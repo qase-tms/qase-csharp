@@ -1,0 +1,66 @@
+name: C# CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - 'main'
+
+env:
+  NUGET_DIR: ./nuget
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test --no-build --verbosity d
+
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: test
+    if: startsWith(github.event.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Create NuGet package
+        run: dotnet pack --configuration Release --no-build --output {{ env.NUGET_DIR }} --include-symbols
+
+      - name: Publish NuGet package
+        run: dotnet nuget push {{ env.NUGET_DIR }}/*.nupkg \
+          --skip-duplicate \
+          --source https://api.nuget.org/v3/index.json \
+          --api-key ${{ secrets.NUGET_API_KEY }}
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
