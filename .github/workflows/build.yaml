@@ -53,7 +53,8 @@ jobs:
         run: dotnet pack --configuration Release --no-build --output ${{ env.NUGET_DIR }} --include-symbols
 
       - name: Publish NuGet package
-        run: dotnet nuget push ${{ env.NUGET_DIR }}/*.nupkg \
+        run: |
+          dotnet nuget push "${{ env.NUGET_DIR }}/*.nupkg" \
           --skip-duplicate \
           --source https://api.nuget.org/v3/index.json \
           --api-key ${{ secrets.NUGET_API_KEY }}
