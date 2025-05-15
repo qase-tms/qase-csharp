@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo> <!-- setting GenerateAssemblyInfo to false
+    causes this bug https://github.com/dotnet/project-system/issues/3934 -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Qase.Csharp.Commons</AssemblyName>
+    <PackageId>Qase.Csharp.Commons</PackageId>
+    <OutputType>Library</OutputType>
+    <AssemblyTitle>Qase.Csharp.Commons</AssemblyTitle>
+    <Description>Common classes for Qase TMS C# reporters</Description>
+    <RootNamespace>Qase.Csharp.Commons</RootNamespace>
+    <RepositoryUrl>https://github.com/qase-tms/qase-csharp.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Qase.ApiClient.V1/Qase.ApiClient.V1.csproj" />
+    <ProjectReference Include="../Qase.ApiClient.V2/Qase.ApiClient.V2.csproj" />
+  </ItemGroup>
+
+</Project>
