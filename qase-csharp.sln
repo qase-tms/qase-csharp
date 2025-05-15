@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qase.ApiClient.V1", "Qase.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qase.ApiClient.V2", "Qase.ApiClient.V2\Qase.ApiClient.V2.csproj", "{3A5141AD-888E-4E97-9F9F-F4D064D8D7C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qase.Csharp.Commons", "Qase.Csharp.Commons\Qase.Csharp.Commons.csproj", "{5973E152-5947-4C58-B00D-B69C25B6C0E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{3A5141AD-888E-4E97-9F9F-F4D064D8D7C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A5141AD-888E-4E97-9F9F-F4D064D8D7C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A5141AD-888E-4E97-9F9F-F4D064D8D7C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5973E152-5947-4C58-B00D-B69C25B6C0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5973E152-5947-4C58-B00D-B69C25B6C0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5973E152-5947-4C58-B00D-B69C25B6C0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5973E152-5947-4C58-B00D-B69C25B6C0E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
