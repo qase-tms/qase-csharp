@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Qase.Csharp.Commons.Config;
@@ -13,8 +13,9 @@ namespace Qase.Csharp.Commons.Reporters
     public class CoreReporterFactory
     {
         private static readonly ILogger<CoreReporterFactory> _logger = NullLogger<CoreReporterFactory>.Instance;
-        private static CoreReporter? _instance;
+        private static ICoreReporter? _instance;
         private static readonly object _lock = new object();
+        private static IServiceProvider? _serviceProvider;
 
         private CoreReporterFactory()
         {
@@ -24,7 +25,7 @@ namespace Qase.Csharp.Commons.Reporters
         /// Gets the singleton instance of CoreReporter
         /// </summary>
         /// <returns>The CoreReporter instance</returns>
-        public static CoreReporter GetInstance()
+        public static ICoreReporter GetInstance()
         {
             if (_instance == null)
             {
@@ -41,13 +42,13 @@ namespace Qase.Csharp.Commons.Reporters
                             _logger.LogDebug("Debug mode is enabled");
                         }
                         
-                        _logger.LogDebug("Qase config: {Config}", config);
+                        _logger.LogDebug("Qase config: {@Config}", config);
                         
-                        var hostInfoCollector = new HostInfo();
-                        var hostInfo = hostInfoCollector.GetHostInfo(typeof(CoreReporterFactory).Assembly.GetName().Version?.ToString());
-                        _logger.LogDebug("Using host info: {HostInfo}", hostInfo);
+                        var services = new ServiceCollection();
+                        services.AddQaseServices(config);
+                        _serviceProvider = services.BuildServiceProvider();
                         
-                        _instance = new CoreReporter(config);
+                        _instance = _serviceProvider.GetRequiredService<ICoreReporter>();
                     }
                 }
             }

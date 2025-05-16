@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
@@ -25,14 +24,18 @@ namespace Qase.Csharp.Commons.Reporters
         /// <summary>
         /// Initializes a new instance of the TestopsReporter class
         /// </summary>
+        /// <param name="logger">The logger instance</param>
         /// <param name="config">The configuration for the reporter</param>
         /// <param name="client">The API client to use</param>
-        public TestopsReporter(QaseConfig config, IClient client)
+        public TestopsReporter(
+            ILogger<TestopsReporter> logger,
+            QaseConfig config,
+            IClient client)
         {
+            _logger = logger;
             _config = config;
             _client = client;
             _results = new List<TestResult>();
-            _logger = NullLogger<TestopsReporter>.Instance;
         }
 
         /// <inheritdoc />
@@ -104,16 +107,17 @@ namespace Qase.Csharp.Commons.Reporters
         }
 
         /// <inheritdoc />
-        public async Task<List<TestResult>> getResults()
+        public Task<List<TestResult>> getResults()
         {
-            return _results;
+            return Task.FromResult(_results);
         }
 
         /// <inheritdoc />
-        public async Task setResults(List<TestResult> results)
+        public Task setResults(List<TestResult> results)
         {
             _results.Clear();
             _results.AddRange(results);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

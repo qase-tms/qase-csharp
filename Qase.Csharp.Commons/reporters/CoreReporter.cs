@@ -2,12 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
-using Qase.Csharp.Commons.Clients;
-using Qase.Csharp.Commons.Writers;
 
 namespace Qase.Csharp.Commons.Reporters
 {
@@ -23,12 +20,17 @@ namespace Qase.Csharp.Commons.Reporters
         /// <summary>
         /// Initializes a new instance of the CoreReporter class
         /// </summary>
-        /// <param name="config">The configuration for the reporter</param>
-        public CoreReporter(QaseConfig config)
+        /// <param name="logger">The logger instance</param>
+        /// <param name="reporter">The primary reporter</param>
+        /// <param name="fallback">The fallback reporter</param>
+        public CoreReporter(
+            ILogger<CoreReporter> logger,
+            IInternalReporter? reporter = null,
+            IInternalReporter? fallback = null)
         {
-            _reporter = CreateReporter(config, config.Mode);
-            _fallback = CreateReporter(config, config.Fallback);
-            _logger = NullLogger<CoreReporter>.Instance;
+            _logger = logger;
+            _reporter = reporter;
+            _fallback = fallback;
         }
 
         /// <inheritdoc />
@@ -111,21 +113,6 @@ namespace Qase.Csharp.Commons.Reporters
             {
                 _logger.LogError(ex, "Failed to start test run with fallback reporter");
                 _reporter = null;
-            }
-        }
-
-        private IInternalReporter? CreateReporter(QaseConfig config, Mode mode)
-        {
-            switch (mode)
-            {
-                case Mode.TestOps:
-                    var client = new ApiClientV2(config);
-                    return new TestopsReporter(config, client);
-                case Mode.Report:
-                    var writer = new FileWriter(config.Report.Connection.ToString());
-                    return new FileReporter(config, writer);
-                default:
-                    return null;
             }
         }
     }
