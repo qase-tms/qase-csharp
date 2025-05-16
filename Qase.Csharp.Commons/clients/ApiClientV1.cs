@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Extensions;
 using Qase.ApiClient.V1.Model;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
@@ -30,33 +26,21 @@ namespace Qase.Csharp.Commons.Clients
         /// <summary>
         /// Initializes a new instance of the ApiClientV1 class
         /// </summary>
+        /// <param name="logger">The logger instance</param>
         /// <param name="config">The configuration for the client</param>
-        public ApiClientV1(QaseConfig config)
+        /// <param name="runApi">The runs API client</param>
+        /// <param name="attachmentsApi">The attachments API client</param>
+        public ApiClientV1(
+            ILogger<ApiClientV1> logger,
+            QaseConfig config,
+            IRunsApi runApi,
+            IAttachmentsApi attachmentsApi)
         {
+            _logger = logger;
             _config = config;
-            _logger = NullLogger<ApiClientV1>.Instance;
-
-            var services = new ServiceCollection();
-
-            var baseUrl = config.TestOps.Api.Host == "qase.io" ? "https://api.qase.io/v1" : $"https://api-{config.TestOps.Api.Host}/v1";
+            _runApi = runApi;
+            _attachmentsApi = attachmentsApi;
             _url = config.TestOps.Api.Host == "qase.io" ? "https://app.qase.io/" : $"https://app-{config.TestOps.Api.Host}/";
-
-            services.AddApi(options =>
-            {
-                ApiKeyToken token = new(config.TestOps.Api.Token!, ClientUtils.ApiKeyHeader.Token, "");
-                options.AddTokens(token);
-                options.AddApiHttpClients(client =>
-                {
-                    client.BaseAddress = new Uri(baseUrl);
-                });
-            });
-
-            var serviceProvider = services.BuildServiceProvider();
-            _runApi = serviceProvider.GetRequiredService<IRunsApi>();
-            _attachmentsApi = serviceProvider.GetRequiredService<IAttachmentsApi>();
-
-
-            _logger.LogDebug("ApiClientV1 initialized with base URL: {BaseUrl}", baseUrl);
         }
 
         /// <inheritdoc />

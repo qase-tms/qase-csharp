@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Qase.ApiClient.V2.Api;
 using Qase.ApiClient.V2.Client;
-using Qase.ApiClient.V2.Extensions;
 using Qase.ApiClient.V2.Model;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
@@ -29,33 +26,20 @@ namespace Qase.Csharp.Commons.Clients
         /// <summary>
         /// Initializes a new instance of the ApiClientV2 class
         /// </summary>
+        /// <param name="logger">The logger instance</param>
         /// <param name="config">The configuration for the client</param>
-        public ApiClientV2(QaseConfig config)
+        /// <param name="apiClientV1">The V1 API client</param>
+        /// <param name="resultsApi">The results API client</param>
+        public ApiClientV2(
+            ILogger<ApiClientV2> logger,
+            QaseConfig config,
+            ApiClientV1 apiClientV1,
+            IResultsApi resultsApi)
         {
+            _logger = logger;
             _config = config;
-            _apiClientV1 = new ApiClientV1(config);
-            _logger = NullLogger<ApiClientV2>.Instance;
-            
-            var services = new ServiceCollection();
-            
-            var baseUrl = config.TestOps.Api.Host == "qase.io" ? 
-                "https://api.qase.io/v2" : 
-                $"https://api-{config.TestOps.Api.Host}/v2";
-            
-            services.AddApi(options =>
-            {
-                ApiKeyToken token = new(config.TestOps.Api.Token!, ClientUtils.ApiKeyHeader.Token, "");
-                options.AddTokens(token);
-                options.AddApiHttpClients(client =>
-                {
-                    client.BaseAddress = new Uri(baseUrl);
-                });
-            });
-            
-            var serviceProvider = services.BuildServiceProvider();
-            _resultsApi = serviceProvider.GetRequiredService<IResultsApi>();
-            
-            _logger.LogDebug("ApiClientV2 initialized with base URL: {BaseUrl}", baseUrl);
+            _apiClientV1 = apiClientV1;
+            _resultsApi = resultsApi;
         }
         
         /// <inheritdoc />
