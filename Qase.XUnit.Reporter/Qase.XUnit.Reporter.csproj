@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo> <!-- setting GenerateAssemblyInfo to false
+    causes this bug https://github.com/dotnet/project-system/issues/3934 -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Qase.XUnit.Reporter</AssemblyName>
+    <PackageId>Qase.XUnit.Reporter</PackageId>
+    <OutputType>Library</OutputType>
+    <AssemblyTitle>Qase.XUnit.Reporter</AssemblyTitle>
+    <Description>xUnit Integration with Qase TMS</Description>
+    <RootNamespace>Qase.XUnit.Reporter</RootNamespace>
+    <RepositoryUrl>https://github.com/qase-tms/qase-csharp.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
+  </ItemGroup>
+
+</Project>
