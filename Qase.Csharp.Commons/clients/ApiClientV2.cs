@@ -71,7 +71,7 @@ namespace Qase.Csharp.Commons.Clients
                 _logger.LogDebug("Sending request to upload results with data: {@Results}", model);
                 var response = await _resultsApi.CreateResultsV2Async(_config.TestOps.Project!, runId, model);
                 
-                if (!response.IsAccepted)
+                if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError(
                         "Failed to upload test results. StatusCode={StatusCode}, Reason={Reason}, Response={@Response}",

@@ -51,10 +51,13 @@ namespace Qase.Csharp.Commons.Clients
             var runData = new RunCreate(title: _config.TestOps.Run.Title ?? "Automated Test Run",
                 description: _config.TestOps.Run.Description,
                 isAutotest: true,
-                startTime: utcTime,
-                environmentSlug: _config.Environment
+                startTime: utcTime
             );
-
+            
+            if (!string.IsNullOrEmpty(_config.Environment)){
+                runData.EnvironmentSlug = _config.Environment;
+            }
+            
             try
             {
                 _logger.LogDebug("Sending request to create test run with data: {@RunData}", runData);
