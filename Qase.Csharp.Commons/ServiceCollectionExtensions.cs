@@ -1,18 +1,15 @@
 using System;
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
 using Qase.ApiClient.V1.Extensions;
-using Qase.ApiClient.V1.Model;
-using Qase.ApiClient.V2.Api;
-using Qase.ApiClient.V2.Client;
 using Qase.ApiClient.V2.Extensions;
-using Qase.ApiClient.V2.Model;
 using Qase.Csharp.Commons.Clients;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Reporters;
 using Qase.Csharp.Commons.Writers;
+using Serilog;
 
 namespace Qase.Csharp.Commons
 {
@@ -32,13 +29,39 @@ namespace Qase.Csharp.Commons
             // Register configuration
             services.AddSingleton(config);
 
+            // Configure Serilog
+            var logPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "logs",
+                $"{DateTime.Now:yyyyMMdd}.log"
+            );
+
+            Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+
+            var loggerConfiguration = new LoggerConfiguration()
+                .WriteTo.Console(
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File(
+                    logPath,
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+
+            if (config.Debug)
+            {
+                loggerConfiguration.MinimumLevel.Debug();
+            }
+            else
+            {
+                loggerConfiguration.MinimumLevel.Information();
+            }
+
+            var logger = loggerConfiguration.CreateLogger();
+
             // Register logging
             services.AddLogging(builder =>
             {
-                if (config.Debug)
-                {
-                    builder.SetMinimumLevel(LogLevel.Debug);
-                }
+                builder.ClearProviders();
+                builder.AddSerilog(logger, dispose: true);
             });
 
             // Register API clients
@@ -100,27 +123,36 @@ namespace Qase.Csharp.Commons
             // Register reporters based on mode
             if (config.Mode == Mode.TestOps)
             {
-                services.AddSingleton<IInternalReporter, TestopsReporter>();
+                services.AddSingleton<IInternalReporter>(sp => 
+                    new TestopsReporter(sp.GetRequiredService<ILogger<TestopsReporter>>(), config, sp.GetRequiredService<IClient>()));
             }
             else if (config.Mode == Mode.Report)
             {
-                services.AddSingleton<IInternalReporter, FileReporter>();
+                services.AddSingleton<IInternalReporter>(sp =>
+                    new FileReporter(sp.GetRequiredService<ILogger<FileReporter>>(), config, sp.GetRequiredService<FileWriter>()));
             }
 
             // Register fallback reporter if needed
             if (config.Fallback == Mode.TestOps)
             {
-                services.AddSingleton<IInternalReporter, TestopsReporter>(sp => 
+                services.AddSingleton<Func<IInternalReporter>>(sp => () => 
                     new TestopsReporter(sp.GetRequiredService<ILogger<TestopsReporter>>(), config, sp.GetRequiredService<IClient>()));
             }
             else if (config.Fallback == Mode.Report)
             {
-                services.AddSingleton<IInternalReporter, FileReporter>(sp =>
+                services.AddSingleton<Func<IInternalReporter>>(sp => () =>
                     new FileReporter(sp.GetRequiredService<ILogger<FileReporter>>(), config, sp.GetRequiredService<FileWriter>()));
             }
 
             // Register core reporter
-            services.AddSingleton<ICoreReporter, CoreReporter>();
+            services.AddSingleton<ICoreReporter>(sp => 
+            {
+                var logger = sp.GetRequiredService<ILogger<CoreReporter>>();
+                var reporter = sp.GetRequiredService<IInternalReporter>();
+                var fallbackFactory = sp.GetService<Func<IInternalReporter>>();
+                var fallback = fallbackFactory?.Invoke();
+                return new CoreReporter(logger, reporter, fallback);
+            });
 
             return services;
         }

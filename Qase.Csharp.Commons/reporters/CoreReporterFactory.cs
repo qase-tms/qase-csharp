@@ -12,7 +12,6 @@ namespace Qase.Csharp.Commons.Reporters
     /// </summary>
     public class CoreReporterFactory
     {
-        private static readonly ILogger<CoreReporterFactory> _logger = NullLogger<CoreReporterFactory>.Instance;
         private static ICoreReporter? _instance;
         private static readonly object _lock = new object();
         private static IServiceProvider? _serviceProvider;
@@ -35,19 +34,13 @@ namespace Qase.Csharp.Commons.Reporters
                     {
                         var config = ConfigFactory.LoadConfig();
                         
-                        if (config.Debug)
-                        {
-                            // TODO: Implement debug logging level setting
-                            // For now, we'll just log that debug is enabled
-                            _logger.LogDebug("Debug mode is enabled");
-                        }
-                        
-                        _logger.LogDebug("Qase config: {@Config}", config);
-                        
                         var services = new ServiceCollection();
                         services.AddQaseServices(config);
                         _serviceProvider = services.BuildServiceProvider();
-                        
+
+                        var logger = _serviceProvider.GetRequiredService<ILogger<CoreReporter>>();
+                        logger.LogDebug("Config: {@Config}", config);
+
                         _instance = _serviceProvider.GetRequiredService<ICoreReporter>();
                     }
                 }
