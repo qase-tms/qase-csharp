@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Qase.Csharp.Commons.Reporters;
 using Qase.Csharp.Commons.Models.Domain;
-using Qase.Csharp.Commons.Models;
 using Xunit.Abstractions;
+using Qase.Csharp.Commons.Attributes;
 
 namespace Qase.XUnit.Reporter
 {
@@ -50,7 +50,7 @@ namespace Qase.XUnit.Reporter
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 _completionSource.TrySetException(ex);
             }
-            
+
             // Pass message to inner handler
             return _innerSink.OnMessage(message);
         }
@@ -66,7 +66,7 @@ namespace Qase.XUnit.Reporter
             }
             else if (message is ITestAssemblyFinished assemblyFinished)
             {
-                try 
+                try
                 {
                     await _reporter.uploadResults();
                     await _reporter.completeTestRun();
@@ -81,16 +81,34 @@ namespace Qase.XUnit.Reporter
             else if (message is ITestPassed testPassed)
             {
                 var testResult = ConvertToTestResult(testPassed);
+
+                if (testResult.Ignore)
+                {
+                    return;
+                }
+
                 await _reporter.addResult(testResult);
             }
             else if (message is ITestFailed testFailed)
             {
                 var testResult = ConvertToTestResult(testFailed);
+
+                if (testResult.Ignore)
+                {
+                    return;
+                }
+
                 await _reporter.addResult(testResult);
             }
             else if (message is ITestSkipped testSkipped)
             {
                 var testResult = ConvertToTestResult(testSkipped);
+
+                if (testResult.Ignore)
+                {
+                    return;
+                }
+
                 await _reporter.addResult(testResult);
             }
         }
@@ -133,44 +151,33 @@ namespace Qase.XUnit.Reporter
         {
             var method = testCase.TestMethod.Method;
             var declaringType = method.Type;
-            
+
             // Get package name (namespace)
             var packageName = declaringType.Assembly.Name?.ToLower().Replace('.', ':') ?? "";
-            
+
             // Get class name
             var className = declaringType.Name.ToLower();
-            
+
             // Get method name
             var methodName = method.Name.ToLower();
-            
-            // // Get Qase IDs from attributes if present
-            // var qaseIds = method.GetCustomAttributes("QaseId")
-            //     .Select(attr => 
-            //     {
-            //         try 
-            //         {
-            //             var idProperty = attr.GetType().GetProperty("Id");
-            //             return idProperty?.GetValue(attr)?.ToString();
-            //         }
-            //         catch
-            //         {
-            //             return null;
-            //         }
-            //     })
-            //     .Where(id => id != null)
-            //     .ToList();
-            
-            // var qaseIdPart = qaseIds.Any() 
-            //     ? "::" + string.Join("-", qaseIds)
-            //     : "";
-            
+
+            // Get Qase IDs from attributes if present
+            var qaseIds = method.GetCustomAttributes(typeof(IQaseAttribute))
+                .Where(attr => attr is QaseIdsAttribute)
+                .Select(attr => ((QaseIdsAttribute)attr).Ids)
+                .FirstOrDefault() ?? new List<long>();
+
+            var qaseIdPart = qaseIds.Any()
+                ? "::" + string.Join("-", qaseIds)
+                : "";
+
             // Format parameters
             var parametersPart = parameters != null && parameters.Any()
-                ? "::" + string.Join("::", parameters.Select(p => 
+                ? "::" + string.Join("::", parameters.Select(p =>
                     $"{p.Key.ToLower()}::{p.Value.ToLower().Replace(" ", "_")}"))
                 : "";
 
-            return $"{packageName}::{className}.cs::{className}::{methodName}{parametersPart}";
+            return $"{packageName}::{className}.java::{className}::{methodName}{qaseIdPart}{parametersPart}";
         }
 
         /// <summary>
@@ -186,7 +193,7 @@ namespace Qase.XUnit.Reporter
                 })
                 .ToDictionary(x => x.parameter.Name, x => x.value.ToString());
 
-            return new TestResult
+            var result = new TestResult
             {
                 Title = testCase.TestMethod.Method.Name,
                 Execution = new TestResultExecution
@@ -200,7 +207,8 @@ namespace Qase.XUnit.Reporter
                 Message = message,
                 Params = parameters,
                 Signature = GenerateSignature(testCase, parameters),
-                Relations = new Relations(){
+                Relations = new Relations()
+                {
                     Suite = new Suite()
                     {
                         Data = testCase.TestMethod.TestClass.Class.Name
@@ -210,6 +218,32 @@ namespace Qase.XUnit.Reporter
                     }
                 }
             };
+
+            var attributes = testCase.TestMethod.Method.GetCustomAttributes(typeof(IQaseAttribute));
+
+            foreach (var attribute in attributes)
+            {
+                switch (((IReflectionAttributeInfo)attribute).Attribute)
+                {
+                    case QaseIdsAttribute qaseIdsAttribute:
+                        result.TestopsIds = qaseIdsAttribute.Ids;
+                        break;
+                    case TitleAttribute titleAttribute:
+                        result.Title = titleAttribute.Title;
+                        break;
+                    case FieldsAttribute fieldsAttribute:
+                        result.Fields.Add(fieldsAttribute.Key, fieldsAttribute.Value);
+                        break;
+                    case SuitesAttribute suitesAttribute:
+                        result.Relations.Suite.Data = suitesAttribute.Suites.Select(suite => new SuiteData { Title = suite }).ToList();
+                        break;
+                    case IgnoreAttribute ignoreAttribute:
+                        result.Ignore = true;
+                        break;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
