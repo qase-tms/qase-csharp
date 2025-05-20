@@ -31,7 +31,7 @@ namespace Qase.Csharp.Commons
 
             // Configure Serilog
             var logPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                AppDomain.CurrentDomain.BaseDirectory,
                 "logs",
                 $"{DateTime.Now:yyyyMMdd}.log"
             );
