@@ -6,6 +6,5 @@
       <Authors>Qase Team</Authors>
       <Company>qase.io</Company>
       <LangVersion>9.0</LangVersion>
-      <TargetFrameworks>netstandard2.0</TargetFrameworks>
     </PropertyGroup>
   </Project>
