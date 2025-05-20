@@ -1,13 +1,11 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Qase.Csharp.Commons.Reporters;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Csharp.Commons.Models;
 using Xunit.Abstractions;
-using Serilog;
-using Serilog.Events;
-using Xunit;
 
 namespace Qase.XUnit.Reporter
 {
@@ -129,24 +127,107 @@ namespace Qase.XUnit.Reporter
         }
 
         /// <summary>
+        /// Generates a unique signature for a test case
+        /// </summary>
+        private string GenerateSignature(ITestCase testCase, System.Collections.Generic.Dictionary<string, string> parameters)
+        {
+            var method = testCase.TestMethod.Method;
+            var declaringType = method.Type;
+            
+            // Get package name (namespace)
+            var packageName = declaringType.Assembly.Name?.ToLower().Replace('.', ':') ?? "";
+            
+            // Get class name
+            var className = declaringType.Name.ToLower();
+            
+            // Get method name
+            var methodName = method.Name.ToLower();
+            
+            // // Get Qase IDs from attributes if present
+            // var qaseIds = method.GetCustomAttributes("QaseId")
+            //     .Select(attr => 
+            //     {
+            //         try 
+            //         {
+            //             var idProperty = attr.GetType().GetProperty("Id");
+            //             return idProperty?.GetValue(attr)?.ToString();
+            //         }
+            //         catch
+            //         {
+            //             return null;
+            //         }
+            //     })
+            //     .Where(id => id != null)
+            //     .ToList();
+            
+            // var qaseIdPart = qaseIds.Any() 
+            //     ? "::" + string.Join("-", qaseIds)
+            //     : "";
+            
+            // Format parameters
+            var parametersPart = parameters != null && parameters.Any()
+                ? "::" + string.Join("::", parameters.Select(p => 
+                    $"{p.Key.ToLower()}::{p.Value.ToLower().Replace(" ", "_")}"))
+                : "";
+
+            return $"{packageName}::{className}.cs::{className}::{methodName}{parametersPart}";
+        }
+
+        /// <summary>
+        /// Creates base test result from test case
+        /// </summary>
+        private TestResult CreateBaseTestResult(ITestCase testCase, TestResultStatus status, long startTime, long endTime, int? duration = null, string message = null, string stacktrace = null)
+        {
+            var parameters = testCase.TestMethod.Method.GetParameters()
+                .Zip(testCase.TestMethodArguments ?? Array.Empty<object>(), (parameter, value) => new
+                {
+                    parameter,
+                    value
+                })
+                .ToDictionary(x => x.parameter.Name, x => x.value.ToString());
+
+            return new TestResult
+            {
+                Title = testCase.TestMethod.Method.Name,
+                Execution = new TestResultExecution
+                {
+                    Status = status,
+                    StartTime = startTime,
+                    EndTime = endTime,
+                    Duration = duration,
+                    Stacktrace = stacktrace
+                },
+                Message = message,
+                Params = parameters,
+                Signature = GenerateSignature(testCase, parameters),
+                Relations = new Relations(){
+                    Suite = new Suite()
+                    {
+                        Data = testCase.TestMethod.TestClass.Class.Name
+                            .Split('.')
+                            .Select(part => new SuiteData { Title = part })
+                            .ToList()
+                    }
+                }
+            };
+        }
+
+        /// <summary>
         /// Converts ITestPassed to TestResult
         /// </summary>
         private TestResult ConvertToTestResult(ITestPassed testPassed)
         {
-            var testResult = new TestResult
-            {
-                Title = testPassed.TestCase.DisplayName,
-                Execution = new TestResultExecution
-                {
-                    Status = TestResultStatus.Passed,
-                    StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (long)(testPassed.ExecutionTime * 1000),
-                    EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    Duration = (int)(testPassed.ExecutionTime * 1000)
-                },
-                Signature = testPassed.TestCase.UniqueID
-            };
+            var endTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var startTime = endTime - (long)(testPassed.ExecutionTime * 1000);
+            var duration = (int)(testPassed.ExecutionTime * 1000);
 
-            return testResult;
+            return CreateBaseTestResult(
+                testPassed.TestCase,
+                TestResultStatus.Passed,
+                startTime,
+                endTime,
+                duration
+            );
         }
 
         /// <summary>
@@ -154,22 +235,19 @@ namespace Qase.XUnit.Reporter
         /// </summary>
         private TestResult ConvertToTestResult(ITestFailed testFailed)
         {
-            var testResult = new TestResult
-            {
-                Title = testFailed.TestCase.DisplayName,
-                Execution = new TestResultExecution
-                {
-                    Status = TestResultStatus.Failed,
-                    StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (long)(testFailed.ExecutionTime * 1000),
-                    EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    Duration = (int)(testFailed.ExecutionTime * 1000),
-                    Stacktrace = testFailed.StackTraces.FirstOrDefault()
-                },
-                Message = testFailed.Messages.FirstOrDefault(),
-                Signature = testFailed.TestCase.UniqueID
-            };
+            var endTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var startTime = endTime - (long)(testFailed.ExecutionTime * 1000);
+            var duration = (int)(testFailed.ExecutionTime * 1000);
 
-            return testResult;
+            return CreateBaseTestResult(
+                testFailed.TestCase,
+                TestResultStatus.Failed,
+                startTime,
+                endTime,
+                duration,
+                testFailed.Messages.FirstOrDefault(),
+                testFailed.StackTraces.FirstOrDefault()
+            );
         }
 
         /// <summary>
@@ -177,20 +255,15 @@ namespace Qase.XUnit.Reporter
         /// </summary>
         private TestResult ConvertToTestResult(ITestSkipped testSkipped)
         {
-            var testResult = new TestResult
-            {
-                Title = testSkipped.TestCase.DisplayName,
-                Execution = new TestResultExecution
-                {
-                    Status = TestResultStatus.Skipped,
-                    StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                },
-                Message = testSkipped.Reason,
-                Signature = testSkipped.TestCase.UniqueID
-            };
+            var time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            return testResult;
+            return CreateBaseTestResult(
+                testSkipped.TestCase,
+                TestResultStatus.Skipped,
+                time,
+                time,
+                message: testSkipped.Reason
+            );
         }
     }
 }
