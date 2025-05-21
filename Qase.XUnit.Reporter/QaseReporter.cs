@@ -151,12 +151,8 @@ namespace Qase.XUnit.Reporter
         {
             var method = testCase.TestMethod.Method;
             var declaringType = method.Type;
-
-            // Get package name (namespace)
-            var packageName = declaringType.Assembly.Name?.ToLower().Replace('.', ':') ?? "";
-
             // Get class name
-            var className = declaringType.Name.ToLower();
+            var className = declaringType.Name.ToLower().Replace(".", "::");
 
             // Get method name
             var methodName = method.Name.ToLower();
@@ -177,7 +173,7 @@ namespace Qase.XUnit.Reporter
                     $"{p.Key.ToLower()}::{p.Value.ToLower().Replace(" ", "_")}"))
                 : "";
 
-            return $"{packageName}::{className}.java::{className}::{methodName}{qaseIdPart}{parametersPart}";
+            return $"{className}::{methodName}{qaseIdPart}{parametersPart}";
         }
 
         /// <summary>
