@@ -46,7 +46,6 @@ namespace Qase.XUnit.Reporter
         {
             try
             {
-                // Ждем завершения всех операций логгера
                 _loggerMessageSink.WaitForCompletionAsync()
                     .ConfigureAwait(false)
                     .GetAwaiter()
@@ -60,6 +59,13 @@ namespace Qase.XUnit.Reporter
             {
                 _framework.Dispose();
             }
+        }
+    }
+
+    public class XunitTheoryDiscover : TheoryDiscoverer
+    {
+        public XunitTheoryDiscover(IMessageSink diagnosticMessageSink) : base(diagnosticMessageSink)
+        {
         }
     }
 }

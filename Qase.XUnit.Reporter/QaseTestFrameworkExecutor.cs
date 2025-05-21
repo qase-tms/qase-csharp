@@ -22,7 +22,6 @@ namespace Qase.XUnit.Reporter
         {
             try
             {
-                // Ждем завершения всех операций логгера
                 _loggerMessageSink.WaitForCompletionAsync()
                     .ConfigureAwait(false)
                     .GetAwaiter()
