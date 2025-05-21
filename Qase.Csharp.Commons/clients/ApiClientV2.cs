@@ -214,10 +214,16 @@ namespace Qase.Csharp.Commons.Clients
             _logger.LogDebug("Converting step result: {@StepResult}", step);
             
             var data = new ResultStepData(
-                action: step.Data?.Action ?? string.Empty,
-                expectedResult: step.Data?.ExpectedResult,
-                inputData: step.Data?.InputData
+                action: step.Data?.Action ?? string.Empty
             );
+
+            if (step.Data?.ExpectedResult != null){
+                data.ExpectedResult = step.Data.ExpectedResult;
+            }
+            
+            if (step.Data?.InputData != null){
+                data.InputData = step.Data.InputData;
+            }
             
             var attachments = step.Execution?.Attachments
                 .Select(async a => await _apiClientV1.UploadAttachmentAsync(a))
