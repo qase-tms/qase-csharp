@@ -6,6 +6,7 @@ using Qase.Csharp.Commons.Reporters;
 using Qase.Csharp.Commons.Models.Domain;
 using Xunit.Abstractions;
 using Qase.Csharp.Commons.Attributes;
+using Qase.Csharp.Commons;
 
 namespace Qase.XUnit.Reporter
 {
@@ -127,7 +128,6 @@ namespace Qase.XUnit.Reporter
             {
                 try
                 {
-                    // Ждем завершения всех операций при освобождении ресурсов
                     WaitForCompletionAsync()
                         .ConfigureAwait(false)
                         .GetAwaiter()
@@ -151,6 +151,7 @@ namespace Qase.XUnit.Reporter
         {
             var method = testCase.TestMethod.Method;
             var declaringType = method.Type;
+            
             // Get class name
             var className = declaringType.Name.ToLower().Replace(".", "::");
 
@@ -212,7 +213,8 @@ namespace Qase.XUnit.Reporter
                             .Select(part => new SuiteData { Title = part })
                             .ToList()
                     }
-                }
+                },
+                Steps = StepManager.GetCompletedSteps()
             };
 
             var attributes = testCase.TestMethod.Method.GetCustomAttributes(typeof(IQaseAttribute));
