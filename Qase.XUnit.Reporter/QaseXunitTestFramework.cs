@@ -61,11 +61,4 @@ namespace Qase.XUnit.Reporter
             }
         }
     }
-
-    public class XunitTheoryDiscover : TheoryDiscoverer
-    {
-        public XunitTheoryDiscover(IMessageSink diagnosticMessageSink) : base(diagnosticMessageSink)
-        {
-        }
-    }
 }
