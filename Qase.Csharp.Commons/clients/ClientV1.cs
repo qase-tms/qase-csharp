@@ -15,13 +15,13 @@ namespace Qase.Csharp.Commons.Clients
     /// <summary>
     /// Implementation of the Qase API client using V1 API
     /// </summary>
-    public class ApiClientV1 : IClient
+    public class ClientV1 : IClient
     {
         private readonly QaseConfig _config;
         private readonly string _url;
         private readonly IRunsApi _runApi;
         private readonly IAttachmentsApi _attachmentsApi;
-        private readonly ILogger<ApiClientV1> _logger;
+        private readonly ILogger<ClientV1> _logger;
 
         /// <summary>
         /// Initializes a new instance of the ApiClientV1 class
@@ -30,8 +30,8 @@ namespace Qase.Csharp.Commons.Clients
         /// <param name="config">The configuration for the client</param>
         /// <param name="runApi">The runs API client</param>
         /// <param name="attachmentsApi">The attachments API client</param>
-        public ApiClientV1(
-            ILogger<ApiClientV1> logger,
+        public ClientV1(
+            ILogger<ClientV1> logger,
             QaseConfig config,
             IRunsApi runApi,
             IAttachmentsApi attachmentsApi)

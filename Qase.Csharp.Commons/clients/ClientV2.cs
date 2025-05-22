@@ -16,11 +16,11 @@ namespace Qase.Csharp.Commons.Clients
     /// <summary>
     /// Implementation of the Qase API client using V2 API
     /// </summary>
-    public class ApiClientV2 : IClient
+    public class ClientV2 : IClient
     {
         private readonly QaseConfig _config;
-        private readonly ApiClientV1 _apiClientV1;
-        private readonly ILogger<ApiClientV2> _logger;
+        private readonly ClientV1 _apiClientV1;
+        private readonly ILogger<ClientV2> _logger;
         private readonly IResultsApi _resultsApi;
         
         /// <summary>
@@ -30,10 +30,10 @@ namespace Qase.Csharp.Commons.Clients
         /// <param name="config">The configuration for the client</param>
         /// <param name="apiClientV1">The V1 API client</param>
         /// <param name="resultsApi">The results API client</param>
-        public ApiClientV2(
-            ILogger<ApiClientV2> logger,
+        public ClientV2(
+            ILogger<ClientV2> logger,
             QaseConfig config,
-            ApiClientV1 apiClientV1,
+            ClientV1 apiClientV1,
             IResultsApi resultsApi)
         {
             _logger = logger;

@@ -65,9 +65,9 @@ namespace Qase.Csharp.Commons
             });
 
             // Register API clients
-            services.AddSingleton<ApiClientV1>(sp =>
+            services.AddSingleton<ClientV1>(sp =>
             {
-                var logger = sp.GetRequiredService<ILogger<ApiClientV1>>();
+                var logger = sp.GetRequiredService<ILogger<ClientV1>>();
                 var baseUrl = config.TestOps.Api.Host == "qase.io" ? 
                     "https://api.qase.io/v1" : 
                     $"https://api-{config.TestOps.Api.Host}/v1";
@@ -87,13 +87,13 @@ namespace Qase.Csharp.Commons
                 var runApi = apiServiceProvider.GetRequiredService<IRunsApi>();
                 var attachmentsApi = apiServiceProvider.GetRequiredService<IAttachmentsApi>();
                 
-                return new ApiClientV1(logger, config, runApi, attachmentsApi);
+                return new ClientV1(logger, config, runApi, attachmentsApi);
             });
 
-            services.AddSingleton<ApiClientV2>(sp =>
+            services.AddSingleton<ClientV2>(sp =>
             {
-                var logger = sp.GetRequiredService<ILogger<ApiClientV2>>();
-                var apiClientV1 = sp.GetRequiredService<ApiClientV1>();
+                var logger = sp.GetRequiredService<ILogger<ClientV2>>();
+                var apiClientV1 = sp.GetRequiredService<ClientV1>();
                 var baseUrl = config.TestOps.Api.Host == "qase.io" ? 
                     "https://api.qase.io/v2" : 
                     $"https://api-{config.TestOps.Api.Host}/v2";
@@ -112,10 +112,10 @@ namespace Qase.Csharp.Commons
                 var apiServiceProvider = apiServices.BuildServiceProvider();
                 var resultsApi = apiServiceProvider.GetRequiredService<Qase.ApiClient.V2.Api.IResultsApi>();
                 
-                return new ApiClientV2(logger, config, apiClientV1, resultsApi);
+                return new ClientV2(logger, config, apiClientV1, resultsApi);
             });
 
-            services.AddSingleton<IClient>(sp => sp.GetRequiredService<ApiClientV2>());
+            services.AddSingleton<IClient>(sp => sp.GetRequiredService<ClientV2>());
 
             // Register writers
             services.AddSingleton<FileWriter>(sp => new FileWriter(config.Report.Connection.ToString()));
