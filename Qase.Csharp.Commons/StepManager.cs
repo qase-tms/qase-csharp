@@ -1,18 +1,32 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+using System.Threading;
 using Qase.Csharp.Commons.Models.Domain;
 
 namespace Qase.Csharp.Commons
 {
     public static class StepManager
     {
-        private static readonly Stack<StepResult> _stepStack = new();
-        private static List<StepResult> _completedSteps = new();
+        private static readonly AsyncLocal<string> _testCaseName = new();
+        private static readonly Dictionary<string, Stack<StepResult>> _stepStacks = new();
+        private static Dictionary<string, List<StepResult>> _completedSteps = new();
+
+        public static void SetTestCaseName(string name)
+        {
+            _testCaseName.Value = name;
+            if (!_stepStacks.ContainsKey(name))
+            {
+                _stepStacks[name] = new Stack<StepResult>();
+            }
+        }
 
         public static void StartStep(string title, Action<StepResult>? configure = null)
         {
+            if (string.IsNullOrEmpty(_testCaseName.Value))
+            {
+                return;
+            }
+
             var step = new StepResult
             {
                 Data = new Data
@@ -27,71 +41,95 @@ namespace Qase.Csharp.Commons
 
             configure?.Invoke(step);
 
-            if (_stepStack.Count > 0)
+            var stack = _stepStacks[_testCaseName.Value];
+            if (stack.Count > 0)
             {
-                var parentStep = _stepStack.Peek();
+                var parentStep = stack.Peek();
                 parentStep.Steps ??= new List<StepResult>();
                 parentStep.Steps.Add(step);
             }
 
-            _stepStack.Push(step);
+            stack.Push(step);
         }
 
         public static void PassStep()
         {
-            if (_stepStack.Count == 0)
+            if (string.IsNullOrEmpty(_testCaseName.Value))
+            {
+                return;
+            }
+
+            var stack = _stepStacks[_testCaseName.Value];
+            if (stack.Count == 0)
             {
                 throw new InvalidOperationException("No active step to pass");
             }
 
-            var step = _stepStack.Pop();
+            var step = stack.Pop();
             step.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             step.Execution!.Status = StepResultStatus.Passed;
 
-            if (_stepStack.Count == 0)
+            if (stack.Count == 0)
             {
-                var rootStep = step;
-                while (rootStep.Steps?.Count > 0)
+                if (!_completedSteps.ContainsKey(_testCaseName.Value))
                 {
-                    rootStep = rootStep.Steps[0];
+                    _completedSteps[_testCaseName.Value] = new List<StepResult>();
                 }
-                _completedSteps = new List<StepResult> { rootStep };
+
+                _completedSteps[_testCaseName.Value].Add(step);
             }
         }
 
         public static void FailStep()
         {
-            if (_stepStack.Count == 0)
+            if (string.IsNullOrEmpty(_testCaseName.Value))
+            {
+                return;
+            }
+
+            var stack = _stepStacks[_testCaseName.Value];
+            if (stack.Count == 0)
             {
                 throw new InvalidOperationException("No active step to fail");
             }
 
-            var step = _stepStack.Pop();
+            var step = stack.Pop();
             step.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             step.Execution!.Status = StepResultStatus.Failed;
 
-            if (_stepStack.Count == 0)
+            if (stack.Count == 0)
             {
-                var rootStep = step;
-                while (rootStep.Steps?.Count > 0)
+                if (!_completedSteps.ContainsKey(_testCaseName.Value))
                 {
-                    rootStep = rootStep.Steps[0];
+                    _completedSteps[_testCaseName.Value] = new List<StepResult>();
                 }
-                _completedSteps = new List<StepResult> { rootStep };
+
+                _completedSteps[_testCaseName.Value].Add(step);
             }
         }
 
-        public static List<StepResult> GetCompletedSteps()
+        public static List<StepResult> GetCompletedSteps(string testCaseName)
         {
-            var steps = _completedSteps.ToList();
-            Clear();
+            if (!_completedSteps.ContainsKey(testCaseName))
+            {
+                return new List<StepResult>();
+            }
+            var steps = _completedSteps[testCaseName];
+            _completedSteps.Remove(testCaseName);
             return steps;
         }
 
         public static void Clear()
         {
-            _stepStack.Clear();
-            _completedSteps.Clear();
+            if (!string.IsNullOrEmpty(_testCaseName.Value) && _stepStacks.ContainsKey(_testCaseName.Value))
+            {
+                _stepStacks[_testCaseName.Value].Clear();
+            }
+        }
+
+        public static void SaveSteps()
+        {
+            Clear();
         }
     }
 }
