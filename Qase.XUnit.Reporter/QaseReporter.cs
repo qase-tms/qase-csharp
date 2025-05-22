@@ -189,7 +189,8 @@ namespace Qase.XUnit.Reporter
                     value
                 })
                 .ToDictionary(x => x.parameter.Name, x => x.value.ToString());
-
+            // method.DeclaringType?.Name + "." + method.Name
+            Console.WriteLine("CreateBaseTestResult: " + testCase.DisplayName);
             var result = new TestResult
             {
                 Title = testCase.TestMethod.Method.Name,
@@ -214,7 +215,7 @@ namespace Qase.XUnit.Reporter
                             .ToList()
                     }
                 },
-                Steps = StepManager.GetCompletedSteps()
+                Steps = StepManager.GetCompletedSteps(testCase.DisplayName)
             };
 
             var attributes = testCase.TestMethod.Method.GetCustomAttributes(typeof(IQaseAttribute));
