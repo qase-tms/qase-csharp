@@ -19,9 +19,6 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
-    <None Include="content\AutoXunitInitializer.cs" Pack="true" PackagePath="content\AutoXunitInitializer.cs" />
-    <None Include="content\xunit.runner.json" Pack="true" PackagePath="content\xunit.runner.json" />
-    <None Include="content\Qase.XUnit.Reporter.testadapter.json" Pack="true" PackagePath="content\Qase.XUnit.Reporter.testadapter.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,9 +26,6 @@
     <PackageReference Include="xunit.extensibility.core" Version="2.6.6" />
     <PackageReference Include="xunit.runner.utility" Version="2.6.6" />
     <ProjectReference Include="../Qase.Csharp.Commons/Qase.Csharp.Commons.csproj" />
-    <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
   
