@@ -36,7 +36,6 @@ namespace Qase.XUnit.Reporter
         /// </summary>
         public bool OnMessage(IMessageSinkMessage message)
         {
-            Console.WriteLine($"Processing message of type: {message.GetType().Name}");
 
             try
             {
@@ -180,7 +179,7 @@ namespace Qase.XUnit.Reporter
         /// <summary>
         /// Creates base test result from test case
         /// </summary>
-        private TestResult CreateBaseTestResult(ITestCase testCase, TestResultStatus status, long startTime, long endTime, int? duration = null, string message = null, string stacktrace = null)
+        private TestResult CreateBaseTestResult(ITestCase testCase, TestResultStatus status, long startTime, long endTime, int? duration = null, string? message = null, string? stacktrace = null)
         {
             var parameters = testCase.TestMethod.Method.GetParameters()
                 .Zip(testCase.TestMethodArguments ?? Array.Empty<object>(), (parameter, value) => new
@@ -189,8 +188,7 @@ namespace Qase.XUnit.Reporter
                     value
                 })
                 .ToDictionary(x => x.parameter.Name, x => x.value.ToString());
-            // method.DeclaringType?.Name + "." + method.Name
-            Console.WriteLine("CreateBaseTestResult: " + testCase.DisplayName);
+
             var result = new TestResult
             {
                 Title = testCase.TestMethod.Method.Name,
