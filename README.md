@@ -7,8 +7,8 @@ includes reporters and API clients designed to streamline the process of reporti
 
 ### Reporters
 
-- **[Qase.xUnit.Reporter](/Qase.xUnit.Reporter)**  
-  Reporter for xUnit. (coming soon)
+- **[Qase.xUnit.Reporter](/Qase.XUnit.Reporter)**  
+  Reporter for xUnit.
 
 - **[Qase.NUnit.Reporter](/Qase.NUnit.Reporter)**  
   Reporter for NUnit. (coming soon)
@@ -22,7 +22,7 @@ includes reporters and API clients designed to streamline the process of reporti
 ### Libraries
 
 - **[Qase.Csharp.Commons](/Qase.Csharp.Commons/)**  
-  Shared library containing common components and utilities used by Qase reporters. (coming soon)
+  Shared library containing common components and utilities used by Qase reporters.
 
 ### API Clients
 
