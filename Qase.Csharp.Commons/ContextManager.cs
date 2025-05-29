@@ -5,10 +5,12 @@ using Qase.Csharp.Commons.Models.Domain;
 
 namespace Qase.Csharp.Commons
 {
-    public static class StepManager
+    public static class ContextManager
     {
         private static readonly AsyncLocal<string> _testCaseName = new();
         private static readonly Dictionary<string, Stack<StepResult>> _stepStacks = new();
+        private static readonly Dictionary<string, List<string>> _messages = new();
+        private static readonly Dictionary<string, List<Attachment>> _attachments = new();
         private static Dictionary<string, List<StepResult>> _completedSteps = new();
 
         public static void SetTestCaseName(string name)
@@ -114,6 +116,7 @@ namespace Qase.Csharp.Commons
             {
                 return new List<StepResult>();
             }
+
             var steps = _completedSteps[testCaseName];
             _completedSteps.Remove(testCaseName);
             return steps;
@@ -130,6 +133,88 @@ namespace Qase.Csharp.Commons
         public static void SaveSteps()
         {
             Clear();
+        }
+
+        internal static void AddComment(string comment)
+        {
+            if (string.IsNullOrEmpty(_testCaseName.Value))
+            {
+                return;
+            }
+
+            if (!_messages.ContainsKey(_testCaseName.Value))
+            {
+                _messages[_testCaseName.Value] = new List<string>();
+            }
+
+            _messages[_testCaseName.Value].Add(comment);
+        }
+
+        public static string GetComments(string testCaseName)
+        {
+            if (!_messages.ContainsKey(testCaseName))
+            {
+                return string.Empty;
+            }
+
+            return string.Join("\n", _messages[testCaseName]);
+        }
+
+        internal static void AddAttachment(List<string> paths)
+        {
+            foreach (var path in paths)
+            {
+                var attachment = new Attachment
+                {
+                    FilePath = path
+                };
+
+                AddAttachment(attachment);
+            }
+            ;
+        }
+
+        internal static void AddAttachment(byte[] data, string fileName)
+        {
+            var attachment = new Attachment
+            {
+                ContentBytes = data,
+                FileName = fileName
+            };
+
+            AddAttachment(attachment);
+        }
+
+        private static void AddAttachment(Attachment attachment)
+        {
+            if (string.IsNullOrEmpty(_testCaseName.Value))
+            {
+                return;
+            }
+
+            if (_stepStacks.ContainsKey(_testCaseName.Value) && _stepStacks[_testCaseName.Value].Count > 0)
+            {
+                var step = _stepStacks[_testCaseName.Value].Peek();
+                step.Execution!.Attachments.Add(attachment);
+                return;
+            }
+
+            if (!_attachments.ContainsKey(_testCaseName.Value))
+            {
+                _attachments[_testCaseName.Value] = new List<Attachment>();
+            }
+
+            _attachments[_testCaseName.Value].Add(attachment);
+        }
+
+        public static List<Attachment> GetAttachments(string testCaseName)
+        {
+            if (!_attachments.ContainsKey(testCaseName))
+            {
+                return new List<Attachment>();
+            }
+
+            return _attachments[testCaseName];
         }
     }
 }

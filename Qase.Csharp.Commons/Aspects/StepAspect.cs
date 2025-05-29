@@ -33,7 +33,7 @@ namespace Qase.Csharp.Commons.Aspects
                     parameter,
                     value
                 })
-                .ToDictionary(x => x.parameter.Name, x => x.value.ToString());
+                .ToDictionary(x => x.parameter.Name ?? "param", x => x.value?.ToString() ?? "null");
 
             var stepName = metadata.GetCustomAttribute<TitleAttribute>()?.Title ?? name;
             try
@@ -65,7 +65,7 @@ namespace Qase.Csharp.Commons.Aspects
         {
             if (metadata.GetCustomAttribute<StepAttribute>() != null)
             {
-                StepManager.StartStep(stepName, configure);
+                ContextManager.StartStep(stepName, configure);
             }
         }
 
@@ -73,7 +73,7 @@ namespace Qase.Csharp.Commons.Aspects
         {
             if (metadata.GetCustomAttribute<StepAttribute>() != null)
             {
-                StepManager.PassStep();
+                ContextManager.PassStep();
             }
         }
 
@@ -81,7 +81,7 @@ namespace Qase.Csharp.Commons.Aspects
         {
             if (metadata.GetCustomAttribute<StepAttribute>() != null)
             {
-                StepManager.FailStep();
+                ContextManager.FailStep();
             }
         }
 
