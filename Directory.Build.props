@@ -5,6 +5,6 @@
       <Copyright>Copyright (c) 2025 Qase</Copyright>
       <Authors>Qase Team</Authors>
       <Company>qase.io</Company>
-      <LangVersion>9.0</LangVersion>
+      <LangVersion>10.0</LangVersion>
     </PropertyGroup>
   </Project>
