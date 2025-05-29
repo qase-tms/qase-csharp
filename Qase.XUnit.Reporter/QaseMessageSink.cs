@@ -2,11 +2,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Qase.Csharp.Commons.Attributes;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
 using Xunit;
 using Xunit.Abstractions;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Qase.Xunit.Reporter
 {
@@ -179,6 +182,8 @@ namespace Qase.Xunit.Reporter
                 throw new ArgumentNullException(nameof(testCase));
             }
 
+            var parts = new List<string>();
+
             var method = testCase.TestMethod.Method;
             var declaringType = method.Type;
 
@@ -194,17 +199,19 @@ namespace Qase.Xunit.Reporter
                 .Select(attr => ((QaseIdsAttribute)attr).Ids)
                 .FirstOrDefault() ?? new List<long>();
 
-            var qaseIdPart = qaseIds.Any()
-                ? "::" + string.Join("-", qaseIds)
-                : "";
+            if (qaseIds.Any())
+            {
+                parts.Add(string.Join("-", qaseIds));
+            }
+            parts.Add(className);
+            parts.Add(methodName);
 
-            // Format parameters
-            var parametersPart = parameters != null && parameters.Any()
-                ? "::" + string.Join("::", parameters.Select(p =>
-                    $"{p.Key.ToLower()}::{p.Value?.ToLower().Replace(" ", "_")}"))
-                : "";
+            if (parameters.Any())
+            {
+                parts.Add(JsonSerializer.Serialize(parameters));
+            }
 
-            return $"{className}::{methodName}{qaseIdPart}{parametersPart}";
+            return string.Join("::", parts);
         }
     }
 }
