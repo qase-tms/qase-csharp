@@ -2,7 +2,7 @@ using System;
 
 namespace Qase.Csharp.Commons.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
     public class FieldsAttribute : Attribute, IQaseAttribute
     {
         public string Key { get; }

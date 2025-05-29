@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 namespace Qase.Csharp.Commons.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class SuitesAttribute : Attribute, IQaseAttribute
     {
         public List<string> Suites { get; }

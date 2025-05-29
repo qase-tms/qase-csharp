@@ -14,12 +14,6 @@ Add the following package to your project:
 <PackageReference Include="Qase.XUnit.Reporter" Version="1.0.1" />
 ```
 
-Also, you need to add the following line to any of your test files:
-
-```csharp
-[assembly: TestFramework("Qase.XUnit.Reporter.QaseXunitTestFramework", "Qase.XUnit.Reporter")]
-```
-
 ## Getting Started
 
 The xUnit reporter can auto-generate test cases and suites based on your test data. Test results from subsequent runs
@@ -35,7 +29,6 @@ reliable binding between your automated tests and test cases, even if you rename
 - **`[Fields]`**: Set custom fields for the test case.
 - **`[Suites]`**: Specify the suite for the test case.
 - **`[Ignore]`**: Ignore the test case in Qase. The test will execute, but results won't be sent to Qase.
-- **`[Steps]`**: Add steps to the test case. You need to add `[UseSteps]` attribute to the test method.
 
 ### Example Test Case
 
@@ -48,7 +41,7 @@ using Qase.XUnit.Reporter;
 public class SimpleTests
 {
     [Fact]
-    [QaseIds(1)]
+    [QaseIds(1, 2)]
     [Title("Example Test")]
     [Fields("description", "This is an example test")]
     [Suites("Example Suite", "Example Suite 2")]
@@ -58,23 +51,8 @@ public class SimpleTests
     }
 
     [Fact]
-    [UseSteps]
-    public void Test2()
-    {
-        Step1();
-        Console.WriteLine("Running example test 2");
-    }
-
-    [Step]
-    [Title("Step 1")]
-    public void Step1()
-    {
-        Console.WriteLine("Step 1");
-    }
-
-    [Fact]
     [Ignore]
-    public void Test3()
+    public void Test2()
     {
         Console.WriteLine("This test will not be reported to Qase");
     }
@@ -82,7 +60,7 @@ public class SimpleTests
     [Theory]
     [InlineData(1, 2, 3)]
     [InlineData(4, 5, 9)]
-    public void Test4(int a, int b, int expected)
+    public void Test3(int a, int b, int expected)
     {
         Console.WriteLine($"Running test with {a} and {b}");
     }
