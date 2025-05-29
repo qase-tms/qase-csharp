@@ -37,28 +37,28 @@ namespace Qase.Csharp.Commons.Reporters
         public async Task startTestRun()
         {
             _logger.LogInformation("Starting test run");
-            await ExecuteWithFallbackAsync(async () => await _reporter.startTestRun(), "start test run");
+            await ExecuteWithFallbackAsync(async () => await _reporter!.startTestRun(), "start test run");
         }
 
         /// <inheritdoc />
         public async Task completeTestRun()
         {
             _logger.LogInformation("Completing test run");
-            await ExecuteWithFallbackAsync(async () => await _reporter.completeTestRun(), "complete test run");
+            await ExecuteWithFallbackAsync(async () => await _reporter!.completeTestRun(), "complete test run");
         }
 
         /// <inheritdoc />
         public async Task addResult(TestResult result)
         {
             _logger.LogDebug("Adding result: {Result}", result);
-            await ExecuteWithFallbackAsync(async () => await _reporter.addResult(result), "add result");
+            await ExecuteWithFallbackAsync(async () => await _reporter!.addResult(result), "add result");
         }
 
         /// <inheritdoc />
         public async Task uploadResults()
         {
             _logger.LogInformation("Uploading results");
-            await ExecuteWithFallbackAsync(async () => await _reporter.uploadResults(), "upload results");
+            await ExecuteWithFallbackAsync(async () => await _reporter!.uploadResults(), "upload results");
         }
 
         private async Task ExecuteWithFallbackAsync(Func<Task> action, string actionName)
@@ -105,7 +105,7 @@ namespace Qase.Csharp.Commons.Reporters
             try
             {
                 await _fallback.startTestRun();
-                await _fallback.setResults(await _reporter.getResults());
+                await _fallback.setResults(await _reporter!.getResults());
                 _reporter = _fallback;
                 _fallback = null;
             }
