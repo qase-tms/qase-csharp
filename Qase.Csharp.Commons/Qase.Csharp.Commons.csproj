@@ -1,24 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo> <!-- setting GenerateAssemblyInfo to false
-    causes this bug https://github.com/dotnet/project-system/issues/3934 -->
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Qase.Csharp.Commons</AssemblyName>
     <PackageId>Qase.Csharp.Commons</PackageId>
-    <OutputType>Library</OutputType>
-    <AssemblyTitle>Qase.Csharp.Commons</AssemblyTitle>
-    <Description>Common classes for Qase TMS C# reporters</Description>
+    <AssemblyName>Qase.Csharp.Commons</AssemblyName>
     <RootNamespace>Qase.Csharp.Commons</RootNamespace>
-    <RepositoryUrl>https://github.com/qase-tms/qase-csharp.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <Description>Common classes for Qase TMS C# reporters</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
