@@ -61,7 +61,7 @@ namespace Qase.Csharp.Commons.Aspects
             return executionResult;
         }
 
-        private static void StartStep(MethodBase metadata, string stepName, Action<StepResult> configure = null)
+        private static void StartStep(MethodBase metadata, string stepName, Action<StepResult>? configure = null)
         {
             if (metadata.GetCustomAttribute<StepAttribute>() != null)
             {
@@ -111,9 +111,9 @@ namespace Qase.Csharp.Commons.Aspects
             {
                 return (T)target(args);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return default(T);
+                return default!;
             }
         }
 
@@ -123,9 +123,9 @@ namespace Qase.Csharp.Commons.Aspects
             {
                 return await (Task<T>)target(args);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return default(T);
+                return default!;
             }
         }
     }

@@ -119,7 +119,7 @@ namespace Qase.Xunit.Reporter
                     parameter,
                     value
                 })
-                .ToDictionary(x => x.parameter.Name, x => x.value?.ToString());
+                .ToDictionary(x => x.parameter.Name, x => x.value?.ToString() ?? "null");
 
             var result = new TestResult
             {
@@ -172,7 +172,7 @@ namespace Qase.Xunit.Reporter
             return result;
         }
 
-        private string GenerateSignature(ITestCase testCase, Dictionary<string, string?> parameters)
+        private string GenerateSignature(ITestCase testCase, Dictionary<string, string> parameters)
         {
             if (testCase == null)
             {
