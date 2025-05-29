@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Qase.Csharp.Commons;
 using Qase.Csharp.Commons.Attributes;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
@@ -146,8 +145,9 @@ namespace Qase.Xunit.Reporter
             };
 
             var attributes = testCase.TestMethod.Method.GetCustomAttributes(typeof(IQaseAttribute));
+            var classAttributes = testCase.TestMethod.TestClass.Class.GetCustomAttributes(typeof(IQaseAttribute));
 
-            foreach (var attribute in attributes)
+            foreach (var attribute in classAttributes.Concat(attributes))
             {
                 switch (((IReflectionAttributeInfo)attribute).Attribute)
                 {
