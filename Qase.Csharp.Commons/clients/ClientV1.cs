@@ -184,7 +184,7 @@ namespace Qase.Csharp.Commons.Clients
                 }
                 else
                 {
-                    _logger.LogError("Failed to upload attachment: {Reason}", resp.ReasonPhrase);
+                    _logger.LogError("Failed to upload attachment: {Reason}", resp.ReasonPhrase + " " + resp.RawContent);
                     return "";
                 }
             }
