@@ -38,6 +38,8 @@ Here's a simple example of using Qase annotations in an xUnit test:
 using Xunit;
 using Qase.XUnit.Reporter;
 
+[Suites("Example Suite", "Example Suite 2")]
+[Fields("preconditions", "This is a precondition")]
 public class SimpleTests
 {
     [Fact]
