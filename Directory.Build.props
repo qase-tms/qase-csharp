@@ -1,10 +1,47 @@
 <Project>
-    <PropertyGroup>
-      <NoWarn>$(NoWarn);0612</NoWarn>
-      <Version>1.0.1</Version>
-      <Copyright>Copyright (c) 2025 Qase</Copyright>
-      <Authors>Qase Team</Authors>
-      <Company>qase.io</Company>
-      <LangVersion>10.0</LangVersion>
-    </PropertyGroup>
-  </Project>
+  <!-- Metadata -->
+  <PropertyGroup>
+    <Version>1.0.1</Version>
+    <Copyright>Copyright (c) 2025 Qase</Copyright>
+    <Authors>Qase Team</Authors>
+    <Company>qase.io</Company>
+    <RepositoryUrl>https://github.com/qase-tms/qase-csharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!-- Common projects' properties -->
+  <PropertyGroup>
+    <LangVersion>10</LangVersion>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>https://qase.io/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>qase</PackageTags>
+  </PropertyGroup>
+
+  <!-- Debug properties -->
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <!-- Enable SourceLink for all projects -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);0612</NoWarn>
+  </PropertyGroup>
+
+  <!-- Include LICENSE to all packages -->
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

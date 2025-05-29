@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo> <!-- setting GenerateAssemblyInfo to false causes this bug https://github.com/dotnet/project-system/issues/3934 -->
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Qase.ApiClient.V1</AssemblyName>
     <PackageId>Qase.ApiClient.V1</PackageId>
@@ -9,16 +8,12 @@
     <AssemblyTitle>Qase.ApiClient.V1</AssemblyTitle>
     <Description>Qase TMS C# API V1 Client</Description>
     <RootNamespace>Qase.ApiClient.V1</RootNamespace>
-    <RepositoryUrl>https://github.com/qase-tms/qase-csharp.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);8601</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
