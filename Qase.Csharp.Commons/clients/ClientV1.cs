@@ -48,16 +48,22 @@ namespace Qase.Csharp.Commons.Clients
         {
             var utcTime = DateTime.UtcNow.AddSeconds(-10).ToString("yyyy-MM-dd HH:mm:ss");
 
-            var runData = new RunCreate(title: _config.TestOps.Run.Title ?? "Automated Test Run",
-                description: _config.TestOps.Run.Description,
+            var runData = new RunCreate(title: _config.TestOps.Run.Title ?? "Automated Test Run " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+                description: _config.TestOps.Run.Description ?? "Automated Test Run " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
                 isAutotest: true,
                 startTime: utcTime
             );
-            
-            if (!string.IsNullOrEmpty(_config.Environment)){
+
+            if (!string.IsNullOrEmpty(_config.Environment))
+            {
                 runData.EnvironmentSlug = _config.Environment;
             }
-            
+
+            if (_config.TestOps.Run.Tags.Count > 0)
+            {
+                runData.Tags = _config.TestOps.Run.Tags;
+            }
+
             try
             {
                 _logger.LogDebug("Sending request to create test run with data: {@RunData}", runData);

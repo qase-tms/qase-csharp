@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Qase.Csharp.Commons.Core;
 
@@ -11,7 +13,7 @@ namespace Qase.Csharp.Commons.Config
     public static class ConfigFactory
     {
         private const string CONFIG_FILE_NAME = "qase.config.json";
-        
+
         /// <summary>
         /// Loads configuration from all available sources
         /// </summary>
@@ -110,6 +112,7 @@ namespace Qase.Csharp.Commons.Config
             qaseConfig.TestOps.Run.Description = GetEnv("QASE_TESTOPS_RUN_DESCRIPTION", qaseConfig.TestOps.Run.Description);
             qaseConfig.TestOps.Run.Id = GetLongEnv("QASE_TESTOPS_RUN_ID", qaseConfig.TestOps.Run.Id);
             qaseConfig.TestOps.Run.Complete = GetBooleanEnv("QASE_TESTOPS_RUN_COMPLETE", qaseConfig.TestOps.Run.Complete);
+            qaseConfig.TestOps.Run.Tags = GetListEnv("QASE_TESTOPS_RUN_TAGS", qaseConfig.TestOps.Run.Tags);
             qaseConfig.TestOps.Plan.Id = GetLongEnv("QASE_TESTOPS_PLAN_ID", qaseConfig.TestOps.Plan.Id);
             qaseConfig.TestOps.Batch.Size = GetIntEnv("QASE_TESTOPS_BATCH_SIZE", qaseConfig.TestOps.Batch.Size);
 
@@ -141,10 +144,10 @@ namespace Qase.Csharp.Commons.Config
             // В C# нет прямого эквивалента Java System.getProperty
             // Мы можем использовать AppSettings из .NET Core или другие подходы
             // В данной реализации просто оставим заглушку
-            
+
             // Примечание: если потребуется реальная реализация,
             // ее можно добавить здесь, используя ConfigurationManager или аналогичный механизм
-            
+
             return qaseConfig;
         }
 
@@ -154,7 +157,7 @@ namespace Qase.Csharp.Commons.Config
         /// <param name="qaseConfig">Configuration to validate</param>
         private static void ValidateConfig(QaseConfig qaseConfig)
         {
-            if ((qaseConfig.Mode == Mode.TestOps || qaseConfig.Fallback == Mode.TestOps) && 
+            if ((qaseConfig.Mode == Mode.TestOps || qaseConfig.Fallback == Mode.TestOps) &&
                 (string.IsNullOrEmpty(qaseConfig.TestOps?.Project) || string.IsNullOrEmpty(qaseConfig.TestOps?.Api?.Token)))
             {
                 Console.Error.WriteLine("Project code and API token are required for TestOps mode");
@@ -173,6 +176,18 @@ namespace Qase.Csharp.Commons.Config
         {
             var value = Environment.GetEnvironmentVariable(key);
             return value ?? defaultValue;
+        }
+
+        /// <summary>
+        /// Gets a list environment variable or returns default value
+        /// </summary>
+        /// <param name="key">Environment variable name</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Environment variable value as list or default</returns>
+        private static List<string> GetListEnv(string key, List<string> defaultValue)
+        {
+            var value = Environment.GetEnvironmentVariable(key);
+            return value != null ? value.Split(',').Select(v => v.Trim()).ToList() : defaultValue;
         }
 
         /// <summary>
@@ -304,6 +319,15 @@ namespace Qase.Csharp.Commons.Config
                         completeElement.ValueKind == JsonValueKind.True)
                     {
                         qaseConfig.TestOps.Run.Complete = true;
+                    }
+
+                    if (runElement.TryGetProperty("tags", out var tagsElement) &&
+                        tagsElement.ValueKind == JsonValueKind.Array)
+                    {
+                        qaseConfig.TestOps.Run.Tags = tagsElement.EnumerateArray()
+                            .Select(t => t.GetString() ?? "")
+                            .Where(t => !string.IsNullOrEmpty(t))
+                            .ToList();
                     }
                 }
 
