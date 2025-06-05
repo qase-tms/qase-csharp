@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Qase.Csharp.Commons.Config
 {
     /// <summary>
@@ -24,5 +26,10 @@ namespace Qase.Csharp.Commons.Config
         /// Gets or sets whether to complete the run after test
         /// </summary>
         public bool Complete { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the run tags
+        /// </summary>
+        public List<string> Tags { get; set; } = new List<string>();
     }
 } 
