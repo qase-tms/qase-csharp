@@ -8,8 +8,7 @@ using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
 using Xunit;
 using Xunit.Abstractions;
-using System.Text.RegularExpressions;
-using System.Text;
+using Qase.Csharp.Commons.Utils;
 
 namespace Qase.Xunit.Reporter
 {
@@ -134,7 +133,6 @@ namespace Qase.Xunit.Reporter
                 },
                 Message = null,
                 Params = parameters,
-                Signature = GenerateSignature(testCase, parameters),
                 Relations = new Relations()
                 {
                     Suite = new Suite()
@@ -172,46 +170,9 @@ namespace Qase.Xunit.Reporter
                 }
             }
 
+            result.Signature = Signature.Generate(result.TestopsIds, result.Relations?.Suite?.Data?.Select(suite => suite.Title), result.Params);
+
             return result;
-        }
-
-        private string GenerateSignature(ITestCase testCase, Dictionary<string, string> parameters)
-        {
-            if (testCase == null)
-            {
-                throw new ArgumentNullException(nameof(testCase));
-            }
-
-            var parts = new List<string>();
-
-            var method = testCase.TestMethod.Method;
-            var declaringType = method.Type;
-
-            // Get class name
-            var className = declaringType.Name.ToLower().Replace(".", "::");
-
-            // Get method name
-            var methodName = method.Name.ToLower();
-
-            // Get Qase IDs from attributes if present
-            var qaseIds = method.GetCustomAttributes(typeof(IQaseAttribute))
-                .Where(attr => attr is QaseIdsAttribute)
-                .Select(attr => ((QaseIdsAttribute)attr).Ids)
-                .FirstOrDefault() ?? new List<long>();
-
-            if (qaseIds.Any())
-            {
-                parts.Add(string.Join("-", qaseIds));
-            }
-            parts.Add(className);
-            parts.Add(methodName);
-
-            if (parameters.Any())
-            {
-                parts.Add(JsonSerializer.Serialize(parameters));
-            }
-
-            return string.Join("::", parts);
         }
     }
 }

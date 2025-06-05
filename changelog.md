@@ -1,4 +1,9 @@
-# qase-scharp 1.0.0
+# Changelog
+
+## qase-scharp 1.0.2
+
+- Added signature generation for test cases
+- Added support for test run tags
 
 ## What's new
 
