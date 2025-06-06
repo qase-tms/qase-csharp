@@ -9,6 +9,7 @@
     <Description>Qase TMS C# API V1 Client</Description>
     <RootNamespace>Qase.ApiClient.V1</RootNamespace>
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
     <NoWarn>$(NoWarn);8601</NoWarn>
   </PropertyGroup>
 
