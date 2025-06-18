@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.3
+
+- Fixed a link to failed test in the console output.
+
 ## qase-scharp 1.0.2
 
 - Added signature generation for test cases

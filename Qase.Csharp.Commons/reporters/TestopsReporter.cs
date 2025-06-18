@@ -141,7 +141,7 @@ namespace Qase.Csharp.Commons.Reporters
 
             if (id.HasValue)
             {
-                return baseLink + id.Value.ToString();
+                return baseLink + _config.TestOps.Project + "-" + id.Value.ToString();
             }
 
             try
