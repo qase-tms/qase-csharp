@@ -30,6 +30,8 @@ reliable binding between your automated tests and test cases, even if you rename
 - **`[Suites]`**: Specify the suite for the test case.
 - **`[Ignore]`**: Ignore the test case in Qase. The test will execute, but results won't be sent to Qase.
 
+For detailed instructions on using attributes and methods, refer to [Usage](docs/usage.md).
+
 ### Example Test Case
 
 Here's a simple example of using Qase annotations in an xUnit test:
