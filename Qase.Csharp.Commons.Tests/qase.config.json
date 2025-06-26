@@ -1,0 +1,14 @@
+{
+  "mode": "report",
+  "fallback": "off",
+  "debug": true,
+  "report": {
+    "driver": "local",
+    "connection": {
+      "local": {
+        "path": "./test-reports",
+        "format": "json"
+      }
+    }
+  }
+} 
