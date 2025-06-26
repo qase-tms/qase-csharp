@@ -124,10 +124,11 @@ namespace Qase.Csharp.Commons
 
         public static void Clear()
         {
-            if (!string.IsNullOrEmpty(_testCaseName.Value) && _stepStacks.ContainsKey(_testCaseName.Value))
-            {
-                _stepStacks[_testCaseName.Value].Clear();
-            }
+            _testCaseName.Value = null;
+            _stepStacks.Clear();
+            _completedSteps.Clear();
+            _messages.Clear();
+            _attachments.Clear();
         }
 
         public static void SaveSteps()

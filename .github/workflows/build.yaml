@@ -26,9 +26,10 @@ jobs:
       - name: Build project
         run: dotnet build --configuration Release --no-restore
 
-      # - name: Run tests
-      #   run: dotnet test --no-build --verbosity d
+      - name: Run tests
+        run: dotnet test Qase.Csharp.Commons.Tests
 
+ 
   publish:
     runs-on: ubuntu-latest
     permissions:

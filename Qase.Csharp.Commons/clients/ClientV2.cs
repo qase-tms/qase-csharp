@@ -97,7 +97,7 @@ namespace Qase.Csharp.Commons.Clients
             return _apiClientV1.GetTestCaseIdsForExecutionAsync();
         }
         
-        private ResultCreate ConvertResult(TestResult result)
+        internal ResultCreate ConvertResult(TestResult result)
         {
             _logger.LogDebug("Converting test result: {@TestResult}", result);
             
@@ -209,7 +209,7 @@ namespace Qase.Csharp.Commons.Clients
             return convertedResult;
         }
         
-        private ResultStep ConvertStepResult(StepResult step)
+        internal ResultStep ConvertStepResult(StepResult step)
         {
             _logger.LogDebug("Converting step result: {@StepResult}", step);
             

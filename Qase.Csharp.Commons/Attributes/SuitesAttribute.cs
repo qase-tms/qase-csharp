@@ -10,7 +10,7 @@ namespace Qase.Csharp.Commons.Attributes
 
         public SuitesAttribute(params string[] suites)
         {
-            Suites = suites.ToList();
+            Suites = suites?.ToList() ?? new List<string>();
         }
     }
 }
