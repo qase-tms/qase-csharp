@@ -1,4 +1,5 @@
 ﻿using Qase.Csharp.Commons.Attributes;
+using Qase.Csharp.Commons;
 
 namespace xUnitExamples;
 
@@ -8,8 +9,11 @@ public class SimpleTests
 {
     [Fact]
     [Title("Test with title")]
+    [Qase]
     public void TestWithTitle()
     {
+        Step1();
+        Step2();
         Assert.True(true);
     }
 
@@ -46,5 +50,25 @@ public class SimpleTests
     [Suites("Unique suite")]
     public void TestWithUniqueSuite()
     {
+    }
+
+    [Fact]
+    [QaseFeature]
+    public void TestWithQaseFeature()
+    {
+        // This test should have its name set in ContextManager
+        Assert.True(true);
+    }
+
+    [Step]
+    private void Step1()
+    {
+        Assert.True(true);
+    }
+
+    [Step]
+    private void Step2()
+    {
+        Assert.True(true);
     }
 }
