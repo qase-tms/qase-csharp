@@ -1,8 +1,13 @@
 # Changelog
 
+## qase-scharp 1.0.4
+
+- Added support for steps
+- Added support for comments
+
 ## qase-scharp 1.0.3
 
-- Fixed a link to failed test in the console output.
+- Fixed a link to failed test in the console output
 
 ## qase-scharp 1.0.2
 

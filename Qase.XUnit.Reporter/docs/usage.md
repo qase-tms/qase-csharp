@@ -141,6 +141,7 @@ Here's a complete example of a test class using Qase attributes:
 ```csharp
 using Xunit;
 using Qase.XUnit.Reporter;
+using Qase.Csharp.Commons.Attributes;
 
 [Suites("API", "User Management")]
 public class UserApiTests
@@ -180,3 +181,43 @@ public class UserApiTests
     }
 }
 ```
+
+### 6. Steps
+
+For using steps, you need to add the `Qase` attribute to the test method.
+
+```csharp
+[Fact]
+[Qase]
+public void TestWithSteps()
+{
+    // Test implementation
+    Step1();
+    Step2();
+}
+
+[Step]
+public void Step1()
+{
+    // Step implementation
+}
+
+[Step]
+public void Step2()
+{
+    // Step implementation
+}
+```
+
+### 7. Comments
+
+For using comments, you need to add the `Qase` attribute to the test method.
+
+```csharp
+[Fact]
+[Qase]
+public void TestWithComments()
+{
+    // Test implementation
+    Metadata.Comment("This is a comment");
+}

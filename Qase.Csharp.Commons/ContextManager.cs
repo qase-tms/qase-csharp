@@ -5,6 +5,9 @@ using Qase.Csharp.Commons.Models.Domain;
 
 namespace Qase.Csharp.Commons
 {
+    /// <summary>
+    /// Context manager for Qase.
+    /// </summary>
     public static class ContextManager
     {
         private static readonly AsyncLocal<string> _testCaseName = new();
@@ -13,6 +16,10 @@ namespace Qase.Csharp.Commons
         private static readonly Dictionary<string, List<Attachment>> _attachments = new();
         private static Dictionary<string, List<StepResult>> _completedSteps = new();
 
+        /// <summary>
+        /// Set the test case name.
+        /// </summary>
+        /// <param name="name">The name of the test case.</param>
         public static void SetTestCaseName(string name)
         {
             _testCaseName.Value = name;
@@ -22,6 +29,11 @@ namespace Qase.Csharp.Commons
             }
         }
 
+        /// <summary>
+        /// Start a step.
+        /// </summary>
+        /// <param name="title">The title of the step.</param>
+        /// <param name="configure">The configure action.</param>
         public static void StartStep(string title, Action<StepResult>? configure = null)
         {
             if (string.IsNullOrEmpty(_testCaseName.Value))
@@ -54,6 +66,9 @@ namespace Qase.Csharp.Commons
             stack.Push(step);
         }
 
+        /// <summary>
+        /// Pass a step.
+        /// </summary>
         public static void PassStep()
         {
             if (string.IsNullOrEmpty(_testCaseName.Value))
@@ -82,6 +97,9 @@ namespace Qase.Csharp.Commons
             }
         }
 
+        /// <summary>
+        /// Fail a step.
+        /// </summary>
         public static void FailStep()
         {
             if (string.IsNullOrEmpty(_testCaseName.Value))
@@ -110,6 +128,11 @@ namespace Qase.Csharp.Commons
             }
         }
 
+        /// <summary>
+        /// Get the completed steps.
+        /// </summary>
+        /// <param name="testCaseName">The name of the test case.</param>
+        /// <returns>The completed steps.</returns>
         public static List<StepResult> GetCompletedSteps(string testCaseName)
         {
             if (!_completedSteps.ContainsKey(testCaseName))
@@ -122,6 +145,9 @@ namespace Qase.Csharp.Commons
             return steps;
         }
 
+        /// <summary>
+        /// Clear the context.
+        /// </summary>
         public static void Clear()
         {
             _testCaseName.Value = null;
@@ -131,11 +157,18 @@ namespace Qase.Csharp.Commons
             _attachments.Clear();
         }
 
+        /// <summary>
+        /// Save the steps.
+        /// </summary>
         public static void SaveSteps()
         {
             Clear();
         }
 
+        /// <summary>
+        /// Add a comment to the test case.
+        /// </summary>
+        /// <param name="comment">The comment to add.</param>
         internal static void AddComment(string comment)
         {
             if (string.IsNullOrEmpty(_testCaseName.Value))
@@ -151,6 +184,11 @@ namespace Qase.Csharp.Commons
             _messages[_testCaseName.Value].Add(comment);
         }
 
+        /// <summary>
+        /// Get the comments for the test case.
+        /// </summary>
+        /// <param name="testCaseName">The name of the test case.</param>
+        /// <returns>The comments for the test case.</returns>
         public static string GetComments(string testCaseName)
         {
             if (!_messages.ContainsKey(testCaseName))
@@ -161,6 +199,10 @@ namespace Qase.Csharp.Commons
             return string.Join("\n", _messages[testCaseName]);
         }
 
+        /// <summary>
+        /// Add attachments to the test case.
+        /// </summary>
+        /// <param name="paths">The paths to the attachments.</param>
         internal static void AddAttachment(List<string> paths)
         {
             foreach (var path in paths)
@@ -208,6 +250,11 @@ namespace Qase.Csharp.Commons
             _attachments[_testCaseName.Value].Add(attachment);
         }
 
+        /// <summary>
+        /// Get the attachments for the test case.
+        /// </summary>
+        /// <param name="testCaseName">The name of the test case.</param>
+        /// <returns>The attachments for the test case.</returns>
         public static List<Attachment> GetAttachments(string testCaseName)
         {
             if (!_attachments.ContainsKey(testCaseName))
