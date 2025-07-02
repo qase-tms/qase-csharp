@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using Qase.Csharp.Commons.Attributes;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
 using Xunit;
 using Xunit.Abstractions;
 using Qase.Csharp.Commons.Utils;
+using Qase.Csharp.Commons;
 
 namespace Qase.Xunit.Reporter
 {
@@ -83,8 +82,9 @@ namespace Qase.Xunit.Reporter
         private void OnTestFinished(MessageHandlerArgs<ITestFinished> args)
         {
             var testResult = qaseTestData[args.Message.Test];
-            // testResult.Steps = ContextManager.GetCompletedSteps(args.Message.Test.TestCase.DisplayName);
-            // testResult.Message = string.Join("\n", testResult.Message, ContextManager.GetComments(args.Message.Test.TestCase.DisplayName));
+
+            testResult.Steps = ContextManager.GetCompletedSteps(args.Message.Test.TestCase.DisplayName);
+            testResult.Message = string.Join("\n", testResult.Message, ContextManager.GetComments(args.Message.Test.TestCase.DisplayName));
             // testResult.Attachments = ContextManager.GetAttachments(args.Message.Test.TestCase.DisplayName);
             if (!testResult.Ignore)
             {
