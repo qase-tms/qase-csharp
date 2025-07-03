@@ -44,7 +44,6 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="type">type</param>
         /// <param name="layer">layer</param>
         /// <param name="isFlaky">isFlaky</param>
-        /// <param name="authorId">authorId</param>
         /// <param name="suiteId">suiteId</param>
         /// <param name="milestoneId">milestoneId</param>
         /// <param name="automation">automation</param>
@@ -57,7 +56,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="createdAt">createdAt</param>
         /// <param name="updatedAt">updatedAt</param>
         [JsonConstructor]
-        public TestCaseCreate(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> authorId = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default)
+        public TestCaseCreate(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default)
         {
             Title = title;
             DescriptionOption = description;
@@ -69,7 +68,6 @@ namespace Qase.ApiClient.V1.Model
             TypeOption = type;
             LayerOption = layer;
             IsFlakyOption = isFlaky;
-            AuthorIdOption = authorId;
             SuiteIdOption = suiteId;
             MilestoneIdOption = milestoneId;
             AutomationOption = automation;
@@ -208,19 +206,6 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         [JsonPropertyName("is_flaky")]
         public int? IsFlaky { get { return this.IsFlakyOption; } set { this.IsFlakyOption = new Option<int?>(value); } }
-
-        /// <summary>
-        /// Used to track the state of AuthorId
-        /// </summary>
-        [JsonIgnore]
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<int?> AuthorIdOption { get; private set; }
-
-        /// <summary>
-        /// Gets or Sets AuthorId
-        /// </summary>
-        [JsonPropertyName("author_id")]
-        public int? AuthorId { get { return this.AuthorIdOption; } set { this.AuthorIdOption = new Option<int?>(value); } }
 
         /// <summary>
         /// Used to track the state of SuiteId
@@ -391,7 +376,6 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Layer: ").Append(Layer).Append("\n");
             sb.Append("  IsFlaky: ").Append(IsFlaky).Append("\n");
-            sb.Append("  AuthorId: ").Append(AuthorId).Append("\n");
             sb.Append("  SuiteId: ").Append(SuiteId).Append("\n");
             sb.Append("  MilestoneId: ").Append(MilestoneId).Append("\n");
             sb.Append("  Automation: ").Append(Automation).Append("\n");
@@ -457,7 +441,6 @@ namespace Qase.ApiClient.V1.Model
             Option<int?> type = default;
             Option<int?> layer = default;
             Option<int?> isFlaky = default;
-            Option<int?> authorId = default;
             Option<long?> suiteId = default;
             Option<long?> milestoneId = default;
             Option<int?> automation = default;
@@ -514,9 +497,6 @@ namespace Qase.ApiClient.V1.Model
                             break;
                         case "is_flaky":
                             isFlaky = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
-                            break;
-                        case "author_id":
-                            authorId = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
                             break;
                         case "suite_id":
                             suiteId = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
@@ -590,9 +570,6 @@ namespace Qase.ApiClient.V1.Model
             if (isFlaky.IsSet && isFlaky.Value == null)
                 throw new ArgumentNullException(nameof(isFlaky), "Property is not nullable for class TestCaseCreate.");
 
-            if (authorId.IsSet && authorId.Value == null)
-                throw new ArgumentNullException(nameof(authorId), "Property is not nullable for class TestCaseCreate.");
-
             if (suiteId.IsSet && suiteId.Value == null)
                 throw new ArgumentNullException(nameof(suiteId), "Property is not nullable for class TestCaseCreate.");
 
@@ -623,7 +600,7 @@ namespace Qase.ApiClient.V1.Model
             if (updatedAt.IsSet && updatedAt.Value == null)
                 throw new ArgumentNullException(nameof(updatedAt), "Property is not nullable for class TestCaseCreate.");
 
-            return new TestCaseCreate(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, authorId, suiteId, milestoneId, automation, status, attachments, steps, tags, varParams, customField, createdAt, updatedAt);
+            return new TestCaseCreate(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, suiteId, milestoneId, automation, status, attachments, steps, tags, varParams, customField, createdAt, updatedAt);
         }
 
         /// <summary>
@@ -708,9 +685,6 @@ namespace Qase.ApiClient.V1.Model
 
             if (testCaseCreate.IsFlakyOption.IsSet)
                 writer.WriteNumber("is_flaky", testCaseCreate.IsFlakyOption.Value!.Value);
-
-            if (testCaseCreate.AuthorIdOption.IsSet)
-                writer.WriteNumber("author_id", testCaseCreate.AuthorIdOption.Value!.Value);
 
             if (testCaseCreate.SuiteIdOption.IsSet)
                 writer.WriteNumber("suite_id", testCaseCreate.SuiteIdOption.Value!.Value);

@@ -52,8 +52,10 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="tags">tags</param>
         /// <param name="cases">cases</param>
         /// <param name="planId">planId</param>
+        /// <param name="configurations">configurations</param>
+        /// <param name="externalIssue">externalIssue</param>
         [JsonConstructor]
-        public Run(Option<long?> id = default, Option<long?> runId = default, Option<string?> title = default, Option<string?> description = default, Option<int?> status = default, Option<string?> statusText = default, Option<DateTime?> startTime = default, Option<DateTime?> endTime = default, Option<bool?> @public = default, Option<RunStats?> stats = default, Option<long?> timeSpent = default, Option<long?> elapsedTime = default, Option<RunEnvironment?> varEnvironment = default, Option<RunMilestone?> milestone = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<TagValue>?> tags = default, Option<List<long>?> cases = default, Option<long?> planId = default)
+        public Run(Option<long?> id = default, Option<long?> runId = default, Option<string?> title = default, Option<string?> description = default, Option<int?> status = default, Option<string?> statusText = default, Option<DateTime?> startTime = default, Option<DateTime?> endTime = default, Option<bool?> @public = default, Option<RunStats?> stats = default, Option<long?> timeSpent = default, Option<long?> elapsedTime = default, Option<RunEnvironment?> varEnvironment = default, Option<RunMilestone?> milestone = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<TagValue>?> tags = default, Option<List<long>?> cases = default, Option<long?> planId = default, Option<List<long>?> configurations = default, Option<RunExternalIssue?> externalIssue = default)
         {
             IdOption = id;
             RunIdOption = runId;
@@ -73,6 +75,8 @@ namespace Qase.ApiClient.V1.Model
             TagsOption = tags;
             CasesOption = cases;
             PlanIdOption = planId;
+            ConfigurationsOption = configurations;
+            ExternalIssueOption = externalIssue;
             OnCreated();
         }
 
@@ -317,6 +321,32 @@ namespace Qase.ApiClient.V1.Model
         public long? PlanId { get { return this.PlanIdOption; } set { this.PlanIdOption = new Option<long?>(value); } }
 
         /// <summary>
+        /// Used to track the state of Configurations
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<List<long>?> ConfigurationsOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets Configurations
+        /// </summary>
+        [JsonPropertyName("configurations")]
+        public List<long>? Configurations { get { return this.ConfigurationsOption; } set { this.ConfigurationsOption = new Option<List<long>?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of ExternalIssue
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<RunExternalIssue?> ExternalIssueOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets ExternalIssue
+        /// </summary>
+        [JsonPropertyName("external_issue")]
+        public RunExternalIssue? ExternalIssue { get { return this.ExternalIssueOption; } set { this.ExternalIssueOption = new Option<RunExternalIssue?>(value); } }
+
+        /// <summary>
         /// Gets or Sets additional properties
         /// </summary>
         [JsonExtensionData]
@@ -348,6 +378,8 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  Tags: ").Append(Tags).Append("\n");
             sb.Append("  Cases: ").Append(Cases).Append("\n");
             sb.Append("  PlanId: ").Append(PlanId).Append("\n");
+            sb.Append("  Configurations: ").Append(Configurations).Append("\n");
+            sb.Append("  ExternalIssue: ").Append(ExternalIssue).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -414,6 +446,8 @@ namespace Qase.ApiClient.V1.Model
             Option<List<TagValue>?> tags = default;
             Option<List<long>?> cases = default;
             Option<long?> planId = default;
+            Option<List<long>?> configurations = default;
+            Option<RunExternalIssue?> externalIssue = default;
 
             while (utf8JsonReader.Read())
             {
@@ -484,6 +518,12 @@ namespace Qase.ApiClient.V1.Model
                         case "plan_id":
                             planId = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
                             break;
+                        case "configurations":
+                            configurations = new Option<List<long>?>(JsonSerializer.Deserialize<List<long>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            break;
+                        case "external_issue":
+                            externalIssue = new Option<RunExternalIssue?>(JsonSerializer.Deserialize<RunExternalIssue>(ref utf8JsonReader, jsonSerializerOptions));
+                            break;
                         default:
                             break;
                     }
@@ -526,7 +566,10 @@ namespace Qase.ApiClient.V1.Model
             if (cases.IsSet && cases.Value == null)
                 throw new ArgumentNullException(nameof(cases), "Property is not nullable for class Run.");
 
-            return new Run(id, runId, title, description, status, statusText, startTime, endTime, varPublic, stats, timeSpent, elapsedTime, varEnvironment, milestone, customFields, tags, cases, planId);
+            if (configurations.IsSet && configurations.Value == null)
+                throw new ArgumentNullException(nameof(configurations), "Property is not nullable for class Run.");
+
+            return new Run(id, runId, title, description, status, statusText, startTime, endTime, varPublic, stats, timeSpent, elapsedTime, varEnvironment, milestone, customFields, tags, cases, planId, configurations, externalIssue);
         }
 
         /// <summary>
@@ -570,6 +613,9 @@ namespace Qase.ApiClient.V1.Model
 
             if (run.CasesOption.IsSet && run.Cases == null)
                 throw new ArgumentNullException(nameof(run.Cases), "Property is required for class Run.");
+
+            if (run.ConfigurationsOption.IsSet && run.Configurations == null)
+                throw new ArgumentNullException(nameof(run.Configurations), "Property is required for class Run.");
 
             if (run.IdOption.IsSet)
                 writer.WriteNumber("id", run.IdOption.Value!.Value);
@@ -654,6 +700,20 @@ namespace Qase.ApiClient.V1.Model
                     writer.WriteNumber("plan_id", run.PlanIdOption.Value!.Value);
                 else
                     writer.WriteNull("plan_id");
+
+            if (run.ConfigurationsOption.IsSet)
+            {
+                writer.WritePropertyName("configurations");
+                JsonSerializer.Serialize(writer, run.Configurations, jsonSerializerOptions);
+            }
+            if (run.ExternalIssueOption.IsSet)
+                if (run.ExternalIssueOption.Value != null)
+                {
+                    writer.WritePropertyName("external_issue");
+                    JsonSerializer.Serialize(writer, run.ExternalIssue, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("external_issue");
         }
     }
 }

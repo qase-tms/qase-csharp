@@ -9,6 +9,8 @@ All URIs are relative to *https://api.qase.io/v1*
 | [**DeleteRun**](RunsApi.md#deleterun) | **DELETE** /run/{code}/{id} | Delete run |
 | [**GetRun**](RunsApi.md#getrun) | **GET** /run/{code}/{id} | Get a specific run |
 | [**GetRuns**](RunsApi.md#getruns) | **GET** /run/{code} | Get all runs |
+| [**RunUpdateExternalIssue**](RunsApi.md#runupdateexternalissue) | **POST** /run/{code}/external-issue | Update external issues for runs |
+| [**UpdateRun**](RunsApi.md#updaterun) | **PATCH** /run/{code}/{id} | Update a specific run |
 | [**UpdateRunPublicity**](RunsApi.md#updaterunpublicity) | **PATCH** /run/{code}/{id}/public | Update publicity of a specific run |
 
 <a id="completerun"></a>
@@ -354,7 +356,7 @@ namespace Example
             var apiInstance = new RunsApi(config);
             var code = "code_example";  // string | Code of project, where to search entities.
             var id = 56;  // int | Identifier.
-            var include = "include_example";  // string | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional) 
+            var include = "include_example";  // string | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional) 
 
             try
             {
@@ -399,7 +401,7 @@ catch (ApiException e)
 |------|------|-------------|-------|
 | **code** | **string** | Code of project, where to search entities. |  |
 | **id** | **int** | Identifier. |  |
-| **include** | **string** | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  | [optional]  |
+| **include** | **string** | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  | [optional]  |
 
 ### Return type
 
@@ -466,7 +468,7 @@ namespace Example
             var toStartTime = 789L;  // long |  (optional) 
             var limit = 10;  // int | A number of entities in result set. (optional)  (default to 10)
             var offset = 0;  // int | How many entities should be skipped. (optional)  (default to 0)
-            var include = "include_example";  // string | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional) 
+            var include = "include_example";  // string | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional) 
 
             try
             {
@@ -518,7 +520,7 @@ catch (ApiException e)
 | **toStartTime** | **long** |  | [optional]  |
 | **limit** | **int** | A number of entities in result set. | [optional] [default to 10] |
 | **offset** | **int** | How many entities should be skipped. | [optional] [default to 0] |
-| **include** | **string** | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  | [optional]  |
+| **include** | **string** | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  | [optional]  |
 
 ### Return type
 
@@ -538,6 +540,210 @@ catch (ApiException e)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | A list of all runs. |  -  |
+| **400** | Bad Request. |  -  |
+| **401** | Unauthorized. |  -  |
+| **403** | Forbidden. |  -  |
+| **404** | Not Found. |  -  |
+| **429** | Too Many Requests. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+<a id="runupdateexternalissue"></a>
+# **RunUpdateExternalIssue**
+> void RunUpdateExternalIssue (string code, RunexternalIssues runexternalIssues)
+
+Update external issues for runs
+
+This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \"PROJ-1234\") - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
+
+### Example
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using Qase.ApiClient.V1.Api;
+using Qase.ApiClient.V1.Client;
+using Qase.ApiClient.V1.Model;
+
+namespace Example
+{
+    public class RunUpdateExternalIssueExample
+    {
+        public static void Main()
+        {
+            Configuration config = new Configuration();
+            config.BasePath = "https://api.qase.io/v1";
+            // Configure API key authorization: TokenAuth
+            config.AddApiKey("Token", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // config.AddApiKeyPrefix("Token", "Bearer");
+
+            var apiInstance = new RunsApi(config);
+            var code = "code_example";  // string | Code of project, where to search entities.
+            var runexternalIssues = new RunexternalIssues(); // RunexternalIssues | 
+
+            try
+            {
+                // Update external issues for runs
+                apiInstance.RunUpdateExternalIssue(code, runexternalIssues);
+            }
+            catch (ApiException  e)
+            {
+                Debug.Print("Exception when calling RunsApi.RunUpdateExternalIssue: " + e.Message);
+                Debug.Print("Status Code: " + e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+#### Using the RunUpdateExternalIssueWithHttpInfo variant
+This returns an ApiResponse object which contains the response data, status code and headers.
+
+```csharp
+try
+{
+    // Update external issues for runs
+    apiInstance.RunUpdateExternalIssueWithHttpInfo(code, runexternalIssues);
+}
+catch (ApiException e)
+{
+    Debug.Print("Exception when calling RunsApi.RunUpdateExternalIssueWithHttpInfo: " + e.Message);
+    Debug.Print("Status Code: " + e.ErrorCode);
+    Debug.Print(e.StackTrace);
+}
+```
+
+### Parameters
+
+| Name | Type | Description | Notes |
+|------|------|-------------|-------|
+| **code** | **string** | Code of project, where to search entities. |  |
+| **runexternalIssues** | [**RunexternalIssues**](RunexternalIssues.md) |  |  |
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[TokenAuth](../README.md#TokenAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK. |  -  |
+| **400** | Bad Request. |  -  |
+| **401** | Unauthorized. |  -  |
+| **403** | Forbidden. |  -  |
+| **404** | Not Found. |  -  |
+| **429** | Too Many Requests. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+<a id="updaterun"></a>
+# **UpdateRun**
+> BaseResponse UpdateRun (string code, int id, Runupdate runupdate)
+
+Update a specific run
+
+This method allows to update a specific run. 
+
+### Example
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using Qase.ApiClient.V1.Api;
+using Qase.ApiClient.V1.Client;
+using Qase.ApiClient.V1.Model;
+
+namespace Example
+{
+    public class UpdateRunExample
+    {
+        public static void Main()
+        {
+            Configuration config = new Configuration();
+            config.BasePath = "https://api.qase.io/v1";
+            // Configure API key authorization: TokenAuth
+            config.AddApiKey("Token", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // config.AddApiKeyPrefix("Token", "Bearer");
+
+            var apiInstance = new RunsApi(config);
+            var code = "code_example";  // string | Code of project, where to search entities.
+            var id = 56;  // int | Identifier.
+            var runupdate = new Runupdate(); // Runupdate | 
+
+            try
+            {
+                // Update a specific run
+                BaseResponse result = apiInstance.UpdateRun(code, id, runupdate);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException  e)
+            {
+                Debug.Print("Exception when calling RunsApi.UpdateRun: " + e.Message);
+                Debug.Print("Status Code: " + e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+#### Using the UpdateRunWithHttpInfo variant
+This returns an ApiResponse object which contains the response data, status code and headers.
+
+```csharp
+try
+{
+    // Update a specific run
+    ApiResponse<BaseResponse> response = apiInstance.UpdateRunWithHttpInfo(code, id, runupdate);
+    Debug.Write("Status Code: " + response.StatusCode);
+    Debug.Write("Response Headers: " + response.Headers);
+    Debug.Write("Response Body: " + response.Data);
+}
+catch (ApiException e)
+{
+    Debug.Print("Exception when calling RunsApi.UpdateRunWithHttpInfo: " + e.Message);
+    Debug.Print("Status Code: " + e.ErrorCode);
+    Debug.Print(e.StackTrace);
+}
+```
+
+### Parameters
+
+| Name | Type | Description | Notes |
+|------|------|-------------|-------|
+| **code** | **string** | Code of project, where to search entities. |  |
+| **id** | **int** | Identifier. |  |
+| **runupdate** | [**Runupdate**](Runupdate.md) |  |  |
+
+### Return type
+
+[**BaseResponse**](BaseResponse.md)
+
+### Authorization
+
+[TokenAuth](../README.md#TokenAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | A result. |  -  |
 | **400** | Bad Request. |  -  |
 | **401** | Unauthorized. |  -  |
 | **403** | Forbidden. |  -  |

@@ -119,7 +119,7 @@ catch (ApiException e)
 
 <a id="caseattachexternalissue"></a>
 # **CaseAttachExternalIssue**
-> BaseResponse CaseAttachExternalIssue (string code, TestCaseExternalIssues testCaseexternalIssues)
+> BaseResponse CaseAttachExternalIssue (string code, TestCaseexternalIssues testCaseexternalIssues)
 
 Attach the external issues to the test cases
 
@@ -146,7 +146,7 @@ namespace Example
 
             var apiInstance = new CasesApi(config);
             var code = "code_example";  // string | Code of project, where to search entities.
-            var testCaseexternalIssues = new TestCaseExternalIssues(); // TestCaseExternalIssues | 
+            var testCaseexternalIssues = new TestCaseexternalIssues(); // TestCaseexternalIssues | 
 
             try
             {
@@ -190,7 +190,7 @@ catch (ApiException e)
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
 | **code** | **string** | Code of project, where to search entities. |  |
-| **testCaseexternalIssues** | [**TestCaseExternalIssues**](TestCaseExternalIssues.md) |  |  |
+| **testCaseexternalIssues** | [**TestCaseexternalIssues**](TestCaseexternalIssues.md) |  |  |
 
 ### Return type
 
@@ -222,7 +222,7 @@ catch (ApiException e)
 
 <a id="casedetachexternalissue"></a>
 # **CaseDetachExternalIssue**
-> BaseResponse CaseDetachExternalIssue (string code, TestCaseExternalIssues testCaseexternalIssues)
+> BaseResponse CaseDetachExternalIssue (string code, TestCaseexternalIssues testCaseexternalIssues)
 
 Detach the external issues from the test cases
 
@@ -249,7 +249,7 @@ namespace Example
 
             var apiInstance = new CasesApi(config);
             var code = "code_example";  // string | Code of project, where to search entities.
-            var testCaseexternalIssues = new TestCaseExternalIssues(); // TestCaseExternalIssues | 
+            var testCaseexternalIssues = new TestCaseexternalIssues(); // TestCaseexternalIssues | 
 
             try
             {
@@ -293,7 +293,7 @@ catch (ApiException e)
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
 | **code** | **string** | Code of project, where to search entities. |  |
-| **testCaseexternalIssues** | [**TestCaseExternalIssues**](TestCaseExternalIssues.md) |  |  |
+| **testCaseexternalIssues** | [**TestCaseexternalIssues**](TestCaseexternalIssues.md) |  |  |
 
 ### Return type
 

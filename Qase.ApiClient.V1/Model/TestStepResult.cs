@@ -34,7 +34,7 @@ namespace Qase.ApiClient.V1.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="TestStepResult" /> class.
         /// </summary>
-        /// <param name="status">status</param>
+        /// <param name="status">1 - passed, 2 - failed, 3 - blocked, 5 - skipped, 7 - in_progress</param>
         /// <param name="position">position</param>
         /// <param name="attachments">attachments</param>
         /// <param name="steps">Nested steps results will be here. The same structure is used for them for them.</param>
@@ -58,8 +58,9 @@ namespace Qase.ApiClient.V1.Model
         public Option<int?> StatusOption { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Status
+        /// 1 - passed, 2 - failed, 3 - blocked, 5 - skipped, 7 - in_progress
         /// </summary>
+        /// <value>1 - passed, 2 - failed, 3 - blocked, 5 - skipped, 7 - in_progress</value>
         [JsonPropertyName("status")]
         public int? Status { get { return this.StatusOption; } set { this.StatusOption = new Option<int?>(value); } }
 

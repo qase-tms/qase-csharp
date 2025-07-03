@@ -119,7 +119,7 @@ namespace Qase.ApiClient.V1.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunApiResponse"/>&gt;</returns>
         Task<IGetRunApiResponse> GetRunAsync(string code, int id, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default);
@@ -132,7 +132,7 @@ namespace Qase.ApiClient.V1.Api
         /// </remarks>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunApiResponse"/>?&gt;</returns>
         Task<IGetRunApiResponse?> GetRunOrDefaultAsync(string code, int id, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default);
@@ -153,7 +153,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="toStartTime"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunsApiResponse"/>&gt;</returns>
         Task<IGetRunsApiResponse> GetRunsAsync(string code, Option<string> search = default, Option<string> status = default, Option<int> milestone = default, Option<int> environment = default, Option<long> fromStartTime = default, Option<long> toStartTime = default, Option<int> limit = default, Option<int> offset = default, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default);
@@ -173,10 +173,62 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="toStartTime"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunsApiResponse"/>?&gt;</returns>
         Task<IGetRunsApiResponse?> GetRunsOrDefaultAsync(string code, Option<string> search = default, Option<string> status = default, Option<int> milestone = default, Option<int> environment = default, Option<long> fromStartTime = default, Option<long> toStartTime = default, Option<int> limit = default, Option<int> offset = default, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update external issues for runs
+        /// </summary>
+        /// <remarks>
+        /// This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \&quot;PROJ-1234\&quot;) - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
+        /// </remarks>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="runexternalIssues"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>&gt;</returns>
+        Task<IRunUpdateExternalIssueApiResponse> RunUpdateExternalIssueAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update external issues for runs
+        /// </summary>
+        /// <remarks>
+        /// This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \&quot;PROJ-1234\&quot;) - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
+        /// </remarks>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="runexternalIssues"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>?&gt;</returns>
+        Task<IRunUpdateExternalIssueApiResponse?> RunUpdateExternalIssueOrDefaultAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update a specific run
+        /// </summary>
+        /// <remarks>
+        /// This method allows to update a specific run. 
+        /// </remarks>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="id">Identifier.</param>
+        /// <param name="runupdate"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IUpdateRunApiResponse"/>&gt;</returns>
+        Task<IUpdateRunApiResponse> UpdateRunAsync(string code, int id, Runupdate runupdate, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update a specific run
+        /// </summary>
+        /// <remarks>
+        /// This method allows to update a specific run. 
+        /// </remarks>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="id">Identifier.</param>
+        /// <param name="runupdate"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IUpdateRunApiResponse"/>?&gt;</returns>
+        Task<IUpdateRunApiResponse?> UpdateRunOrDefaultAsync(string code, int id, Runupdate runupdate, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Update publicity of a specific run
@@ -429,6 +481,90 @@ namespace Qase.ApiClient.V1.Api
     }
 
     /// <summary>
+    /// The <see cref="IRunUpdateExternalIssueApiResponse"/>
+    /// </summary>
+    public interface IRunUpdateExternalIssueApiResponse : Qase.ApiClient.V1.Client.IApiResponse
+    {
+        /// <summary>
+        /// Returns true if the response is 200 Ok
+        /// </summary>
+        /// <returns></returns>
+        bool IsOk { get; }
+
+        /// <summary>
+        /// Returns true if the response is 400 BadRequest
+        /// </summary>
+        /// <returns></returns>
+        bool IsBadRequest { get; }
+
+        /// <summary>
+        /// Returns true if the response is 401 Unauthorized
+        /// </summary>
+        /// <returns></returns>
+        bool IsUnauthorized { get; }
+
+        /// <summary>
+        /// Returns true if the response is 403 Forbidden
+        /// </summary>
+        /// <returns></returns>
+        bool IsForbidden { get; }
+
+        /// <summary>
+        /// Returns true if the response is 404 NotFound
+        /// </summary>
+        /// <returns></returns>
+        bool IsNotFound { get; }
+
+        /// <summary>
+        /// Returns true if the response is 429 TooManyRequests
+        /// </summary>
+        /// <returns></returns>
+        bool IsTooManyRequests { get; }
+    }
+
+    /// <summary>
+    /// The <see cref="IUpdateRunApiResponse"/>
+    /// </summary>
+    public interface IUpdateRunApiResponse : Qase.ApiClient.V1.Client.IApiResponse, IOk<Qase.ApiClient.V1.Model.BaseResponse?>
+    {
+        /// <summary>
+        /// Returns true if the response is 200 Ok
+        /// </summary>
+        /// <returns></returns>
+        bool IsOk { get; }
+
+        /// <summary>
+        /// Returns true if the response is 400 BadRequest
+        /// </summary>
+        /// <returns></returns>
+        bool IsBadRequest { get; }
+
+        /// <summary>
+        /// Returns true if the response is 401 Unauthorized
+        /// </summary>
+        /// <returns></returns>
+        bool IsUnauthorized { get; }
+
+        /// <summary>
+        /// Returns true if the response is 403 Forbidden
+        /// </summary>
+        /// <returns></returns>
+        bool IsForbidden { get; }
+
+        /// <summary>
+        /// Returns true if the response is 404 NotFound
+        /// </summary>
+        /// <returns></returns>
+        bool IsNotFound { get; }
+
+        /// <summary>
+        /// Returns true if the response is 429 TooManyRequests
+        /// </summary>
+        /// <returns></returns>
+        bool IsTooManyRequests { get; }
+    }
+
+    /// <summary>
     /// The <see cref="IUpdateRunPublicityApiResponse"/>
     /// </summary>
     public interface IUpdateRunPublicityApiResponse : Qase.ApiClient.V1.Client.IApiResponse, IOk<Qase.ApiClient.V1.Model.RunPublicResponse?>
@@ -573,6 +709,46 @@ namespace Qase.ApiClient.V1.Api
         internal void ExecuteOnErrorGetRuns(Exception exception)
         {
             OnErrorGetRuns?.Invoke(this, new ExceptionEventArgs(exception));
+        }
+
+        /// <summary>
+        /// The event raised after the server response
+        /// </summary>
+        public event EventHandler<ApiResponseEventArgs>? OnRunUpdateExternalIssue;
+
+        /// <summary>
+        /// The event raised after an error querying the server
+        /// </summary>
+        public event EventHandler<ExceptionEventArgs>? OnErrorRunUpdateExternalIssue;
+
+        internal void ExecuteOnRunUpdateExternalIssue(RunsApi.RunUpdateExternalIssueApiResponse apiResponse)
+        {
+            OnRunUpdateExternalIssue?.Invoke(this, new ApiResponseEventArgs(apiResponse));
+        }
+
+        internal void ExecuteOnErrorRunUpdateExternalIssue(Exception exception)
+        {
+            OnErrorRunUpdateExternalIssue?.Invoke(this, new ExceptionEventArgs(exception));
+        }
+
+        /// <summary>
+        /// The event raised after the server response
+        /// </summary>
+        public event EventHandler<ApiResponseEventArgs>? OnUpdateRun;
+
+        /// <summary>
+        /// The event raised after an error querying the server
+        /// </summary>
+        public event EventHandler<ExceptionEventArgs>? OnErrorUpdateRun;
+
+        internal void ExecuteOnUpdateRun(RunsApi.UpdateRunApiResponse apiResponse)
+        {
+            OnUpdateRun?.Invoke(this, new ApiResponseEventArgs(apiResponse));
+        }
+
+        internal void ExecuteOnErrorUpdateRun(Exception exception)
+        {
+            OnErrorUpdateRun?.Invoke(this, new ExceptionEventArgs(exception));
         }
 
         /// <summary>
@@ -1542,7 +1718,7 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunApiResponse"/>&gt;</returns>
         public async Task<IGetRunApiResponse?> GetRunOrDefaultAsync(string code, int id, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default)
@@ -1563,7 +1739,7 @@ namespace Qase.ApiClient.V1.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunApiResponse"/>&gt;</returns>
         public async Task<IGetRunApiResponse> GetRunAsync(string code, int id, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default)
@@ -1867,7 +2043,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="toStartTime"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunsApiResponse"/>&gt;</returns>
         public async Task<IGetRunsApiResponse?> GetRunsOrDefaultAsync(string code, Option<string> search = default, Option<string> status = default, Option<int> milestone = default, Option<int> environment = default, Option<long> fromStartTime = default, Option<long> toStartTime = default, Option<int> limit = default, Option<int> offset = default, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default)
@@ -1895,7 +2071,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="toStartTime"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
-        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects  (optional)</param>
+        /// <param name="include">Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetRunsApiResponse"/>&gt;</returns>
         public async Task<IGetRunsApiResponse> GetRunsAsync(string code, Option<string> search = default, Option<string> status = default, Option<int> milestone = default, Option<int> environment = default, Option<long> fromStartTime = default, Option<long> toStartTime = default, Option<int> limit = default, Option<int> offset = default, Option<string> include = default, System.Threading.CancellationToken cancellationToken = default)
@@ -2048,6 +2224,535 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="result"></param>
             /// <returns></returns>
             public bool TryOk(out Qase.ApiClient.V1.Model.RunListResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Ok();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)200);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public bool IsUnauthorized => 401 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public bool IsForbidden => 403 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 404 NotFound
+            /// </summary>
+            /// <returns></returns>
+            public bool IsNotFound => 404 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 429 TooManyRequests
+            /// </summary>
+            /// <returns></returns>
+            public bool IsTooManyRequests => 429 == (int)StatusCode;
+
+            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
+            {
+                bool suppressDefaultLog = false;
+                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
+                if (!suppressDefaultLog)
+                    Logger.LogError(exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
+            }
+
+            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
+        }
+
+        partial void FormatRunUpdateExternalIssue(ref string code, RunexternalIssues runexternalIssues);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="runexternalIssues"></param>
+        /// <returns></returns>
+        private void ValidateRunUpdateExternalIssue(string code, RunexternalIssues runexternalIssues)
+        {
+            if (code == null)
+                throw new ArgumentNullException(nameof(code));
+
+            if (runexternalIssues == null)
+                throw new ArgumentNullException(nameof(runexternalIssues));
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="runexternalIssues"></param>
+        private void AfterRunUpdateExternalIssueDefaultImplementation(IRunUpdateExternalIssueApiResponse apiResponseLocalVar, string code, RunexternalIssues runexternalIssues)
+        {
+            bool suppressDefaultLog = false;
+            AfterRunUpdateExternalIssue(ref suppressDefaultLog, apiResponseLocalVar, code, runexternalIssues);
+            if (!suppressDefaultLog)
+                Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="suppressDefaultLog"></param>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="runexternalIssues"></param>
+        partial void AfterRunUpdateExternalIssue(ref bool suppressDefaultLog, IRunUpdateExternalIssueApiResponse apiResponseLocalVar, string code, RunexternalIssues runexternalIssues);
+
+        /// <summary>
+        /// Logs exceptions that occur while retrieving the server response
+        /// </summary>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="runexternalIssues"></param>
+        private void OnErrorRunUpdateExternalIssueDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, RunexternalIssues runexternalIssues)
+        {
+            bool suppressDefaultLogLocalVar = false;
+            OnErrorRunUpdateExternalIssue(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, runexternalIssues);
+            if (!suppressDefaultLogLocalVar)
+                Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
+        }
+
+        /// <summary>
+        /// A partial method that gives developers a way to provide customized exception handling
+        /// </summary>
+        /// <param name="suppressDefaultLogLocalVar"></param>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="runexternalIssues"></param>
+        partial void OnErrorRunUpdateExternalIssue(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, RunexternalIssues runexternalIssues);
+
+        /// <summary>
+        /// Update external issues for runs This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \&quot;PROJ-1234\&quot;) - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
+        /// </summary>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="runexternalIssues"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>&gt;</returns>
+        public async Task<IRunUpdateExternalIssueApiResponse?> RunUpdateExternalIssueOrDefaultAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await RunUpdateExternalIssueAsync(code, runexternalIssues, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Update external issues for runs This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \&quot;PROJ-1234\&quot;) - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="runexternalIssues"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>&gt;</returns>
+        public async Task<IRunUpdateExternalIssueApiResponse> RunUpdateExternalIssueAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        {
+            UriBuilder uriBuilderLocalVar = new UriBuilder();
+
+            try
+            {
+                ValidateRunUpdateExternalIssue(code, runexternalIssues);
+
+                FormatRunUpdateExternalIssue(ref code, runexternalIssues);
+
+                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
+                {
+                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
+                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
+                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
+                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
+                        ? "/run/{code}/external-issue"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/run/{code}/external-issue");
+                    uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcode%7D", Uri.EscapeDataString(code.ToString()));
+
+                    httpRequestMessageLocalVar.Content = (runexternalIssues as object) is System.IO.Stream stream
+                        ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(runexternalIssues, _jsonSerializerOptions));
+
+                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
+                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Token", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
+                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
+
+                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
+
+                    string[] contentTypes = new string[] {
+                        "application/json"
+                    };
+
+                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
+
+                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
+                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
+
+                    httpRequestMessageLocalVar.Method = new HttpMethod("POST");
+
+                    DateTime requestedAtLocalVar = DateTime.UtcNow;
+
+                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
+                    {
+                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                        ILogger<RunUpdateExternalIssueApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<RunUpdateExternalIssueApiResponse>();
+
+                        RunUpdateExternalIssueApiResponse apiResponseLocalVar = new RunUpdateExternalIssueApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/external-issue", requestedAtLocalVar, _jsonSerializerOptions);
+
+                        AfterRunUpdateExternalIssueDefaultImplementation(apiResponseLocalVar, code, runexternalIssues);
+
+                        Events.ExecuteOnRunUpdateExternalIssue(apiResponseLocalVar);
+
+                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
+                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
+                                tokenBaseLocalVar.BeginRateLimit();
+
+                        return apiResponseLocalVar;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                OnErrorRunUpdateExternalIssueDefaultImplementation(e, "/run/{code}/external-issue", uriBuilderLocalVar.Path, code, runexternalIssues);
+                Events.ExecuteOnErrorRunUpdateExternalIssue(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="RunUpdateExternalIssueApiResponse"/>
+        /// </summary>
+        public partial class RunUpdateExternalIssueApiResponse : Qase.ApiClient.V1.Client.ApiResponse, IRunUpdateExternalIssueApiResponse
+        {
+            /// <summary>
+            /// The logger
+            /// </summary>
+            public ILogger<RunUpdateExternalIssueApiResponse> Logger { get; }
+
+            /// <summary>
+            /// The <see cref="RunUpdateExternalIssueApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="rawContent"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public RunUpdateExternalIssueApiResponse(ILogger<RunUpdateExternalIssueApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public bool IsOk => 200 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public bool IsUnauthorized => 401 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public bool IsForbidden => 403 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 404 NotFound
+            /// </summary>
+            /// <returns></returns>
+            public bool IsNotFound => 404 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 429 TooManyRequests
+            /// </summary>
+            /// <returns></returns>
+            public bool IsTooManyRequests => 429 == (int)StatusCode;
+
+            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
+            {
+                bool suppressDefaultLog = false;
+                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
+                if (!suppressDefaultLog)
+                    Logger.LogError(exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
+            }
+
+            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
+        }
+
+        partial void FormatUpdateRun(ref string code, ref int id, Runupdate runupdate);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="runupdate"></param>
+        /// <returns></returns>
+        private void ValidateUpdateRun(string code, Runupdate runupdate)
+        {
+            if (code == null)
+                throw new ArgumentNullException(nameof(code));
+
+            if (runupdate == null)
+                throw new ArgumentNullException(nameof(runupdate));
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="id"></param>
+        /// <param name="runupdate"></param>
+        private void AfterUpdateRunDefaultImplementation(IUpdateRunApiResponse apiResponseLocalVar, string code, int id, Runupdate runupdate)
+        {
+            bool suppressDefaultLog = false;
+            AfterUpdateRun(ref suppressDefaultLog, apiResponseLocalVar, code, id, runupdate);
+            if (!suppressDefaultLog)
+                Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="suppressDefaultLog"></param>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="id"></param>
+        /// <param name="runupdate"></param>
+        partial void AfterUpdateRun(ref bool suppressDefaultLog, IUpdateRunApiResponse apiResponseLocalVar, string code, int id, Runupdate runupdate);
+
+        /// <summary>
+        /// Logs exceptions that occur while retrieving the server response
+        /// </summary>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="id"></param>
+        /// <param name="runupdate"></param>
+        private void OnErrorUpdateRunDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, int id, Runupdate runupdate)
+        {
+            bool suppressDefaultLogLocalVar = false;
+            OnErrorUpdateRun(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, id, runupdate);
+            if (!suppressDefaultLogLocalVar)
+                Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
+        }
+
+        /// <summary>
+        /// A partial method that gives developers a way to provide customized exception handling
+        /// </summary>
+        /// <param name="suppressDefaultLogLocalVar"></param>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="code"></param>
+        /// <param name="id"></param>
+        /// <param name="runupdate"></param>
+        partial void OnErrorUpdateRun(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, int id, Runupdate runupdate);
+
+        /// <summary>
+        /// Update a specific run This method allows to update a specific run. 
+        /// </summary>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="id">Identifier.</param>
+        /// <param name="runupdate"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IUpdateRunApiResponse"/>&gt;</returns>
+        public async Task<IUpdateRunApiResponse?> UpdateRunOrDefaultAsync(string code, int id, Runupdate runupdate, System.Threading.CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await UpdateRunAsync(code, id, runupdate, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Update a specific run This method allows to update a specific run. 
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="code">Code of project, where to search entities.</param>
+        /// <param name="id">Identifier.</param>
+        /// <param name="runupdate"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IUpdateRunApiResponse"/>&gt;</returns>
+        public async Task<IUpdateRunApiResponse> UpdateRunAsync(string code, int id, Runupdate runupdate, System.Threading.CancellationToken cancellationToken = default)
+        {
+            UriBuilder uriBuilderLocalVar = new UriBuilder();
+
+            try
+            {
+                ValidateUpdateRun(code, runupdate);
+
+                FormatUpdateRun(ref code, ref id, runupdate);
+
+                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
+                {
+                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
+                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
+                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
+                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
+                        ? "/run/{code}/{id}"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/run/{code}/{id}");
+                    uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcode%7D", Uri.EscapeDataString(code.ToString()));
+                    uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bid%7D", Uri.EscapeDataString(id.ToString()));
+
+                    httpRequestMessageLocalVar.Content = (runupdate as object) is System.IO.Stream stream
+                        ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(runupdate, _jsonSerializerOptions));
+
+                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
+                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Token", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
+                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
+
+                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
+
+                    string[] contentTypes = new string[] {
+                        "application/json"
+                    };
+
+                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
+
+                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
+                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
+
+                    string[] acceptLocalVars = new string[] {
+                        "application/json"
+                    };
+
+                    string? acceptLocalVar = ClientUtils.SelectHeaderAccept(acceptLocalVars);
+
+                    if (acceptLocalVar != null)
+                        httpRequestMessageLocalVar.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptLocalVar));
+                    httpRequestMessageLocalVar.Method = new HttpMethod("PATCH");
+
+                    DateTime requestedAtLocalVar = DateTime.UtcNow;
+
+                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
+                    {
+                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                        ILogger<UpdateRunApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<UpdateRunApiResponse>();
+
+                        UpdateRunApiResponse apiResponseLocalVar = new UpdateRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                        AfterUpdateRunDefaultImplementation(apiResponseLocalVar, code, id, runupdate);
+
+                        Events.ExecuteOnUpdateRun(apiResponseLocalVar);
+
+                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
+                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
+                                tokenBaseLocalVar.BeginRateLimit();
+
+                        return apiResponseLocalVar;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                OnErrorUpdateRunDefaultImplementation(e, "/run/{code}/{id}", uriBuilderLocalVar.Path, code, id, runupdate);
+                Events.ExecuteOnErrorUpdateRun(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="UpdateRunApiResponse"/>
+        /// </summary>
+        public partial class UpdateRunApiResponse : Qase.ApiClient.V1.Client.ApiResponse, IUpdateRunApiResponse
+        {
+            /// <summary>
+            /// The logger
+            /// </summary>
+            public ILogger<UpdateRunApiResponse> Logger { get; }
+
+            /// <summary>
+            /// The <see cref="UpdateRunApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="rawContent"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public UpdateRunApiResponse(ILogger<UpdateRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public bool IsOk => 200 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public Qase.ApiClient.V1.Model.BaseResponse? Ok()
+            {
+                // This logic may be modified with the AsModel.mustache template
+                return IsOk
+                    ? System.Text.Json.JsonSerializer.Deserialize<Qase.ApiClient.V1.Model.BaseResponse>(RawContent, _jsonSerializerOptions)
+                    : default;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryOk(out Qase.ApiClient.V1.Model.BaseResponse? result)
             {
                 result = null;
 

@@ -139,6 +139,7 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new RunJsonConverter());
             _jsonOptions.Converters.Add(new RunCreateJsonConverter());
             _jsonOptions.Converters.Add(new RunEnvironmentJsonConverter());
+            _jsonOptions.Converters.Add(new RunExternalIssueJsonConverter());
             _jsonOptions.Converters.Add(new RunListResponseJsonConverter());
             _jsonOptions.Converters.Add(new RunListResponseAllOfResultJsonConverter());
             _jsonOptions.Converters.Add(new RunMilestoneJsonConverter());
@@ -148,6 +149,9 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new RunQueryJsonConverter());
             _jsonOptions.Converters.Add(new RunResponseJsonConverter());
             _jsonOptions.Converters.Add(new RunStatsJsonConverter());
+            _jsonOptions.Converters.Add(new RunexternalIssuesJsonConverter());
+            _jsonOptions.Converters.Add(new RunexternalIssuesLinksInnerJsonConverter());
+            _jsonOptions.Converters.Add(new RunupdateJsonConverter());
             _jsonOptions.Converters.Add(new SearchResponseJsonConverter());
             _jsonOptions.Converters.Add(new SearchResponseAllOfResultJsonConverter());
             _jsonOptions.Converters.Add(new SearchResponseAllOfResultEntitiesJsonConverter());
