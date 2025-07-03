@@ -22,6 +22,8 @@ Name | Type | Description | Notes
 **Tags** | [**List&lt;TagValue&gt;**](TagValue.md) |  | [optional] 
 **Cases** | **List&lt;long&gt;** |  | [optional] 
 **PlanId** | **long** |  | [optional] 
+**Configurations** | **List&lt;long&gt;** |  | [optional] 
+**ExternalIssue** | [**RunExternalIssue**](RunExternalIssue.md) |  | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

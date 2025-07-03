@@ -1,11 +1,12 @@
-# Qase.ApiClient.V1.Model.TestCaseexternalIssues
+# Qase.ApiClient.V1.Model.RunExternalIssue
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Type** | **string** |  | 
-**Links** | [**List&lt;TestCaseExternalIssuesLinksInner&gt;**](TestCaseExternalIssuesLinksInner.md) |  | 
+**Id** | **string** |  | [optional] 
+**Type** | **string** |  | [optional] 
+**Link** | **string** |  | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

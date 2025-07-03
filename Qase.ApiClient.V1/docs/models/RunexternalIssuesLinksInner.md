@@ -1,11 +1,11 @@
-# Qase.ApiClient.V1.Model.TestCaseexternalIssues
+# Qase.ApiClient.V1.Model.RunexternalIssuesLinksInner
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Type** | **string** |  | 
-**Links** | [**List&lt;TestCaseExternalIssuesLinksInner&gt;**](TestCaseExternalIssuesLinksInner.md) |  | 
+**RunId** | **long** |  | 
+**ExternalIssue** | **string** | An external issue identifier, e.g. \&quot;PROJ-1234\&quot;. Or null if you want to remove the link. | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

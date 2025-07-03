@@ -76,7 +76,12 @@ namespace Qase.ApiClient.V1.Model
             /// <summary>
             /// Enum Blocked for value: blocked
             /// </summary>
-            Blocked = 3
+            Blocked = 3,
+
+            /// <summary>
+            /// Enum InProgress for value: in_progress
+            /// </summary>
+            InProgress = 4
         }
 
         /// <summary>
@@ -95,6 +100,9 @@ namespace Qase.ApiClient.V1.Model
 
             if (value.Equals("blocked"))
                 return StatusEnum.Blocked;
+
+            if (value.Equals("in_progress"))
+                return StatusEnum.InProgress;
 
             throw new NotImplementedException($"Could not convert value to type StatusEnum: '{value}'");
         }
@@ -115,6 +123,9 @@ namespace Qase.ApiClient.V1.Model
             if (value.Equals("blocked"))
                 return StatusEnum.Blocked;
 
+            if (value.Equals("in_progress"))
+                return StatusEnum.InProgress;
+
             return null;
         }
 
@@ -134,6 +145,9 @@ namespace Qase.ApiClient.V1.Model
 
             if (value == StatusEnum.Blocked)
                 return "blocked";
+
+            if (value == StatusEnum.InProgress)
+                return "in_progress";
 
             throw new NotImplementedException($"Value could not be handled: '{value}'");
         }
