@@ -221,3 +221,31 @@ public void TestWithComments()
     // Test implementation
     Metadata.Comment("This is a comment");
 }
+```
+
+### 8. File Attachments Support
+
+The Qase API clients support uploading file attachments to test cases and test runs. This feature allows you to:
+
+- Upload files from file system paths
+- Upload content from strings or byte arrays
+- Properly handle file names and multipart/form-data requests
+- Support multiple file formats and sizes (up to 32MB per file)
+
+#### Example Usage
+
+```csharp
+[Fact]
+[Qase]
+public void TestWithComments()
+{
+    // Test implementation
+    Metadata.Attach("path/to/your/file.xml");
+
+    // or
+    Metadata.Attach(new List<string> { "path/to/your/file.xml", "path/to/your/file2.xml" });
+
+    // or
+    Metadata.Attach(Encoding.UTF8.GetBytes("test data"), "log.txt");
+}
+```

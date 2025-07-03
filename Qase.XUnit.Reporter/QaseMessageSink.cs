@@ -85,7 +85,7 @@ namespace Qase.Xunit.Reporter
 
             testResult.Steps = ContextManager.GetCompletedSteps(args.Message.Test.TestCase.DisplayName);
             testResult.Message = string.Join("\n", testResult.Message, ContextManager.GetComments(args.Message.Test.TestCase.DisplayName));
-            // testResult.Attachments = ContextManager.GetAttachments(args.Message.Test.TestCase.DisplayName);
+            testResult.Attachments = ContextManager.GetAttachments(args.Message.Test.TestCase.DisplayName);
             if (!testResult.Ignore)
             {
                 _reporter.addResult(testResult).GetAwaiter().GetResult();
