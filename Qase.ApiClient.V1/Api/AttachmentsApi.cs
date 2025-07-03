@@ -117,7 +117,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="file"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IUploadAttachmentApiResponse"/>&gt;</returns>
-        Task<IUploadAttachmentApiResponse> UploadAttachmentAsync(string code, Option<List<System.IO.Stream>> file = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IUploadAttachmentApiResponse> UploadAttachmentAsync(string code, Option<List<(System.IO.Stream Stream, string FileName)>> file = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Upload attachment
@@ -129,7 +129,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="file"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IUploadAttachmentApiResponse"/>?&gt;</returns>
-        Task<IUploadAttachmentApiResponse?> UploadAttachmentOrDefaultAsync(string code, Option<List<System.IO.Stream>> file = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IUploadAttachmentApiResponse?> UploadAttachmentOrDefaultAsync(string code, Option<List<(System.IO.Stream Stream, string FileName)>> file = default, System.Threading.CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -1227,7 +1227,7 @@ namespace Qase.ApiClient.V1.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatUploadAttachment(ref string code, Option<List<System.IO.Stream>> file);
+        partial void FormatUploadAttachment(ref string code, Option<List<(System.IO.Stream Stream, string FileName)>> file);
 
         /// <summary>
         /// Validates the request parameters
@@ -1235,7 +1235,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="code"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        private void ValidateUploadAttachment(string code, Option<List<System.IO.Stream>> file)
+        private void ValidateUploadAttachment(string code, Option<List<(System.IO.Stream Stream, string FileName)>> file)
         {
             if (code == null)
                 throw new ArgumentNullException(nameof(code));
@@ -1250,7 +1250,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="file"></param>
-        private void AfterUploadAttachmentDefaultImplementation(IUploadAttachmentApiResponse apiResponseLocalVar, string code, Option<List<System.IO.Stream>> file)
+        private void AfterUploadAttachmentDefaultImplementation(IUploadAttachmentApiResponse apiResponseLocalVar, string code, Option<List<(System.IO.Stream Stream, string FileName)>> file)
         {
             bool suppressDefaultLog = false;
             AfterUploadAttachment(ref suppressDefaultLog, apiResponseLocalVar, code, file);
@@ -1265,7 +1265,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="file"></param>
-        partial void AfterUploadAttachment(ref bool suppressDefaultLog, IUploadAttachmentApiResponse apiResponseLocalVar, string code, Option<List<System.IO.Stream>> file);
+        partial void AfterUploadAttachment(ref bool suppressDefaultLog, IUploadAttachmentApiResponse apiResponseLocalVar, string code, Option<List<(System.IO.Stream Stream, string FileName)>> file);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1275,7 +1275,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="file"></param>
-        private void OnErrorUploadAttachmentDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, Option<List<System.IO.Stream>> file)
+        private void OnErrorUploadAttachmentDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, Option<List<(System.IO.Stream Stream, string FileName)>> file)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorUploadAttachment(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, file);
@@ -1292,7 +1292,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="file"></param>
-        partial void OnErrorUploadAttachment(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, Option<List<System.IO.Stream>> file);
+        partial void OnErrorUploadAttachment(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, Option<List<(System.IO.Stream Stream, string FileName)>> file);
 
         /// <summary>
         /// Upload attachment This method allows to upload attachment to Qase. Max upload size: * Up to 32 Mb per file * Up to 128 Mb per single request * Up to 20 files per single request  If there is no free space left in your team account, you will receive an error with code 507 - Insufficient Storage. 
@@ -1301,7 +1301,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="file"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IUploadAttachmentApiResponse"/>&gt;</returns>
-        public async Task<IUploadAttachmentApiResponse?> UploadAttachmentOrDefaultAsync(string code, Option<List<System.IO.Stream>> file = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IUploadAttachmentApiResponse?> UploadAttachmentOrDefaultAsync(string code, Option<List<(System.IO.Stream Stream, string FileName)>> file = default, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -1321,7 +1321,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="file"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IUploadAttachmentApiResponse"/>&gt;</returns>
-        public async Task<IUploadAttachmentApiResponse> UploadAttachmentAsync(string code, Option<List<System.IO.Stream>> file = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IUploadAttachmentApiResponse> UploadAttachmentAsync(string code, Option<List<(System.IO.Stream Stream, string FileName)>> file = default, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
@@ -1341,14 +1341,24 @@ namespace Qase.ApiClient.V1.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/attachment/{code}");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcode%7D", Uri.EscapeDataString(code.ToString()));
 
-                    MultipartContent multipartContentLocalVar = new MultipartContent();
+                    MultipartFormDataContent multipartContentLocalVar = new MultipartFormDataContent();
 
                     httpRequestMessageLocalVar.Content = multipartContentLocalVar;
 
-                    List<KeyValuePair<string?, string?>> formParameterLocalVars = new List<KeyValuePair<string?, string?>>();
-
-                    multipartContentLocalVar.Add(new FormUrlEncodedContent(formParameterLocalVars));                    if (file.IsSet)
-                        multipartContentLocalVar.Add(new StreamContent(file.Value[0]));
+                    if (file.IsSet && file.Value != null && file.Value.Count > 0)
+                    {
+                        // Add each file with the correct field name "file"
+                        foreach (var (fileStream, fileName) in file.Value)
+                        {
+                            // Ensure stream is at the beginning
+                            if (fileStream.CanSeek)
+                            {
+                                fileStream.Position = 0;
+                            }
+                                                        
+                            multipartContentLocalVar.Add(new StreamContent(fileStream), "file", fileName);
+                        }
+                    }
 
                     List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
                     ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Token", cancellationToken).ConfigureAwait(false);
@@ -1357,14 +1367,8 @@ namespace Qase.ApiClient.V1.Api
 
                     httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
 
-                    string[] contentTypes = new string[] {
-                        "multipart/form-data"
-                    };
-
-                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
-
-                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
-                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
+                    // For multipart/form-data, Content-Type is automatically set with boundary
+                    // No need to manually set it
 
                     string[] acceptLocalVars = new string[] {
                         "application/json"

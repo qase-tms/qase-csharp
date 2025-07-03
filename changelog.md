@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.5
+
+- Added support for file attachments upload
+
 ## qase-scharp 1.0.4
 
 - Added support for steps

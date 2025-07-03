@@ -154,7 +154,17 @@ namespace Qase.Csharp.Commons.Clients
         public async Task<string> UploadAttachmentAsync(Models.Domain.Attachment attachment)
         {
             var tempFiles = new List<string>(1);
-            _logger.LogDebug("Uploading attachment: {FileName}", attachment.FileName);
+            var fileName = attachment.FileName;
+            if (string.IsNullOrEmpty(fileName)){
+                if (attachment.FilePath != null && File.Exists(attachment.FilePath)){
+                    fileName = Path.GetFileName(attachment.FilePath);
+                }
+                else {
+                    fileName = Path.GetRandomFileName();
+                }
+            }
+
+            _logger.LogDebug("Uploading attachment: {FileName}", fileName);
 
             try
             {
@@ -166,13 +176,13 @@ namespace Qase.Csharp.Commons.Clients
                 }
                 else if (!string.IsNullOrEmpty(attachment.Content))
                 {
-                    filePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + "_" + attachment.FileName);
+                    filePath = Path.Combine(Path.GetTempPath(), fileName);
                     File.WriteAllText(filePath, attachment.Content);
                     tempFiles.Add(filePath);
                 }
                 else if (attachment.ContentBytes != null && attachment.ContentBytes.Length > 0)
                 {
-                    filePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + "_" + attachment.FileName);
+                    filePath = Path.Combine(Path.GetTempPath(), fileName);
                     File.WriteAllBytes(filePath, attachment.ContentBytes);
                     tempFiles.Add(filePath);
                 }
@@ -182,7 +192,7 @@ namespace Qase.Csharp.Commons.Clients
                     return "";
                 }
 
-                var resp = await _attachmentsApi.UploadAttachmentAsync(_config.TestOps.Project!, new List<Stream> { File.OpenRead(filePath) });
+                var resp = await _attachmentsApi.UploadAttachmentAsync(_config.TestOps.Project!, new List<(Stream Stream, string FileName)> { (File.OpenRead(filePath), fileName!) });
 
                 if (resp.IsSuccessStatusCode)
                 {
