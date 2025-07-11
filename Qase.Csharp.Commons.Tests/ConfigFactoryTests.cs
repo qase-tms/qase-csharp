@@ -424,5 +424,185 @@ namespace Qase.Csharp.Commons.Tests
             config.Report.Connection.Local.Format.Should().Be(Format.Json);
             config.Report.Connection.Local.Path.Should().Be("/complex/report/path");
         }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadConfigurationsFromJsonFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""configurations"": {
+      ""values"": [
+        {
+          ""name"": ""group1"",
+          ""value"": ""value1""
+        },
+        {
+          ""name"": ""group2"",
+          ""value"": ""value2""
+        }
+      ],
+      ""createIfNotExists"": true
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.Values.Should().HaveCount(2);
+            config.TestOps.Configurations.Values[0].Name.Should().Be("group1");
+            config.TestOps.Configurations.Values[0].Value.Should().Be("value1");
+            config.TestOps.Configurations.Values[1].Name.Should().Be("group2");
+            config.TestOps.Configurations.Values[1].Value.Should().Be("value2");
+            config.TestOps.Configurations.CreateIfNotExists.Should().BeTrue();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadConfigurationsFromEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", "group1=value1,group2=value2,group3=value3");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.Values.Should().HaveCount(3);
+            config.TestOps.Configurations.Values[0].Name.Should().Be("group1");
+            config.TestOps.Configurations.Values[0].Value.Should().Be("value1");
+            config.TestOps.Configurations.Values[1].Name.Should().Be("group2");
+            config.TestOps.Configurations.Values[1].Value.Should().Be("value2");
+            config.TestOps.Configurations.Values[2].Name.Should().Be("group3");
+            config.TestOps.Configurations.Values[2].Value.Should().Be("value3");
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHandleInvalidConfigurationsInEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", "10,invalid,30");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.Values.Should().BeEmpty();
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHandleEmptyConfigurationsInEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", "");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.Values.Should().BeEmpty();
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHandleConfigurationsWithSpacesInEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", " group1 = value1 , group2 = value2 ");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.Values.Should().HaveCount(2);
+            config.TestOps.Configurations.Values[0].Name.Should().Be("group1");
+            config.TestOps.Configurations.Values[0].Value.Should().Be("value1");
+            config.TestOps.Configurations.Values[1].Name.Should().Be("group2");
+            config.TestOps.Configurations.Values[1].Value.Should().Be("value2");
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_VALUES", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadConfigurationsCreateIfNotExistsFromEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS", "true");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.CreateIfNotExists.Should().BeTrue();
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadConfigurationsCreateIfNotExistsFromJsonFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""configurations"": {
+      ""createIfNotExists"": true
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.CreateIfNotExists.Should().BeTrue();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadConfigurationsWithValuesAndCreateIfNotExistsFromJsonFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""configurations"": {
+      ""values"": [
+        {
+          ""name"": ""group1"",
+          ""value"": ""value1""
+        },
+        {
+          ""name"": ""group2"",
+          ""value"": ""value2""
+        }
+      ],
+      ""createIfNotExists"": true
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Configurations.Values.Should().HaveCount(2);
+            config.TestOps.Configurations.Values[0].Name.Should().Be("group1");
+            config.TestOps.Configurations.Values[0].Value.Should().Be("value1");
+            config.TestOps.Configurations.Values[1].Name.Should().Be("group2");
+            config.TestOps.Configurations.Values[1].Value.Should().Be("value2");
+            config.TestOps.Configurations.CreateIfNotExists.Should().BeTrue();
+        }
     }
 } 

@@ -20,6 +20,7 @@ namespace Qase.Csharp.Commons.Tests
         private readonly Mock<ILogger<ClientV1>> _clientV1LoggerMock = new();
         private readonly Mock<IRunsApi> _runsApiMock = new();
         private readonly Mock<IAttachmentsApi> _attachmentsApiMock = new();
+        private readonly Mock<IConfigurationsApi> _configurationsApiMock = new();
         private readonly Mock<Qase.ApiClient.V2.Api.IResultsApi> _resultsApiMock = new();
         private readonly QaseConfig _config;
         private readonly ClientV1 _clientV1;
@@ -40,7 +41,7 @@ namespace Qase.Csharp.Commons.Tests
                 }
             };
             
-            _clientV1 = new ClientV1(_clientV1LoggerMock.Object, _config, _runsApiMock.Object, _attachmentsApiMock.Object);
+            _clientV1 = new ClientV1(_clientV1LoggerMock.Object, _config, _runsApiMock.Object, _attachmentsApiMock.Object, _configurationsApiMock.Object);
             _client = new ClientV2(_loggerMock.Object, _config, _clientV1, _resultsApiMock.Object);
         }
 
