@@ -44,6 +44,8 @@ All configuration options are listed in the table below:
 | Qase test plan ID                                                                                                          | `testops.plan.id`          | `QASE_TESTOPS_PLAN_ID`          | `QASE_TESTOPS_PLAN_ID`          | undefined                               | No       | Any integer                |
 | Size of batch for sending test results                                                                                     | `testops.batch.size`       | `QASE_TESTOPS_BATCH_SIZE`       | `QASE_TESTOPS_BATCH_SIZE`       | `200`                                   | No       | Any integer                |
 | Enable defects for failed test cases                                                                                       | `testops.defect`           | `QASE_TESTOPS_DEFECT`           | `QASE_TESTOPS_DEFECT`           | `False`                                 | No       | `True`, `False`            |
+| Configuration values for test run                                                                                          | `testops.configurations.values` | `QASE_TESTOPS_CONFIGURATIONS_VALUES` | `QASE_TESTOPS_CONFIGURATIONS_VALUES` | `[]`                                    | No       | Comma-separated key=value pairs |
+| Whether to create configuration groups and values if they don't exist                                                      | `testops.configurations.createIfNotExists` | `QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS` | `QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS` | `False`                                 | No       | `True`, `False`            |
 
 ### Example `qase.config.json` config
 
@@ -78,6 +80,19 @@ All configuration options are listed in the table below:
     "project": "<project_code>",
     "batch": {
       "size": 100
+    },
+    "configurations": {
+      "values": [
+        {
+          "name": "Browser",
+          "value": "Chrome"
+        },
+        {
+          "name": "Environment",
+          "value": "Production"
+        }
+      ],
+      "createIfNotExists": true
     }
   }
 }

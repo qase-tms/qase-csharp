@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.6
+
+- Added support for test run configurations
+
 ## qase-scharp 1.0.5
 
 - Added support for file attachments upload

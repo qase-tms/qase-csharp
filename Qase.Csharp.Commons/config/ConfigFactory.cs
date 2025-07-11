@@ -113,6 +113,8 @@ namespace Qase.Csharp.Commons.Config
             qaseConfig.TestOps.Run.Id = GetLongEnv("QASE_TESTOPS_RUN_ID", qaseConfig.TestOps.Run.Id);
             qaseConfig.TestOps.Run.Complete = GetBooleanEnv("QASE_TESTOPS_RUN_COMPLETE", qaseConfig.TestOps.Run.Complete);
             qaseConfig.TestOps.Run.Tags = GetListEnv("QASE_TESTOPS_RUN_TAGS", qaseConfig.TestOps.Run.Tags);
+            qaseConfig.TestOps.Configurations.Values = GetConfigurationListEnv("QASE_TESTOPS_CONFIGURATIONS_VALUES", qaseConfig.TestOps.Configurations.Values);
+            qaseConfig.TestOps.Configurations.CreateIfNotExists = GetBooleanEnv("QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS", qaseConfig.TestOps.Configurations.CreateIfNotExists);
             qaseConfig.TestOps.Plan.Id = GetLongEnv("QASE_TESTOPS_PLAN_ID", qaseConfig.TestOps.Plan.Id);
             qaseConfig.TestOps.Batch.Size = GetIntEnv("QASE_TESTOPS_BATCH_SIZE", qaseConfig.TestOps.Batch.Size);
 
@@ -224,6 +226,46 @@ namespace Qase.Csharp.Commons.Config
         {
             var value = Environment.GetEnvironmentVariable(key);
             return value != null ? long.Parse(value) : defaultValue;
+        }
+
+        /// <summary>
+        /// Gets a list of long environment variable or returns default value
+        /// </summary>
+        /// <param name="key">Environment variable name</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Environment variable value as list of long or default</returns>
+        private static List<ConfigurationItem> GetConfigurationListEnv(string key, List<ConfigurationItem> defaultValue)
+        {
+            var value = Environment.GetEnvironmentVariable(key);
+            if (value == null) return defaultValue;
+            
+            try
+            {
+                var configurations = new List<ConfigurationItem>();
+                var pairs = value.Split(',');
+                
+                foreach (var pair in pairs)
+                {
+                    var trimmedPair = pair.Trim();
+                    if (string.IsNullOrEmpty(trimmedPair)) continue;
+                    
+                    var parts = trimmedPair.Split('=');
+                    if (parts.Length == 2)
+                    {
+                        configurations.Add(new ConfigurationItem
+                        {
+                            Name = parts[0].Trim(),
+                            Value = parts[1].Trim()
+                        });
+                    }
+                }
+                
+                return configurations;
+            }
+            catch
+            {
+                return defaultValue;
+            }
         }
 
         /// <summary>
@@ -346,6 +388,33 @@ namespace Qase.Csharp.Commons.Config
                         sizeElement.ValueKind == JsonValueKind.Number)
                     {
                         qaseConfig.TestOps.Batch.Size = sizeElement.GetInt32();
+                    }
+                }
+
+                if (testopsElement.TryGetProperty("configurations", out var configurationsElement))
+                {
+                    if (configurationsElement.ValueKind == JsonValueKind.Object)
+                    {
+                        // Object format: "configurations": { "values": [...], "createIfNotExists": true }
+                        if (configurationsElement.TryGetProperty("values", out var valuesElement) &&
+                            valuesElement.ValueKind == JsonValueKind.Array)
+                        {
+                            qaseConfig.TestOps.Configurations.Values = valuesElement.EnumerateArray()
+                                .Where(e => e.ValueKind == JsonValueKind.Object)
+                                .Select(e => new ConfigurationItem
+                                {
+                                    Name = e.TryGetProperty("name", out var nameElement) ? nameElement.GetString() ?? "" : "",
+                                    Value = e.TryGetProperty("value", out var valueElement) ? valueElement.GetString() ?? "" : ""
+                                })
+                                .Where(c => !string.IsNullOrEmpty(c.Name) && !string.IsNullOrEmpty(c.Value))
+                                .ToList();
+                        }
+
+                        if (configurationsElement.TryGetProperty("createIfNotExists", out var createIfNotExistsElement) &&
+                            createIfNotExistsElement.ValueKind == JsonValueKind.True)
+                        {
+                            qaseConfig.TestOps.Configurations.CreateIfNotExists = true;
+                        }
                     }
                 }
             }

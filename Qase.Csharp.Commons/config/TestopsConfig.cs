@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Qase.Csharp.Commons.Config
 {
     /// <summary>
@@ -34,5 +36,10 @@ namespace Qase.Csharp.Commons.Config
         /// Gets or sets the plan config
         /// </summary>
         public PlanConfig Plan { get; set; } = new PlanConfig();
+
+        /// <summary>
+        /// Gets or sets the configurations
+        /// </summary>
+        public ConfigurationsConfig Configurations { get; set; } = new ConfigurationsConfig();
     }
 }

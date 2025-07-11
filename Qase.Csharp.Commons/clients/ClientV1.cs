@@ -21,6 +21,7 @@ namespace Qase.Csharp.Commons.Clients
         private readonly string _url;
         private readonly IRunsApi _runApi;
         private readonly IAttachmentsApi _attachmentsApi;
+        private readonly IConfigurationsApi _configurationsApi;
         private readonly ILogger<ClientV1> _logger;
 
         /// <summary>
@@ -34,12 +35,14 @@ namespace Qase.Csharp.Commons.Clients
             ILogger<ClientV1> logger,
             QaseConfig config,
             IRunsApi runApi,
-            IAttachmentsApi attachmentsApi)
+            IAttachmentsApi attachmentsApi,
+            IConfigurationsApi configurationsApi)
         {
             _logger = logger;
             _config = config;
             _runApi = runApi;
             _attachmentsApi = attachmentsApi;
+            _configurationsApi = configurationsApi;
             _url = config.TestOps.Api.Host == "qase.io" ? "https://app.qase.io/" : $"https://app-{config.TestOps.Api.Host}/";
         }
 
@@ -62,6 +65,15 @@ namespace Qase.Csharp.Commons.Clients
             if (_config.TestOps.Run.Tags.Count > 0)
             {
                 runData.Tags = _config.TestOps.Run.Tags;
+            }
+
+            if (_config.TestOps.Configurations.Values.Count() > 0)
+            {
+                var configurationIds = await GetConfigurationIdsAsync();
+                if (configurationIds.Count > 0)
+                {
+                    runData.Configurations = configurationIds;
+                }
             }
 
             try
@@ -226,6 +238,97 @@ namespace Qase.Csharp.Commons.Clients
                         _logger.LogError(ex, "Failed to delete temporary file: {FilePath}", tempFile);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets configuration IDs by resolving configuration names and values
+        /// </summary>
+        /// <returns>List of configuration IDs</returns>
+        private async Task<List<long>> GetConfigurationIdsAsync()
+        {
+            if (_config.TestOps.Configurations.Values.Count() == 0)
+            {
+                return new List<long>();
+            }
+
+            var configurationIds = new List<long>();
+
+            try
+            {
+                // Get all configuration groups
+                var resp = await _configurationsApi.GetConfigurationsAsync(_config.TestOps.Project!);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning("Failed to get configurations: {Reason}", resp.ReasonPhrase);
+                    return new List<long>();
+                }
+
+                var groups = resp.Ok()?.Result?.Entities ?? new List<ConfigurationGroup>();
+
+                foreach (var configItem in _config.TestOps.Configurations.Values)
+                {
+                    ConfigurationGroup? group = groups.FirstOrDefault(g => g.Title?.Equals(configItem.Name, StringComparison.OrdinalIgnoreCase) == true);
+
+                    // If the group does not exist and creation is allowed, create it
+                    if (group == null && _config.TestOps.Configurations.CreateIfNotExists)
+                    {
+                        var groupCreate = new ConfigurationGroupCreate(configItem.Name);
+                        var groupResp = await _configurationsApi.CreateConfigurationGroupAsync(_config.TestOps.Project!, groupCreate);
+                        if (groupResp.IsSuccessStatusCode)
+                        {
+                            var newGroupId = groupResp.Ok()?.Result?.Id;
+                            if (newGroupId.HasValue)
+                            {
+                                group = new ConfigurationGroup { Id = newGroupId.Value, Title = configItem.Name, Configurations = new List<ModelConfiguration>() };
+                                groups.Add(group);
+                                _logger.LogDebug("Created new configuration group: {Name} with ID: {Id}", configItem.Name, newGroupId.Value);
+                            }
+                        }
+                    }
+
+                    if (group == null)
+                    {
+                        _logger.LogWarning("Configuration group {Name} not found and createIfNotExists is false", configItem.Name);
+                        continue;
+                    }
+
+                    // In the group, search for configuration by value
+                    var conf = group.Configurations?.FirstOrDefault(c => c.Title?.Equals(configItem.Value, StringComparison.OrdinalIgnoreCase) == true);
+
+                    // If the configuration does not exist and creation is allowed, create it
+                    if (conf == null && _config.TestOps.Configurations.CreateIfNotExists)
+                    {
+                        var confCreate = new ConfigurationCreate(configItem.Value, (int)group.Id!);
+                        var confResp = await _configurationsApi.CreateConfigurationAsync(_config.TestOps.Project!, confCreate);
+                        if (confResp.IsSuccessStatusCode)
+                        {
+                            var newConfId = confResp.Ok()?.Result?.Id;
+                            if (newConfId.HasValue)
+                            {
+                                conf = new ModelConfiguration { Id = newConfId.Value, Title = configItem.Value };
+                                group.Configurations ??= new List<ModelConfiguration>();
+                                group.Configurations.Add(conf);
+                                _logger.LogDebug("Created new configuration: {Value} in group {Name} with ID: {Id}", configItem.Value, configItem.Name, newConfId.Value);
+                            }
+                        }
+                    }
+
+                    if (conf == null)
+                    {
+                        _logger.LogWarning("Configuration {Value} in group {Name} not found and createIfNotExists is false", configItem.Value, configItem.Name);
+                        continue;
+                    }
+
+                    configurationIds.Add(conf.Id ?? 0);
+                }
+
+                return configurationIds;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get configuration IDs");
+                return new List<long>();
             }
         }
     }
