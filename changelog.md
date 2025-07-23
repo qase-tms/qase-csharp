@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.7
+
+- Updated API clients to the latest specification versions
+
 ## qase-scharp 1.0.6
 
 - Added support for test run configurations

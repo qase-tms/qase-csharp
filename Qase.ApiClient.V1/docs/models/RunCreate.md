@@ -19,6 +19,8 @@ Name | Type | Description | Notes
 **CustomField** | **Dictionary&lt;string, string&gt;** | A map of custom fields values (id &#x3D;&gt; value) | [optional] 
 **StartTime** | **string** |  | [optional] 
 **EndTime** | **string** |  | [optional] 
+**IsCloud** | **bool** | Indicates if the run is created for the Test Cases produced by AIDEN | [optional] 
+**CloudRunConfig** | [**RunCreateCloudRunConfig**](RunCreateCloudRunConfig.md) |  | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

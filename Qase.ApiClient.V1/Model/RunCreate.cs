@@ -49,8 +49,10 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="customField">A map of custom fields values (id &#x3D;&gt; value)</param>
         /// <param name="startTime">startTime</param>
         /// <param name="endTime">endTime</param>
+        /// <param name="isCloud">Indicates if the run is created for the Test Cases produced by AIDEN</param>
+        /// <param name="cloudRunConfig">cloudRunConfig</param>
         [JsonConstructor]
-        public RunCreate(string title, Option<string?> description = default, Option<bool?> includeAllCases = default, Option<List<long>?> cases = default, Option<bool?> isAutotest = default, Option<long?> environmentId = default, Option<string?> environmentSlug = default, Option<long?> milestoneId = default, Option<long?> planId = default, Option<long?> authorId = default, Option<List<string>?> tags = default, Option<List<long>?> configurations = default, Option<Dictionary<string, string>?> customField = default, Option<string?> startTime = default, Option<string?> endTime = default)
+        public RunCreate(string title, Option<string?> description = default, Option<bool?> includeAllCases = default, Option<List<long>?> cases = default, Option<bool?> isAutotest = default, Option<long?> environmentId = default, Option<string?> environmentSlug = default, Option<long?> milestoneId = default, Option<long?> planId = default, Option<long?> authorId = default, Option<List<string>?> tags = default, Option<List<long>?> configurations = default, Option<Dictionary<string, string>?> customField = default, Option<string?> startTime = default, Option<string?> endTime = default, Option<bool?> isCloud = default, Option<RunCreateCloudRunConfig?> cloudRunConfig = default)
         {
             Title = title;
             DescriptionOption = description;
@@ -67,6 +69,8 @@ namespace Qase.ApiClient.V1.Model
             CustomFieldOption = customField;
             StartTimeOption = startTime;
             EndTimeOption = endTime;
+            IsCloudOption = isCloud;
+            CloudRunConfigOption = cloudRunConfig;
             OnCreated();
         }
 
@@ -262,6 +266,33 @@ namespace Qase.ApiClient.V1.Model
         public string? EndTime { get { return this.EndTimeOption; } set { this.EndTimeOption = new Option<string?>(value); } }
 
         /// <summary>
+        /// Used to track the state of IsCloud
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<bool?> IsCloudOption { get; private set; }
+
+        /// <summary>
+        /// Indicates if the run is created for the Test Cases produced by AIDEN
+        /// </summary>
+        /// <value>Indicates if the run is created for the Test Cases produced by AIDEN</value>
+        [JsonPropertyName("is_cloud")]
+        public bool? IsCloud { get { return this.IsCloudOption; } set { this.IsCloudOption = new Option<bool?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of CloudRunConfig
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<RunCreateCloudRunConfig?> CloudRunConfigOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets CloudRunConfig
+        /// </summary>
+        [JsonPropertyName("cloud_run_config")]
+        public RunCreateCloudRunConfig? CloudRunConfig { get { return this.CloudRunConfigOption; } set { this.CloudRunConfigOption = new Option<RunCreateCloudRunConfig?>(value); } }
+
+        /// <summary>
         /// Gets or Sets additional properties
         /// </summary>
         [JsonExtensionData]
@@ -290,6 +321,8 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  CustomField: ").Append(CustomField).Append("\n");
             sb.Append("  StartTime: ").Append(StartTime).Append("\n");
             sb.Append("  EndTime: ").Append(EndTime).Append("\n");
+            sb.Append("  IsCloud: ").Append(IsCloud).Append("\n");
+            sb.Append("  CloudRunConfig: ").Append(CloudRunConfig).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -385,6 +418,8 @@ namespace Qase.ApiClient.V1.Model
             Option<Dictionary<string, string>?> customField = default;
             Option<string?> startTime = default;
             Option<string?> endTime = default;
+            Option<bool?> isCloud = default;
+            Option<RunCreateCloudRunConfig?> cloudRunConfig = default;
 
             while (utf8JsonReader.Read())
             {
@@ -446,6 +481,12 @@ namespace Qase.ApiClient.V1.Model
                         case "end_time":
                             endTime = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
+                        case "is_cloud":
+                            isCloud = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
+                            break;
+                        case "cloud_run_config":
+                            cloudRunConfig = new Option<RunCreateCloudRunConfig?>(JsonSerializer.Deserialize<RunCreateCloudRunConfig>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            break;
                         default:
                             break;
                     }
@@ -500,7 +541,13 @@ namespace Qase.ApiClient.V1.Model
             if (endTime.IsSet && endTime.Value == null)
                 throw new ArgumentNullException(nameof(endTime), "Property is not nullable for class RunCreate.");
 
-            return new RunCreate(title.Value!, description, includeAllCases, cases, isAutotest, environmentId, environmentSlug, milestoneId, planId, authorId, tags, configurations, customField, startTime, endTime);
+            if (isCloud.IsSet && isCloud.Value == null)
+                throw new ArgumentNullException(nameof(isCloud), "Property is not nullable for class RunCreate.");
+
+            if (cloudRunConfig.IsSet && cloudRunConfig.Value == null)
+                throw new ArgumentNullException(nameof(cloudRunConfig), "Property is not nullable for class RunCreate.");
+
+            return new RunCreate(title.Value!, description, includeAllCases, cases, isAutotest, environmentId, environmentSlug, milestoneId, planId, authorId, tags, configurations, customField, startTime, endTime, isCloud, cloudRunConfig);
         }
 
         /// <summary>
@@ -554,6 +601,9 @@ namespace Qase.ApiClient.V1.Model
             if (runCreate.EndTimeOption.IsSet && runCreate.EndTime == null)
                 throw new ArgumentNullException(nameof(runCreate.EndTime), "Property is required for class RunCreate.");
 
+            if (runCreate.CloudRunConfigOption.IsSet && runCreate.CloudRunConfig == null)
+                throw new ArgumentNullException(nameof(runCreate.CloudRunConfig), "Property is required for class RunCreate.");
+
             writer.WriteString("title", runCreate.Title);
 
             if (runCreate.DescriptionOption.IsSet)
@@ -605,6 +655,15 @@ namespace Qase.ApiClient.V1.Model
 
             if (runCreate.EndTimeOption.IsSet)
                 writer.WriteString("end_time", runCreate.EndTime);
+
+            if (runCreate.IsCloudOption.IsSet)
+                writer.WriteBoolean("is_cloud", runCreate.IsCloudOption.Value!.Value);
+
+            if (runCreate.CloudRunConfigOption.IsSet)
+            {
+                writer.WritePropertyName("cloud_run_config");
+                JsonSerializer.Serialize(writer, runCreate.CloudRunConfig, jsonSerializerOptions);
+            }
         }
     }
 }

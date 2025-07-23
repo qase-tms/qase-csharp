@@ -158,6 +158,8 @@ namespace Qase.ApiClient.V1.Client
                 return RequirementQuery.TypeEnumToJsonValue(requirementQueryTypeEnum);
             if (obj is ResultUpdate.StatusEnum resultUpdateStatusEnum)
                 return ResultUpdate.StatusEnumToJsonValue(resultUpdateStatusEnum);
+            if (obj is RunCreateCloudRunConfig.BrowserEnum runCreateCloudRunConfigBrowserEnum)
+                return RunCreateCloudRunConfig.BrowserEnumToJsonValue(runCreateCloudRunConfigBrowserEnum);
             if (obj is RunexternalIssues.TypeEnum runexternalIssuesTypeEnum)
                 return RunexternalIssues.TypeEnumToJsonValue(runexternalIssuesTypeEnum);
             if (obj is TestCaseExternalIssues.TypeEnum testCaseExternalIssuesTypeEnum)
