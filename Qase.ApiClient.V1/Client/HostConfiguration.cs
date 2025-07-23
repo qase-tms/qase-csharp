@@ -138,6 +138,7 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new ResultCreateBulkJsonConverter());
             _jsonOptions.Converters.Add(new RunJsonConverter());
             _jsonOptions.Converters.Add(new RunCreateJsonConverter());
+            _jsonOptions.Converters.Add(new RunCreateCloudRunConfigJsonConverter());
             _jsonOptions.Converters.Add(new RunEnvironmentJsonConverter());
             _jsonOptions.Converters.Add(new RunExternalIssueJsonConverter());
             _jsonOptions.Converters.Add(new RunListResponseJsonConverter());
