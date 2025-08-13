@@ -51,12 +51,13 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="attachments">A list of Attachment hashes.</param>
         /// <param name="steps">steps</param>
         /// <param name="tags">tags</param>
-        /// <param name="params">params</param>
+        /// <param name="params">Deprecated, use &#x60;parameters&#x60; instead.</param>
+        /// <param name="parameters">parameters</param>
         /// <param name="customField">A map of custom fields values (id &#x3D;&gt; value)</param>
         /// <param name="createdAt">createdAt</param>
         /// <param name="updatedAt">updatedAt</param>
         [JsonConstructor]
-        public TestCaseCreate(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default)
+        public TestCaseCreate(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<List<TestCaseParametercreate>?> parameters = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default)
         {
             Title = title;
             DescriptionOption = description;
@@ -76,6 +77,7 @@ namespace Qase.ApiClient.V1.Model
             StepsOption = steps;
             TagsOption = tags;
             ParamsOption = @params;
+            ParametersOption = parameters;
             CustomFieldOption = customField;
             CreatedAtOption = createdAt;
             UpdatedAtOption = updatedAt;
@@ -307,10 +309,25 @@ namespace Qase.ApiClient.V1.Model
         public Option<Dictionary<string, List<string>>?> ParamsOption { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Params
+        /// Deprecated, use &#x60;parameters&#x60; instead.
         /// </summary>
+        /// <value>Deprecated, use &#x60;parameters&#x60; instead.</value>
         [JsonPropertyName("params")]
+        [Obsolete]
         public Dictionary<string, List<string>>? Params { get { return this.ParamsOption; } set { this.ParamsOption = new Option<Dictionary<string, List<string>>?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of Parameters
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<List<TestCaseParametercreate>?> ParametersOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets Parameters
+        /// </summary>
+        [JsonPropertyName("parameters")]
+        public List<TestCaseParametercreate>? Parameters { get { return this.ParametersOption; } set { this.ParametersOption = new Option<List<TestCaseParametercreate>?>(value); } }
 
         /// <summary>
         /// Used to track the state of CustomField
@@ -384,6 +401,7 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  Steps: ").Append(Steps).Append("\n");
             sb.Append("  Tags: ").Append(Tags).Append("\n");
             sb.Append("  Params: ").Append(Params).Append("\n");
+            sb.Append("  Parameters: ").Append(Parameters).Append("\n");
             sb.Append("  CustomField: ").Append(CustomField).Append("\n");
             sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("  UpdatedAt: ").Append(UpdatedAt).Append("\n");
@@ -449,6 +467,7 @@ namespace Qase.ApiClient.V1.Model
             Option<List<TestStepCreate>?> steps = default;
             Option<List<string>?> tags = default;
             Option<Dictionary<string, List<string>>?> varParams = default;
+            Option<List<TestCaseParametercreate>?> parameters = default;
             Option<Dictionary<string, string>?> customField = default;
             Option<string?> createdAt = default;
             Option<string?> updatedAt = default;
@@ -521,6 +540,9 @@ namespace Qase.ApiClient.V1.Model
                             break;
                         case "params":
                             varParams = new Option<Dictionary<string, List<string>>?>(JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref utf8JsonReader, jsonSerializerOptions));
+                            break;
+                        case "parameters":
+                            parameters = new Option<List<TestCaseParametercreate>?>(JsonSerializer.Deserialize<List<TestCaseParametercreate>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "custom_field":
                             customField = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions)!);
@@ -600,7 +622,7 @@ namespace Qase.ApiClient.V1.Model
             if (updatedAt.IsSet && updatedAt.Value == null)
                 throw new ArgumentNullException(nameof(updatedAt), "Property is not nullable for class TestCaseCreate.");
 
-            return new TestCaseCreate(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, suiteId, milestoneId, automation, status, attachments, steps, tags, varParams, customField, createdAt, updatedAt);
+            return new TestCaseCreate(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, suiteId, milestoneId, automation, status, attachments, steps, tags, varParams, parameters, customField, createdAt, updatedAt);
         }
 
         /// <summary>
@@ -721,6 +743,14 @@ namespace Qase.ApiClient.V1.Model
                 }
                 else
                     writer.WriteNull("params");
+            if (testCaseCreate.ParametersOption.IsSet)
+                if (testCaseCreate.ParametersOption.Value != null)
+                {
+                    writer.WritePropertyName("parameters");
+                    JsonSerializer.Serialize(writer, testCaseCreate.Parameters, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("parameters");
             if (testCaseCreate.CustomFieldOption.IsSet)
             {
                 writer.WritePropertyName("custom_field");

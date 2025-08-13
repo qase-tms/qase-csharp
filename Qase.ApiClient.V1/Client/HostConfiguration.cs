@@ -98,6 +98,9 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new MilestoneUpdateJsonConverter());
             _jsonOptions.Converters.Add(new ModelConfigurationJsonConverter());
             _jsonOptions.Converters.Add(new ModelEnvironmentJsonConverter());
+            _jsonOptions.Converters.Add(new ParameterGroupJsonConverter());
+            _jsonOptions.Converters.Add(new ParameterSharedJsonConverter());
+            _jsonOptions.Converters.Add(new ParameterSingleJsonConverter());
             _jsonOptions.Converters.Add(new PlanJsonConverter());
             _jsonOptions.Converters.Add(new PlanCreateJsonConverter());
             _jsonOptions.Converters.Add(new PlanDetailedJsonConverter());
@@ -121,6 +124,7 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new QqlDefectJsonConverter());
             _jsonOptions.Converters.Add(new QqlPlanJsonConverter());
             _jsonOptions.Converters.Add(new QqlTestCaseJsonConverter());
+            _jsonOptions.Converters.Add(new QqlTestCaseParamsJsonConverter());
             _jsonOptions.Converters.Add(new RequirementJsonConverter());
             _jsonOptions.Converters.Add(new RequirementQueryJsonConverter());
             _jsonOptions.Converters.Add(new ResponseJsonConverter());
@@ -156,6 +160,13 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new SearchResponseJsonConverter());
             _jsonOptions.Converters.Add(new SearchResponseAllOfResultJsonConverter());
             _jsonOptions.Converters.Add(new SearchResponseAllOfResultEntitiesJsonConverter());
+            _jsonOptions.Converters.Add(new SharedParameterJsonConverter());
+            _jsonOptions.Converters.Add(new SharedParameterCreateJsonConverter());
+            _jsonOptions.Converters.Add(new SharedParameterListResponseJsonConverter());
+            _jsonOptions.Converters.Add(new SharedParameterListResponseAllOfResultJsonConverter());
+            _jsonOptions.Converters.Add(new SharedParameterParameterJsonConverter());
+            _jsonOptions.Converters.Add(new SharedParameterResponseJsonConverter());
+            _jsonOptions.Converters.Add(new SharedParameterUpdateJsonConverter());
             _jsonOptions.Converters.Add(new SharedStepJsonConverter());
             _jsonOptions.Converters.Add(new SharedStepContentJsonConverter());
             _jsonOptions.Converters.Add(new SharedStepContentCreateJsonConverter());
@@ -181,6 +192,11 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new TestCaseExternalIssuesLinksInnerJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseListResponseJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseListResponseAllOfResultJsonConverter());
+            _jsonOptions.Converters.Add(new TestCaseParameterJsonConverter());
+            _jsonOptions.Converters.Add(new TestCaseParameterBaseJsonConverter());
+            _jsonOptions.Converters.Add(new TestCaseParameterGroupJsonConverter());
+            _jsonOptions.Converters.Add(new TestCaseParameterSingleJsonConverter());
+            _jsonOptions.Converters.Add(new TestCaseParametercreateJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseParamsJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseQueryJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseResponseJsonConverter());
@@ -192,6 +208,9 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new TestStepCreateJsonConverter());
             _jsonOptions.Converters.Add(new TestStepResultJsonConverter());
             _jsonOptions.Converters.Add(new TestStepResultCreateJsonConverter());
+            _jsonOptions.Converters.Add(new UuidResponseJsonConverter());
+            _jsonOptions.Converters.Add(new UuidResponse1JsonConverter());
+            _jsonOptions.Converters.Add(new UuidResponseAllOfResultJsonConverter());
             JsonSerializerOptionsProvider jsonSerializerOptionsProvider = new JsonSerializerOptionsProvider(_jsonOptions);
             _services.AddSingleton(jsonSerializerOptionsProvider);
             _services.AddSingleton<IApiFactory, ApiFactory>();
@@ -221,6 +240,8 @@ namespace Qase.ApiClient.V1.Client
             _services.AddTransient<IRunsApi, RunsApi>();
             _services.AddSingleton<SearchApiEvents>();
             _services.AddTransient<ISearchApi, SearchApi>();
+            _services.AddSingleton<SharedParametersApiEvents>();
+            _services.AddTransient<ISharedParametersApi, SharedParametersApi>();
             _services.AddSingleton<SharedStepsApiEvents>();
             _services.AddTransient<ISharedStepsApi, SharedStepsApi>();
             _services.AddSingleton<SuitesApiEvents>();
@@ -257,6 +278,7 @@ namespace Qase.ApiClient.V1.Client
             builders.Add(_services.AddHttpClient<IResultsApi, ResultsApi>(client));
             builders.Add(_services.AddHttpClient<IRunsApi, RunsApi>(client));
             builders.Add(_services.AddHttpClient<ISearchApi, SearchApi>(client));
+            builders.Add(_services.AddHttpClient<ISharedParametersApi, SharedParametersApi>(client));
             builders.Add(_services.AddHttpClient<ISharedStepsApi, SharedStepsApi>(client));
             builders.Add(_services.AddHttpClient<ISuitesApi, SuitesApi>(client));
             builders.Add(_services.AddHttpClient<ISystemFieldsApi, SystemFieldsApi>(client));

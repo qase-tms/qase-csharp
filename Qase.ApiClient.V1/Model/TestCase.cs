@@ -55,6 +55,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="stepsType">stepsType</param>
         /// <param name="steps">steps</param>
         /// <param name="params">params</param>
+        /// <param name="parameters">parameters</param>
         /// <param name="tags">tags</param>
         /// <param name="memberId">Deprecated, use &#x60;author_id&#x60; instead.</param>
         /// <param name="authorId">authorId</param>
@@ -65,7 +66,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="updated">Deprecated, use the &#x60;updated_at&#x60; property instead.</param>
         /// <param name="externalIssues">externalIssues</param>
         [JsonConstructor]
-        public TestCase(Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<string?> stepsType = default, Option<List<TestStep>?> steps = default, Option<TestCaseParams?> @params = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<string?> deleted = default, Option<string?> created = default, Option<string?> updated = default, Option<List<ExternalIssue>?> externalIssues = default)
+        public TestCase(Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<string?> stepsType = default, Option<List<TestStep>?> steps = default, Option<TestCaseParams?> @params = default, Option<List<TestCaseParameter>?> parameters = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<string?> deleted = default, Option<string?> created = default, Option<string?> updated = default, Option<List<ExternalIssue>?> externalIssues = default)
         {
             IdOption = id;
             PositionOption = position;
@@ -88,6 +89,7 @@ namespace Qase.ApiClient.V1.Model
             StepsTypeOption = stepsType;
             StepsOption = steps;
             ParamsOption = @params;
+            ParametersOption = parameters;
             TagsOption = tags;
             MemberIdOption = memberId;
             AuthorIdOption = authorId;
@@ -373,7 +375,21 @@ namespace Qase.ApiClient.V1.Model
         /// Gets or Sets Params
         /// </summary>
         [JsonPropertyName("params")]
+        [Obsolete]
         public TestCaseParams? Params { get { return this.ParamsOption; } set { this.ParamsOption = new Option<TestCaseParams?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of Parameters
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<List<TestCaseParameter>?> ParametersOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets Parameters
+        /// </summary>
+        [JsonPropertyName("parameters")]
+        public List<TestCaseParameter>? Parameters { get { return this.ParametersOption; } set { this.ParametersOption = new Option<List<TestCaseParameter>?>(value); } }
 
         /// <summary>
         /// Used to track the state of Tags
@@ -539,6 +555,7 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  StepsType: ").Append(StepsType).Append("\n");
             sb.Append("  Steps: ").Append(Steps).Append("\n");
             sb.Append("  Params: ").Append(Params).Append("\n");
+            sb.Append("  Parameters: ").Append(Parameters).Append("\n");
             sb.Append("  Tags: ").Append(Tags).Append("\n");
             sb.Append("  MemberId: ").Append(MemberId).Append("\n");
             sb.Append("  AuthorId: ").Append(AuthorId).Append("\n");
@@ -617,6 +634,7 @@ namespace Qase.ApiClient.V1.Model
             Option<string?> stepsType = default;
             Option<List<TestStep>?> steps = default;
             Option<TestCaseParams?> varParams = default;
+            Option<List<TestCaseParameter>?> parameters = default;
             Option<List<TagValue>?> tags = default;
             Option<long?> memberId = default;
             Option<long?> authorId = default;
@@ -705,6 +723,9 @@ namespace Qase.ApiClient.V1.Model
                         case "params":
                             varParams = new Option<TestCaseParams?>(JsonSerializer.Deserialize<TestCaseParams>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
+                        case "parameters":
+                            parameters = new Option<List<TestCaseParameter>?>(JsonSerializer.Deserialize<List<TestCaseParameter>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            break;
                         case "tags":
                             tags = new Option<List<TagValue>?>(JsonSerializer.Deserialize<List<TagValue>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
@@ -783,6 +804,9 @@ namespace Qase.ApiClient.V1.Model
             if (varParams.IsSet && varParams.Value == null)
                 throw new ArgumentNullException(nameof(varParams), "Property is not nullable for class TestCase.");
 
+            if (parameters.IsSet && parameters.Value == null)
+                throw new ArgumentNullException(nameof(parameters), "Property is not nullable for class TestCase.");
+
             if (tags.IsSet && tags.Value == null)
                 throw new ArgumentNullException(nameof(tags), "Property is not nullable for class TestCase.");
 
@@ -807,7 +831,7 @@ namespace Qase.ApiClient.V1.Model
             if (externalIssues.IsSet && externalIssues.Value == null)
                 throw new ArgumentNullException(nameof(externalIssues), "Property is not nullable for class TestCase.");
 
-            return new TestCase(id, position, title, description, preconditions, postconditions, severity, priority, type, layer, isFlaky, behavior, automation, status, milestoneId, suiteId, customFields, attachments, stepsType, steps, varParams, tags, memberId, authorId, createdAt, updatedAt, deleted, created, updated, externalIssues);
+            return new TestCase(id, position, title, description, preconditions, postconditions, severity, priority, type, layer, isFlaky, behavior, automation, status, milestoneId, suiteId, customFields, attachments, stepsType, steps, varParams, parameters, tags, memberId, authorId, createdAt, updatedAt, deleted, created, updated, externalIssues);
         }
 
         /// <summary>
@@ -848,6 +872,9 @@ namespace Qase.ApiClient.V1.Model
 
             if (testCase.ParamsOption.IsSet && testCase.Params == null)
                 throw new ArgumentNullException(nameof(testCase.Params), "Property is required for class TestCase.");
+
+            if (testCase.ParametersOption.IsSet && testCase.Parameters == null)
+                throw new ArgumentNullException(nameof(testCase.Parameters), "Property is required for class TestCase.");
 
             if (testCase.TagsOption.IsSet && testCase.Tags == null)
                 throw new ArgumentNullException(nameof(testCase.Tags), "Property is required for class TestCase.");
@@ -949,6 +976,11 @@ namespace Qase.ApiClient.V1.Model
             {
                 writer.WritePropertyName("params");
                 JsonSerializer.Serialize(writer, testCase.Params, jsonSerializerOptions);
+            }
+            if (testCase.ParametersOption.IsSet)
+            {
+                writer.WritePropertyName("parameters");
+                JsonSerializer.Serialize(writer, testCase.Parameters, jsonSerializerOptions);
             }
             if (testCase.TagsOption.IsSet)
             {
