@@ -21,7 +21,8 @@ Name | Type | Description | Notes
 **Attachments** | **List&lt;string&gt;** | A list of Attachment hashes. | [optional] 
 **Steps** | [**List&lt;TestStepCreate&gt;**](TestStepCreate.md) |  | [optional] 
 **Tags** | **List&lt;string&gt;** |  | [optional] 
-**Params** | **Dictionary&lt;string, List&lt;string&gt;&gt;** |  | [optional] 
+**Params** | **Dictionary&lt;string, List&lt;string&gt;&gt;** | Deprecated, use &#x60;parameters&#x60; instead. | [optional] 
+**Parameters** | [**List&lt;TestCaseParametercreate&gt;**](TestCaseParametercreate.md) |  | [optional] 
 **CustomField** | **Dictionary&lt;string, string&gt;** | A map of custom fields values (id &#x3D;&gt; value) | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)

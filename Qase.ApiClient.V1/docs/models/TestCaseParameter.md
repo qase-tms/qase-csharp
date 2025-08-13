@@ -1,5 +1,4 @@
-# Qase.ApiClient.V1.Model.TestCaseParams
-Deprecated, use `parameters` instead.
+# Qase.ApiClient.V1.Model.TestCaseParameter
 
 ## Properties
 

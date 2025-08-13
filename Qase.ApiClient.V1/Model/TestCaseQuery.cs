@@ -63,7 +63,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="updatedAt">updatedAt</param>
         /// <param name="updatedBy">Author ID of the last update.</param>
         [JsonConstructor]
-        public TestCaseQuery(long testCaseId, Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<string?> stepsType = default, Option<List<TestStep>?> steps = default, Option<TestCaseParams?> @params = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<long?> updatedBy = default)
+        public TestCaseQuery(long testCaseId, Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<string?> stepsType = default, Option<List<TestStep>?> steps = default, Option<QqlTestCaseParams?> @params = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<long?> updatedBy = default)
         {
             TestCaseId = testCaseId;
             IdOption = id;
@@ -369,13 +369,13 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<TestCaseParams?> ParamsOption { get; private set; }
+        public Option<QqlTestCaseParams?> ParamsOption { get; private set; }
 
         /// <summary>
         /// Gets or Sets Params
         /// </summary>
         [JsonPropertyName("params")]
-        public TestCaseParams? Params { get { return this.ParamsOption; } set { this.ParamsOption = new Option<TestCaseParams?>(value); } }
+        public QqlTestCaseParams? Params { get { return this.ParamsOption; } set { this.ParamsOption = new Option<QqlTestCaseParams?>(value); } }
 
         /// <summary>
         /// Used to track the state of Tags
@@ -571,7 +571,7 @@ namespace Qase.ApiClient.V1.Model
             Option<List<Attachment>?> attachments = default;
             Option<string?> stepsType = default;
             Option<List<TestStep>?> steps = default;
-            Option<TestCaseParams?> varParams = default;
+            Option<QqlTestCaseParams?> varParams = default;
             Option<List<TagValue>?> tags = default;
             Option<long?> memberId = default;
             Option<long?> authorId = default;
@@ -658,7 +658,7 @@ namespace Qase.ApiClient.V1.Model
                             steps = new Option<List<TestStep>?>(JsonSerializer.Deserialize<List<TestStep>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "params":
-                            varParams = new Option<TestCaseParams?>(JsonSerializer.Deserialize<TestCaseParams>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            varParams = new Option<QqlTestCaseParams?>(JsonSerializer.Deserialize<QqlTestCaseParams>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "tags":
                             tags = new Option<List<TagValue>?>(JsonSerializer.Deserialize<List<TagValue>>(ref utf8JsonReader, jsonSerializerOptions)!);
