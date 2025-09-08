@@ -63,7 +63,11 @@ namespace Qase.Xunit.Reporter
         private void OnTestFailed(MessageHandlerArgs<ITestFailed> args)
         {
             var testResult = qaseTestData[args.Message.Test];
-            testResult.Execution!.Status = TestResultStatus.Failed;
+            
+            // Determine if the failure is due to assertion or other reasons
+            var isAssertionFailure = IsAssertionFailure(args.Message);
+                        
+            testResult.Execution!.Status = isAssertionFailure ? TestResultStatus.Failed : TestResultStatus.Invalid;
             testResult.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             testResult.Execution!.Duration = (int)(args.Message.ExecutionTime * 1000);
             testResult.Message = string.Join("\n", args.Message.Messages);
@@ -173,6 +177,47 @@ namespace Qase.Xunit.Reporter
             result.Signature = Signature.Generate(result.TestopsIds, result.Relations?.Suite?.Data?.Select(suite => suite.Title), result.Params);
 
             return result;
+        }
+
+        /// <summary>
+        /// Determines if the test failure is due to an assertion failure or other reasons
+        /// </summary>
+        /// <param name="testFailed">The test failed message</param>
+        /// <returns>True if the failure is due to assertion, false otherwise</returns>
+        public static bool IsAssertionFailure(ITestFailed testFailed)
+        {
+            // Check stack trace for xUnit assertion methods
+            var stackTrace = string.Join("\n", testFailed.StackTraces);
+            
+            // Look for xUnit assertion methods in stack trace
+            // We need to be more specific to avoid false positives
+            if (stackTrace.Contains("at Xunit.Assert.Equal") ||
+                stackTrace.Contains("at Xunit.Assert.NotEqual") ||
+                stackTrace.Contains("at Xunit.Assert.True") ||
+                stackTrace.Contains("at Xunit.Assert.False") ||
+                stackTrace.Contains("at Xunit.Assert.Null") ||
+                stackTrace.Contains("at Xunit.Assert.NotNull") ||
+                stackTrace.Contains("at Xunit.Assert.Empty") ||
+                stackTrace.Contains("at Xunit.Assert.NotEmpty") ||
+                stackTrace.Contains("at Xunit.Assert.Contains") ||
+                stackTrace.Contains("at Xunit.Assert.DoesNotContain") ||
+                stackTrace.Contains("at Xunit.Assert.InRange") ||
+                stackTrace.Contains("at Xunit.Assert.NotInRange") ||
+                stackTrace.Contains("at Xunit.Assert.Single") ||
+                stackTrace.Contains("at Xunit.Assert.Collection") ||
+                stackTrace.Contains("at Xunit.Assert.PropertyChanged") ||
+                stackTrace.Contains("at Xunit.Assert.All") ||
+                stackTrace.Contains("at Xunit.Assert.Any") ||
+                stackTrace.Contains("at Xunit.Assert.Throws") ||
+                stackTrace.Contains("at Xunit.Assert.DoesNotThrow") ||
+                stackTrace.Contains("at Xunit.Assert.Record") ||
+                stackTrace.Contains("at Xunit.Assert.NotRecord") ||
+                stackTrace.Contains("at Xunit.Assert.Fail"))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

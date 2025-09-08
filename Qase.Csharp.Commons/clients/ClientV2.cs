@@ -264,6 +264,8 @@ namespace Qase.Csharp.Commons.Clients
                     return "failed";
                 case TestResultStatus.Skipped:
                     return "skipped";
+                case TestResultStatus.Invalid:
+                    return "invalid";
                 default:
                     return "failed";
             }

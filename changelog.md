@@ -1,5 +1,10 @@
 # Changelog
 
+## qase-scharp 1.0.9
+
+- Improved the logic for determining the status of a test result
+- Added support for the `Invalid` status
+
 ## qase-scharp 1.0.7
 
 - Updated API clients to the latest specification versions
