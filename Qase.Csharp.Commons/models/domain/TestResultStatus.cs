@@ -18,6 +18,11 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// <summary>
         /// Test skipped
         /// </summary>
-        Skipped
+        Skipped,
+
+        /// <summary>
+        /// Test invalid (failed due to non-assertion reasons)
+        /// </summary>
+        Invalid
     }
 } 
