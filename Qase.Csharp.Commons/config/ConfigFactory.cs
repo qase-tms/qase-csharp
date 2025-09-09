@@ -117,6 +117,7 @@ namespace Qase.Csharp.Commons.Config
             qaseConfig.TestOps.Configurations.CreateIfNotExists = GetBooleanEnv("QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS", qaseConfig.TestOps.Configurations.CreateIfNotExists);
             qaseConfig.TestOps.Plan.Id = GetLongEnv("QASE_TESTOPS_PLAN_ID", qaseConfig.TestOps.Plan.Id);
             qaseConfig.TestOps.Batch.Size = GetIntEnv("QASE_TESTOPS_BATCH_SIZE", qaseConfig.TestOps.Batch.Size);
+            qaseConfig.TestOps.StatusFilter = GetListEnv("QASE_TESTOPS_STATUS_FILTER", qaseConfig.TestOps.StatusFilter);
 
             // Report settings
             string? driverStr = GetEnv("QASE_REPORT_DRIVER", null);
@@ -416,6 +417,16 @@ namespace Qase.Csharp.Commons.Config
                             qaseConfig.TestOps.Configurations.CreateIfNotExists = true;
                         }
                     }
+                }
+
+                if (testopsElement.TryGetProperty("statusFilter", out var statusFilterElement) &&
+                    statusFilterElement.ValueKind == JsonValueKind.Array)
+                {
+                    qaseConfig.TestOps.StatusFilter = statusFilterElement.EnumerateArray()
+                        .Where(e => e.ValueKind == JsonValueKind.String)
+                        .Select(e => e.GetString() ?? "")
+                        .Where(s => !string.IsNullOrEmpty(s))
+                        .ToList();
                 }
             }
 

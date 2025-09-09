@@ -604,5 +604,106 @@ namespace Qase.Csharp.Commons.Tests
             config.TestOps.Configurations.Values[1].Value.Should().Be("value2");
             config.TestOps.Configurations.CreateIfNotExists.Should().BeTrue();
         }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadStatusFilterFromJsonFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""statusFilter"": [""passed"", ""failed""]
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.StatusFilter.Should().HaveCount(2);
+            config.TestOps.StatusFilter.Should().Contain("passed");
+            config.TestOps.StatusFilter.Should().Contain("failed");
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadEmptyStatusFilterFromJsonFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""statusFilter"": []
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.StatusFilter.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHaveEmptyStatusFilterByDefault()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""project"": ""TEST""
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.StatusFilter.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadStatusFilterFromEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_STATUS_FILTER", "passed,failed,skipped");
+
+            try
+            {
+                // Act
+                var config = ConfigFactory.LoadConfig();
+
+                // Assert
+                config.TestOps.StatusFilter.Should().HaveCount(3);
+                config.TestOps.StatusFilter.Should().Contain("passed");
+                config.TestOps.StatusFilter.Should().Contain("failed");
+                config.TestOps.StatusFilter.Should().Contain("skipped");
+            }
+            finally
+            {
+                // Cleanup
+                Environment.SetEnvironmentVariable("QASE_TESTOPS_STATUS_FILTER", null);
+            }
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldIgnoreInvalidStatusFilterValues()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""statusFilter"": [""passed"", null, ""failed"", """", ""skipped""]
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.StatusFilter.Should().HaveCount(3);
+            config.TestOps.StatusFilter.Should().Contain("passed");
+            config.TestOps.StatusFilter.Should().Contain("failed");
+            config.TestOps.StatusFilter.Should().Contain("skipped");
+        }
     }
 } 
