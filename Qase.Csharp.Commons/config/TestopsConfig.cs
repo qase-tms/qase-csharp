@@ -41,5 +41,10 @@ namespace Qase.Csharp.Commons.Config
         /// Gets or sets the configurations
         /// </summary>
         public ConfigurationsConfig Configurations { get; set; } = new ConfigurationsConfig();
+
+        /// <summary>
+        /// Gets or sets the status filter for test results
+        /// </summary>
+        public List<string> StatusFilter { get; set; } = new List<string>();
     }
 }

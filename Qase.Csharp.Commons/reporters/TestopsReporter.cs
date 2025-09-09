@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -62,6 +63,31 @@ namespace Qase.Csharp.Commons.Reporters
         /// <inheritdoc />
         public async Task addResult(TestResult result)
         {
+            // Apply status filter if configured
+            if (_config.TestOps.StatusFilter.Count > 0)
+            {
+                if (result.Execution?.Status == null)
+                {
+                    // If execution is null, we don't filter it out - send it
+                    _logger.LogDebug("Test result with null execution will be sent (not filtered). Filter: {Filter}", 
+                        string.Join(",", _config.TestOps.StatusFilter));
+                }
+                else
+                {
+                    var statusString = result.Execution.Status.ToString().ToLowerInvariant();
+                    var filterContainsStatus = _config.TestOps.StatusFilter.Any(filter => 
+                        string.Equals(filter, statusString, StringComparison.OrdinalIgnoreCase));
+                    
+                    // If status is in the filter, we filter it out (don't send)
+                    if (filterContainsStatus)
+                    {
+                        _logger.LogDebug("Test result filtered out by status filter. Status: {Status}, Filter: {Filter}", 
+                            statusString, string.Join(",", _config.TestOps.StatusFilter));
+                        return;
+                    }
+                }
+            }
+
             _results.Add(result);
 
             if (result.Execution?.Status == TestResultStatus.Failed)

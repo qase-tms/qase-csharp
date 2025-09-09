@@ -960,5 +960,190 @@ namespace Qase.Csharp.Commons.Tests
             await reporterWithNullClient.addResult(result);
             // Should not throw an exception
         }
+
+        [Fact]
+        public async Task AddResult_WithStatusFilter_ShouldFilterOutMatchingStatuses()
+        {
+            // Arrange
+            _config.TestOps.StatusFilter = new List<string> { "passed", "failed" };
+            
+            var passedResult = new TestResult
+            {
+                Title = "Passed Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Passed }
+            };
+            
+            var failedResult = new TestResult
+            {
+                Title = "Failed Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Failed }
+            };
+            
+            var skippedResult = new TestResult
+            {
+                Title = "Skipped Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Skipped }
+            };
+
+            // Act
+            await _reporter.addResult(passedResult);
+            await _reporter.addResult(failedResult);
+            await _reporter.addResult(skippedResult);
+
+            // Assert
+            var results = await _reporter.getResults();
+            results.Should().HaveCount(1);
+            results.Should().NotContain(passedResult);
+            results.Should().NotContain(failedResult);
+            results.Should().Contain(skippedResult);
+        }
+
+        [Fact]
+        public async Task AddResult_WithEmptyStatusFilter_ShouldNotFilterAnyResults()
+        {
+            // Arrange
+            _config.TestOps.StatusFilter = new List<string>();
+            
+            var passedResult = new TestResult
+            {
+                Title = "Passed Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Passed }
+            };
+            
+            var skippedResult = new TestResult
+            {
+                Title = "Skipped Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Skipped }
+            };
+
+            // Act
+            await _reporter.addResult(passedResult);
+            await _reporter.addResult(skippedResult);
+
+            // Assert
+            var results = await _reporter.getResults();
+            results.Should().HaveCount(2);
+            results.Should().Contain(passedResult);
+            results.Should().Contain(skippedResult);
+        }
+
+        [Fact]
+        public async Task AddResult_WithStatusFilter_ShouldNotFilterResultsWithNullExecution()
+        {
+            // Arrange
+            _config.TestOps.StatusFilter = new List<string> { "passed" };
+            
+            var resultWithNullExecution = new TestResult
+            {
+                Title = "Test with null execution",
+                Execution = null
+            };
+
+            // Act
+            await _reporter.addResult(resultWithNullExecution);
+
+            // Assert
+            var results = await _reporter.getResults();
+            results.Should().HaveCount(1);
+            results.Should().Contain(resultWithNullExecution);
+        }
+
+        [Fact]
+        public async Task AddResult_WithStatusFilter_ShouldLogDebugWhenFilteringOut()
+        {
+            // Arrange
+            _config.TestOps.StatusFilter = new List<string> { "skipped" };
+            
+            var skippedResult = new TestResult
+            {
+                Title = "Skipped Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Skipped }
+            };
+
+            // Act
+            await _reporter.addResult(skippedResult);
+
+            // Assert
+            _loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Debug,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Test result filtered out by status filter")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineData("passed", TestResultStatus.Passed, false)] // Should be filtered out
+        [InlineData("failed", TestResultStatus.Failed, false)] // Should be filtered out
+        [InlineData("skipped", TestResultStatus.Skipped, false)] // Should be filtered out
+        [InlineData("invalid", TestResultStatus.Invalid, false)] // Should be filtered out
+        [InlineData("PASSED", TestResultStatus.Passed, false)] // Case insensitive - should be filtered out
+        [InlineData("FAILED", TestResultStatus.Failed, false)] // Case insensitive - should be filtered out
+        [InlineData("passed", TestResultStatus.Failed, true)] // Should NOT be filtered out
+        [InlineData("failed", TestResultStatus.Passed, true)] // Should NOT be filtered out
+        public async Task AddResult_WithStatusFilter_ShouldFilterCorrectly(string filterStatus, TestResultStatus resultStatus, bool shouldInclude)
+        {
+            // Arrange
+            _config.TestOps.StatusFilter = new List<string> { filterStatus };
+            
+            var result = new TestResult
+            {
+                Title = "Test",
+                Execution = new TestResultExecution { Status = resultStatus }
+            };
+
+            // Act
+            await _reporter.addResult(result);
+
+            // Assert
+            var results = await _reporter.getResults();
+            if (shouldInclude)
+            {
+                results.Should().Contain(result);
+            }
+            else
+            {
+                results.Should().NotContain(result);
+            }
+        }
+
+        [Fact]
+        public async Task AddResult_WithMultipleStatusFilters_ShouldFilterOutAnyMatchingStatus()
+        {
+            // Arrange
+            _config.TestOps.StatusFilter = new List<string> { "passed", "skipped" };
+            
+            var passedResult = new TestResult
+            {
+                Title = "Passed Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Passed }
+            };
+            
+            var skippedResult = new TestResult
+            {
+                Title = "Skipped Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Skipped }
+            };
+            
+            var failedResult = new TestResult
+            {
+                Title = "Failed Test",
+                Execution = new TestResultExecution { Status = TestResultStatus.Failed }
+            };
+
+            // Act
+            await _reporter.addResult(passedResult);
+            await _reporter.addResult(skippedResult);
+            await _reporter.addResult(failedResult);
+
+            // Assert
+            var results = await _reporter.getResults();
+            results.Should().HaveCount(1);
+            results.Should().NotContain(passedResult);
+            results.Should().NotContain(skippedResult);
+            results.Should().Contain(failedResult);
+        }
     }
 } 
