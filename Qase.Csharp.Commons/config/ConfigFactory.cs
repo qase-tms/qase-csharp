@@ -113,6 +113,9 @@ namespace Qase.Csharp.Commons.Config
             qaseConfig.TestOps.Run.Id = GetLongEnv("QASE_TESTOPS_RUN_ID", qaseConfig.TestOps.Run.Id);
             qaseConfig.TestOps.Run.Complete = GetBooleanEnv("QASE_TESTOPS_RUN_COMPLETE", qaseConfig.TestOps.Run.Complete);
             qaseConfig.TestOps.Run.Tags = GetListEnv("QASE_TESTOPS_RUN_TAGS", qaseConfig.TestOps.Run.Tags);
+            // Try separate environment variables first, then fallback to combined variable
+            qaseConfig.TestOps.Run.ExternalLink = GetExternalLinkFromSeparateEnvVars(qaseConfig.TestOps.Run.ExternalLink) 
+                ?? GetExternalLinkEnv("QASE_TESTOPS_RUN_EXTERNAL_LINK", qaseConfig.TestOps.Run.ExternalLink);
             qaseConfig.TestOps.Configurations.Values = GetConfigurationListEnv("QASE_TESTOPS_CONFIGURATIONS_VALUES", qaseConfig.TestOps.Configurations.Values);
             qaseConfig.TestOps.Configurations.CreateIfNotExists = GetBooleanEnv("QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS", qaseConfig.TestOps.Configurations.CreateIfNotExists);
             qaseConfig.TestOps.Plan.Id = GetLongEnv("QASE_TESTOPS_PLAN_ID", qaseConfig.TestOps.Plan.Id);
@@ -372,6 +375,12 @@ namespace Qase.Csharp.Commons.Config
                             .Where(t => !string.IsNullOrEmpty(t))
                             .ToList();
                     }
+
+                    if (runElement.TryGetProperty("externalLink", out var externalLinkElement) &&
+                        externalLinkElement.ValueKind == JsonValueKind.Object)
+                    {
+                        qaseConfig.TestOps.Run.ExternalLink = ParseExternalLinkFromJson(externalLinkElement);
+                    }
                 }
 
                 if (testopsElement.TryGetProperty("plan", out var planElement))
@@ -464,6 +473,115 @@ namespace Qase.Csharp.Commons.Config
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets external link from separate environment variables or returns default value
+        /// </summary>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>External link configuration or default</returns>
+        private static TestOpsExternalLinkType? GetExternalLinkFromSeparateEnvVars(TestOpsExternalLinkType? defaultValue)
+        {
+            var typeValue = Environment.GetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_TYPE");
+            var urlValue = Environment.GetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_URL");
+            
+            if (string.IsNullOrEmpty(typeValue) || string.IsNullOrEmpty(urlValue))
+            {
+                return defaultValue;
+            }
+            
+            try
+            {
+                if (Enum.TryParse<ExternalLinkType>(typeValue, true, out var type))
+                {
+                    return new TestOpsExternalLinkType
+                    {
+                        Type = type,
+                        Link = urlValue
+                    };
+                }
+            }
+            catch
+            {
+                // Ignore parsing errors
+            }
+            
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Gets external link from environment variable or returns default value
+        /// </summary>
+        /// <param name="key">Environment variable name</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>External link configuration or default</returns>
+        private static TestOpsExternalLinkType? GetExternalLinkEnv(string key, TestOpsExternalLinkType? defaultValue)
+        {
+            var value = Environment.GetEnvironmentVariable(key);
+            if (value == null) return defaultValue;
+            
+            try
+            {
+                var parts = value.Split('|');
+                if (parts.Length == 2)
+                {
+                    var typeStr = parts[0].Trim();
+                    var link = parts[1].Trim();
+                    
+                    if (Enum.TryParse<ExternalLinkType>(typeStr, true, out var type))
+                    {
+                        return new TestOpsExternalLinkType
+                        {
+                            Type = type,
+                            Link = link
+                        };
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore parsing errors
+            }
+            
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Parses external link configuration from JSON element
+        /// </summary>
+        /// <param name="jsonElement">JSON element containing external link configuration</param>
+        /// <returns>External link configuration or null</returns>
+        private static TestOpsExternalLinkType? ParseExternalLinkFromJson(JsonElement jsonElement)
+        {
+            try
+            {
+                if (jsonElement.TryGetProperty("type", out var typeElement) &&
+                    jsonElement.TryGetProperty("link", out var linkElement) &&
+                    typeElement.ValueKind == JsonValueKind.String &&
+                    linkElement.ValueKind == JsonValueKind.String)
+                {
+                    var typeStr = typeElement.GetString();
+                    var link = linkElement.GetString();
+                    
+                    if (!string.IsNullOrEmpty(typeStr) && !string.IsNullOrEmpty(link))
+                    {
+                        if (Enum.TryParse<ExternalLinkType>(typeStr, true, out var type))
+                        {
+                            return new TestOpsExternalLinkType
+                            {
+                                Type = type,
+                                Link = link
+                            };
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore parsing errors
+            }
+            
+            return null;
         }
 
         /// <summary>
