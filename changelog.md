@@ -1,5 +1,10 @@
 # Changelog
 
+## qase-scharp 1.0.10
+
+- Added support for external link configuration
+- Added support for status filter configuration
+
 ## qase-scharp 1.0.9
 
 - Improved the logic for determining the status of a test result

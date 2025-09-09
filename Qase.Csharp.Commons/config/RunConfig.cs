@@ -31,5 +31,10 @@ namespace Qase.Csharp.Commons.Config
         /// Gets or sets the run tags
         /// </summary>
         public List<string> Tags { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Gets or sets the external link configuration
+        /// </summary>
+        public TestOpsExternalLinkType? ExternalLink { get; set; }
     }
 } 

@@ -84,6 +84,13 @@ namespace Qase.Csharp.Commons.Clients
                 if (resp.IsSuccessStatusCode)
                 {
                     var runId = resp.Ok()?.Result?.Id ?? throw new QaseException("Failed to create test run, invalid response");
+                    
+                    // Attach external link if configured
+                    if (_config.TestOps.Run.ExternalLink != null)
+                    {
+                        await AttachExternalLinkAsync(runId);
+                    }
+                    
                     return runId;
                 }
                 else
@@ -329,6 +336,47 @@ namespace Qase.Csharp.Commons.Clients
             {
                 _logger.LogError(ex, "Failed to get configuration IDs");
                 return new List<long>();
+            }
+        }
+
+        /// <summary>
+        /// Attaches external link to the test run
+        /// </summary>
+        /// <param name="runId">The run ID to attach the external link to</param>
+        private async Task AttachExternalLinkAsync(long runId)
+        {
+            try
+            {
+                _logger.LogDebug("Attaching external link to run {RunId}", runId);
+
+                // Map our enum values to API enum values
+                var apiType = _config.TestOps.Run.ExternalLink!.Type == ExternalLinkType.JiraCloud
+                    ? RunexternalIssues.TypeEnum.JiraCloud
+                    : RunexternalIssues.TypeEnum.JiraServer;
+
+                var externalIssues = new RunexternalIssues(
+                    apiType,
+                    new List<RunexternalIssuesLinksInner>
+                    {
+                        new RunexternalIssuesLinksInner(runId, _config.TestOps.Run.ExternalLink.Link)
+                    }
+                );
+
+                var resp = await _runApi.RunUpdateExternalIssueAsync(_config.TestOps.Project!, externalIssues);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    _logger.LogDebug("Successfully attached external link to run {RunId}", runId);
+                }
+                else
+                {
+                    _logger.LogWarning("Failed to attach external link to run {RunId}: {ReasonPhrase}", runId, resp.ReasonPhrase);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to attach external link to run {RunId}", runId);
+                // Don't throw exception here to avoid breaking the test run creation
             }
         }
     }

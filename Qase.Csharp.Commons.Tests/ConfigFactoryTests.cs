@@ -705,5 +705,179 @@ namespace Qase.Csharp.Commons.Tests
             config.TestOps.StatusFilter.Should().Contain("failed");
             config.TestOps.StatusFilter.Should().Contain("skipped");
         }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadExternalLinkFromFile_WhenExternalLinkConfigured()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""project"": ""TEST"",
+    ""api"": {
+      ""token"": ""test-token"",
+      ""host"": ""qase.io""
+    },
+    ""run"": {
+      ""title"": ""Test Run"",
+      ""description"": ""Test Description"",
+      ""externalLink"": {
+        ""type"": ""JiraCloud"",
+        ""link"": ""PROJ-123""
+      }
+    }
+  }
+}";
+
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().NotBeNull();
+            config.TestOps.Run.ExternalLink!.Type.Should().Be(ExternalLinkType.JiraCloud);
+            config.TestOps.Run.ExternalLink.Link.Should().Be("PROJ-123");
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadJiraServerExternalLinkFromFile_WhenJiraServerConfigured()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""project"": ""TEST"",
+    ""api"": {
+      ""token"": ""test-token"",
+      ""host"": ""qase.io""
+    },
+    ""run"": {
+      ""title"": ""Test Run"",
+      ""description"": ""Test Description"",
+      ""externalLink"": {
+        ""type"": ""JiraServer"",
+        ""link"": ""PROJ-456""
+      }
+    }
+  }
+}";
+
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().NotBeNull();
+            config.TestOps.Run.ExternalLink!.Type.Should().Be(ExternalLinkType.JiraServer);
+            config.TestOps.Run.ExternalLink.Link.Should().Be("PROJ-456");
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadExternalLinkFromSeparateEnvironmentVariables_WhenEnvironmentVariablesSet()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_TYPE", "JiraCloud");
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_URL", "PROJ-789");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().NotBeNull();
+            config.TestOps.Run.ExternalLink!.Type.Should().Be(ExternalLinkType.JiraCloud);
+            config.TestOps.Run.ExternalLink.Link.Should().Be("PROJ-789");
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_TYPE", null);
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_URL", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadExternalLinkFromEnvironment_WhenEnvironmentVariableSet()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", "JiraCloud|PROJ-789");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().NotBeNull();
+            config.TestOps.Run.ExternalLink!.Type.Should().Be(ExternalLinkType.JiraCloud);
+            config.TestOps.Run.ExternalLink.Link.Should().Be("PROJ-789");
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadJiraServerExternalLinkFromSeparateEnvironmentVariables_WhenEnvironmentVariablesSet()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_TYPE", "JiraServer");
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_URL", "PROJ-999");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().NotBeNull();
+            config.TestOps.Run.ExternalLink!.Type.Should().Be(ExternalLinkType.JiraServer);
+            config.TestOps.Run.ExternalLink.Link.Should().Be("PROJ-999");
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_TYPE", null);
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK_URL", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadJiraServerExternalLinkFromEnvironment_WhenJiraServerEnvironmentVariableSet()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", "JiraServer|PROJ-999");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().NotBeNull();
+            config.TestOps.Run.ExternalLink!.Type.Should().Be(ExternalLinkType.JiraServer);
+            config.TestOps.Run.ExternalLink.Link.Should().Be("PROJ-999");
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHandleInvalidExternalLinkFromEnvironment_WhenInvalidFormatProvided()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", "InvalidFormat");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().BeNull();
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHandleInvalidExternalLinkTypeFromEnvironment_WhenInvalidTypeProvided()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", "InvalidType|PROJ-123");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.ExternalLink.Should().BeNull();
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", null);
+        }
     }
 } 

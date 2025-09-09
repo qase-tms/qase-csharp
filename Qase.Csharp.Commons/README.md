@@ -41,6 +41,8 @@ All configuration options are listed in the table below:
 | Qase test run description                                                                                                  | `testops.run.description`  | `QASE_TESTOPS_RUN_DESCRIPTION`  | `QASE_TESTOPS_RUN_DESCRIPTION`  | `<Framework name> automated run`        | No       | Any string                 |
 | Qase test run complete                                                                                                     | `testops.run.complete`     | `QASE_TESTOPS_RUN_COMPLETE`     | `QASE_TESTOPS_RUN_COMPLETE`     | `True`                                  |          | `True`, `False`            |
 | Qase test run tags                                                                                                         | `testops.run.tags`         | `QASE_TESTOPS_RUN_TAGS`         | `QASE_TESTOPS_RUN_TAGS`         | `[]`                                    | No       | Array of strings           |
+| External link type for test run                                                                                            | `testops.run.externalLink.type` | `QASE_TESTOPS_RUN_EXTERNAL_LINK_TYPE` | `QASE_TESTOPS_RUN_EXTERNAL_LINK_TYPE` | None, don't add external link           | No       | `jiraCloud`, `jiraServer`  |
+| External link URL for test run                                                                                             | `testops.run.externalLink.link` | `QASE_TESTOPS_RUN_EXTERNAL_LINK_URL` | `QASE_TESTOPS_RUN_EXTERNAL_LINK_URL` | None, don't add external link           | No       | Any string (e.g., "PROJ-1234") |
 | Qase test plan ID                                                                                                          | `testops.plan.id`          | `QASE_TESTOPS_PLAN_ID`          | `QASE_TESTOPS_PLAN_ID`          | undefined                               | No       | Any integer                |
 | Size of batch for sending test results                                                                                     | `testops.batch.size`       | `QASE_TESTOPS_BATCH_SIZE`       | `QASE_TESTOPS_BATCH_SIZE`       | `200`                                   | No       | Any integer                |
 | Enable defects for failed test cases                                                                                       | `testops.defect`           | `QASE_TESTOPS_DEFECT`           | `QASE_TESTOPS_DEFECT`           | `False`                                 | No       | `True`, `False`            |
@@ -75,7 +77,11 @@ All configuration options are listed in the table below:
       "title": "Regress run",
       "description": "Regress run description",
       "complete": true,
-      "tags": ["tag1", "tag2"]
+      "tags": ["tag1", "tag2"],
+      "externalLink": {
+        "type": "JiraCloud",
+        "link": "PROJ-1234"
+      }
     },
     "defect": false,
     "project": "<project_code>",
