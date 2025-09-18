@@ -84,13 +84,13 @@ namespace Qase.Csharp.Commons.Clients
                 if (resp.IsSuccessStatusCode)
                 {
                     var runId = resp.Ok()?.Result?.Id ?? throw new QaseException("Failed to create test run, invalid response");
-                    
+
                     // Attach external link if configured
                     if (_config.TestOps.Run.ExternalLink != null)
                     {
                         await AttachExternalLinkAsync(runId);
                     }
-                    
+
                     return runId;
                 }
                 else
@@ -174,11 +174,14 @@ namespace Qase.Csharp.Commons.Clients
         {
             var tempFiles = new List<string>(1);
             var fileName = attachment.FileName;
-            if (string.IsNullOrEmpty(fileName)){
-                if (attachment.FilePath != null && File.Exists(attachment.FilePath)){
+            if (string.IsNullOrEmpty(fileName))
+            {
+                if (attachment.FilePath != null && File.Exists(attachment.FilePath))
+                {
                     fileName = Path.GetFileName(attachment.FilePath);
                 }
-                else {
+                else
+                {
                     fileName = Path.GetRandomFileName();
                 }
             }
@@ -351,14 +354,14 @@ namespace Qase.Csharp.Commons.Clients
 
                 // Map our enum values to API enum values
                 var apiType = _config.TestOps.Run.ExternalLink!.Type == ExternalLinkType.JiraCloud
-                    ? RunexternalIssues.TypeEnum.JiraCloud
-                    : RunexternalIssues.TypeEnum.JiraServer;
+                    ? RunExternalIssues.TypeEnum.JiraCloud
+                    : RunExternalIssues.TypeEnum.JiraServer;
 
-                var externalIssues = new RunexternalIssues(
+                var externalIssues = new RunExternalIssues(
                     apiType,
-                    new List<RunexternalIssuesLinksInner>
+                    new List<RunExternalIssuesLinksInner>
                     {
-                        new RunexternalIssuesLinksInner(runId, _config.TestOps.Run.ExternalLink.Link)
+                        new RunExternalIssuesLinksInner(runId, _config.TestOps.Run.ExternalLink.Link)
                     }
                 );
 

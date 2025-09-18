@@ -1,4 +1,4 @@
-# Qase.ApiClient.V1.Model.TestCaseParametercreate
+# Qase.ApiClient.V1.Model.TestCaseParameterCreate
 
 ## Properties
 

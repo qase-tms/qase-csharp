@@ -71,10 +71,10 @@ namespace Qase.ApiClient.V1.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="resultcreateBulk"></param>
+        /// <param name="resultCreateBulk"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICreateResultBulkApiResponse"/>&gt;</returns>
-        Task<ICreateResultBulkApiResponse> CreateResultBulkAsync(string code, int id, ResultcreateBulk resultcreateBulk, System.Threading.CancellationToken cancellationToken = default);
+        Task<ICreateResultBulkApiResponse> CreateResultBulkAsync(string code, int id, ResultCreateBulk resultCreateBulk, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Bulk create test run result
@@ -84,10 +84,10 @@ namespace Qase.ApiClient.V1.Api
         /// </remarks>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="resultcreateBulk"></param>
+        /// <param name="resultCreateBulk"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICreateResultBulkApiResponse"/>?&gt;</returns>
-        Task<ICreateResultBulkApiResponse?> CreateResultBulkOrDefaultAsync(string code, int id, ResultcreateBulk resultcreateBulk, System.Threading.CancellationToken cancellationToken = default);
+        Task<ICreateResultBulkApiResponse?> CreateResultBulkOrDefaultAsync(string code, int id, ResultCreateBulk resultCreateBulk, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete test run result
@@ -816,11 +816,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CreateResultApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CreateResultApiResponse>();
+                        CreateResultApiResponse apiResponseLocalVar;
 
-                        CreateResultApiResponse apiResponseLocalVar = new CreateResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CreateResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterCreateResultDefaultImplementation(apiResponseLocalVar, code, id, resultCreate);
 
@@ -863,6 +869,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public CreateResultApiResponse(ILogger<CreateResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="CreateResultApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CreateResultApiResponse(ILogger<CreateResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -955,21 +977,21 @@ namespace Qase.ApiClient.V1.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatCreateResultBulk(ref string code, ref int id, ResultcreateBulk resultcreateBulk);
+        partial void FormatCreateResultBulk(ref string code, ref int id, ResultCreateBulk resultCreateBulk);
 
         /// <summary>
         /// Validates the request parameters
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="resultcreateBulk"></param>
+        /// <param name="resultCreateBulk"></param>
         /// <returns></returns>
-        private void ValidateCreateResultBulk(string code, ResultcreateBulk resultcreateBulk)
+        private void ValidateCreateResultBulk(string code, ResultCreateBulk resultCreateBulk)
         {
             if (code == null)
                 throw new ArgumentNullException(nameof(code));
 
-            if (resultcreateBulk == null)
-                throw new ArgumentNullException(nameof(resultcreateBulk));
+            if (resultCreateBulk == null)
+                throw new ArgumentNullException(nameof(resultCreateBulk));
         }
 
         /// <summary>
@@ -978,11 +1000,11 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="id"></param>
-        /// <param name="resultcreateBulk"></param>
-        private void AfterCreateResultBulkDefaultImplementation(ICreateResultBulkApiResponse apiResponseLocalVar, string code, int id, ResultcreateBulk resultcreateBulk)
+        /// <param name="resultCreateBulk"></param>
+        private void AfterCreateResultBulkDefaultImplementation(ICreateResultBulkApiResponse apiResponseLocalVar, string code, int id, ResultCreateBulk resultCreateBulk)
         {
             bool suppressDefaultLog = false;
-            AfterCreateResultBulk(ref suppressDefaultLog, apiResponseLocalVar, code, id, resultcreateBulk);
+            AfterCreateResultBulk(ref suppressDefaultLog, apiResponseLocalVar, code, id, resultCreateBulk);
             if (!suppressDefaultLog)
                 Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
         }
@@ -994,8 +1016,8 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="id"></param>
-        /// <param name="resultcreateBulk"></param>
-        partial void AfterCreateResultBulk(ref bool suppressDefaultLog, ICreateResultBulkApiResponse apiResponseLocalVar, string code, int id, ResultcreateBulk resultcreateBulk);
+        /// <param name="resultCreateBulk"></param>
+        partial void AfterCreateResultBulk(ref bool suppressDefaultLog, ICreateResultBulkApiResponse apiResponseLocalVar, string code, int id, ResultCreateBulk resultCreateBulk);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1005,11 +1027,11 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="id"></param>
-        /// <param name="resultcreateBulk"></param>
-        private void OnErrorCreateResultBulkDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, int id, ResultcreateBulk resultcreateBulk)
+        /// <param name="resultCreateBulk"></param>
+        private void OnErrorCreateResultBulkDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, int id, ResultCreateBulk resultCreateBulk)
         {
             bool suppressDefaultLogLocalVar = false;
-            OnErrorCreateResultBulk(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, id, resultcreateBulk);
+            OnErrorCreateResultBulk(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, id, resultCreateBulk);
             if (!suppressDefaultLogLocalVar)
                 Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
         }
@@ -1023,22 +1045,22 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
         /// <param name="id"></param>
-        /// <param name="resultcreateBulk"></param>
-        partial void OnErrorCreateResultBulk(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, int id, ResultcreateBulk resultcreateBulk);
+        /// <param name="resultCreateBulk"></param>
+        partial void OnErrorCreateResultBulk(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, int id, ResultCreateBulk resultCreateBulk);
 
         /// <summary>
         /// Bulk create test run result This method allows to create a lot of test run result at once.  If you try to send more than 2,000 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
         /// </summary>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="resultcreateBulk"></param>
+        /// <param name="resultCreateBulk"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICreateResultBulkApiResponse"/>&gt;</returns>
-        public async Task<ICreateResultBulkApiResponse?> CreateResultBulkOrDefaultAsync(string code, int id, ResultcreateBulk resultcreateBulk, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<ICreateResultBulkApiResponse?> CreateResultBulkOrDefaultAsync(string code, int id, ResultCreateBulk resultCreateBulk, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
-                return await CreateResultBulkAsync(code, id, resultcreateBulk, cancellationToken).ConfigureAwait(false);
+                return await CreateResultBulkAsync(code, id, resultCreateBulk, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -1052,18 +1074,18 @@ namespace Qase.ApiClient.V1.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
-        /// <param name="resultcreateBulk"></param>
+        /// <param name="resultCreateBulk"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICreateResultBulkApiResponse"/>&gt;</returns>
-        public async Task<ICreateResultBulkApiResponse> CreateResultBulkAsync(string code, int id, ResultcreateBulk resultcreateBulk, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<ICreateResultBulkApiResponse> CreateResultBulkAsync(string code, int id, ResultCreateBulk resultCreateBulk, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
-                ValidateCreateResultBulk(code, resultcreateBulk);
+                ValidateCreateResultBulk(code, resultCreateBulk);
 
-                FormatCreateResultBulk(ref code, ref id, resultcreateBulk);
+                FormatCreateResultBulk(ref code, ref id, resultCreateBulk);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
                 {
@@ -1076,9 +1098,9 @@ namespace Qase.ApiClient.V1.Api
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcode%7D", Uri.EscapeDataString(code.ToString()));
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bid%7D", Uri.EscapeDataString(id.ToString()));
 
-                    httpRequestMessageLocalVar.Content = (resultcreateBulk as object) is System.IO.Stream stream
+                    httpRequestMessageLocalVar.Content = (resultCreateBulk as object) is System.IO.Stream stream
                         ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
-                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(resultcreateBulk, _jsonSerializerOptions));
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(resultCreateBulk, _jsonSerializerOptions));
 
                     List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
                     ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Token", cancellationToken).ConfigureAwait(false);
@@ -1110,13 +1132,19 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CreateResultBulkApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CreateResultBulkApiResponse>();
+                        CreateResultBulkApiResponse apiResponseLocalVar;
 
-                        CreateResultBulkApiResponse apiResponseLocalVar = new CreateResultBulkApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}/bulk", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CreateResultBulkApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}/bulk", requestedAtLocalVar, _jsonSerializerOptions);
 
-                        AfterCreateResultBulkDefaultImplementation(apiResponseLocalVar, code, id, resultcreateBulk);
+                                break;
+                            }
+                        }
+
+                        AfterCreateResultBulkDefaultImplementation(apiResponseLocalVar, code, id, resultCreateBulk);
 
                         Events.ExecuteOnCreateResultBulk(apiResponseLocalVar);
 
@@ -1130,7 +1158,7 @@ namespace Qase.ApiClient.V1.Api
             }
             catch(Exception e)
             {
-                OnErrorCreateResultBulkDefaultImplementation(e, "/result/{code}/{id}/bulk", uriBuilderLocalVar.Path, code, id, resultcreateBulk);
+                OnErrorCreateResultBulkDefaultImplementation(e, "/result/{code}/{id}/bulk", uriBuilderLocalVar.Path, code, id, resultCreateBulk);
                 Events.ExecuteOnErrorCreateResultBulk(e);
                 throw;
             }
@@ -1157,6 +1185,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public CreateResultBulkApiResponse(ILogger<CreateResultBulkApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="CreateResultBulkApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CreateResultBulkApiResponse(ILogger<CreateResultBulkApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1398,11 +1442,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<DeleteResultApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<DeleteResultApiResponse>();
+                        DeleteResultApiResponse apiResponseLocalVar;
 
-                        DeleteResultApiResponse apiResponseLocalVar = new DeleteResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}/{hash}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new DeleteResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}/{hash}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterDeleteResultDefaultImplementation(apiResponseLocalVar, code, id, hash);
 
@@ -1445,6 +1495,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public DeleteResultApiResponse(ILogger<DeleteResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="DeleteResultApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public DeleteResultApiResponse(ILogger<DeleteResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1667,11 +1733,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<GetResultApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetResultApiResponse>();
+                        GetResultApiResponse apiResponseLocalVar;
 
-                        GetResultApiResponse apiResponseLocalVar = new GetResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{hash}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new GetResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{hash}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetResultDefaultImplementation(apiResponseLocalVar, code, hash);
 
@@ -1714,6 +1786,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetResultApiResponse(ILogger<GetResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetResultApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetResultApiResponse(ILogger<GetResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2034,11 +2122,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<GetResultsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetResultsApiResponse>();
+                        GetResultsApiResponse apiResponseLocalVar;
 
-                        GetResultsApiResponse apiResponseLocalVar = new GetResultsApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new GetResultsApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetResultsDefaultImplementation(apiResponseLocalVar, code, status, run, caseId, member, api, fromEndTime, toEndTime, limit, offset);
 
@@ -2081,6 +2175,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetResultsApiResponse(ILogger<GetResultsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetResultsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetResultsApiResponse(ILogger<GetResultsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2333,11 +2443,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<UpdateResultApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<UpdateResultApiResponse>();
+                        UpdateResultApiResponse apiResponseLocalVar;
 
-                        UpdateResultApiResponse apiResponseLocalVar = new UpdateResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}/{hash}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new UpdateResultApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/result/{code}/{id}/{hash}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterUpdateResultDefaultImplementation(apiResponseLocalVar, code, id, hash, resultUpdate);
 
@@ -2380,6 +2496,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public UpdateResultApiResponse(ILogger<UpdateResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="UpdateResultApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public UpdateResultApiResponse(ILogger<UpdateResultApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

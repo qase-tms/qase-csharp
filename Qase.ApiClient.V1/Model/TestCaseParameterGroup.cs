@@ -38,7 +38,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="items">items</param>
         /// <param name="sharedId">sharedId</param>
         [JsonConstructor]
-        public TestCaseParameterGroup(TypeEnum type, Object items, Option<Guid?> sharedId = default)
+        public TestCaseParameterGroup(TypeEnum type, List<ParameterSingle> items, Option<Guid?> sharedId = default)
         {
             Type = type;
             Items = items;
@@ -110,7 +110,7 @@ namespace Qase.ApiClient.V1.Model
         /// Gets or Sets Items
         /// </summary>
         [JsonPropertyName("items")]
-        public Object Items { get; set; }
+        public List<ParameterSingle> Items { get; set; }
 
         /// <summary>
         /// Used to track the state of SharedId
@@ -181,7 +181,7 @@ namespace Qase.ApiClient.V1.Model
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
             Option<TestCaseParameterGroup.TypeEnum?> type = default;
-            Option<Object?> items = default;
+            Option<List<ParameterSingle>?> items = default;
             Option<Guid?> sharedId = default;
 
             while (utf8JsonReader.Read())
@@ -205,7 +205,7 @@ namespace Qase.ApiClient.V1.Model
                                 type = new Option<TestCaseParameterGroup.TypeEnum?>(TestCaseParameterGroup.TypeEnumFromStringOrDefault(typeRawValue));
                             break;
                         case "items":
-                            items = new Option<Object?>(JsonSerializer.Deserialize<Object>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            items = new Option<List<ParameterSingle>?>(JsonSerializer.Deserialize<List<ParameterSingle>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "shared_id":
                             sharedId = new Option<Guid?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (Guid?)null : utf8JsonReader.GetGuid());

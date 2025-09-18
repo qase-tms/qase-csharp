@@ -27,43 +27,50 @@ using Qase.ApiClient.V1.Client;
 namespace Qase.ApiClient.V1.Model
 {
     /// <summary>
-    /// TestCaseParameterBase
+    /// UserListResponse
     /// </summary>
-    public partial class TestCaseParameterBase : IValidatableObject
+    public partial class UserListResponse : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseParameterBase" /> class.
+        /// Initializes a new instance of the <see cref="UserListResponse" /> class.
         /// </summary>
-        /// <param name="type">type</param>
-        /// <param name="sharedId">sharedId</param>
+        /// <param name="status">status</param>
+        /// <param name="result">result</param>
         [JsonConstructor]
-        public TestCaseParameterBase(string type, Option<Guid?> sharedId = default)
+        public UserListResponse(Option<bool?> status = default, Option<UserListResponseAllOfResult?> result = default)
         {
-            Type = type;
-            SharedIdOption = sharedId;
+            StatusOption = status;
+            ResultOption = result;
             OnCreated();
         }
 
         partial void OnCreated();
 
         /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
-
-        /// <summary>
-        /// Used to track the state of SharedId
+        /// Used to track the state of Status
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<Guid?> SharedIdOption { get; private set; }
+        public Option<bool?> StatusOption { get; private set; }
 
         /// <summary>
-        /// Gets or Sets SharedId
+        /// Gets or Sets Status
         /// </summary>
-        [JsonPropertyName("shared_id")]
-        public Guid? SharedId { get { return this.SharedIdOption; } set { this.SharedIdOption = new Option<Guid?>(value); } }
+        [JsonPropertyName("status")]
+        public bool? Status { get { return this.StatusOption; } set { this.StatusOption = new Option<bool?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of Result
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<UserListResponseAllOfResult?> ResultOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets Result
+        /// </summary>
+        [JsonPropertyName("result")]
+        public UserListResponseAllOfResult? Result { get { return this.ResultOption; } set { this.ResultOption = new Option<UserListResponseAllOfResult?>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -78,9 +85,9 @@ namespace Qase.ApiClient.V1.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class TestCaseParameterBase {\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  SharedId: ").Append(SharedId).Append("\n");
+            sb.Append("class UserListResponse {\n");
+            sb.Append("  Status: ").Append(Status).Append("\n");
+            sb.Append("  Result: ").Append(Result).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -98,19 +105,19 @@ namespace Qase.ApiClient.V1.Model
     }
 
     /// <summary>
-    /// A Json converter for type <see cref="TestCaseParameterBase" />
+    /// A Json converter for type <see cref="UserListResponse" />
     /// </summary>
-    public class TestCaseParameterBaseJsonConverter : JsonConverter<TestCaseParameterBase>
+    public class UserListResponseJsonConverter : JsonConverter<UserListResponse>
     {
         /// <summary>
-        /// Deserializes json to <see cref="TestCaseParameterBase" />
+        /// Deserializes json to <see cref="UserListResponse" />
         /// </summary>
         /// <param name="utf8JsonReader"></param>
         /// <param name="typeToConvert"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="JsonException"></exception>
-        public override TestCaseParameterBase Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
+        public override UserListResponse Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
         {
             int currentDepth = utf8JsonReader.CurrentDepth;
 
@@ -119,8 +126,8 @@ namespace Qase.ApiClient.V1.Model
 
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
-            Option<string?> type = default;
-            Option<Guid?> sharedId = default;
+            Option<bool?> status = default;
+            Option<UserListResponseAllOfResult?> result = default;
 
             while (utf8JsonReader.Read())
             {
@@ -137,11 +144,11 @@ namespace Qase.ApiClient.V1.Model
 
                     switch (localVarJsonPropertyName)
                     {
-                        case "type":
-                            type = new Option<string?>(utf8JsonReader.GetString()!);
+                        case "status":
+                            status = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
                             break;
-                        case "shared_id":
-                            sharedId = new Option<Guid?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (Guid?)null : utf8JsonReader.GetGuid());
+                        case "result":
+                            result = new Option<UserListResponseAllOfResult?>(JsonSerializer.Deserialize<UserListResponseAllOfResult>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         default:
                             break;
@@ -149,49 +156,50 @@ namespace Qase.ApiClient.V1.Model
                 }
             }
 
-            if (!type.IsSet)
-                throw new ArgumentException("Property is required for class TestCaseParameterBase.", nameof(type));
+            if (status.IsSet && status.Value == null)
+                throw new ArgumentNullException(nameof(status), "Property is not nullable for class UserListResponse.");
 
-            if (type.IsSet && type.Value == null)
-                throw new ArgumentNullException(nameof(type), "Property is not nullable for class TestCaseParameterBase.");
+            if (result.IsSet && result.Value == null)
+                throw new ArgumentNullException(nameof(result), "Property is not nullable for class UserListResponse.");
 
-            return new TestCaseParameterBase(type.Value!, sharedId);
+            return new UserListResponse(status, result);
         }
 
         /// <summary>
-        /// Serializes a <see cref="TestCaseParameterBase" />
+        /// Serializes a <see cref="UserListResponse" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testCaseParameterBase"></param>
+        /// <param name="userListResponse"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Write(Utf8JsonWriter writer, TestCaseParameterBase testCaseParameterBase, JsonSerializerOptions jsonSerializerOptions)
+        public override void Write(Utf8JsonWriter writer, UserListResponse userListResponse, JsonSerializerOptions jsonSerializerOptions)
         {
             writer.WriteStartObject();
 
-            WriteProperties(writer, testCaseParameterBase, jsonSerializerOptions);
+            WriteProperties(writer, userListResponse, jsonSerializerOptions);
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serializes the properties of <see cref="TestCaseParameterBase" />
+        /// Serializes the properties of <see cref="UserListResponse" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testCaseParameterBase"></param>
+        /// <param name="userListResponse"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void WriteProperties(Utf8JsonWriter writer, TestCaseParameterBase testCaseParameterBase, JsonSerializerOptions jsonSerializerOptions)
+        public void WriteProperties(Utf8JsonWriter writer, UserListResponse userListResponse, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (testCaseParameterBase.Type == null)
-                throw new ArgumentNullException(nameof(testCaseParameterBase.Type), "Property is required for class TestCaseParameterBase.");
+            if (userListResponse.ResultOption.IsSet && userListResponse.Result == null)
+                throw new ArgumentNullException(nameof(userListResponse.Result), "Property is required for class UserListResponse.");
 
-            writer.WriteString("type", testCaseParameterBase.Type);
+            if (userListResponse.StatusOption.IsSet)
+                writer.WriteBoolean("status", userListResponse.StatusOption.Value!.Value);
 
-            if (testCaseParameterBase.SharedIdOption.IsSet)
-                if (testCaseParameterBase.SharedIdOption.Value != null)
-                    writer.WriteString("shared_id", testCaseParameterBase.SharedIdOption.Value!.Value);
-                else
-                    writer.WriteNull("shared_id");
+            if (userListResponse.ResultOption.IsSet)
+            {
+                writer.WritePropertyName("result");
+                JsonSerializer.Serialize(writer, userListResponse.Result, jsonSerializerOptions);
+            }
         }
     }
 }

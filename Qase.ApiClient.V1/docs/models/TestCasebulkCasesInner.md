@@ -22,7 +22,7 @@ Name | Type | Description | Notes
 **Steps** | [**List&lt;TestStepCreate&gt;**](TestStepCreate.md) |  | [optional] 
 **Tags** | **List&lt;string&gt;** |  | [optional] 
 **Params** | **Dictionary&lt;string, List&lt;string&gt;&gt;** | Deprecated, use &#x60;parameters&#x60; instead. | [optional] 
-**Parameters** | [**List&lt;TestCaseParametercreate&gt;**](TestCaseParametercreate.md) |  | [optional] 
+**Parameters** | [**List&lt;TestCaseParameterCreate&gt;**](TestCaseParameterCreate.md) |  | [optional] 
 **CustomField** | **Dictionary&lt;string, string&gt;** | A map of custom fields values (id &#x3D;&gt; value) | [optional] 
 **CreatedAt** | **string** |  | [optional] 
 **UpdatedAt** | **string** |  | [optional] 

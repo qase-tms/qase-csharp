@@ -139,12 +139,13 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new ResultQueryJsonConverter());
             _jsonOptions.Converters.Add(new ResultResponseJsonConverter());
             _jsonOptions.Converters.Add(new ResultUpdateJsonConverter());
-            _jsonOptions.Converters.Add(new ResultCreateBulkJsonConverter());
             _jsonOptions.Converters.Add(new RunJsonConverter());
             _jsonOptions.Converters.Add(new RunCreateJsonConverter());
             _jsonOptions.Converters.Add(new RunCreateCloudRunConfigJsonConverter());
             _jsonOptions.Converters.Add(new RunEnvironmentJsonConverter());
             _jsonOptions.Converters.Add(new RunExternalIssueJsonConverter());
+            _jsonOptions.Converters.Add(new RunExternalIssuesJsonConverter());
+            _jsonOptions.Converters.Add(new RunExternalIssuesLinksInnerJsonConverter());
             _jsonOptions.Converters.Add(new RunListResponseJsonConverter());
             _jsonOptions.Converters.Add(new RunListResponseAllOfResultJsonConverter());
             _jsonOptions.Converters.Add(new RunMilestoneJsonConverter());
@@ -154,8 +155,6 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new RunQueryJsonConverter());
             _jsonOptions.Converters.Add(new RunResponseJsonConverter());
             _jsonOptions.Converters.Add(new RunStatsJsonConverter());
-            _jsonOptions.Converters.Add(new RunexternalIssuesJsonConverter());
-            _jsonOptions.Converters.Add(new RunexternalIssuesLinksInnerJsonConverter());
             _jsonOptions.Converters.Add(new RunupdateJsonConverter());
             _jsonOptions.Converters.Add(new SearchResponseJsonConverter());
             _jsonOptions.Converters.Add(new SearchResponseAllOfResultJsonConverter());
@@ -194,20 +193,23 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new TestCaseListResponseAllOfResultJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseParameterJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseParameterBaseJsonConverter());
+            _jsonOptions.Converters.Add(new TestCaseParameterCreateJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseParameterGroupJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseParameterSingleJsonConverter());
-            _jsonOptions.Converters.Add(new TestCaseParametercreateJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseParamsJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseQueryJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseResponseJsonConverter());
             _jsonOptions.Converters.Add(new TestCaseUpdateJsonConverter());
             _jsonOptions.Converters.Add(new TestCasebulkJsonConverter());
             _jsonOptions.Converters.Add(new TestCasebulkCasesInnerJsonConverter());
-            _jsonOptions.Converters.Add(new TestCaseExternalIssuesJsonConverter());
             _jsonOptions.Converters.Add(new TestStepJsonConverter());
             _jsonOptions.Converters.Add(new TestStepCreateJsonConverter());
             _jsonOptions.Converters.Add(new TestStepResultJsonConverter());
             _jsonOptions.Converters.Add(new TestStepResultCreateJsonConverter());
+            _jsonOptions.Converters.Add(new UserJsonConverter());
+            _jsonOptions.Converters.Add(new UserListResponseJsonConverter());
+            _jsonOptions.Converters.Add(new UserListResponseAllOfResultJsonConverter());
+            _jsonOptions.Converters.Add(new UserResponseJsonConverter());
             _jsonOptions.Converters.Add(new UuidResponseJsonConverter());
             _jsonOptions.Converters.Add(new UuidResponse1JsonConverter());
             _jsonOptions.Converters.Add(new UuidResponseAllOfResultJsonConverter());
@@ -215,39 +217,23 @@ namespace Qase.ApiClient.V1.Client
             _services.AddSingleton(jsonSerializerOptionsProvider);
             _services.AddSingleton<IApiFactory, ApiFactory>();
             _services.AddSingleton<AttachmentsApiEvents>();
-            _services.AddTransient<IAttachmentsApi, AttachmentsApi>();
             _services.AddSingleton<AuthorsApiEvents>();
-            _services.AddTransient<IAuthorsApi, AuthorsApi>();
             _services.AddSingleton<CasesApiEvents>();
-            _services.AddTransient<ICasesApi, CasesApi>();
             _services.AddSingleton<ConfigurationsApiEvents>();
-            _services.AddTransient<IConfigurationsApi, ConfigurationsApi>();
             _services.AddSingleton<CustomFieldsApiEvents>();
-            _services.AddTransient<ICustomFieldsApi, CustomFieldsApi>();
             _services.AddSingleton<DefectsApiEvents>();
-            _services.AddTransient<IDefectsApi, DefectsApi>();
             _services.AddSingleton<EnvironmentsApiEvents>();
-            _services.AddTransient<IEnvironmentsApi, EnvironmentsApi>();
             _services.AddSingleton<MilestonesApiEvents>();
-            _services.AddTransient<IMilestonesApi, MilestonesApi>();
             _services.AddSingleton<PlansApiEvents>();
-            _services.AddTransient<IPlansApi, PlansApi>();
             _services.AddSingleton<ProjectsApiEvents>();
-            _services.AddTransient<IProjectsApi, ProjectsApi>();
             _services.AddSingleton<ResultsApiEvents>();
-            _services.AddTransient<IResultsApi, ResultsApi>();
             _services.AddSingleton<RunsApiEvents>();
-            _services.AddTransient<IRunsApi, RunsApi>();
             _services.AddSingleton<SearchApiEvents>();
-            _services.AddTransient<ISearchApi, SearchApi>();
             _services.AddSingleton<SharedParametersApiEvents>();
-            _services.AddTransient<ISharedParametersApi, SharedParametersApi>();
             _services.AddSingleton<SharedStepsApiEvents>();
-            _services.AddTransient<ISharedStepsApi, SharedStepsApi>();
             _services.AddSingleton<SuitesApiEvents>();
-            _services.AddTransient<ISuitesApi, SuitesApi>();
             _services.AddSingleton<SystemFieldsApiEvents>();
-            _services.AddTransient<ISystemFieldsApi, SystemFieldsApi>();
+            _services.AddSingleton<UsersApiEvents>();
         }
 
         /// <summary>
@@ -282,6 +268,7 @@ namespace Qase.ApiClient.V1.Client
             builders.Add(_services.AddHttpClient<ISharedStepsApi, SharedStepsApi>(client));
             builders.Add(_services.AddHttpClient<ISuitesApi, SuitesApi>(client));
             builders.Add(_services.AddHttpClient<ISystemFieldsApi, SystemFieldsApi>(client));
+            builders.Add(_services.AddHttpClient<IUsersApi, UsersApi>(client));
             
             if (builder != null)
                 foreach (IHttpClientBuilder instance in builders)

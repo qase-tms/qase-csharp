@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.11
+
+- Updated API clients to the latest specification versions
+
 ## qase-scharp 1.0.10
 
 - Added support for external link configuration

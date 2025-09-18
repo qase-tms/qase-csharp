@@ -186,10 +186,10 @@ namespace Qase.ApiClient.V1.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="runexternalIssues"></param>
+        /// <param name="runExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>&gt;</returns>
-        Task<IRunUpdateExternalIssueApiResponse> RunUpdateExternalIssueAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+        Task<IRunUpdateExternalIssueApiResponse> RunUpdateExternalIssueAsync(string code, RunExternalIssues runExternalIssues, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Update external issues for runs
@@ -198,10 +198,10 @@ namespace Qase.ApiClient.V1.Api
         /// This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \&quot;PROJ-1234\&quot;) - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
         /// </remarks>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="runexternalIssues"></param>
+        /// <param name="runExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>?&gt;</returns>
-        Task<IRunUpdateExternalIssueApiResponse?> RunUpdateExternalIssueOrDefaultAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+        Task<IRunUpdateExternalIssueApiResponse?> RunUpdateExternalIssueOrDefaultAsync(string code, RunExternalIssues runExternalIssues, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Update a specific run
@@ -951,11 +951,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CompleteRunApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CompleteRunApiResponse>();
+                        CompleteRunApiResponse apiResponseLocalVar;
 
-                        CompleteRunApiResponse apiResponseLocalVar = new CompleteRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}/complete", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CompleteRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}/complete", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterCompleteRunDefaultImplementation(apiResponseLocalVar, code, id);
 
@@ -998,6 +1004,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public CompleteRunApiResponse(ILogger<CompleteRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="CompleteRunApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CompleteRunApiResponse(ILogger<CompleteRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1238,11 +1260,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CreateRunApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CreateRunApiResponse>();
+                        CreateRunApiResponse apiResponseLocalVar;
 
-                        CreateRunApiResponse apiResponseLocalVar = new CreateRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CreateRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterCreateRunDefaultImplementation(apiResponseLocalVar, code, runCreate);
 
@@ -1285,6 +1313,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public CreateRunApiResponse(ILogger<CreateRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="CreateRunApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CreateRunApiResponse(ILogger<CreateRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1509,11 +1553,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<DeleteRunApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<DeleteRunApiResponse>();
+                        DeleteRunApiResponse apiResponseLocalVar;
 
-                        DeleteRunApiResponse apiResponseLocalVar = new DeleteRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new DeleteRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterDeleteRunDefaultImplementation(apiResponseLocalVar, code, id);
 
@@ -1556,6 +1606,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public DeleteRunApiResponse(ILogger<DeleteRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="DeleteRunApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public DeleteRunApiResponse(ILogger<DeleteRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1791,11 +1857,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<GetRunApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetRunApiResponse>();
+                        GetRunApiResponse apiResponseLocalVar;
 
-                        GetRunApiResponse apiResponseLocalVar = new GetRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new GetRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetRunDefaultImplementation(apiResponseLocalVar, code, id, include);
 
@@ -1838,6 +1910,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetRunApiResponse(ILogger<GetRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetRunApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetRunApiResponse(ILogger<GetRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2146,11 +2234,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<GetRunsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetRunsApiResponse>();
+                        GetRunsApiResponse apiResponseLocalVar;
 
-                        GetRunsApiResponse apiResponseLocalVar = new GetRunsApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new GetRunsApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetRunsDefaultImplementation(apiResponseLocalVar, code, search, status, milestone, environment, fromStartTime, toStartTime, limit, offset, include);
 
@@ -2193,6 +2287,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetRunsApiResponse(ILogger<GetRunsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetRunsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetRunsApiResponse(ILogger<GetRunsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2279,21 +2389,21 @@ namespace Qase.ApiClient.V1.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatRunUpdateExternalIssue(ref string code, RunexternalIssues runexternalIssues);
+        partial void FormatRunUpdateExternalIssue(ref string code, RunExternalIssues runExternalIssues);
 
         /// <summary>
         /// Validates the request parameters
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="runexternalIssues"></param>
+        /// <param name="runExternalIssues"></param>
         /// <returns></returns>
-        private void ValidateRunUpdateExternalIssue(string code, RunexternalIssues runexternalIssues)
+        private void ValidateRunUpdateExternalIssue(string code, RunExternalIssues runExternalIssues)
         {
             if (code == null)
                 throw new ArgumentNullException(nameof(code));
 
-            if (runexternalIssues == null)
-                throw new ArgumentNullException(nameof(runexternalIssues));
+            if (runExternalIssues == null)
+                throw new ArgumentNullException(nameof(runExternalIssues));
         }
 
         /// <summary>
@@ -2301,11 +2411,11 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="runexternalIssues"></param>
-        private void AfterRunUpdateExternalIssueDefaultImplementation(IRunUpdateExternalIssueApiResponse apiResponseLocalVar, string code, RunexternalIssues runexternalIssues)
+        /// <param name="runExternalIssues"></param>
+        private void AfterRunUpdateExternalIssueDefaultImplementation(IRunUpdateExternalIssueApiResponse apiResponseLocalVar, string code, RunExternalIssues runExternalIssues)
         {
             bool suppressDefaultLog = false;
-            AfterRunUpdateExternalIssue(ref suppressDefaultLog, apiResponseLocalVar, code, runexternalIssues);
+            AfterRunUpdateExternalIssue(ref suppressDefaultLog, apiResponseLocalVar, code, runExternalIssues);
             if (!suppressDefaultLog)
                 Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
         }
@@ -2316,8 +2426,8 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="runexternalIssues"></param>
-        partial void AfterRunUpdateExternalIssue(ref bool suppressDefaultLog, IRunUpdateExternalIssueApiResponse apiResponseLocalVar, string code, RunexternalIssues runexternalIssues);
+        /// <param name="runExternalIssues"></param>
+        partial void AfterRunUpdateExternalIssue(ref bool suppressDefaultLog, IRunUpdateExternalIssueApiResponse apiResponseLocalVar, string code, RunExternalIssues runExternalIssues);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -2326,11 +2436,11 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="runexternalIssues"></param>
-        private void OnErrorRunUpdateExternalIssueDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, RunexternalIssues runexternalIssues)
+        /// <param name="runExternalIssues"></param>
+        private void OnErrorRunUpdateExternalIssueDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, RunExternalIssues runExternalIssues)
         {
             bool suppressDefaultLogLocalVar = false;
-            OnErrorRunUpdateExternalIssue(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, runexternalIssues);
+            OnErrorRunUpdateExternalIssue(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, runExternalIssues);
             if (!suppressDefaultLogLocalVar)
                 Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
         }
@@ -2343,21 +2453,21 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="runexternalIssues"></param>
-        partial void OnErrorRunUpdateExternalIssue(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, RunexternalIssues runexternalIssues);
+        /// <param name="runExternalIssues"></param>
+        partial void OnErrorRunUpdateExternalIssue(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, RunExternalIssues runExternalIssues);
 
         /// <summary>
         /// Update external issues for runs This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \&quot;PROJ-1234\&quot;) - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
         /// </summary>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="runexternalIssues"></param>
+        /// <param name="runExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>&gt;</returns>
-        public async Task<IRunUpdateExternalIssueApiResponse?> RunUpdateExternalIssueOrDefaultAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IRunUpdateExternalIssueApiResponse?> RunUpdateExternalIssueOrDefaultAsync(string code, RunExternalIssues runExternalIssues, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
-                return await RunUpdateExternalIssueAsync(code, runexternalIssues, cancellationToken).ConfigureAwait(false);
+                return await RunUpdateExternalIssueAsync(code, runExternalIssues, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -2370,18 +2480,18 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="runexternalIssues"></param>
+        /// <param name="runExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IRunUpdateExternalIssueApiResponse"/>&gt;</returns>
-        public async Task<IRunUpdateExternalIssueApiResponse> RunUpdateExternalIssueAsync(string code, RunexternalIssues runexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IRunUpdateExternalIssueApiResponse> RunUpdateExternalIssueAsync(string code, RunExternalIssues runExternalIssues, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
-                ValidateRunUpdateExternalIssue(code, runexternalIssues);
+                ValidateRunUpdateExternalIssue(code, runExternalIssues);
 
-                FormatRunUpdateExternalIssue(ref code, runexternalIssues);
+                FormatRunUpdateExternalIssue(ref code, runExternalIssues);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
                 {
@@ -2393,9 +2503,9 @@ namespace Qase.ApiClient.V1.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/run/{code}/external-issue");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcode%7D", Uri.EscapeDataString(code.ToString()));
 
-                    httpRequestMessageLocalVar.Content = (runexternalIssues as object) is System.IO.Stream stream
+                    httpRequestMessageLocalVar.Content = (runExternalIssues as object) is System.IO.Stream stream
                         ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
-                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(runexternalIssues, _jsonSerializerOptions));
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(runExternalIssues, _jsonSerializerOptions));
 
                     List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
                     ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Token", cancellationToken).ConfigureAwait(false);
@@ -2419,13 +2529,19 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<RunUpdateExternalIssueApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<RunUpdateExternalIssueApiResponse>();
+                        RunUpdateExternalIssueApiResponse apiResponseLocalVar;
 
-                        RunUpdateExternalIssueApiResponse apiResponseLocalVar = new RunUpdateExternalIssueApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/external-issue", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new RunUpdateExternalIssueApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/external-issue", requestedAtLocalVar, _jsonSerializerOptions);
 
-                        AfterRunUpdateExternalIssueDefaultImplementation(apiResponseLocalVar, code, runexternalIssues);
+                                break;
+                            }
+                        }
+
+                        AfterRunUpdateExternalIssueDefaultImplementation(apiResponseLocalVar, code, runExternalIssues);
 
                         Events.ExecuteOnRunUpdateExternalIssue(apiResponseLocalVar);
 
@@ -2439,7 +2555,7 @@ namespace Qase.ApiClient.V1.Api
             }
             catch(Exception e)
             {
-                OnErrorRunUpdateExternalIssueDefaultImplementation(e, "/run/{code}/external-issue", uriBuilderLocalVar.Path, code, runexternalIssues);
+                OnErrorRunUpdateExternalIssueDefaultImplementation(e, "/run/{code}/external-issue", uriBuilderLocalVar.Path, code, runExternalIssues);
                 Events.ExecuteOnErrorRunUpdateExternalIssue(e);
                 throw;
             }
@@ -2466,6 +2582,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public RunUpdateExternalIssueApiResponse(ILogger<RunUpdateExternalIssueApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="RunUpdateExternalIssueApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public RunUpdateExternalIssueApiResponse(ILogger<RunUpdateExternalIssueApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2675,11 +2807,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<UpdateRunApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<UpdateRunApiResponse>();
+                        UpdateRunApiResponse apiResponseLocalVar;
 
-                        UpdateRunApiResponse apiResponseLocalVar = new UpdateRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new UpdateRunApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterUpdateRunDefaultImplementation(apiResponseLocalVar, code, id, runupdate);
 
@@ -2722,6 +2860,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public UpdateRunApiResponse(ILogger<UpdateRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="UpdateRunApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public UpdateRunApiResponse(ILogger<UpdateRunApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2963,11 +3117,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<UpdateRunPublicityApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<UpdateRunPublicityApiResponse>();
+                        UpdateRunPublicityApiResponse apiResponseLocalVar;
 
-                        UpdateRunPublicityApiResponse apiResponseLocalVar = new UpdateRunPublicityApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}/public", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new UpdateRunPublicityApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/run/{code}/{id}/public", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterUpdateRunPublicityDefaultImplementation(apiResponseLocalVar, code, id, runPublic);
 
@@ -3010,6 +3170,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public UpdateRunPublicityApiResponse(ILogger<UpdateRunPublicityApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="UpdateRunPublicityApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public UpdateRunPublicityApiResponse(ILogger<UpdateRunPublicityApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

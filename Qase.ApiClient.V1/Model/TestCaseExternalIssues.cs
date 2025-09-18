@@ -229,14 +229,14 @@ namespace Qase.ApiClient.V1.Model
         /// Serializes a <see cref="TestCaseExternalIssues" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Write(Utf8JsonWriter writer, TestCaseExternalIssues testCaseexternalIssues, JsonSerializerOptions jsonSerializerOptions)
+        public override void Write(Utf8JsonWriter writer, TestCaseExternalIssues testCaseExternalIssues, JsonSerializerOptions jsonSerializerOptions)
         {
             writer.WriteStartObject();
 
-            WriteProperties(writer, testCaseexternalIssues, jsonSerializerOptions);
+            WriteProperties(writer, testCaseExternalIssues, jsonSerializerOptions);
             writer.WriteEndObject();
         }
 
@@ -244,18 +244,18 @@ namespace Qase.ApiClient.V1.Model
         /// Serializes the properties of <see cref="TestCaseExternalIssues" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void WriteProperties(Utf8JsonWriter writer, TestCaseExternalIssues testCaseexternalIssues, JsonSerializerOptions jsonSerializerOptions)
+        public void WriteProperties(Utf8JsonWriter writer, TestCaseExternalIssues testCaseExternalIssues, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (testCaseexternalIssues.Links == null)
-                throw new ArgumentNullException(nameof(testCaseexternalIssues.Links), "Property is required for class TestCaseExternalIssues.");
+            if (testCaseExternalIssues.Links == null)
+                throw new ArgumentNullException(nameof(testCaseExternalIssues.Links), "Property is required for class TestCaseExternalIssues.");
 
-            var typeRawValue = TestCaseExternalIssues.TypeEnumToJsonValue(testCaseexternalIssues.Type);
+            var typeRawValue = TestCaseExternalIssues.TypeEnumToJsonValue(testCaseExternalIssues.Type);
             writer.WriteString("type", typeRawValue);
             writer.WritePropertyName("links");
-            JsonSerializer.Serialize(writer, testCaseexternalIssues.Links, jsonSerializerOptions);
+            JsonSerializer.Serialize(writer, testCaseExternalIssues.Links, jsonSerializerOptions);
         }
     }
 }

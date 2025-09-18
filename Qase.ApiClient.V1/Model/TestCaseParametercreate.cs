@@ -27,35 +27,35 @@ using Qase.ApiClient.V1.Client;
 namespace Qase.ApiClient.V1.Model
 {
     /// <summary>
-    /// TestCaseParametercreate
+    /// TestCaseParameterCreate
     /// </summary>
-    public partial class TestCaseParametercreate : IValidatableObject
+    public partial class TestCaseParameterCreate : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseParametercreate" /> class.
+        /// Initializes a new instance of the <see cref="TestCaseParameterCreate" /> class.
         /// </summary>
         /// <param name="parameterShared"></param>
-        public TestCaseParametercreate(ParameterShared parameterShared)
+        public TestCaseParameterCreate(ParameterShared parameterShared)
         {
             ParameterShared = parameterShared;
             OnCreated();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseParametercreate" /> class.
+        /// Initializes a new instance of the <see cref="TestCaseParameterCreate" /> class.
         /// </summary>
         /// <param name="parameterSingle"></param>
-        public TestCaseParametercreate(ParameterSingle parameterSingle)
+        public TestCaseParameterCreate(ParameterSingle parameterSingle)
         {
             ParameterSingle = parameterSingle;
             OnCreated();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseParametercreate" /> class.
+        /// Initializes a new instance of the <see cref="TestCaseParameterCreate" /> class.
         /// </summary>
         /// <param name="parameterGroup"></param>
-        public TestCaseParametercreate(ParameterGroup parameterGroup)
+        public TestCaseParameterCreate(ParameterGroup parameterGroup)
         {
             ParameterGroup = parameterGroup;
             OnCreated();
@@ -91,7 +91,7 @@ namespace Qase.ApiClient.V1.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class TestCaseParametercreate {\n");
+            sb.Append("class TestCaseParameterCreate {\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -109,19 +109,19 @@ namespace Qase.ApiClient.V1.Model
     }
 
     /// <summary>
-    /// A Json converter for type <see cref="TestCaseParametercreate" />
+    /// A Json converter for type <see cref="TestCaseParameterCreate" />
     /// </summary>
-    public class TestCaseParametercreateJsonConverter : JsonConverter<TestCaseParametercreate>
+    public class TestCaseParameterCreateJsonConverter : JsonConverter<TestCaseParameterCreate>
     {
         /// <summary>
-        /// Deserializes json to <see cref="TestCaseParametercreate" />
+        /// Deserializes json to <see cref="TestCaseParameterCreate" />
         /// </summary>
         /// <param name="utf8JsonReader"></param>
         /// <param name="typeToConvert"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="JsonException"></exception>
-        public override TestCaseParametercreate Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
+        public override TestCaseParameterCreate Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
         {
             int currentDepth = utf8JsonReader.CurrentDepth;
 
@@ -178,40 +178,40 @@ namespace Qase.ApiClient.V1.Model
             }
 
             if (parameterShared != null)
-                return new TestCaseParametercreate(parameterShared);
+                return new TestCaseParameterCreate(parameterShared);
 
             if (parameterSingle != null)
-                return new TestCaseParametercreate(parameterSingle);
+                return new TestCaseParameterCreate(parameterSingle);
 
             if (parameterGroup != null)
-                return new TestCaseParametercreate(parameterGroup);
+                return new TestCaseParameterCreate(parameterGroup);
 
             throw new JsonException();
         }
 
         /// <summary>
-        /// Serializes a <see cref="TestCaseParametercreate" />
+        /// Serializes a <see cref="TestCaseParameterCreate" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testCaseParametercreate"></param>
+        /// <param name="testCaseParameterCreate"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Write(Utf8JsonWriter writer, TestCaseParametercreate testCaseParametercreate, JsonSerializerOptions jsonSerializerOptions)
+        public override void Write(Utf8JsonWriter writer, TestCaseParameterCreate testCaseParameterCreate, JsonSerializerOptions jsonSerializerOptions)
         {
             writer.WriteStartObject();
 
-            WriteProperties(writer, testCaseParametercreate, jsonSerializerOptions);
+            WriteProperties(writer, testCaseParameterCreate, jsonSerializerOptions);
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serializes the properties of <see cref="TestCaseParametercreate" />
+        /// Serializes the properties of <see cref="TestCaseParameterCreate" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testCaseParametercreate"></param>
+        /// <param name="testCaseParameterCreate"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void WriteProperties(Utf8JsonWriter writer, TestCaseParametercreate testCaseParametercreate, JsonSerializerOptions jsonSerializerOptions)
+        public void WriteProperties(Utf8JsonWriter writer, TestCaseParameterCreate testCaseParameterCreate, JsonSerializerOptions jsonSerializerOptions)
         {
 
         }

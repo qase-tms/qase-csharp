@@ -68,10 +68,10 @@ namespace Qase.ApiClient.V1.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseAttachExternalIssueApiResponse"/>&gt;</returns>
-        Task<ICaseAttachExternalIssueApiResponse> CaseAttachExternalIssueAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+        Task<ICaseAttachExternalIssueApiResponse> CaseAttachExternalIssueAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Attach the external issues to the test cases
@@ -80,10 +80,10 @@ namespace Qase.ApiClient.V1.Api
         /// 
         /// </remarks>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseAttachExternalIssueApiResponse"/>?&gt;</returns>
-        Task<ICaseAttachExternalIssueApiResponse?> CaseAttachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+        Task<ICaseAttachExternalIssueApiResponse?> CaseAttachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Detach the external issues from the test cases
@@ -93,10 +93,10 @@ namespace Qase.ApiClient.V1.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseDetachExternalIssueApiResponse"/>&gt;</returns>
-        Task<ICaseDetachExternalIssueApiResponse> CaseDetachExternalIssueAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+        Task<ICaseDetachExternalIssueApiResponse> CaseDetachExternalIssueAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Detach the external issues from the test cases
@@ -105,10 +105,10 @@ namespace Qase.ApiClient.V1.Api
         /// 
         /// </remarks>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseDetachExternalIssueApiResponse"/>?&gt;</returns>
-        Task<ICaseDetachExternalIssueApiResponse?> CaseDetachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default);
+        Task<ICaseDetachExternalIssueApiResponse?> CaseDetachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create a new test case
@@ -1023,11 +1023,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<BulkApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<BulkApiResponse>();
+                        BulkApiResponse apiResponseLocalVar;
 
-                        BulkApiResponse apiResponseLocalVar = new BulkApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/bulk", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new BulkApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/bulk", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterBulkDefaultImplementation(apiResponseLocalVar, code, testCasebulk);
 
@@ -1070,6 +1076,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public BulkApiResponse(ILogger<BulkApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="BulkApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public BulkApiResponse(ILogger<BulkApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1162,21 +1184,21 @@ namespace Qase.ApiClient.V1.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatCaseAttachExternalIssue(ref string code, TestCaseExternalIssues testCaseexternalIssues);
+        partial void FormatCaseAttachExternalIssue(ref string code, TestCaseExternalIssues testCaseExternalIssues);
 
         /// <summary>
         /// Validates the request parameters
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <returns></returns>
-        private void ValidateCaseAttachExternalIssue(string code, TestCaseExternalIssues testCaseexternalIssues)
+        private void ValidateCaseAttachExternalIssue(string code, TestCaseExternalIssues testCaseExternalIssues)
         {
             if (code == null)
                 throw new ArgumentNullException(nameof(code));
 
-            if (testCaseexternalIssues == null)
-                throw new ArgumentNullException(nameof(testCaseexternalIssues));
+            if (testCaseExternalIssues == null)
+                throw new ArgumentNullException(nameof(testCaseExternalIssues));
         }
 
         /// <summary>
@@ -1184,11 +1206,11 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        private void AfterCaseAttachExternalIssueDefaultImplementation(ICaseAttachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues)
+        /// <param name="testCaseExternalIssues"></param>
+        private void AfterCaseAttachExternalIssueDefaultImplementation(ICaseAttachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues)
         {
             bool suppressDefaultLog = false;
-            AfterCaseAttachExternalIssue(ref suppressDefaultLog, apiResponseLocalVar, code, testCaseexternalIssues);
+            AfterCaseAttachExternalIssue(ref suppressDefaultLog, apiResponseLocalVar, code, testCaseExternalIssues);
             if (!suppressDefaultLog)
                 Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
         }
@@ -1199,8 +1221,8 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        partial void AfterCaseAttachExternalIssue(ref bool suppressDefaultLog, ICaseAttachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues);
+        /// <param name="testCaseExternalIssues"></param>
+        partial void AfterCaseAttachExternalIssue(ref bool suppressDefaultLog, ICaseAttachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1209,11 +1231,11 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        private void OnErrorCaseAttachExternalIssueDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues)
+        /// <param name="testCaseExternalIssues"></param>
+        private void OnErrorCaseAttachExternalIssueDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues)
         {
             bool suppressDefaultLogLocalVar = false;
-            OnErrorCaseAttachExternalIssue(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, testCaseexternalIssues);
+            OnErrorCaseAttachExternalIssue(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, testCaseExternalIssues);
             if (!suppressDefaultLogLocalVar)
                 Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
         }
@@ -1226,21 +1248,21 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        partial void OnErrorCaseAttachExternalIssue(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues);
+        /// <param name="testCaseExternalIssues"></param>
+        partial void OnErrorCaseAttachExternalIssue(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues);
 
         /// <summary>
         /// Attach the external issues to the test cases 
         /// </summary>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseAttachExternalIssueApiResponse"/>&gt;</returns>
-        public async Task<ICaseAttachExternalIssueApiResponse?> CaseAttachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<ICaseAttachExternalIssueApiResponse?> CaseAttachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
-                return await CaseAttachExternalIssueAsync(code, testCaseexternalIssues, cancellationToken).ConfigureAwait(false);
+                return await CaseAttachExternalIssueAsync(code, testCaseExternalIssues, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -1253,18 +1275,18 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseAttachExternalIssueApiResponse"/>&gt;</returns>
-        public async Task<ICaseAttachExternalIssueApiResponse> CaseAttachExternalIssueAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<ICaseAttachExternalIssueApiResponse> CaseAttachExternalIssueAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
-                ValidateCaseAttachExternalIssue(code, testCaseexternalIssues);
+                ValidateCaseAttachExternalIssue(code, testCaseExternalIssues);
 
-                FormatCaseAttachExternalIssue(ref code, testCaseexternalIssues);
+                FormatCaseAttachExternalIssue(ref code, testCaseExternalIssues);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
                 {
@@ -1276,9 +1298,9 @@ namespace Qase.ApiClient.V1.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/case/{code}/external-issue/attach");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcode%7D", Uri.EscapeDataString(code.ToString()));
 
-                    httpRequestMessageLocalVar.Content = (testCaseexternalIssues as object) is System.IO.Stream stream
+                    httpRequestMessageLocalVar.Content = (testCaseExternalIssues as object) is System.IO.Stream stream
                         ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
-                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(testCaseexternalIssues, _jsonSerializerOptions));
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(testCaseExternalIssues, _jsonSerializerOptions));
 
                     List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
                     ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Token", cancellationToken).ConfigureAwait(false);
@@ -1310,13 +1332,19 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CaseAttachExternalIssueApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CaseAttachExternalIssueApiResponse>();
+                        CaseAttachExternalIssueApiResponse apiResponseLocalVar;
 
-                        CaseAttachExternalIssueApiResponse apiResponseLocalVar = new CaseAttachExternalIssueApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/external-issue/attach", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CaseAttachExternalIssueApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/external-issue/attach", requestedAtLocalVar, _jsonSerializerOptions);
 
-                        AfterCaseAttachExternalIssueDefaultImplementation(apiResponseLocalVar, code, testCaseexternalIssues);
+                                break;
+                            }
+                        }
+
+                        AfterCaseAttachExternalIssueDefaultImplementation(apiResponseLocalVar, code, testCaseExternalIssues);
 
                         Events.ExecuteOnCaseAttachExternalIssue(apiResponseLocalVar);
 
@@ -1330,7 +1358,7 @@ namespace Qase.ApiClient.V1.Api
             }
             catch(Exception e)
             {
-                OnErrorCaseAttachExternalIssueDefaultImplementation(e, "/case/{code}/external-issue/attach", uriBuilderLocalVar.Path, code, testCaseexternalIssues);
+                OnErrorCaseAttachExternalIssueDefaultImplementation(e, "/case/{code}/external-issue/attach", uriBuilderLocalVar.Path, code, testCaseExternalIssues);
                 Events.ExecuteOnErrorCaseAttachExternalIssue(e);
                 throw;
             }
@@ -1357,6 +1385,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public CaseAttachExternalIssueApiResponse(ILogger<CaseAttachExternalIssueApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="CaseAttachExternalIssueApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CaseAttachExternalIssueApiResponse(ILogger<CaseAttachExternalIssueApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1455,21 +1499,21 @@ namespace Qase.ApiClient.V1.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatCaseDetachExternalIssue(ref string code, TestCaseExternalIssues testCaseexternalIssues);
+        partial void FormatCaseDetachExternalIssue(ref string code, TestCaseExternalIssues testCaseExternalIssues);
 
         /// <summary>
         /// Validates the request parameters
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <returns></returns>
-        private void ValidateCaseDetachExternalIssue(string code, TestCaseExternalIssues testCaseexternalIssues)
+        private void ValidateCaseDetachExternalIssue(string code, TestCaseExternalIssues testCaseExternalIssues)
         {
             if (code == null)
                 throw new ArgumentNullException(nameof(code));
 
-            if (testCaseexternalIssues == null)
-                throw new ArgumentNullException(nameof(testCaseexternalIssues));
+            if (testCaseExternalIssues == null)
+                throw new ArgumentNullException(nameof(testCaseExternalIssues));
         }
 
         /// <summary>
@@ -1477,11 +1521,11 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        private void AfterCaseDetachExternalIssueDefaultImplementation(ICaseDetachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues)
+        /// <param name="testCaseExternalIssues"></param>
+        private void AfterCaseDetachExternalIssueDefaultImplementation(ICaseDetachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues)
         {
             bool suppressDefaultLog = false;
-            AfterCaseDetachExternalIssue(ref suppressDefaultLog, apiResponseLocalVar, code, testCaseexternalIssues);
+            AfterCaseDetachExternalIssue(ref suppressDefaultLog, apiResponseLocalVar, code, testCaseExternalIssues);
             if (!suppressDefaultLog)
                 Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
         }
@@ -1492,8 +1536,8 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        partial void AfterCaseDetachExternalIssue(ref bool suppressDefaultLog, ICaseDetachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues);
+        /// <param name="testCaseExternalIssues"></param>
+        partial void AfterCaseDetachExternalIssue(ref bool suppressDefaultLog, ICaseDetachExternalIssueApiResponse apiResponseLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1502,11 +1546,11 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        private void OnErrorCaseDetachExternalIssueDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues)
+        /// <param name="testCaseExternalIssues"></param>
+        private void OnErrorCaseDetachExternalIssueDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues)
         {
             bool suppressDefaultLogLocalVar = false;
-            OnErrorCaseDetachExternalIssue(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, testCaseexternalIssues);
+            OnErrorCaseDetachExternalIssue(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, code, testCaseExternalIssues);
             if (!suppressDefaultLogLocalVar)
                 Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
         }
@@ -1519,21 +1563,21 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="code"></param>
-        /// <param name="testCaseexternalIssues"></param>
-        partial void OnErrorCaseDetachExternalIssue(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseexternalIssues);
+        /// <param name="testCaseExternalIssues"></param>
+        partial void OnErrorCaseDetachExternalIssue(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, TestCaseExternalIssues testCaseExternalIssues);
 
         /// <summary>
         /// Detach the external issues from the test cases 
         /// </summary>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseDetachExternalIssueApiResponse"/>&gt;</returns>
-        public async Task<ICaseDetachExternalIssueApiResponse?> CaseDetachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<ICaseDetachExternalIssueApiResponse?> CaseDetachExternalIssueOrDefaultAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
-                return await CaseDetachExternalIssueAsync(code, testCaseexternalIssues, cancellationToken).ConfigureAwait(false);
+                return await CaseDetachExternalIssueAsync(code, testCaseExternalIssues, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -1546,18 +1590,18 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
-        /// <param name="testCaseexternalIssues"></param>
+        /// <param name="testCaseExternalIssues"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="ICaseDetachExternalIssueApiResponse"/>&gt;</returns>
-        public async Task<ICaseDetachExternalIssueApiResponse> CaseDetachExternalIssueAsync(string code, TestCaseExternalIssues testCaseexternalIssues, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<ICaseDetachExternalIssueApiResponse> CaseDetachExternalIssueAsync(string code, TestCaseExternalIssues testCaseExternalIssues, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
-                ValidateCaseDetachExternalIssue(code, testCaseexternalIssues);
+                ValidateCaseDetachExternalIssue(code, testCaseExternalIssues);
 
-                FormatCaseDetachExternalIssue(ref code, testCaseexternalIssues);
+                FormatCaseDetachExternalIssue(ref code, testCaseExternalIssues);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
                 {
@@ -1569,9 +1613,9 @@ namespace Qase.ApiClient.V1.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/case/{code}/external-issue/detach");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcode%7D", Uri.EscapeDataString(code.ToString()));
 
-                    httpRequestMessageLocalVar.Content = (testCaseexternalIssues as object) is System.IO.Stream stream
+                    httpRequestMessageLocalVar.Content = (testCaseExternalIssues as object) is System.IO.Stream stream
                         ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
-                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(testCaseexternalIssues, _jsonSerializerOptions));
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(testCaseExternalIssues, _jsonSerializerOptions));
 
                     List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
                     ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Token", cancellationToken).ConfigureAwait(false);
@@ -1603,13 +1647,19 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CaseDetachExternalIssueApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CaseDetachExternalIssueApiResponse>();
+                        CaseDetachExternalIssueApiResponse apiResponseLocalVar;
 
-                        CaseDetachExternalIssueApiResponse apiResponseLocalVar = new CaseDetachExternalIssueApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/external-issue/detach", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CaseDetachExternalIssueApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/external-issue/detach", requestedAtLocalVar, _jsonSerializerOptions);
 
-                        AfterCaseDetachExternalIssueDefaultImplementation(apiResponseLocalVar, code, testCaseexternalIssues);
+                                break;
+                            }
+                        }
+
+                        AfterCaseDetachExternalIssueDefaultImplementation(apiResponseLocalVar, code, testCaseExternalIssues);
 
                         Events.ExecuteOnCaseDetachExternalIssue(apiResponseLocalVar);
 
@@ -1623,7 +1673,7 @@ namespace Qase.ApiClient.V1.Api
             }
             catch(Exception e)
             {
-                OnErrorCaseDetachExternalIssueDefaultImplementation(e, "/case/{code}/external-issue/detach", uriBuilderLocalVar.Path, code, testCaseexternalIssues);
+                OnErrorCaseDetachExternalIssueDefaultImplementation(e, "/case/{code}/external-issue/detach", uriBuilderLocalVar.Path, code, testCaseExternalIssues);
                 Events.ExecuteOnErrorCaseDetachExternalIssue(e);
                 throw;
             }
@@ -1650,6 +1700,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public CaseDetachExternalIssueApiResponse(ILogger<CaseDetachExternalIssueApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="CaseDetachExternalIssueApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CaseDetachExternalIssueApiResponse(ILogger<CaseDetachExternalIssueApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1896,11 +1962,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CreateCaseApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CreateCaseApiResponse>();
+                        CreateCaseApiResponse apiResponseLocalVar;
 
-                        CreateCaseApiResponse apiResponseLocalVar = new CreateCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CreateCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterCreateCaseDefaultImplementation(apiResponseLocalVar, code, testCaseCreate);
 
@@ -1943,6 +2015,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public CreateCaseApiResponse(ILogger<CreateCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="CreateCaseApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CreateCaseApiResponse(ILogger<CreateCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2167,11 +2255,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<DeleteCaseApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<DeleteCaseApiResponse>();
+                        DeleteCaseApiResponse apiResponseLocalVar;
 
-                        DeleteCaseApiResponse apiResponseLocalVar = new DeleteCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new DeleteCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterDeleteCaseDefaultImplementation(apiResponseLocalVar, code, id);
 
@@ -2214,6 +2308,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public DeleteCaseApiResponse(ILogger<DeleteCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="DeleteCaseApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public DeleteCaseApiResponse(ILogger<DeleteCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2455,11 +2565,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<GetCaseApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetCaseApiResponse>();
+                        GetCaseApiResponse apiResponseLocalVar;
 
-                        GetCaseApiResponse apiResponseLocalVar = new GetCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new GetCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetCaseDefaultImplementation(apiResponseLocalVar, code, id, include);
 
@@ -2502,6 +2618,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetCaseApiResponse(ILogger<GetCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetCaseApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetCaseApiResponse(ILogger<GetCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2889,11 +3021,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<GetCasesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetCasesApiResponse>();
+                        GetCasesApiResponse apiResponseLocalVar;
 
-                        GetCasesApiResponse apiResponseLocalVar = new GetCasesApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new GetCasesApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetCasesDefaultImplementation(apiResponseLocalVar, code, search, milestoneId, suiteId, severity, priority, type, behavior, automation, status, externalIssuesType, externalIssuesIds, include, limit, offset);
 
@@ -2936,6 +3074,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetCasesApiResponse(ILogger<GetCasesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetCasesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetCasesApiResponse(ILogger<GetCasesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -3183,11 +3337,17 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<UpdateCaseApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<UpdateCaseApiResponse>();
+                        UpdateCaseApiResponse apiResponseLocalVar;
 
-                        UpdateCaseApiResponse apiResponseLocalVar = new UpdateCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new UpdateCaseApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/case/{code}/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterUpdateCaseDefaultImplementation(apiResponseLocalVar, code, id, testCaseUpdate);
 
@@ -3230,6 +3390,22 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public UpdateCaseApiResponse(ILogger<UpdateCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="UpdateCaseApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public UpdateCaseApiResponse(ILogger<UpdateCaseApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

@@ -1,4 +1,4 @@
-# Qase.ApiClient.V1.Model.RunexternalIssuesLinksInner
+# Qase.ApiClient.V1.Model.RunExternalIssuesLinksInner
 
 ## Properties
 
