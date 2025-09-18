@@ -14,65 +14,6 @@ Get all System Fields
 
 This method allows to retrieve all system fields. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetSystemFieldsExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new SystemFieldsApi(config);
-
-            try
-            {
-                // Get all System Fields
-                SystemFieldListResponse result = apiInstance.GetSystemFields();
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling SystemFieldsApi.GetSystemFields: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetSystemFieldsWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get all System Fields
-    ApiResponse<SystemFieldListResponse> response = apiInstance.GetSystemFieldsWithHttpInfo();
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling SystemFieldsApi.GetSystemFieldsWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 This endpoint does not need any parameter.

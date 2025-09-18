@@ -27,7 +27,7 @@ using Qase.ApiClient.V1.Client;
 namespace Qase.ApiClient.V1.Model
 {
     /// <summary>
-    /// TestCaseParams
+    /// Deprecated, use &#x60;parameters&#x60; instead.
     /// </summary>
     public partial class TestCaseParams : IValidatableObject
     {

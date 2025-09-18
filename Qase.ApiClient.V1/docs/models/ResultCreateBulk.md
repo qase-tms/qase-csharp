@@ -1,4 +1,4 @@
-# Qase.ApiClient.V1.Model.ResultcreateBulk
+# Qase.ApiClient.V1.Model.ResultCreateBulk
 
 ## Properties
 

@@ -318,7 +318,7 @@ namespace Qase.Csharp.Commons.Tests
 
             mockRunApi.Setup(x => x.RunUpdateExternalIssueAsync(
                 It.IsAny<string>(),
-                It.IsAny<RunexternalIssues>(),
+                It.IsAny<RunExternalIssues>(),
                 It.IsAny<System.Threading.CancellationToken>()))
                 .ReturnsAsync(externalIssueResponse.Object);
 
@@ -333,8 +333,8 @@ namespace Qase.Csharp.Commons.Tests
                 It.IsAny<System.Threading.CancellationToken>()), Times.Once);
             mockRunApi.Verify(x => x.RunUpdateExternalIssueAsync(
                 It.Is<string>(p => p == "TEST"),
-                It.Is<RunexternalIssues>(e => 
-                    e.Type == RunexternalIssues.TypeEnum.JiraCloud &&
+                It.Is<RunExternalIssues>(e => 
+                    e.Type == RunExternalIssues.TypeEnum.JiraCloud &&
                     e.Links != null && e.Links.Count == 1 &&
                     e.Links[0].RunId == 12345 &&
                     e.Links[0].ExternalIssue == "PROJ-123"),
@@ -398,7 +398,7 @@ namespace Qase.Csharp.Commons.Tests
 
             mockRunApi.Setup(x => x.RunUpdateExternalIssueAsync(
                 It.IsAny<string>(),
-                It.IsAny<RunexternalIssues>(),
+                It.IsAny<RunExternalIssues>(),
                 It.IsAny<System.Threading.CancellationToken>()))
                 .ReturnsAsync(externalIssueResponse.Object);
 
@@ -409,8 +409,8 @@ namespace Qase.Csharp.Commons.Tests
             result.Should().Be(67890);
             mockRunApi.Verify(x => x.RunUpdateExternalIssueAsync(
                 It.Is<string>(p => p == "TEST"),
-                It.Is<RunexternalIssues>(e => 
-                    e.Type == RunexternalIssues.TypeEnum.JiraServer &&
+                It.Is<RunExternalIssues>(e => 
+                    e.Type == RunExternalIssues.TypeEnum.JiraServer &&
                     e.Links != null && e.Links.Count == 1 &&
                     e.Links[0].RunId == 67890 &&
                     e.Links[0].ExternalIssue == "PROJ-456"),

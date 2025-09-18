@@ -27,16 +27,16 @@ using Qase.ApiClient.V1.Client;
 namespace Qase.ApiClient.V1.Model
 {
     /// <summary>
-    /// ResultcreateBulk
+    /// ResultCreateBulk
     /// </summary>
-    public partial class ResultcreateBulk : IValidatableObject
+    public partial class ResultCreateBulk : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResultcreateBulk" /> class.
+        /// Initializes a new instance of the <see cref="ResultCreateBulk" /> class.
         /// </summary>
         /// <param name="results">results</param>
         [JsonConstructor]
-        public ResultcreateBulk(List<ResultCreate> results)
+        public ResultCreateBulk(List<ResultCreate> results)
         {
             Results = results;
             OnCreated();
@@ -63,7 +63,7 @@ namespace Qase.ApiClient.V1.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class ResultcreateBulk {\n");
+            sb.Append("class ResultCreateBulk {\n");
             sb.Append("  Results: ").Append(Results).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
@@ -82,19 +82,19 @@ namespace Qase.ApiClient.V1.Model
     }
 
     /// <summary>
-    /// A Json converter for type <see cref="ResultcreateBulk" />
+    /// A Json converter for type <see cref="ResultCreateBulk" />
     /// </summary>
-    public class ResultCreateBulkJsonConverter : JsonConverter<ResultcreateBulk>
+    public class ResultCreateBulkJsonConverter : JsonConverter<ResultCreateBulk>
     {
         /// <summary>
-        /// Deserializes json to <see cref="ResultcreateBulk" />
+        /// Deserializes json to <see cref="ResultCreateBulk" />
         /// </summary>
         /// <param name="utf8JsonReader"></param>
         /// <param name="typeToConvert"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="JsonException"></exception>
-        public override ResultcreateBulk Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
+        public override ResultCreateBulk Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
         {
             int currentDepth = utf8JsonReader.CurrentDepth;
 
@@ -130,43 +130,43 @@ namespace Qase.ApiClient.V1.Model
             }
 
             if (!results.IsSet)
-                throw new ArgumentException("Property is required for class ResultcreateBulk.", nameof(results));
+                throw new ArgumentException("Property is required for class ResultCreateBulk.", nameof(results));
 
             if (results.IsSet && results.Value == null)
-                throw new ArgumentNullException(nameof(results), "Property is not nullable for class ResultcreateBulk.");
+                throw new ArgumentNullException(nameof(results), "Property is not nullable for class ResultCreateBulk.");
 
-            return new ResultcreateBulk(results.Value!);
+            return new ResultCreateBulk(results.Value!);
         }
 
         /// <summary>
-        /// Serializes a <see cref="ResultcreateBulk" />
+        /// Serializes a <see cref="ResultCreateBulk" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="resultcreateBulk"></param>
+        /// <param name="resultCreateBulk"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Write(Utf8JsonWriter writer, ResultcreateBulk resultcreateBulk, JsonSerializerOptions jsonSerializerOptions)
+        public override void Write(Utf8JsonWriter writer, ResultCreateBulk resultCreateBulk, JsonSerializerOptions jsonSerializerOptions)
         {
             writer.WriteStartObject();
 
-            WriteProperties(writer, resultcreateBulk, jsonSerializerOptions);
+            WriteProperties(writer, resultCreateBulk, jsonSerializerOptions);
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serializes the properties of <see cref="ResultcreateBulk" />
+        /// Serializes the properties of <see cref="ResultCreateBulk" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="resultcreateBulk"></param>
+        /// <param name="resultCreateBulk"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void WriteProperties(Utf8JsonWriter writer, ResultcreateBulk resultcreateBulk, JsonSerializerOptions jsonSerializerOptions)
+        public void WriteProperties(Utf8JsonWriter writer, ResultCreateBulk resultCreateBulk, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (resultcreateBulk.Results == null)
-                throw new ArgumentNullException(nameof(resultcreateBulk.Results), "Property is required for class ResultcreateBulk.");
+            if (resultCreateBulk.Results == null)
+                throw new ArgumentNullException(nameof(resultCreateBulk.Results), "Property is required for class ResultCreateBulk.");
 
             writer.WritePropertyName("results");
-            JsonSerializer.Serialize(writer, resultcreateBulk.Results, jsonSerializerOptions);
+            JsonSerializer.Serialize(writer, resultCreateBulk.Results, jsonSerializerOptions);
         }
     }
 }

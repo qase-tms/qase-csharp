@@ -21,67 +21,6 @@ Complete a specific run
 
 This method allows to complete a specific run. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CompleteRunExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-
-            try
-            {
-                // Complete a specific run
-                BaseResponse result = apiInstance.CompleteRun(code, id);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.CompleteRun: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CompleteRunWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Complete a specific run
-    ApiResponse<BaseResponse> response = apiInstance.CompleteRunWithHttpInfo(code, id);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.CompleteRunWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -125,67 +64,6 @@ Create a new run
 
 This method allows to create a run in selected project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CreateRunExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var runCreate = new RunCreate(); // RunCreate | 
-
-            try
-            {
-                // Create a new run
-                IdResponse result = apiInstance.CreateRun(code, runCreate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.CreateRun: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreateRunWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Create a new run
-    ApiResponse<IdResponse> response = apiInstance.CreateRunWithHttpInfo(code, runCreate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.CreateRunWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -229,67 +107,6 @@ Delete run
 
 This method completely deletes a run from repository. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class DeleteRunExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-
-            try
-            {
-                // Delete run
-                IdResponse result = apiInstance.DeleteRun(code, id);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.DeleteRun: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the DeleteRunWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Delete run
-    ApiResponse<IdResponse> response = apiInstance.DeleteRunWithHttpInfo(code, id);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.DeleteRunWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -332,68 +149,6 @@ Get a specific run
 
 This method allows to retrieve a specific run. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetRunExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var include = "include_example";  // string | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional) 
-
-            try
-            {
-                // Get a specific run
-                RunResponse result = apiInstance.GetRun(code, id, include);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.GetRun: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetRunWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get a specific run
-    ApiResponse<RunResponse> response = apiInstance.GetRunWithHttpInfo(code, id, include);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.GetRunWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -437,75 +192,6 @@ Get all runs
 
 This method allows to retrieve all runs stored in selected project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetRunsExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var search = "search_example";  // string |  (optional) 
-            var status = "status_example";  // string | A list of status values separated by comma. Possible values: in_progress, passed, failed, aborted, active (deprecated), complete (deprecated), abort (deprecated).  (optional) 
-            var milestone = 56;  // int |  (optional) 
-            var environment = 56;  // int |  (optional) 
-            var fromStartTime = 789L;  // long |  (optional) 
-            var toStartTime = 789L;  // long |  (optional) 
-            var limit = 10;  // int | A number of entities in result set. (optional)  (default to 10)
-            var offset = 0;  // int | How many entities should be skipped. (optional)  (default to 0)
-            var include = "include_example";  // string | Include a list of related entities IDs into response. Should be separated by comma. Possible values: cases, defects, external_issue  (optional) 
-
-            try
-            {
-                // Get all runs
-                RunListResponse result = apiInstance.GetRuns(code, search, status, milestone, environment, fromStartTime, toStartTime, limit, offset, include);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.GetRuns: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetRunsWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get all runs
-    ApiResponse<RunListResponse> response = apiInstance.GetRunsWithHttpInfo(code, search, status, milestone, environment, fromStartTime, toStartTime, limit, offset, include);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.GetRunsWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -550,76 +236,19 @@ catch (ApiException e)
 
 <a id="runupdateexternalissue"></a>
 # **RunUpdateExternalIssue**
-> void RunUpdateExternalIssue (string code, RunexternalIssues runexternalIssues)
+> void RunUpdateExternalIssue (string code, RunExternalIssues runExternalIssues)
 
 Update external issues for runs
 
 This method allows you to update links between test runs and external issues (such as Jira tickets).  You can use this endpoint to: - Link test runs to external issues by providing the external issue identifier (e.g., \"PROJ-1234\") - Update existing links by providing a new external issue identifier - Remove existing links by setting the external_issue field to null  **Important**: Each test run can have only one link with an external issue. If a test run already has an external issue link, providing a new external_issue value will replace the existing link.  The endpoint supports both Jira Cloud and Jira Server integrations. Each request can update multiple test run links in a single operation. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class RunUpdateExternalIssueExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var runexternalIssues = new RunexternalIssues(); // RunexternalIssues | 
-
-            try
-            {
-                // Update external issues for runs
-                apiInstance.RunUpdateExternalIssue(code, runexternalIssues);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.RunUpdateExternalIssue: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the RunUpdateExternalIssueWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Update external issues for runs
-    apiInstance.RunUpdateExternalIssueWithHttpInfo(code, runexternalIssues);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.RunUpdateExternalIssueWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
 | **code** | **string** | Code of project, where to search entities. |  |
-| **runexternalIssues** | [**RunexternalIssues**](RunexternalIssues.md) |  |  |
+| **runExternalIssues** | [**RunExternalIssues**](RunExternalIssues.md) |  |  |
 
 ### Return type
 
@@ -655,68 +284,6 @@ Update a specific run
 
 This method allows to update a specific run. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class UpdateRunExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var runupdate = new Runupdate(); // Runupdate | 
-
-            try
-            {
-                // Update a specific run
-                BaseResponse result = apiInstance.UpdateRun(code, id, runupdate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.UpdateRun: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the UpdateRunWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Update a specific run
-    ApiResponse<BaseResponse> response = apiInstance.UpdateRunWithHttpInfo(code, id, runupdate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.UpdateRunWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -760,68 +327,6 @@ Update publicity of a specific run
 
 This method allows to update a publicity of specific run. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class UpdateRunPublicityExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new RunsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var runPublic = new RunPublic(); // RunPublic | 
-
-            try
-            {
-                // Update publicity of a specific run
-                RunPublicResponse result = apiInstance.UpdateRunPublicity(code, id, runPublic);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling RunsApi.UpdateRunPublicity: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the UpdateRunPublicityWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Update publicity of a specific run
-    ApiResponse<RunPublicResponse> response = apiInstance.UpdateRunPublicityWithHttpInfo(code, id, runPublic);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling RunsApi.UpdateRunPublicityWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 

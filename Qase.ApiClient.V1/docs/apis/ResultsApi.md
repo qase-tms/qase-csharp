@@ -19,68 +19,6 @@ Create test run result
 
 This method allows to create test run result by Run Id. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CreateResultExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var resultCreate = new ResultCreate(); // ResultCreate | 
-
-            try
-            {
-                // Create test run result
-                ResultCreateResponse result = apiInstance.CreateResult(code, id, resultCreate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.CreateResult: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreateResultWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Create test run result
-    ApiResponse<ResultCreateResponse> response = apiInstance.CreateResultWithHttpInfo(code, id, resultCreate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.CreateResultWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -119,74 +57,12 @@ catch (ApiException e)
 
 <a id="createresultbulk"></a>
 # **CreateResultBulk**
-> BaseResponse CreateResultBulk (string code, int id, ResultcreateBulk resultcreateBulk)
+> BaseResponse CreateResultBulk (string code, int id, ResultCreateBulk resultCreateBulk)
 
 Bulk create test run result
 
 This method allows to create a lot of test run result at once.  If you try to send more than 2,000 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CreateResultBulkExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var resultcreateBulk = new ResultcreateBulk(); // ResultcreateBulk | 
-
-            try
-            {
-                // Bulk create test run result
-                BaseResponse result = apiInstance.CreateResultBulk(code, id, resultcreateBulk);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.CreateResultBulk: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreateResultBulkWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Bulk create test run result
-    ApiResponse<BaseResponse> response = apiInstance.CreateResultBulkWithHttpInfo(code, id, resultcreateBulk);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.CreateResultBulkWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -194,7 +70,7 @@ catch (ApiException e)
 |------|------|-------------|-------|
 | **code** | **string** | Code of project, where to search entities. |  |
 | **id** | **int** | Identifier. |  |
-| **resultcreateBulk** | [**ResultcreateBulk**](ResultcreateBulk.md) |  |  |
+| **resultCreateBulk** | [**ResultCreateBulk**](ResultCreateBulk.md) |  |  |
 
 ### Return type
 
@@ -232,68 +108,6 @@ Delete test run result
 
 This method allows to delete test run result. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class DeleteResultExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var hash = "hash_example";  // string | Hash.
-
-            try
-            {
-                // Delete test run result
-                HashResponse result = apiInstance.DeleteResult(code, id, hash);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.DeleteResult: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the DeleteResultWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Delete test run result
-    ApiResponse<HashResponse> response = apiInstance.DeleteResultWithHttpInfo(code, id, hash);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.DeleteResultWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -337,67 +151,6 @@ Get test run result by code
 
 This method allows to retrieve a specific test run result by Hash. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetResultExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var hash = "hash_example";  // string | Hash.
-
-            try
-            {
-                // Get test run result by code
-                ResultResponse result = apiInstance.GetResult(code, hash);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.GetResult: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetResultWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get test run result by code
-    ApiResponse<ResultResponse> response = apiInstance.GetResultWithHttpInfo(code, hash);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.GetResultWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -440,75 +193,6 @@ Get all test run results
 
 This method allows to retrieve all test run results stored in selected project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetResultsExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var status = "status_example";  // string | A single test run result status. Possible values: in_progress, passed, failed, blocked, skipped, invalid.  (optional) 
-            var run = "run_example";  // string | A list of run IDs separated by comma. (optional) 
-            var caseId = "caseId_example";  // string | A list of case IDs separated by comma. (optional) 
-            var member = "member_example";  // string | A list of member IDs separated by comma. (optional) 
-            var api = true;  // bool |  (optional) 
-            var fromEndTime = "fromEndTime_example";  // string | Will return all results created after provided datetime. Allowed format: `Y-m-d H:i:s`.  (optional) 
-            var toEndTime = "toEndTime_example";  // string | Will return all results created before provided datetime. Allowed format: `Y-m-d H:i:s`.  (optional) 
-            var limit = 10;  // int | A number of entities in result set. (optional)  (default to 10)
-            var offset = 0;  // int | How many entities should be skipped. (optional)  (default to 0)
-
-            try
-            {
-                // Get all test run results
-                ResultListResponse result = apiInstance.GetResults(code, status, run, caseId, member, api, fromEndTime, toEndTime, limit, offset);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.GetResults: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetResultsWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get all test run results
-    ApiResponse<ResultListResponse> response = apiInstance.GetResultsWithHttpInfo(code, status, run, caseId, member, api, fromEndTime, toEndTime, limit, offset);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.GetResultsWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -559,69 +243,6 @@ Update test run result
 
 This method allows to update test run result. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class UpdateResultExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var hash = "hash_example";  // string | Hash.
-            var resultUpdate = new ResultUpdate(); // ResultUpdate | 
-
-            try
-            {
-                // Update test run result
-                HashResponse result = apiInstance.UpdateResult(code, id, hash, resultUpdate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.UpdateResult: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the UpdateResultWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Update test run result
-    ApiResponse<HashResponse> response = apiInstance.UpdateResultWithHttpInfo(code, id, hash, resultUpdate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.UpdateResultWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 

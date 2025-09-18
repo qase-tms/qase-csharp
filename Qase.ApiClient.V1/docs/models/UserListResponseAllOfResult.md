@@ -1,11 +1,13 @@
-# Qase.ApiClient.V1.Model.TestCaseExternalIssues
+# Qase.ApiClient.V1.Model.UserListResponseAllOfResult
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Type** | **string** |  | 
-**Links** | [**List&lt;TestCaseExternalIssuesLinksInner&gt;**](TestCaseExternalIssuesLinksInner.md) |  | 
+**Total** | **int** |  | [optional] 
+**Filtered** | **int** |  | [optional] 
+**Count** | **int** |  | [optional] 
+**Entities** | [**List&lt;User&gt;**](User.md) |  | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

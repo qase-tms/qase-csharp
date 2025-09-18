@@ -160,8 +160,8 @@ namespace Qase.ApiClient.V1.Client
                 return ResultUpdate.StatusEnumToJsonValue(resultUpdateStatusEnum);
             if (obj is RunCreateCloudRunConfig.BrowserEnum runCreateCloudRunConfigBrowserEnum)
                 return RunCreateCloudRunConfig.BrowserEnumToJsonValue(runCreateCloudRunConfigBrowserEnum);
-            if (obj is RunexternalIssues.TypeEnum runexternalIssuesTypeEnum)
-                return RunexternalIssues.TypeEnumToJsonValue(runexternalIssuesTypeEnum);
+            if (obj is RunExternalIssues.TypeEnum runExternalIssuesTypeEnum)
+                return RunExternalIssues.TypeEnumToJsonValue(runExternalIssuesTypeEnum);
             if (obj is SharedParameter.TypeEnum sharedParameterTypeEnum)
                 return SharedParameter.TypeEnumToJsonValue(sharedParameterTypeEnum);
             if (obj is SharedParameterCreate.TypeEnum sharedParameterCreateTypeEnum)
@@ -172,8 +172,6 @@ namespace Qase.ApiClient.V1.Client
                 return TestCaseParameterGroup.TypeEnumToJsonValue(testCaseParameterGroupTypeEnum);
             if (obj is TestCaseParameterSingle.TypeEnum testCaseParameterSingleTypeEnum)
                 return TestCaseParameterSingle.TypeEnumToJsonValue(testCaseParameterSingleTypeEnum);
-            if (obj is TestCaseExternalIssues.TypeEnum testCaseexternalIssuesTypeEnum)
-                return TestCaseExternalIssues.TypeEnumToJsonValue(testCaseexternalIssuesTypeEnum);
             if (obj is TestStepResultCreate.StatusEnum testStepResultCreateStatusEnum)
                 return TestStepResultCreate.StatusEnumToJsonValue(testStepResultCreateStatusEnum);
             if (obj is ICollection collection)

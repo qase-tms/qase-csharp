@@ -27,17 +27,17 @@ using Qase.ApiClient.V1.Client;
 namespace Qase.ApiClient.V1.Model
 {
     /// <summary>
-    /// RunexternalIssuesLinksInner
+    /// RunExternalIssuesLinksInner
     /// </summary>
-    public partial class RunexternalIssuesLinksInner : IValidatableObject
+    public partial class RunExternalIssuesLinksInner : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RunexternalIssuesLinksInner" /> class.
+        /// Initializes a new instance of the <see cref="RunExternalIssuesLinksInner" /> class.
         /// </summary>
         /// <param name="runId">runId</param>
         /// <param name="externalIssue">An external issue identifier, e.g. \&quot;PROJ-1234\&quot;. Or null if you want to remove the link.</param>
         [JsonConstructor]
-        public RunexternalIssuesLinksInner(long runId, Option<string?> externalIssue = default)
+        public RunExternalIssuesLinksInner(long runId, Option<string?> externalIssue = default)
         {
             RunId = runId;
             ExternalIssueOption = externalIssue;
@@ -79,7 +79,7 @@ namespace Qase.ApiClient.V1.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class RunexternalIssuesLinksInner {\n");
+            sb.Append("class RunExternalIssuesLinksInner {\n");
             sb.Append("  RunId: ").Append(RunId).Append("\n");
             sb.Append("  ExternalIssue: ").Append(ExternalIssue).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
@@ -105,19 +105,19 @@ namespace Qase.ApiClient.V1.Model
     }
 
     /// <summary>
-    /// A Json converter for type <see cref="RunexternalIssuesLinksInner" />
+    /// A Json converter for type <see cref="RunExternalIssuesLinksInner" />
     /// </summary>
-    public class RunexternalIssuesLinksInnerJsonConverter : JsonConverter<RunexternalIssuesLinksInner>
+    public class RunExternalIssuesLinksInnerJsonConverter : JsonConverter<RunExternalIssuesLinksInner>
     {
         /// <summary>
-        /// Deserializes json to <see cref="RunexternalIssuesLinksInner" />
+        /// Deserializes json to <see cref="RunExternalIssuesLinksInner" />
         /// </summary>
         /// <param name="utf8JsonReader"></param>
         /// <param name="typeToConvert"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="JsonException"></exception>
-        public override RunexternalIssuesLinksInner Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
+        public override RunExternalIssuesLinksInner Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
         {
             int currentDepth = utf8JsonReader.CurrentDepth;
 
@@ -157,43 +157,43 @@ namespace Qase.ApiClient.V1.Model
             }
 
             if (!runId.IsSet)
-                throw new ArgumentException("Property is required for class RunexternalIssuesLinksInner.", nameof(runId));
+                throw new ArgumentException("Property is required for class RunExternalIssuesLinksInner.", nameof(runId));
 
             if (runId.IsSet && runId.Value == null)
-                throw new ArgumentNullException(nameof(runId), "Property is not nullable for class RunexternalIssuesLinksInner.");
+                throw new ArgumentNullException(nameof(runId), "Property is not nullable for class RunExternalIssuesLinksInner.");
 
-            return new RunexternalIssuesLinksInner(runId.Value!.Value!, externalIssue);
+            return new RunExternalIssuesLinksInner(runId.Value!.Value!, externalIssue);
         }
 
         /// <summary>
-        /// Serializes a <see cref="RunexternalIssuesLinksInner" />
+        /// Serializes a <see cref="RunExternalIssuesLinksInner" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="runexternalIssuesLinksInner"></param>
+        /// <param name="runExternalIssuesLinksInner"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Write(Utf8JsonWriter writer, RunexternalIssuesLinksInner runexternalIssuesLinksInner, JsonSerializerOptions jsonSerializerOptions)
+        public override void Write(Utf8JsonWriter writer, RunExternalIssuesLinksInner runExternalIssuesLinksInner, JsonSerializerOptions jsonSerializerOptions)
         {
             writer.WriteStartObject();
 
-            WriteProperties(writer, runexternalIssuesLinksInner, jsonSerializerOptions);
+            WriteProperties(writer, runExternalIssuesLinksInner, jsonSerializerOptions);
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serializes the properties of <see cref="RunexternalIssuesLinksInner" />
+        /// Serializes the properties of <see cref="RunExternalIssuesLinksInner" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="runexternalIssuesLinksInner"></param>
+        /// <param name="runExternalIssuesLinksInner"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void WriteProperties(Utf8JsonWriter writer, RunexternalIssuesLinksInner runexternalIssuesLinksInner, JsonSerializerOptions jsonSerializerOptions)
+        public void WriteProperties(Utf8JsonWriter writer, RunExternalIssuesLinksInner runExternalIssuesLinksInner, JsonSerializerOptions jsonSerializerOptions)
         {
-            writer.WriteNumber("run_id", runexternalIssuesLinksInner.RunId);
+            writer.WriteNumber("run_id", runExternalIssuesLinksInner.RunId);
 
-            if (runexternalIssuesLinksInner.ExternalIssueOption.IsSet)
-                if (runexternalIssuesLinksInner.ExternalIssueOption.Value != null)
-                    writer.WriteString("external_issue", runexternalIssuesLinksInner.ExternalIssue);
+            if (runExternalIssuesLinksInner.ExternalIssueOption.IsSet)
+                if (runExternalIssuesLinksInner.ExternalIssueOption.Value != null)
+                    writer.WriteString("external_issue", runExternalIssuesLinksInner.ExternalIssue);
                 else
                     writer.WriteNull("external_issue");
         }

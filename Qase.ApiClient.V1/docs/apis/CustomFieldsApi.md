@@ -18,66 +18,6 @@ Create new Custom Field
 
 This method allows to create custom field. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CreateCustomFieldExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CustomFieldsApi(config);
-            var customFieldCreate = new CustomFieldCreate(); // CustomFieldCreate | 
-
-            try
-            {
-                // Create new Custom Field
-                IdResponse result = apiInstance.CreateCustomField(customFieldCreate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CustomFieldsApi.CreateCustomField: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreateCustomFieldWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Create new Custom Field
-    ApiResponse<IdResponse> response = apiInstance.CreateCustomFieldWithHttpInfo(customFieldCreate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CustomFieldsApi.CreateCustomFieldWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -119,66 +59,6 @@ Delete Custom Field by id
 
 This method allows to delete custom field. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class DeleteCustomFieldExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CustomFieldsApi(config);
-            var id = 56;  // int | Identifier.
-
-            try
-            {
-                // Delete Custom Field by id
-                BaseResponse result = apiInstance.DeleteCustomField(id);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CustomFieldsApi.DeleteCustomField: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the DeleteCustomFieldWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Delete Custom Field by id
-    ApiResponse<BaseResponse> response = apiInstance.DeleteCustomFieldWithHttpInfo(id);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CustomFieldsApi.DeleteCustomFieldWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -220,66 +100,6 @@ Get Custom Field by id
 
 This method allows to retrieve custom field. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetCustomFieldExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CustomFieldsApi(config);
-            var id = 56;  // int | Identifier.
-
-            try
-            {
-                // Get Custom Field by id
-                CustomFieldResponse result = apiInstance.GetCustomField(id);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CustomFieldsApi.GetCustomField: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetCustomFieldWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get Custom Field by id
-    ApiResponse<CustomFieldResponse> response = apiInstance.GetCustomFieldWithHttpInfo(id);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CustomFieldsApi.GetCustomFieldWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -321,69 +141,6 @@ Get all Custom Fields
 
 This method allows to retrieve and filter custom fields. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetCustomFieldsExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CustomFieldsApi(config);
-            var entity = "case";  // string |  (optional) 
-            var type = "string";  // string |  (optional) 
-            var limit = 10;  // int | A number of entities in result set. (optional)  (default to 10)
-            var offset = 0;  // int | How many entities should be skipped. (optional)  (default to 0)
-
-            try
-            {
-                // Get all Custom Fields
-                CustomFieldListResponse result = apiInstance.GetCustomFields(entity, type, limit, offset);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CustomFieldsApi.GetCustomFields: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetCustomFieldsWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get all Custom Fields
-    ApiResponse<CustomFieldListResponse> response = apiInstance.GetCustomFieldsWithHttpInfo(entity, type, limit, offset);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CustomFieldsApi.GetCustomFieldsWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -427,67 +184,6 @@ Update Custom Field by id
 
 This method allows to update custom field. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class UpdateCustomFieldExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CustomFieldsApi(config);
-            var id = 56;  // int | Identifier.
-            var customFieldUpdate = new CustomFieldUpdate(); // CustomFieldUpdate | 
-
-            try
-            {
-                // Update Custom Field by id
-                BaseResponse result = apiInstance.UpdateCustomField(id, customFieldUpdate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CustomFieldsApi.UpdateCustomField: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the UpdateCustomFieldWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Update Custom Field by id
-    ApiResponse<BaseResponse> response = apiInstance.UpdateCustomFieldWithHttpInfo(id, customFieldUpdate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CustomFieldsApi.UpdateCustomFieldWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 

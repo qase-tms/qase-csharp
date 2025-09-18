@@ -57,7 +57,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="createdAt">createdAt</param>
         /// <param name="updatedAt">updatedAt</param>
         [JsonConstructor]
-        public TestCaseCreate(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<List<TestCaseParametercreate>?> parameters = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default)
+        public TestCaseCreate(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<List<TestCaseParameterCreate>?> parameters = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default)
         {
             Title = title;
             DescriptionOption = description;
@@ -321,13 +321,13 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<List<TestCaseParametercreate>?> ParametersOption { get; private set; }
+        public Option<List<TestCaseParameterCreate>?> ParametersOption { get; private set; }
 
         /// <summary>
         /// Gets or Sets Parameters
         /// </summary>
         [JsonPropertyName("parameters")]
-        public List<TestCaseParametercreate>? Parameters { get { return this.ParametersOption; } set { this.ParametersOption = new Option<List<TestCaseParametercreate>?>(value); } }
+        public List<TestCaseParameterCreate>? Parameters { get { return this.ParametersOption; } set { this.ParametersOption = new Option<List<TestCaseParameterCreate>?>(value); } }
 
         /// <summary>
         /// Used to track the state of CustomField
@@ -467,7 +467,7 @@ namespace Qase.ApiClient.V1.Model
             Option<List<TestStepCreate>?> steps = default;
             Option<List<string>?> tags = default;
             Option<Dictionary<string, List<string>>?> varParams = default;
-            Option<List<TestCaseParametercreate>?> parameters = default;
+            Option<List<TestCaseParameterCreate>?> parameters = default;
             Option<Dictionary<string, string>?> customField = default;
             Option<string?> createdAt = default;
             Option<string?> updatedAt = default;
@@ -542,7 +542,7 @@ namespace Qase.ApiClient.V1.Model
                             varParams = new Option<Dictionary<string, List<string>>?>(JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "parameters":
-                            parameters = new Option<List<TestCaseParametercreate>?>(JsonSerializer.Deserialize<List<TestCaseParametercreate>>(ref utf8JsonReader, jsonSerializerOptions));
+                            parameters = new Option<List<TestCaseParameterCreate>?>(JsonSerializer.Deserialize<List<TestCaseParameterCreate>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "custom_field":
                             customField = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions)!);

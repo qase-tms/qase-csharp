@@ -18,67 +18,6 @@ Create a new plan
 
 This method allows to create a plan in selected project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CreatePlanExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new PlansApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var planCreate = new PlanCreate(); // PlanCreate | 
-
-            try
-            {
-                // Create a new plan
-                IdResponse result = apiInstance.CreatePlan(code, planCreate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling PlansApi.CreatePlan: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreatePlanWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Create a new plan
-    ApiResponse<IdResponse> response = apiInstance.CreatePlanWithHttpInfo(code, planCreate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling PlansApi.CreatePlanWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -122,67 +61,6 @@ Delete plan
 
 This method completely deletes a plan from repository. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class DeletePlanExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new PlansApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-
-            try
-            {
-                // Delete plan
-                IdResponse result = apiInstance.DeletePlan(code, id);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling PlansApi.DeletePlan: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the DeletePlanWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Delete plan
-    ApiResponse<IdResponse> response = apiInstance.DeletePlanWithHttpInfo(code, id);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling PlansApi.DeletePlanWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -225,67 +103,6 @@ Get a specific plan
 
 This method allows to retrieve a specific plan. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetPlanExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new PlansApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-
-            try
-            {
-                // Get a specific plan
-                PlanResponse result = apiInstance.GetPlan(code, id);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling PlansApi.GetPlan: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetPlanWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get a specific plan
-    ApiResponse<PlanResponse> response = apiInstance.GetPlanWithHttpInfo(code, id);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling PlansApi.GetPlanWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -328,68 +145,6 @@ Get all plans
 
 This method allows to retrieve all plans stored in selected project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetPlansExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new PlansApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var limit = 10;  // int | A number of entities in result set. (optional)  (default to 10)
-            var offset = 0;  // int | How many entities should be skipped. (optional)  (default to 0)
-
-            try
-            {
-                // Get all plans
-                PlanListResponse result = apiInstance.GetPlans(code, limit, offset);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling PlansApi.GetPlans: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetPlansWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get all plans
-    ApiResponse<PlanListResponse> response = apiInstance.GetPlansWithHttpInfo(code, limit, offset);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling PlansApi.GetPlansWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -433,68 +188,6 @@ Update plan
 
 This method updates a plan. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class UpdatePlanExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new PlansApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var planUpdate = new PlanUpdate(); // PlanUpdate | 
-
-            try
-            {
-                // Update plan
-                IdResponse result = apiInstance.UpdatePlan(code, id, planUpdate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling PlansApi.UpdatePlan: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the UpdatePlanWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Update plan
-    ApiResponse<IdResponse> response = apiInstance.UpdatePlanWithHttpInfo(code, id, planUpdate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling PlansApi.UpdatePlanWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 

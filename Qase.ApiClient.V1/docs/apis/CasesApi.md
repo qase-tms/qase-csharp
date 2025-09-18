@@ -21,67 +21,6 @@ Create test cases in bulk
 
 This method allows to bulk create new test cases in a project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class BulkExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var testCasebulk = new TestCasebulk(); // TestCasebulk | 
-
-            try
-            {
-                // Create test cases in bulk
-                Bulk200Response result = apiInstance.Bulk(code, testCasebulk);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.Bulk: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the BulkWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Create test cases in bulk
-    ApiResponse<Bulk200Response> response = apiInstance.BulkWithHttpInfo(code, testCasebulk);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.BulkWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -119,78 +58,17 @@ catch (ApiException e)
 
 <a id="caseattachexternalissue"></a>
 # **CaseAttachExternalIssue**
-> BaseResponse CaseAttachExternalIssue (string code, TestCaseexternalIssues testCaseexternalIssues)
+> BaseResponse CaseAttachExternalIssue (string code, TestCaseExternalIssues testCaseExternalIssues)
 
 Attach the external issues to the test cases
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CaseAttachExternalIssueExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var testCaseexternalIssues = new TestCaseexternalIssues(); // TestCaseexternalIssues | 
-
-            try
-            {
-                // Attach the external issues to the test cases
-                BaseResponse result = apiInstance.CaseAttachExternalIssue(code, testCaseexternalIssues);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.CaseAttachExternalIssue: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CaseAttachExternalIssueWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Attach the external issues to the test cases
-    ApiResponse<BaseResponse> response = apiInstance.CaseAttachExternalIssueWithHttpInfo(code, testCaseexternalIssues);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.CaseAttachExternalIssueWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
 | **code** | **string** | Code of project, where to search entities. |  |
-| **testCaseexternalIssues** | [**TestCaseexternalIssues**](TestCaseexternalIssues.md) |  |  |
+| **testCaseExternalIssues** | [**TestCaseExternalIssues**](TestCaseExternalIssues.md) |  |  |
 
 ### Return type
 
@@ -222,78 +100,17 @@ catch (ApiException e)
 
 <a id="casedetachexternalissue"></a>
 # **CaseDetachExternalIssue**
-> BaseResponse CaseDetachExternalIssue (string code, TestCaseexternalIssues testCaseexternalIssues)
+> BaseResponse CaseDetachExternalIssue (string code, TestCaseExternalIssues testCaseExternalIssues)
 
 Detach the external issues from the test cases
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CaseDetachExternalIssueExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var testCaseexternalIssues = new TestCaseexternalIssues(); // TestCaseexternalIssues | 
-
-            try
-            {
-                // Detach the external issues from the test cases
-                BaseResponse result = apiInstance.CaseDetachExternalIssue(code, testCaseexternalIssues);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.CaseDetachExternalIssue: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CaseDetachExternalIssueWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Detach the external issues from the test cases
-    ApiResponse<BaseResponse> response = apiInstance.CaseDetachExternalIssueWithHttpInfo(code, testCaseexternalIssues);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.CaseDetachExternalIssueWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
 | **code** | **string** | Code of project, where to search entities. |  |
-| **testCaseexternalIssues** | [**TestCaseexternalIssues**](TestCaseexternalIssues.md) |  |  |
+| **testCaseExternalIssues** | [**TestCaseExternalIssues**](TestCaseExternalIssues.md) |  |  |
 
 ### Return type
 
@@ -331,67 +148,6 @@ Create a new test case
 
 This method allows to create a new test case in selected project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class CreateCaseExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var testCaseCreate = new TestCaseCreate(); // TestCaseCreate | 
-
-            try
-            {
-                // Create a new test case
-                IdResponse result = apiInstance.CreateCase(code, testCaseCreate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.CreateCase: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreateCaseWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Create a new test case
-    ApiResponse<IdResponse> response = apiInstance.CreateCaseWithHttpInfo(code, testCaseCreate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.CreateCaseWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -435,67 +191,6 @@ Delete test case
 
 This method completely deletes a test case from repository. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class DeleteCaseExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-
-            try
-            {
-                // Delete test case
-                IdResponse result = apiInstance.DeleteCase(code, id);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.DeleteCase: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the DeleteCaseWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Delete test case
-    ApiResponse<IdResponse> response = apiInstance.DeleteCaseWithHttpInfo(code, id);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.DeleteCaseWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -539,68 +234,6 @@ Get a specific test case
 
 This method allows to retrieve a specific test case. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetCaseExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var include = "include_example";  // string | A list of entities to include in response separated by comma. Possible values: external_issues.  (optional) 
-
-            try
-            {
-                // Get a specific test case
-                TestCaseResponse result = apiInstance.GetCase(code, id, include);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.GetCase: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetCaseWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get a specific test case
-    ApiResponse<TestCaseResponse> response = apiInstance.GetCaseWithHttpInfo(code, id, include);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.GetCaseWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -645,80 +278,6 @@ Get all test cases
 
 This method allows to retrieve all test cases stored in selected project. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class GetCasesExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var search = "search_example";  // string | Provide a string that will be used to search by name. (optional) 
-            var milestoneId = 56;  // int | ID of milestone. (optional) 
-            var suiteId = 56;  // int | ID of test suite. (optional) 
-            var severity = "severity_example";  // string | A list of severity values separated by comma. Possible values: undefined, blocker, critical, major, normal, minor, trivial  (optional) 
-            var priority = "priority_example";  // string | A list of priority values separated by comma. Possible values: undefined, high, medium, low  (optional) 
-            var type = "type_example";  // string | A list of type values separated by comma. Possible values: other, functional smoke, regression, security, usability, performance, acceptance  (optional) 
-            var behavior = "behavior_example";  // string | A list of behavior values separated by comma. Possible values: undefined, positive negative, destructive  (optional) 
-            var automation = "automation_example";  // string | A list of values separated by comma. Possible values: is-not-automated, automated to-be-automated  (optional) 
-            var status = "status_example";  // string | A list of values separated by comma. Possible values: actual, draft deprecated  (optional) 
-            var externalIssuesType = "asana";  // string | An integration type.  (optional) 
-            var externalIssuesIds = new List<string>(); // List<string> | A list of issue IDs. (optional) 
-            var include = "include_example";  // string | A list of entities to include in response separated by comma. Possible values: external_issues.  (optional) 
-            var limit = 10;  // int | A number of entities in result set. (optional)  (default to 10)
-            var offset = 0;  // int | How many entities should be skipped. (optional)  (default to 0)
-
-            try
-            {
-                // Get all test cases
-                TestCaseListResponse result = apiInstance.GetCases(code, search, milestoneId, suiteId, severity, priority, type, behavior, automation, status, externalIssuesType, externalIssuesIds, include, limit, offset);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.GetCases: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the GetCasesWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Get all test cases
-    ApiResponse<TestCaseListResponse> response = apiInstance.GetCasesWithHttpInfo(code, search, milestoneId, suiteId, severity, priority, type, behavior, automation, status, externalIssuesType, externalIssuesIds, include, limit, offset);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.GetCasesWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -775,68 +334,6 @@ Update test case
 
 This method updates a test case. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V1.Api;
-using Qase.ApiClient.V1.Client;
-using Qase.ApiClient.V1.Model;
-
-namespace Example
-{
-    public class UpdateCaseExample
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v1";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new CasesApi(config);
-            var code = "code_example";  // string | Code of project, where to search entities.
-            var id = 56;  // int | Identifier.
-            var testCaseUpdate = new TestCaseUpdate(); // TestCaseUpdate | 
-
-            try
-            {
-                // Update test case
-                IdResponse result = apiInstance.UpdateCase(code, id, testCaseUpdate);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling CasesApi.UpdateCase: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the UpdateCaseWithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Update test case
-    ApiResponse<IdResponse> response = apiInstance.UpdateCaseWithHttpInfo(code, id, testCaseUpdate);
-    Debug.Write("Status Code: " + response.StatusCode);
-    Debug.Write("Response Headers: " + response.Headers);
-    Debug.Write("Response Body: " + response.Data);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling CasesApi.UpdateCaseWithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 

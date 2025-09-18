@@ -27,17 +27,17 @@ using Qase.ApiClient.V1.Client;
 namespace Qase.ApiClient.V1.Model
 {
     /// <summary>
-    /// RunexternalIssues
+    /// RunExternalIssues
     /// </summary>
-    public partial class RunexternalIssues : IValidatableObject
+    public partial class RunExternalIssues : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RunexternalIssues" /> class.
+        /// Initializes a new instance of the <see cref="RunExternalIssues" /> class.
         /// </summary>
         /// <param name="type">type</param>
         /// <param name="links">Array of external issue links. Each test run (run_id) can have only one external issue link.</param>
         [JsonConstructor]
-        public RunexternalIssues(TypeEnum type, List<RunexternalIssuesLinksInner> links)
+        public RunExternalIssues(TypeEnum type, List<RunExternalIssuesLinksInner> links)
         {
             Type = type;
             Links = links;
@@ -123,7 +123,7 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         /// <value>Array of external issue links. Each test run (run_id) can have only one external issue link.</value>
         [JsonPropertyName("links")]
-        public List<RunexternalIssuesLinksInner> Links { get; set; }
+        public List<RunExternalIssuesLinksInner> Links { get; set; }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -138,7 +138,7 @@ namespace Qase.ApiClient.V1.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class RunexternalIssues {\n");
+            sb.Append("class RunExternalIssues {\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Links: ").Append(Links).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
@@ -158,19 +158,19 @@ namespace Qase.ApiClient.V1.Model
     }
 
     /// <summary>
-    /// A Json converter for type <see cref="RunexternalIssues" />
+    /// A Json converter for type <see cref="RunExternalIssues" />
     /// </summary>
-    public class RunexternalIssuesJsonConverter : JsonConverter<RunexternalIssues>
+    public class RunExternalIssuesJsonConverter : JsonConverter<RunExternalIssues>
     {
         /// <summary>
-        /// Deserializes json to <see cref="RunexternalIssues" />
+        /// Deserializes json to <see cref="RunExternalIssues" />
         /// </summary>
         /// <param name="utf8JsonReader"></param>
         /// <param name="typeToConvert"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="JsonException"></exception>
-        public override RunexternalIssues Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
+        public override RunExternalIssues Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
         {
             int currentDepth = utf8JsonReader.CurrentDepth;
 
@@ -179,8 +179,8 @@ namespace Qase.ApiClient.V1.Model
 
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
-            Option<RunexternalIssues.TypeEnum?> type = default;
-            Option<List<RunexternalIssuesLinksInner>?> links = default;
+            Option<RunExternalIssues.TypeEnum?> type = default;
+            Option<List<RunExternalIssuesLinksInner>?> links = default;
 
             while (utf8JsonReader.Read())
             {
@@ -200,10 +200,10 @@ namespace Qase.ApiClient.V1.Model
                         case "type":
                             string? typeRawValue = utf8JsonReader.GetString();
                             if (typeRawValue != null)
-                                type = new Option<RunexternalIssues.TypeEnum?>(RunexternalIssues.TypeEnumFromStringOrDefault(typeRawValue));
+                                type = new Option<RunExternalIssues.TypeEnum?>(RunExternalIssues.TypeEnumFromStringOrDefault(typeRawValue));
                             break;
                         case "links":
-                            links = new Option<List<RunexternalIssuesLinksInner>?>(JsonSerializer.Deserialize<List<RunexternalIssuesLinksInner>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            links = new Option<List<RunExternalIssuesLinksInner>?>(JsonSerializer.Deserialize<List<RunExternalIssuesLinksInner>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         default:
                             break;
@@ -212,51 +212,51 @@ namespace Qase.ApiClient.V1.Model
             }
 
             if (!type.IsSet)
-                throw new ArgumentException("Property is required for class RunexternalIssues.", nameof(type));
+                throw new ArgumentException("Property is required for class RunExternalIssues.", nameof(type));
 
             if (!links.IsSet)
-                throw new ArgumentException("Property is required for class RunexternalIssues.", nameof(links));
+                throw new ArgumentException("Property is required for class RunExternalIssues.", nameof(links));
 
             if (type.IsSet && type.Value == null)
-                throw new ArgumentNullException(nameof(type), "Property is not nullable for class RunexternalIssues.");
+                throw new ArgumentNullException(nameof(type), "Property is not nullable for class RunExternalIssues.");
 
             if (links.IsSet && links.Value == null)
-                throw new ArgumentNullException(nameof(links), "Property is not nullable for class RunexternalIssues.");
+                throw new ArgumentNullException(nameof(links), "Property is not nullable for class RunExternalIssues.");
 
-            return new RunexternalIssues(type.Value!.Value!, links.Value!);
+            return new RunExternalIssues(type.Value!.Value!, links.Value!);
         }
 
         /// <summary>
-        /// Serializes a <see cref="RunexternalIssues" />
+        /// Serializes a <see cref="RunExternalIssues" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="runexternalIssues"></param>
+        /// <param name="runExternalIssues"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Write(Utf8JsonWriter writer, RunexternalIssues runexternalIssues, JsonSerializerOptions jsonSerializerOptions)
+        public override void Write(Utf8JsonWriter writer, RunExternalIssues runExternalIssues, JsonSerializerOptions jsonSerializerOptions)
         {
             writer.WriteStartObject();
 
-            WriteProperties(writer, runexternalIssues, jsonSerializerOptions);
+            WriteProperties(writer, runExternalIssues, jsonSerializerOptions);
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serializes the properties of <see cref="RunexternalIssues" />
+        /// Serializes the properties of <see cref="RunExternalIssues" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="runexternalIssues"></param>
+        /// <param name="runExternalIssues"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void WriteProperties(Utf8JsonWriter writer, RunexternalIssues runexternalIssues, JsonSerializerOptions jsonSerializerOptions)
+        public void WriteProperties(Utf8JsonWriter writer, RunExternalIssues runExternalIssues, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (runexternalIssues.Links == null)
-                throw new ArgumentNullException(nameof(runexternalIssues.Links), "Property is required for class RunexternalIssues.");
+            if (runExternalIssues.Links == null)
+                throw new ArgumentNullException(nameof(runExternalIssues.Links), "Property is required for class RunExternalIssues.");
 
-            var typeRawValue = RunexternalIssues.TypeEnumToJsonValue(runexternalIssues.Type);
+            var typeRawValue = RunExternalIssues.TypeEnumToJsonValue(runExternalIssues.Type);
             writer.WriteString("type", typeRawValue);
             writer.WritePropertyName("links");
-            JsonSerializer.Serialize(writer, runexternalIssues.Links, jsonSerializerOptions);
+            JsonSerializer.Serialize(writer, runExternalIssues.Links, jsonSerializerOptions);
         }
     }
 }

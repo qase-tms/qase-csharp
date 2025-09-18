@@ -28,200 +28,136 @@ namespace Qase.ApiClient.V1.Api
     /// Represents a collection of functions to interact with the API endpoints
     /// This class is registered as transient.
     /// </summary>
-    public interface IAuthorsApi : IApi
+    public interface IUsersApi : IApi
     {
         /// <summary>
         /// The class containing the events
         /// </summary>
-        AuthorsApiEvents Events { get; }
+        UsersApiEvents Events { get; }
 
         /// <summary>
-        /// Get a specific author
+        /// Get a specific user.
         /// </summary>
         /// <remarks>
-        /// This method allows to retrieve a specific author. 
+        /// This method allows to retrieve a specific user. 
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>&gt;</returns>
-        Task<IGetAuthorApiResponse> GetAuthorAsync(int id, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUserApiResponse"/>&gt;</returns>
+        Task<IGetUserApiResponse> GetUserAsync(int id, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Get a specific author
+        /// Get a specific user.
         /// </summary>
         /// <remarks>
-        /// This method allows to retrieve a specific author. 
+        /// This method allows to retrieve a specific user. 
         /// </remarks>
         /// <param name="id">Identifier.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>?&gt;</returns>
-        Task<IGetAuthorApiResponse?> GetAuthorOrDefaultAsync(int id, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUserApiResponse"/>?&gt;</returns>
+        Task<IGetUserApiResponse?> GetUserOrDefaultAsync(int id, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Get all authors
+        /// Get all users.
         /// </summary>
         /// <remarks>
-        /// This method allows to retrieve all authors in selected project. 
+        /// This method allows to retrieve all users. 
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="search">Provide a string that will be used to search by name. (optional)</param>
-        /// <param name="type"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorsApiResponse"/>&gt;</returns>
-        Task<IGetAuthorsApiResponse> GetAuthorsAsync(Option<string> search = default, Option<string> type = default, Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUsersApiResponse"/>&gt;</returns>
+        Task<IGetUsersApiResponse> GetUsersAsync(Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Get all authors
+        /// Get all users.
         /// </summary>
         /// <remarks>
-        /// This method allows to retrieve all authors in selected project. 
+        /// This method allows to retrieve all users. 
         /// </remarks>
-        /// <param name="search">Provide a string that will be used to search by name. (optional)</param>
-        /// <param name="type"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorsApiResponse"/>?&gt;</returns>
-        Task<IGetAuthorsApiResponse?> GetAuthorsOrDefaultAsync(Option<string> search = default, Option<string> type = default, Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUsersApiResponse"/>?&gt;</returns>
+        Task<IGetUsersApiResponse?> GetUsersOrDefaultAsync(Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default);
     }
 
     /// <summary>
-    /// The <see cref="IGetAuthorApiResponse"/>
+    /// The <see cref="IGetUserApiResponse"/>
     /// </summary>
-    public interface IGetAuthorApiResponse : Qase.ApiClient.V1.Client.IApiResponse, IOk<Qase.ApiClient.V1.Model.AuthorResponse?>
+    public interface IGetUserApiResponse : Qase.ApiClient.V1.Client.IApiResponse, IOk<Qase.ApiClient.V1.Model.UserResponse?>
     {
         /// <summary>
         /// Returns true if the response is 200 Ok
         /// </summary>
         /// <returns></returns>
         bool IsOk { get; }
-
-        /// <summary>
-        /// Returns true if the response is 400 BadRequest
-        /// </summary>
-        /// <returns></returns>
-        bool IsBadRequest { get; }
-
-        /// <summary>
-        /// Returns true if the response is 401 Unauthorized
-        /// </summary>
-        /// <returns></returns>
-        bool IsUnauthorized { get; }
-
-        /// <summary>
-        /// Returns true if the response is 403 Forbidden
-        /// </summary>
-        /// <returns></returns>
-        bool IsForbidden { get; }
-
-        /// <summary>
-        /// Returns true if the response is 404 NotFound
-        /// </summary>
-        /// <returns></returns>
-        bool IsNotFound { get; }
-
-        /// <summary>
-        /// Returns true if the response is 429 TooManyRequests
-        /// </summary>
-        /// <returns></returns>
-        bool IsTooManyRequests { get; }
     }
 
     /// <summary>
-    /// The <see cref="IGetAuthorsApiResponse"/>
+    /// The <see cref="IGetUsersApiResponse"/>
     /// </summary>
-    public interface IGetAuthorsApiResponse : Qase.ApiClient.V1.Client.IApiResponse, IOk<Qase.ApiClient.V1.Model.AuthorListResponse?>
+    public interface IGetUsersApiResponse : Qase.ApiClient.V1.Client.IApiResponse, IOk<Qase.ApiClient.V1.Model.UserListResponse?>
     {
         /// <summary>
         /// Returns true if the response is 200 Ok
         /// </summary>
         /// <returns></returns>
         bool IsOk { get; }
-
-        /// <summary>
-        /// Returns true if the response is 400 BadRequest
-        /// </summary>
-        /// <returns></returns>
-        bool IsBadRequest { get; }
-
-        /// <summary>
-        /// Returns true if the response is 401 Unauthorized
-        /// </summary>
-        /// <returns></returns>
-        bool IsUnauthorized { get; }
-
-        /// <summary>
-        /// Returns true if the response is 403 Forbidden
-        /// </summary>
-        /// <returns></returns>
-        bool IsForbidden { get; }
-
-        /// <summary>
-        /// Returns true if the response is 404 NotFound
-        /// </summary>
-        /// <returns></returns>
-        bool IsNotFound { get; }
-
-        /// <summary>
-        /// Returns true if the response is 429 TooManyRequests
-        /// </summary>
-        /// <returns></returns>
-        bool IsTooManyRequests { get; }
     }
 
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public class AuthorsApiEvents
+    public class UsersApiEvents
     {
         /// <summary>
         /// The event raised after the server response
         /// </summary>
-        public event EventHandler<ApiResponseEventArgs>? OnGetAuthor;
+        public event EventHandler<ApiResponseEventArgs>? OnGetUser;
 
         /// <summary>
         /// The event raised after an error querying the server
         /// </summary>
-        public event EventHandler<ExceptionEventArgs>? OnErrorGetAuthor;
+        public event EventHandler<ExceptionEventArgs>? OnErrorGetUser;
 
-        internal void ExecuteOnGetAuthor(AuthorsApi.GetAuthorApiResponse apiResponse)
+        internal void ExecuteOnGetUser(UsersApi.GetUserApiResponse apiResponse)
         {
-            OnGetAuthor?.Invoke(this, new ApiResponseEventArgs(apiResponse));
+            OnGetUser?.Invoke(this, new ApiResponseEventArgs(apiResponse));
         }
 
-        internal void ExecuteOnErrorGetAuthor(Exception exception)
+        internal void ExecuteOnErrorGetUser(Exception exception)
         {
-            OnErrorGetAuthor?.Invoke(this, new ExceptionEventArgs(exception));
+            OnErrorGetUser?.Invoke(this, new ExceptionEventArgs(exception));
         }
 
         /// <summary>
         /// The event raised after the server response
         /// </summary>
-        public event EventHandler<ApiResponseEventArgs>? OnGetAuthors;
+        public event EventHandler<ApiResponseEventArgs>? OnGetUsers;
 
         /// <summary>
         /// The event raised after an error querying the server
         /// </summary>
-        public event EventHandler<ExceptionEventArgs>? OnErrorGetAuthors;
+        public event EventHandler<ExceptionEventArgs>? OnErrorGetUsers;
 
-        internal void ExecuteOnGetAuthors(AuthorsApi.GetAuthorsApiResponse apiResponse)
+        internal void ExecuteOnGetUsers(UsersApi.GetUsersApiResponse apiResponse)
         {
-            OnGetAuthors?.Invoke(this, new ApiResponseEventArgs(apiResponse));
+            OnGetUsers?.Invoke(this, new ApiResponseEventArgs(apiResponse));
         }
 
-        internal void ExecuteOnErrorGetAuthors(Exception exception)
+        internal void ExecuteOnErrorGetUsers(Exception exception)
         {
-            OnErrorGetAuthors?.Invoke(this, new ExceptionEventArgs(exception));
+            OnErrorGetUsers?.Invoke(this, new ExceptionEventArgs(exception));
         }
     }
 
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public sealed partial class AuthorsApi : IAuthorsApi
+    public sealed partial class UsersApi : IUsersApi
     {
         private JsonSerializerOptions _jsonSerializerOptions;
 
@@ -233,7 +169,7 @@ namespace Qase.ApiClient.V1.Api
         /// <summary>
         /// The logger
         /// </summary>
-        public ILogger<AuthorsApi> Logger { get; }
+        public ILogger<UsersApi> Logger { get; }
 
         /// <summary>
         /// The HttpClient
@@ -243,7 +179,7 @@ namespace Qase.ApiClient.V1.Api
         /// <summary>
         /// The class containing the events
         /// </summary>
-        public AuthorsApiEvents Events { get; }
+        public UsersApiEvents Events { get; }
 
         /// <summary>
         /// A token provider of type <see cref="ApiKeyProvider"/>
@@ -251,31 +187,31 @@ namespace Qase.ApiClient.V1.Api
         public TokenProvider<ApiKeyToken> ApiKeyProvider { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthorsApi"/> class.
+        /// Initializes a new instance of the <see cref="UsersApi"/> class.
         /// </summary>
         /// <returns></returns>
-        public AuthorsApi(ILogger<AuthorsApi> logger, ILoggerFactory loggerFactory, HttpClient httpClient, JsonSerializerOptionsProvider jsonSerializerOptionsProvider, AuthorsApiEvents authorsApiEvents,
+        public UsersApi(ILogger<UsersApi> logger, ILoggerFactory loggerFactory, HttpClient httpClient, JsonSerializerOptionsProvider jsonSerializerOptionsProvider, UsersApiEvents usersApiEvents,
             TokenProvider<ApiKeyToken> apiKeyProvider)
         {
             _jsonSerializerOptions = jsonSerializerOptionsProvider.Options;
             LoggerFactory = loggerFactory;
-            Logger = LoggerFactory.CreateLogger<AuthorsApi>();
+            Logger = LoggerFactory.CreateLogger<UsersApi>();
             HttpClient = httpClient;
-            Events = authorsApiEvents;
+            Events = usersApiEvents;
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatGetAuthor(ref int id);
+        partial void FormatGetUser(ref int id);
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="id"></param>
-        private void AfterGetAuthorDefaultImplementation(IGetAuthorApiResponse apiResponseLocalVar, int id)
+        private void AfterGetUserDefaultImplementation(IGetUserApiResponse apiResponseLocalVar, int id)
         {
             bool suppressDefaultLog = false;
-            AfterGetAuthor(ref suppressDefaultLog, apiResponseLocalVar, id);
+            AfterGetUser(ref suppressDefaultLog, apiResponseLocalVar, id);
             if (!suppressDefaultLog)
                 Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
         }
@@ -286,7 +222,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="id"></param>
-        partial void AfterGetAuthor(ref bool suppressDefaultLog, IGetAuthorApiResponse apiResponseLocalVar, int id);
+        partial void AfterGetUser(ref bool suppressDefaultLog, IGetUserApiResponse apiResponseLocalVar, int id);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -295,10 +231,10 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="id"></param>
-        private void OnErrorGetAuthorDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id)
+        private void OnErrorGetUserDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id)
         {
             bool suppressDefaultLogLocalVar = false;
-            OnErrorGetAuthor(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, id);
+            OnErrorGetUser(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, id);
             if (!suppressDefaultLogLocalVar)
                 Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
         }
@@ -311,19 +247,19 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="id"></param>
-        partial void OnErrorGetAuthor(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id);
+        partial void OnErrorGetUser(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id);
 
         /// <summary>
-        /// Get a specific author This method allows to retrieve a specific author. 
+        /// Get a specific user. This method allows to retrieve a specific user. 
         /// </summary>
         /// <param name="id">Identifier.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>&gt;</returns>
-        public async Task<IGetAuthorApiResponse?> GetAuthorOrDefaultAsync(int id, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUserApiResponse"/>&gt;</returns>
+        public async Task<IGetUserApiResponse?> GetUserOrDefaultAsync(int id, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetAuthorAsync(id, cancellationToken).ConfigureAwait(false);
+                return await GetUserAsync(id, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -332,19 +268,19 @@ namespace Qase.ApiClient.V1.Api
         }
 
         /// <summary>
-        /// Get a specific author This method allows to retrieve a specific author. 
+        /// Get a specific user. This method allows to retrieve a specific user. 
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>&gt;</returns>
-        public async Task<IGetAuthorApiResponse> GetAuthorAsync(int id, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUserApiResponse"/>&gt;</returns>
+        public async Task<IGetUserApiResponse> GetUserAsync(int id, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
-                FormatGetAuthor(ref id);
+                FormatGetUser(ref id);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
                 {
@@ -352,8 +288,8 @@ namespace Qase.ApiClient.V1.Api
                     uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
                     uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
                     uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
-                        ? "/author/{id}"
-                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/author/{id}");
+                        ? "/user/{id}"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/user/{id}");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bid%7D", Uri.EscapeDataString(id.ToString()));
 
                     List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
@@ -377,21 +313,21 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        ILogger<GetAuthorApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetAuthorApiResponse>();
-                        GetAuthorApiResponse apiResponseLocalVar;
+                        ILogger<GetUserApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetUserApiResponse>();
+                        GetUserApiResponse apiResponseLocalVar;
 
                         switch ((int)httpResponseMessageLocalVar.StatusCode) {
                             default: {
                                 string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-                                apiResponseLocalVar = new GetAuthorApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/author/{id}", requestedAtLocalVar, _jsonSerializerOptions);
+                                apiResponseLocalVar = new GetUserApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/user/{id}", requestedAtLocalVar, _jsonSerializerOptions);
 
                                 break;
                             }
                         }
 
-                        AfterGetAuthorDefaultImplementation(apiResponseLocalVar, id);
+                        AfterGetUserDefaultImplementation(apiResponseLocalVar, id);
 
-                        Events.ExecuteOnGetAuthor(apiResponseLocalVar);
+                        Events.ExecuteOnGetUser(apiResponseLocalVar);
 
                         if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
                             foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
@@ -403,24 +339,24 @@ namespace Qase.ApiClient.V1.Api
             }
             catch(Exception e)
             {
-                OnErrorGetAuthorDefaultImplementation(e, "/author/{id}", uriBuilderLocalVar.Path, id);
-                Events.ExecuteOnErrorGetAuthor(e);
+                OnErrorGetUserDefaultImplementation(e, "/user/{id}", uriBuilderLocalVar.Path, id);
+                Events.ExecuteOnErrorGetUser(e);
                 throw;
             }
         }
 
         /// <summary>
-        /// The <see cref="GetAuthorApiResponse"/>
+        /// The <see cref="GetUserApiResponse"/>
         /// </summary>
-        public partial class GetAuthorApiResponse : Qase.ApiClient.V1.Client.ApiResponse, IGetAuthorApiResponse
+        public partial class GetUserApiResponse : Qase.ApiClient.V1.Client.ApiResponse, IGetUserApiResponse
         {
             /// <summary>
             /// The logger
             /// </summary>
-            public ILogger<GetAuthorApiResponse> Logger { get; }
+            public ILogger<GetUserApiResponse> Logger { get; }
 
             /// <summary>
-            /// The <see cref="GetAuthorApiResponse"/>
+            /// The <see cref="GetUserApiResponse"/>
             /// </summary>
             /// <param name="logger"></param>
             /// <param name="httpRequestMessage"></param>
@@ -429,14 +365,14 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="path"></param>
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
-            public GetAuthorApiResponse(ILogger<GetAuthorApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            public GetUserApiResponse(ILogger<GetUserApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
             /// <summary>
-            /// The <see cref="GetAuthorApiResponse"/>
+            /// The <see cref="GetUserApiResponse"/>
             /// </summary>
             /// <param name="logger"></param>
             /// <param name="httpRequestMessage"></param>
@@ -445,7 +381,7 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="path"></param>
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
-            public GetAuthorApiResponse(ILogger<GetAuthorApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            public GetUserApiResponse(ILogger<GetUserApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -463,11 +399,11 @@ namespace Qase.ApiClient.V1.Api
             /// Deserializes the response if the response is 200 Ok
             /// </summary>
             /// <returns></returns>
-            public Qase.ApiClient.V1.Model.AuthorResponse? Ok()
+            public Qase.ApiClient.V1.Model.UserResponse? Ok()
             {
                 // This logic may be modified with the AsModel.mustache template
                 return IsOk
-                    ? System.Text.Json.JsonSerializer.Deserialize<Qase.ApiClient.V1.Model.AuthorResponse>(RawContent, _jsonSerializerOptions)
+                    ? System.Text.Json.JsonSerializer.Deserialize<Qase.ApiClient.V1.Model.UserResponse>(RawContent, _jsonSerializerOptions)
                     : default;
             }
 
@@ -476,7 +412,7 @@ namespace Qase.ApiClient.V1.Api
             /// </summary>
             /// <param name="result"></param>
             /// <returns></returns>
-            public bool TryOk(out Qase.ApiClient.V1.Model.AuthorResponse? result)
+            public bool TryOk(out Qase.ApiClient.V1.Model.UserResponse? result)
             {
                 result = null;
 
@@ -491,36 +427,6 @@ namespace Qase.ApiClient.V1.Api
                 return result != null;
             }
 
-            /// <summary>
-            /// Returns true if the response is 400 BadRequest
-            /// </summary>
-            /// <returns></returns>
-            public bool IsBadRequest => 400 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 401 Unauthorized
-            /// </summary>
-            /// <returns></returns>
-            public bool IsUnauthorized => 401 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 403 Forbidden
-            /// </summary>
-            /// <returns></returns>
-            public bool IsForbidden => 403 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 404 NotFound
-            /// </summary>
-            /// <returns></returns>
-            public bool IsNotFound => 404 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 429 TooManyRequests
-            /// </summary>
-            /// <returns></returns>
-            public bool IsTooManyRequests => 429 == (int)StatusCode;
-
             private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
             {
                 bool suppressDefaultLog = false;
@@ -532,35 +438,18 @@ namespace Qase.ApiClient.V1.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatGetAuthors(ref Option<string> search, ref Option<string> type, ref Option<int> limit, ref Option<int> offset);
-
-        /// <summary>
-        /// Validates the request parameters
-        /// </summary>
-        /// <param name="search"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private void ValidateGetAuthors(Option<string> search, Option<string> type)
-        {
-            if (search.IsSet && search.Value == null)
-                throw new ArgumentNullException(nameof(search));
-
-            if (type.IsSet && type.Value == null)
-                throw new ArgumentNullException(nameof(type));
-        }
+        partial void FormatGetUsers(ref Option<int> limit, ref Option<int> offset);
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
-        /// <param name="search"></param>
-        /// <param name="type"></param>
         /// <param name="limit"></param>
         /// <param name="offset"></param>
-        private void AfterGetAuthorsDefaultImplementation(IGetAuthorsApiResponse apiResponseLocalVar, Option<string> search, Option<string> type, Option<int> limit, Option<int> offset)
+        private void AfterGetUsersDefaultImplementation(IGetUsersApiResponse apiResponseLocalVar, Option<int> limit, Option<int> offset)
         {
             bool suppressDefaultLog = false;
-            AfterGetAuthors(ref suppressDefaultLog, apiResponseLocalVar, search, type, limit, offset);
+            AfterGetUsers(ref suppressDefaultLog, apiResponseLocalVar, limit, offset);
             if (!suppressDefaultLog)
                 Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
         }
@@ -570,11 +459,9 @@ namespace Qase.ApiClient.V1.Api
         /// </summary>
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
-        /// <param name="search"></param>
-        /// <param name="type"></param>
         /// <param name="limit"></param>
         /// <param name="offset"></param>
-        partial void AfterGetAuthors(ref bool suppressDefaultLog, IGetAuthorsApiResponse apiResponseLocalVar, Option<string> search, Option<string> type, Option<int> limit, Option<int> offset);
+        partial void AfterGetUsers(ref bool suppressDefaultLog, IGetUsersApiResponse apiResponseLocalVar, Option<int> limit, Option<int> offset);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -582,14 +469,12 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="exceptionLocalVar"></param>
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
-        /// <param name="search"></param>
-        /// <param name="type"></param>
         /// <param name="limit"></param>
         /// <param name="offset"></param>
-        private void OnErrorGetAuthorsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<string> search, Option<string> type, Option<int> limit, Option<int> offset)
+        private void OnErrorGetUsersDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> limit, Option<int> offset)
         {
             bool suppressDefaultLogLocalVar = false;
-            OnErrorGetAuthors(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, search, type, limit, offset);
+            OnErrorGetUsers(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, limit, offset);
             if (!suppressDefaultLogLocalVar)
                 Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
         }
@@ -601,26 +486,22 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="exceptionLocalVar"></param>
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
-        /// <param name="search"></param>
-        /// <param name="type"></param>
         /// <param name="limit"></param>
         /// <param name="offset"></param>
-        partial void OnErrorGetAuthors(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<string> search, Option<string> type, Option<int> limit, Option<int> offset);
+        partial void OnErrorGetUsers(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> limit, Option<int> offset);
 
         /// <summary>
-        /// Get all authors This method allows to retrieve all authors in selected project. 
+        /// Get all users. This method allows to retrieve all users. 
         /// </summary>
-        /// <param name="search">Provide a string that will be used to search by name. (optional)</param>
-        /// <param name="type"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorsApiResponse"/>&gt;</returns>
-        public async Task<IGetAuthorsApiResponse?> GetAuthorsOrDefaultAsync(Option<string> search = default, Option<string> type = default, Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUsersApiResponse"/>&gt;</returns>
+        public async Task<IGetUsersApiResponse?> GetUsersOrDefaultAsync(Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetAuthorsAsync(search, type, limit, offset, cancellationToken).ConfigureAwait(false);
+                return await GetUsersAsync(limit, offset, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -629,24 +510,20 @@ namespace Qase.ApiClient.V1.Api
         }
 
         /// <summary>
-        /// Get all authors This method allows to retrieve all authors in selected project. 
+        /// Get all users. This method allows to retrieve all users. 
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="search">Provide a string that will be used to search by name. (optional)</param>
-        /// <param name="type"> (optional)</param>
         /// <param name="limit">A number of entities in result set. (optional, default to 10)</param>
         /// <param name="offset">How many entities should be skipped. (optional, default to 0)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorsApiResponse"/>&gt;</returns>
-        public async Task<IGetAuthorsApiResponse> GetAuthorsAsync(Option<string> search = default, Option<string> type = default, Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetUsersApiResponse"/>&gt;</returns>
+        public async Task<IGetUsersApiResponse> GetUsersAsync(Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
-                ValidateGetAuthors(search, type);
-
-                FormatGetAuthors(ref search, ref type, ref limit, ref offset);
+                FormatGetUsers(ref limit, ref offset);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
                 {
@@ -654,16 +531,10 @@ namespace Qase.ApiClient.V1.Api
                     uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
                     uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
                     uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
-                        ? "/author"
-                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/author");
+                        ? "/user"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/user");
 
                     System.Collections.Specialized.NameValueCollection parseQueryStringLocalVar = System.Web.HttpUtility.ParseQueryString(string.Empty);
-
-                    if (search.IsSet)
-                        parseQueryStringLocalVar["search"] = ClientUtils.ParameterToString(search.Value);
-
-                    if (type.IsSet)
-                        parseQueryStringLocalVar["type"] = ClientUtils.ParameterToString(type.Value);
 
                     if (limit.IsSet)
                         parseQueryStringLocalVar["limit"] = ClientUtils.ParameterToString(limit.Value);
@@ -694,21 +565,21 @@ namespace Qase.ApiClient.V1.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        ILogger<GetAuthorsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetAuthorsApiResponse>();
-                        GetAuthorsApiResponse apiResponseLocalVar;
+                        ILogger<GetUsersApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetUsersApiResponse>();
+                        GetUsersApiResponse apiResponseLocalVar;
 
                         switch ((int)httpResponseMessageLocalVar.StatusCode) {
                             default: {
                                 string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-                                apiResponseLocalVar = new GetAuthorsApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/author", requestedAtLocalVar, _jsonSerializerOptions);
+                                apiResponseLocalVar = new GetUsersApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/user", requestedAtLocalVar, _jsonSerializerOptions);
 
                                 break;
                             }
                         }
 
-                        AfterGetAuthorsDefaultImplementation(apiResponseLocalVar, search, type, limit, offset);
+                        AfterGetUsersDefaultImplementation(apiResponseLocalVar, limit, offset);
 
-                        Events.ExecuteOnGetAuthors(apiResponseLocalVar);
+                        Events.ExecuteOnGetUsers(apiResponseLocalVar);
 
                         if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
                             foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
@@ -720,24 +591,24 @@ namespace Qase.ApiClient.V1.Api
             }
             catch(Exception e)
             {
-                OnErrorGetAuthorsDefaultImplementation(e, "/author", uriBuilderLocalVar.Path, search, type, limit, offset);
-                Events.ExecuteOnErrorGetAuthors(e);
+                OnErrorGetUsersDefaultImplementation(e, "/user", uriBuilderLocalVar.Path, limit, offset);
+                Events.ExecuteOnErrorGetUsers(e);
                 throw;
             }
         }
 
         /// <summary>
-        /// The <see cref="GetAuthorsApiResponse"/>
+        /// The <see cref="GetUsersApiResponse"/>
         /// </summary>
-        public partial class GetAuthorsApiResponse : Qase.ApiClient.V1.Client.ApiResponse, IGetAuthorsApiResponse
+        public partial class GetUsersApiResponse : Qase.ApiClient.V1.Client.ApiResponse, IGetUsersApiResponse
         {
             /// <summary>
             /// The logger
             /// </summary>
-            public ILogger<GetAuthorsApiResponse> Logger { get; }
+            public ILogger<GetUsersApiResponse> Logger { get; }
 
             /// <summary>
-            /// The <see cref="GetAuthorsApiResponse"/>
+            /// The <see cref="GetUsersApiResponse"/>
             /// </summary>
             /// <param name="logger"></param>
             /// <param name="httpRequestMessage"></param>
@@ -746,14 +617,14 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="path"></param>
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
-            public GetAuthorsApiResponse(ILogger<GetAuthorsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            public GetUsersApiResponse(ILogger<GetUsersApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
             /// <summary>
-            /// The <see cref="GetAuthorsApiResponse"/>
+            /// The <see cref="GetUsersApiResponse"/>
             /// </summary>
             /// <param name="logger"></param>
             /// <param name="httpRequestMessage"></param>
@@ -762,7 +633,7 @@ namespace Qase.ApiClient.V1.Api
             /// <param name="path"></param>
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
-            public GetAuthorsApiResponse(ILogger<GetAuthorsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            public GetUsersApiResponse(ILogger<GetUsersApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -780,11 +651,11 @@ namespace Qase.ApiClient.V1.Api
             /// Deserializes the response if the response is 200 Ok
             /// </summary>
             /// <returns></returns>
-            public Qase.ApiClient.V1.Model.AuthorListResponse? Ok()
+            public Qase.ApiClient.V1.Model.UserListResponse? Ok()
             {
                 // This logic may be modified with the AsModel.mustache template
                 return IsOk
-                    ? System.Text.Json.JsonSerializer.Deserialize<Qase.ApiClient.V1.Model.AuthorListResponse>(RawContent, _jsonSerializerOptions)
+                    ? System.Text.Json.JsonSerializer.Deserialize<Qase.ApiClient.V1.Model.UserListResponse>(RawContent, _jsonSerializerOptions)
                     : default;
             }
 
@@ -793,7 +664,7 @@ namespace Qase.ApiClient.V1.Api
             /// </summary>
             /// <param name="result"></param>
             /// <returns></returns>
-            public bool TryOk(out Qase.ApiClient.V1.Model.AuthorListResponse? result)
+            public bool TryOk(out Qase.ApiClient.V1.Model.UserListResponse? result)
             {
                 result = null;
 
@@ -807,36 +678,6 @@ namespace Qase.ApiClient.V1.Api
 
                 return result != null;
             }
-
-            /// <summary>
-            /// Returns true if the response is 400 BadRequest
-            /// </summary>
-            /// <returns></returns>
-            public bool IsBadRequest => 400 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 401 Unauthorized
-            /// </summary>
-            /// <returns></returns>
-            public bool IsUnauthorized => 401 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 403 Forbidden
-            /// </summary>
-            /// <returns></returns>
-            public bool IsForbidden => 403 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 404 NotFound
-            /// </summary>
-            /// <returns></returns>
-            public bool IsNotFound => 404 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 429 TooManyRequests
-            /// </summary>
-            /// <returns></returns>
-            public bool IsTooManyRequests => 429 == (int)StatusCode;
 
             private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
             {

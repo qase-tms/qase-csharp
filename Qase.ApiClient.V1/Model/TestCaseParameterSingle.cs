@@ -35,13 +35,13 @@ namespace Qase.ApiClient.V1.Model
         /// Initializes a new instance of the <see cref="TestCaseParameterSingle" /> class.
         /// </summary>
         /// <param name="type">type</param>
-        /// <param name="items">items</param>
+        /// <param name="item">item</param>
         /// <param name="sharedId">sharedId</param>
         [JsonConstructor]
-        public TestCaseParameterSingle(TypeEnum type, Object items, Option<Guid?> sharedId = default)
+        public TestCaseParameterSingle(TypeEnum type, ParameterSingle item, Option<Guid?> sharedId = default)
         {
             Type = type;
-            Items = items;
+            Item = item;
             SharedIdOption = sharedId;
             OnCreated();
         }
@@ -107,10 +107,10 @@ namespace Qase.ApiClient.V1.Model
         public TypeEnum Type { get; set; }
 
         /// <summary>
-        /// Gets or Sets Items
+        /// Gets or Sets Item
         /// </summary>
-        [JsonPropertyName("items")]
-        public Object Items { get; set; }
+        [JsonPropertyName("item")]
+        public ParameterSingle Item { get; set; }
 
         /// <summary>
         /// Used to track the state of SharedId
@@ -140,7 +140,7 @@ namespace Qase.ApiClient.V1.Model
             StringBuilder sb = new StringBuilder();
             sb.Append("class TestCaseParameterSingle {\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Items: ").Append(Items).Append("\n");
+            sb.Append("  Item: ").Append(Item).Append("\n");
             sb.Append("  SharedId: ").Append(SharedId).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
@@ -181,7 +181,7 @@ namespace Qase.ApiClient.V1.Model
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
             Option<TestCaseParameterSingle.TypeEnum?> type = default;
-            Option<Object?> items = default;
+            Option<ParameterSingle?> item = default;
             Option<Guid?> sharedId = default;
 
             while (utf8JsonReader.Read())
@@ -204,8 +204,8 @@ namespace Qase.ApiClient.V1.Model
                             if (typeRawValue != null)
                                 type = new Option<TestCaseParameterSingle.TypeEnum?>(TestCaseParameterSingle.TypeEnumFromStringOrDefault(typeRawValue));
                             break;
-                        case "items":
-                            items = new Option<Object?>(JsonSerializer.Deserialize<Object>(ref utf8JsonReader, jsonSerializerOptions)!);
+                        case "item":
+                            item = new Option<ParameterSingle?>(JsonSerializer.Deserialize<ParameterSingle>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "shared_id":
                             sharedId = new Option<Guid?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (Guid?)null : utf8JsonReader.GetGuid());
@@ -219,16 +219,16 @@ namespace Qase.ApiClient.V1.Model
             if (!type.IsSet)
                 throw new ArgumentException("Property is required for class TestCaseParameterSingle.", nameof(type));
 
-            if (!items.IsSet)
-                throw new ArgumentException("Property is required for class TestCaseParameterSingle.", nameof(items));
+            if (!item.IsSet)
+                throw new ArgumentException("Property is required for class TestCaseParameterSingle.", nameof(item));
 
             if (type.IsSet && type.Value == null)
                 throw new ArgumentNullException(nameof(type), "Property is not nullable for class TestCaseParameterSingle.");
 
-            if (items.IsSet && items.Value == null)
-                throw new ArgumentNullException(nameof(items), "Property is not nullable for class TestCaseParameterSingle.");
+            if (item.IsSet && item.Value == null)
+                throw new ArgumentNullException(nameof(item), "Property is not nullable for class TestCaseParameterSingle.");
 
-            return new TestCaseParameterSingle(type.Value!.Value!, items.Value!, sharedId);
+            return new TestCaseParameterSingle(type.Value!.Value!, item.Value!, sharedId);
         }
 
         /// <summary>
@@ -255,13 +255,13 @@ namespace Qase.ApiClient.V1.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, TestCaseParameterSingle testCaseParameterSingle, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (testCaseParameterSingle.Items == null)
-                throw new ArgumentNullException(nameof(testCaseParameterSingle.Items), "Property is required for class TestCaseParameterSingle.");
+            if (testCaseParameterSingle.Item == null)
+                throw new ArgumentNullException(nameof(testCaseParameterSingle.Item), "Property is required for class TestCaseParameterSingle.");
 
             var typeRawValue = TestCaseParameterSingle.TypeEnumToJsonValue(testCaseParameterSingle.Type);
             writer.WriteString("type", typeRawValue);
-            writer.WritePropertyName("items");
-            JsonSerializer.Serialize(writer, testCaseParameterSingle.Items, jsonSerializerOptions);
+            writer.WritePropertyName("item");
+            JsonSerializer.Serialize(writer, testCaseParameterSingle.Item, jsonSerializerOptions);
             if (testCaseParameterSingle.SharedIdOption.IsSet)
                 if (testCaseParameterSingle.SharedIdOption.Value != null)
                     writer.WriteString("shared_id", testCaseParameterSingle.SharedIdOption.Value!.Value);
