@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Qase.Csharp.Commons.Core;
+using Qase.Csharp.Commons.Utils;
 
 namespace Qase.Csharp.Commons.Config
 {
@@ -121,6 +122,17 @@ namespace Qase.Csharp.Commons.Config
             qaseConfig.TestOps.Plan.Id = GetLongEnv("QASE_TESTOPS_PLAN_ID", qaseConfig.TestOps.Plan.Id);
             qaseConfig.TestOps.Batch.Size = GetIntEnv("QASE_TESTOPS_BATCH_SIZE", qaseConfig.TestOps.Batch.Size);
             qaseConfig.TestOps.StatusFilter = GetListEnv("QASE_TESTOPS_STATUS_FILTER", qaseConfig.TestOps.StatusFilter);
+
+            // Status mapping settings
+            var statusMappingEnv = GetEnv("QASE_STATUS_MAPPING", null);
+            if (!string.IsNullOrEmpty(statusMappingEnv))
+            {
+                var statusMapping = StatusMappingUtils.ParseStatusMappingFromEnv(statusMappingEnv);
+                foreach (var kvp in statusMapping)
+                {
+                    qaseConfig.StatusMapping[kvp.Key] = kvp.Value;
+                }
+            }
 
             // Report settings
             string? driverStr = GetEnv("QASE_REPORT_DRIVER", null);
@@ -310,6 +322,15 @@ namespace Qase.Csharp.Commons.Config
             if (json.TryGetProperty("debug", out var debugElement) && debugElement.ValueKind == JsonValueKind.True)
             {
                 qaseConfig.Debug = true;
+            }
+
+            if (json.TryGetProperty("statusMapping", out var statusMappingElement) && statusMappingElement.ValueKind == JsonValueKind.Object)
+            {
+                var statusMapping = StatusMappingUtils.ParseStatusMappingFromJson(statusMappingElement);
+                foreach (var kvp in statusMapping)
+                {
+                    qaseConfig.StatusMapping[kvp.Key] = kvp.Value;
+                }
             }
 
             if (json.TryGetProperty("testops", out var testopsElement))
