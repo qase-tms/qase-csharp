@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Qase.Csharp.Commons.Config
 {
@@ -41,6 +42,11 @@ namespace Qase.Csharp.Commons.Config
         /// Gets or sets the report config
         /// </summary>
         public ReportConfig Report { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status mapping configuration
+        /// </summary>
+        public Dictionary<string, string> StatusMapping { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the QaseConfig class

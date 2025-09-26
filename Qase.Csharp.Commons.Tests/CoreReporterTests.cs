@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
@@ -23,14 +24,16 @@ namespace Qase.Csharp.Commons.Tests
             _loggerMock = new Mock<ILogger<CoreReporter>>();
             _primaryReporterMock = new Mock<IInternalReporter>();
             _fallbackReporterMock = new Mock<IInternalReporter>();
-            _coreReporter = new CoreReporter(_loggerMock.Object, _primaryReporterMock.Object, _fallbackReporterMock.Object);
+            var config = new QaseConfig();
+            _coreReporter = new CoreReporter(_loggerMock.Object, config, _primaryReporterMock.Object, _fallbackReporterMock.Object);
         }
 
         [Fact]
         public void Constructor_ShouldInitializeWithLogger()
         {
             // Arrange & Act
-            var reporter = new CoreReporter(_loggerMock.Object);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config);
 
             // Assert
             reporter.Should().NotBeNull();
@@ -40,7 +43,8 @@ namespace Qase.Csharp.Commons.Tests
         public void Constructor_ShouldInitializeWithLoggerAndPrimaryReporter()
         {
             // Arrange & Act
-            var reporter = new CoreReporter(_loggerMock.Object, _primaryReporterMock.Object);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config, _primaryReporterMock.Object);
 
             // Assert
             reporter.Should().NotBeNull();
@@ -50,7 +54,8 @@ namespace Qase.Csharp.Commons.Tests
         public void Constructor_ShouldInitializeWithLoggerAndPrimaryAndFallbackReporter()
         {
             // Arrange & Act
-            var reporter = new CoreReporter(_loggerMock.Object, _primaryReporterMock.Object, _fallbackReporterMock.Object);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config, _primaryReporterMock.Object, _fallbackReporterMock.Object);
 
             // Assert
             reporter.Should().NotBeNull();
@@ -73,7 +78,8 @@ namespace Qase.Csharp.Commons.Tests
         public async Task StartTestRun_ShouldNotThrow_WhenPrimaryReporterIsNull()
         {
             // Arrange
-            var reporter = new CoreReporter(_loggerMock.Object, null, _fallbackReporterMock.Object);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config, null, _fallbackReporterMock.Object);
 
             // Act & Assert
             await reporter.Invoking(x => x.startTestRun()).Should().NotThrowAsync();
@@ -136,7 +142,8 @@ namespace Qase.Csharp.Commons.Tests
         public async Task CompleteTestRun_ShouldNotThrow_WhenPrimaryReporterIsNull()
         {
             // Arrange
-            var reporter = new CoreReporter(_loggerMock.Object, null, _fallbackReporterMock.Object);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config, null, _fallbackReporterMock.Object);
 
             // Act & Assert
             await reporter.Invoking(x => x.completeTestRun()).Should().NotThrowAsync();
@@ -183,7 +190,8 @@ namespace Qase.Csharp.Commons.Tests
         public async Task AddResult_ShouldNotThrow_WhenPrimaryReporterIsNull()
         {
             // Arrange
-            var reporter = new CoreReporter(_loggerMock.Object, null, _fallbackReporterMock.Object);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config, null, _fallbackReporterMock.Object);
             var testResult = new TestResult { Id = "test1", Title = "Test 1" };
 
             // Act & Assert
@@ -231,7 +239,8 @@ namespace Qase.Csharp.Commons.Tests
         public async Task UploadResults_ShouldNotThrow_WhenPrimaryReporterIsNull()
         {
             // Arrange
-            var reporter = new CoreReporter(_loggerMock.Object, null, _fallbackReporterMock.Object);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config, null, _fallbackReporterMock.Object);
 
             // Act & Assert
             await reporter.Invoking(x => x.uploadResults()).Should().NotThrowAsync();
@@ -264,7 +273,8 @@ namespace Qase.Csharp.Commons.Tests
         public async Task StartTestRun_ShouldDisableReporter_WhenFallbackIsNullAndPrimaryFails()
         {
             // Arrange
-            var reporter = new CoreReporter(_loggerMock.Object, _primaryReporterMock.Object, null);
+            var config = new QaseConfig();
+            var reporter = new CoreReporter(_loggerMock.Object, config, _primaryReporterMock.Object, null);
             _primaryReporterMock.Setup(r => r.startTestRun())
                 .ThrowsAsync(new QaseException("Primary reporter failed"));
 

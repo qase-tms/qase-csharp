@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.12
+
+- Added support for status mapping
+
 ## qase-scharp 1.0.11
 
 - Updated API clients to the latest specification versions

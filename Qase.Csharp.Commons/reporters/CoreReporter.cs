@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Csharp.Commons.Utils;
 
 namespace Qase.Csharp.Commons.Reporters
 {
@@ -14,6 +15,7 @@ namespace Qase.Csharp.Commons.Reporters
     public class CoreReporter : ICoreReporter
     {
         private readonly ILogger<CoreReporter> _logger;
+        private readonly QaseConfig _config;
         private IInternalReporter? _reporter;
         private IInternalReporter? _fallback;
 
@@ -21,14 +23,17 @@ namespace Qase.Csharp.Commons.Reporters
         /// Initializes a new instance of the CoreReporter class
         /// </summary>
         /// <param name="logger">The logger instance</param>
+        /// <param name="config">The configuration</param>
         /// <param name="reporter">The primary reporter</param>
         /// <param name="fallback">The fallback reporter</param>
         public CoreReporter(
             ILogger<CoreReporter> logger,
+            QaseConfig config,
             IInternalReporter? reporter = null,
             IInternalReporter? fallback = null)
         {
             _logger = logger;
+            _config = config;
             _reporter = reporter;
             _fallback = fallback;
         }
@@ -51,6 +56,13 @@ namespace Qase.Csharp.Commons.Reporters
         public async Task addResult(TestResult result)
         {
             _logger.LogDebug("Adding result: {Result}", result);
+            
+            // Apply status mapping if configured
+            if (_config?.StatusMapping?.Count > 0)
+            {
+                StatusMappingUtils.ApplyStatusMapping(result, _config.StatusMapping, _logger);
+            }
+            
             await ExecuteWithFallbackAsync(async () => await _reporter!.addResult(result), "add result");
         }
 

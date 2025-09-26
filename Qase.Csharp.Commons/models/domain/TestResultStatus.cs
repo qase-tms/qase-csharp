@@ -21,6 +21,11 @@ namespace Qase.Csharp.Commons.Models.Domain
         Skipped,
 
         /// <summary>
+        /// Test blocked
+        /// </summary>
+        Blocked,
+
+        /// <summary>
         /// Test invalid (failed due to non-assertion reasons)
         /// </summary>
         Invalid

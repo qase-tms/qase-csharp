@@ -152,7 +152,7 @@ namespace Qase.Csharp.Commons
                 var reporter = sp.GetRequiredService<IInternalReporter>();
                 var fallbackFactory = sp.GetService<Func<IInternalReporter>>();
                 var fallback = fallbackFactory?.Invoke();
-                return new CoreReporter(logger, reporter, fallback);
+                return new CoreReporter(logger, config, reporter, fallback);
             });
 
             return services;
