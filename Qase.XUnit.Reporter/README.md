@@ -38,8 +38,10 @@ For detailed instructions on using attributes and methods, refer to [Usage](docs
 Here's a simple example of using Qase annotations in an xUnit test:
 
 ```csharp
+using System;
 using Xunit;
-using Qase.XUnit.Reporter;
+using Qase.Xunit.Reporter;
+using Qase.Csharp.Commons.Attributes;
 
 [Suites("Example Suite", "Example Suite 2")]
 [Fields("preconditions", "This is a precondition")]
@@ -69,6 +71,7 @@ public class SimpleTests
     {
         Console.WriteLine($"Running test with {a} and {b}");
     }
+}
 ```
 
 To execute your xUnit tests and report the results to Qase.io, use the following command:
