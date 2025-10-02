@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using Qase.Csharp.Commons.Config;
 using Xunit;
 
@@ -20,6 +21,9 @@ namespace Qase.Csharp.Commons.Tests
             config.Debug.Should().BeFalse();
             config.TestOps.Should().NotBeNull();
             config.Report.Should().NotBeNull();
+            config.Logging.Should().NotBeNull();
+            config.Logging.Console.Should().BeTrue();
+            config.Logging.File.Should().BeFalse();
         }
 
         [Theory]
@@ -104,6 +108,23 @@ namespace Qase.Csharp.Commons.Tests
             config.Debug.Should().Be(debug);
             config.Mode.Should().Be(Mode.TestOps);
             config.Fallback.Should().Be(Mode.Report);
+        }
+
+        [Fact]
+        public void LoggingProperties_ShouldBeSettable()
+        {
+            // Arrange
+            var config = new QaseConfig();
+            var console = false;
+            var file = true;
+
+            // Act
+            config.Logging.Console = console;
+            config.Logging.File = file;
+
+            // Assert
+            config.Logging.Console.Should().Be(console);
+            config.Logging.File.Should().Be(file);
         }
     }
 } 

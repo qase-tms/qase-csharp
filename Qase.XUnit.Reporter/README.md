@@ -101,6 +101,10 @@ The Qase xUnit reporter can be configured in multiple ways:
    "fallback": "report",
    "debug": true,
    "environment": "local",
+   "logging": {
+      "console": true,
+      "file": false
+   },
    "report": {
       "driver": "local",
       "connection": {
@@ -128,6 +132,38 @@ The Qase xUnit reporter can be configured in multiple ways:
    }
 }
 ```
+
+## Logging Configuration
+
+Control logging output with the `logging` option:
+
+### Disable console output (only log to file):
+```json
+{
+  "debug": true,
+  "logging": {
+    "console": false
+  }
+}
+```
+
+### Disable all logging:
+```json
+{
+  "logging": {
+    "console": false,
+    "file": false
+  }
+}
+```
+
+### Environment variables:
+- `QASE_LOGGING_CONSOLE` - enable/disable console output (default: true)
+- `QASE_LOGGING_FILE` - enable/disable file output (default: false, true when debug=true)
+
+**Note:** Log level is controlled by the `debug` parameter:
+- `debug: true` - Debug level (detailed logs)
+- `debug: false` - Information level (standard logs)
 
 ## Requirements
 

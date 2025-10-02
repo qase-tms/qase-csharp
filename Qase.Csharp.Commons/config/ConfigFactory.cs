@@ -65,7 +65,9 @@ namespace Qase.Csharp.Commons.Config
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Error reading configuration file: {e.Message}");
+                // Use direct console output for critical configuration errors
+                // This ensures the error is always visible to the user
+                Console.Error.WriteLine($"qase: Error reading configuration file: {e.Message}");
             }
 
             return qaseConfig;
@@ -149,6 +151,10 @@ namespace Qase.Csharp.Commons.Config
 
             qaseConfig.Report.Connection.Local.Path = GetEnv("QASE_REPORT_CONNECTION_PATH", qaseConfig.Report.Connection.Local.Path);
 
+            // Logging settings
+            qaseConfig.Logging.Console = GetBooleanEnv("QASE_LOGGING_CONSOLE", qaseConfig.Logging.Console);
+            qaseConfig.Logging.File = GetBooleanEnv("QASE_LOGGING_FILE", qaseConfig.Logging.File);
+
             return qaseConfig;
         }
 
@@ -178,7 +184,9 @@ namespace Qase.Csharp.Commons.Config
             if ((qaseConfig.Mode == Mode.TestOps || qaseConfig.Fallback == Mode.TestOps) &&
                 (string.IsNullOrEmpty(qaseConfig.TestOps?.Project) || string.IsNullOrEmpty(qaseConfig.TestOps?.Api?.Token)))
             {
-                Console.Error.WriteLine("Project code and API token are required for TestOps mode");
+                // Use direct console output for critical validation errors
+                // This ensures the error is always visible to the user
+                Console.Error.WriteLine("qase: Project code and API token are required for TestOps mode");
                 qaseConfig.Mode = Mode.Off;
                 qaseConfig.Fallback = Mode.Off;
             }
@@ -492,6 +500,21 @@ namespace Qase.Csharp.Commons.Config
                             qaseConfig.Report.Connection.Local.Path = pathElement.GetString();
                         }
                     }
+                }
+            }
+
+            if (json.TryGetProperty("logging", out var loggingElement))
+            {
+                if (loggingElement.TryGetProperty("console", out var consoleElement) &&
+                    consoleElement.ValueKind == JsonValueKind.False)
+                {
+                    qaseConfig.Logging.Console = false;
+                }
+
+                if (loggingElement.TryGetProperty("file", out var fileElement) &&
+                    fileElement.ValueKind == JsonValueKind.True)
+                {
+                    qaseConfig.Logging.File = true;
                 }
             }
         }

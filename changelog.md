@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.13
+
+- Added support for logging configuration
+
 ## qase-scharp 1.0.12
 
 - Added support for status mapping

@@ -35,6 +35,9 @@ namespace Qase.Csharp.Commons.Tests
             config.Environment.Should().BeNull();
             config.RootSuite.Should().BeNull();
             config.Debug.Should().BeFalse();
+            config.Logging.Should().NotBeNull();
+            config.Logging.Console.Should().BeTrue();
+            config.Logging.File.Should().BeFalse();
         }
 
         [Fact]
@@ -878,6 +881,69 @@ namespace Qase.Csharp.Commons.Tests
 
             // Cleanup
             Environment.SetEnvironmentVariable("QASE_TESTOPS_RUN_EXTERNAL_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadLoggingConfigFromFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""logging"": {
+    ""console"": false,
+    ""file"": true
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.Logging.Console.Should().BeFalse();
+            config.Logging.File.Should().BeTrue();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadLoggingConfigFromEnvironmentVariables()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_LOGGING_CONSOLE", "false");
+            Environment.SetEnvironmentVariable("QASE_LOGGING_FILE", "true");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.Logging.Console.Should().BeFalse();
+            config.Logging.File.Should().BeTrue();
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_LOGGING_CONSOLE", null);
+            Environment.SetEnvironmentVariable("QASE_LOGGING_FILE", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldMergeLoggingConfigFromFileAndEnvironment()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""logging"": {
+    ""console"": false,
+    ""file"": true
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+            Environment.SetEnvironmentVariable("QASE_LOGGING_FILE", "false");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.Logging.Console.Should().BeFalse(); // from file
+            config.Logging.File.Should().BeFalse(); // from environment (overrides file)
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_LOGGING_FILE", null);
         }
     }
 } 
