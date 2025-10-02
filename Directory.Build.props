@@ -1,7 +1,7 @@
 <Project>
   <!-- Metadata -->
   <PropertyGroup>
-    <Version>1.0.12</Version>
+    <Version>1.0.13</Version>
     <Copyright>Copyright (c) 2025 Qase</Copyright>
     <Authors>Qase Team</Authors>
     <Company>qase.io</Company>

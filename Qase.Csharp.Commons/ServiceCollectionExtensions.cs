@@ -36,15 +36,28 @@ namespace Qase.Csharp.Commons
                 $"{DateTime.Now:yyyyMMdd}.log"
             );
 
-            Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+            if (config.Logging.File)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+            }
 
-            var loggerConfiguration = new LoggerConfiguration()
-                .WriteTo.Console(
-                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.File(
+            var loggerConfiguration = new LoggerConfiguration();
+
+            // Configure console output
+            if (config.Logging.Console)
+            {
+                loggerConfiguration.WriteTo.Console(
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] qase: {Message:lj}{NewLine}{Exception}");
+            }
+
+            // Configure file output
+            if (config.Logging.File)
+            {
+                loggerConfiguration.WriteTo.File(
                     logPath,
                     rollingInterval: RollingInterval.Day,
-                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] qase: {Message:lj}{NewLine}{Exception}");
+            }
 
             if (config.Debug)
             {

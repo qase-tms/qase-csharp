@@ -49,12 +49,18 @@ namespace Qase.Csharp.Commons.Config
         public Dictionary<string, string> StatusMapping { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
+        /// Gets or sets the logging configuration
+        /// </summary>
+        public LoggingConfig Logging { get; set; } = new LoggingConfig();
+
+        /// <summary>
         /// Initializes a new instance of the QaseConfig class
         /// </summary>
         public QaseConfig()
         {
             TestOps = new TestOpsConfig();
             Report = new ReportConfig();
+            Logging = new LoggingConfig();
         }
 
         public void SetMode(string? mode)
