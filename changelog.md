@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.14
+
+- Added support for showing public report link after test run completion
+
 ## qase-scharp 1.0.13
 
 - Added support for logging configuration

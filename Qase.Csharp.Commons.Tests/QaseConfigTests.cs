@@ -126,5 +126,44 @@ namespace Qase.Csharp.Commons.Tests
             config.Logging.Console.Should().Be(console);
             config.Logging.File.Should().Be(file);
         }
+
+        [Fact]
+        public void TestOpsConfig_ShowPublicReportLink_ShouldHaveDefaultValue()
+        {
+            // Act
+            var config = new QaseConfig();
+
+            // Assert
+            config.TestOps.Should().NotBeNull();
+            config.TestOps.ShowPublicReportLink.Should().BeFalse();
+        }
+
+        [Fact]
+        public void TestOpsConfig_ShowPublicReportLink_ShouldBeSettable()
+        {
+            // Arrange
+            var config = new QaseConfig();
+
+            // Act
+            config.TestOps.ShowPublicReportLink = true;
+
+            // Assert
+            config.TestOps.ShowPublicReportLink.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestOpsConfig_ShowPublicReportLink_ShouldAcceptBooleanValues(bool value)
+        {
+            // Arrange
+            var config = new QaseConfig();
+
+            // Act
+            config.TestOps.ShowPublicReportLink = value;
+
+            // Assert
+            config.TestOps.ShowPublicReportLink.Should().Be(value);
+        }
     }
 } 

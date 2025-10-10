@@ -416,5 +416,279 @@ namespace Qase.Csharp.Commons.Tests
                     e.Links[0].ExternalIssue == "PROJ-456"),
                 It.IsAny<System.Threading.CancellationToken>()), Times.Once);
         }
+
+        [Fact]
+        public async Task EnablePublicReportAsync_ShouldCallUpdateRunPublicityAndReturnUrl()
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<ClientV1>>();
+            var mockRunApi = new Mock<IRunsApi>();
+            var mockAttachmentsApi = new Mock<IAttachmentsApi>();
+            var mockConfigurationsApi = new Mock<IConfigurationsApi>();
+
+            var config = new QaseConfig
+            {
+                TestOps = new TestOpsConfig
+                {
+                    Project = "TEST",
+                    Api = new ApiConfig
+                    {
+                        Token = "test-token",
+                        Host = "qase.io"
+                    }
+                }
+            };
+
+            var client = new ClientV1(mockLogger.Object, config, mockRunApi.Object, mockAttachmentsApi.Object, mockConfigurationsApi.Object);
+
+            var expectedUrl = "https://app.qase.io/public/report/abc123";
+            var mockResponse = new Mock<IUpdateRunPublicityApiResponse>();
+            mockResponse.Setup(x => x.IsSuccessStatusCode).Returns(true);
+            mockResponse.Setup(x => x.Ok()).Returns(new RunPublicResponse
+            {
+                Status = true,
+                Result = new RunPublicResponseAllOfResult
+                {
+                    Url = expectedUrl
+                }
+            });
+
+            mockRunApi.Setup(x => x.UpdateRunPublicityAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<RunPublic>(),
+                It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(mockResponse.Object);
+
+            // Act
+            var result = await client.EnablePublicReportAsync(12345);
+
+            // Assert
+            result.Should().Be(expectedUrl);
+            mockRunApi.Verify(x => x.UpdateRunPublicityAsync(
+                It.Is<string>(p => p == "TEST"),
+                It.Is<int>(id => id == 12345),
+                It.Is<RunPublic>(rp => rp.Status == true),
+                It.IsAny<System.Threading.CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task EnablePublicReportAsync_WithFailedResponse_ShouldThrowQaseException()
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<ClientV1>>();
+            var mockRunApi = new Mock<IRunsApi>();
+            var mockAttachmentsApi = new Mock<IAttachmentsApi>();
+            var mockConfigurationsApi = new Mock<IConfigurationsApi>();
+
+            var config = new QaseConfig
+            {
+                TestOps = new TestOpsConfig
+                {
+                    Project = "TEST",
+                    Api = new ApiConfig
+                    {
+                        Token = "test-token",
+                        Host = "qase.io"
+                    }
+                }
+            };
+
+            var client = new ClientV1(mockLogger.Object, config, mockRunApi.Object, mockAttachmentsApi.Object, mockConfigurationsApi.Object);
+
+            var mockResponse = new Mock<IUpdateRunPublicityApiResponse>();
+            mockResponse.Setup(x => x.IsSuccessStatusCode).Returns(false);
+            mockResponse.Setup(x => x.ReasonPhrase).Returns("Bad Request");
+
+            mockRunApi.Setup(x => x.UpdateRunPublicityAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<RunPublic>(),
+                It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(mockResponse.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<QaseException>(() => client.EnablePublicReportAsync(12345));
+        }
+
+        [Fact]
+        public async Task EnablePublicReportAsync_WithEmptyUrl_ShouldThrowQaseException()
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<ClientV1>>();
+            var mockRunApi = new Mock<IRunsApi>();
+            var mockAttachmentsApi = new Mock<IAttachmentsApi>();
+            var mockConfigurationsApi = new Mock<IConfigurationsApi>();
+
+            var config = new QaseConfig
+            {
+                TestOps = new TestOpsConfig
+                {
+                    Project = "TEST",
+                    Api = new ApiConfig
+                    {
+                        Token = "test-token",
+                        Host = "qase.io"
+                    }
+                }
+            };
+
+            var client = new ClientV1(mockLogger.Object, config, mockRunApi.Object, mockAttachmentsApi.Object, mockConfigurationsApi.Object);
+
+            var mockResponse = new Mock<IUpdateRunPublicityApiResponse>();
+            mockResponse.Setup(x => x.IsSuccessStatusCode).Returns(true);
+            mockResponse.Setup(x => x.Ok()).Returns(new RunPublicResponse
+            {
+                Status = true,
+                Result = new RunPublicResponseAllOfResult
+                {
+                    Url = null // Empty URL
+                }
+            });
+
+            mockRunApi.Setup(x => x.UpdateRunPublicityAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<RunPublic>(),
+                It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(mockResponse.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<QaseException>(() => client.EnablePublicReportAsync(12345));
+        }
+
+        [Fact]
+        public async Task EnablePublicReportAsync_WithApiException_ShouldThrowQaseException()
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<ClientV1>>();
+            var mockRunApi = new Mock<IRunsApi>();
+            var mockAttachmentsApi = new Mock<IAttachmentsApi>();
+            var mockConfigurationsApi = new Mock<IConfigurationsApi>();
+
+            var config = new QaseConfig
+            {
+                TestOps = new TestOpsConfig
+                {
+                    Project = "TEST",
+                    Api = new ApiConfig
+                    {
+                        Token = "test-token",
+                        Host = "qase.io"
+                    }
+                }
+            };
+
+            var client = new ClientV1(mockLogger.Object, config, mockRunApi.Object, mockAttachmentsApi.Object, mockConfigurationsApi.Object);
+
+            mockRunApi.Setup(x => x.UpdateRunPublicityAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<RunPublic>(),
+                It.IsAny<System.Threading.CancellationToken>()))
+                .ThrowsAsync(new InvalidOperationException("Network error"));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<QaseException>(() => client.EnablePublicReportAsync(12345));
+            exception.Message.Should().Contain("Failed to enable public report");
+            exception.Message.Should().Contain("Network error");
+        }
+
+        [Fact]
+        public async Task EnablePublicReportAsync_WithNullResponse_ShouldThrowQaseException()
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<ClientV1>>();
+            var mockRunApi = new Mock<IRunsApi>();
+            var mockAttachmentsApi = new Mock<IAttachmentsApi>();
+            var mockConfigurationsApi = new Mock<IConfigurationsApi>();
+
+            var config = new QaseConfig
+            {
+                TestOps = new TestOpsConfig
+                {
+                    Project = "TEST",
+                    Api = new ApiConfig
+                    {
+                        Token = "test-token",
+                        Host = "qase.io"
+                    }
+                }
+            };
+
+            var client = new ClientV1(mockLogger.Object, config, mockRunApi.Object, mockAttachmentsApi.Object, mockConfigurationsApi.Object);
+
+            var mockResponse = new Mock<IUpdateRunPublicityApiResponse>();
+            mockResponse.Setup(x => x.IsSuccessStatusCode).Returns(true);
+            mockResponse.Setup(x => x.Ok()).Returns((RunPublicResponse?)null);
+
+            mockRunApi.Setup(x => x.UpdateRunPublicityAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<RunPublic>(),
+                It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(mockResponse.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<QaseException>(() => client.EnablePublicReportAsync(12345));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(long.MaxValue)]
+        public async Task EnablePublicReportAsync_WithDifferentRunIds_ShouldCallApiWithCorrectId(long runId)
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<ClientV1>>();
+            var mockRunApi = new Mock<IRunsApi>();
+            var mockAttachmentsApi = new Mock<IAttachmentsApi>();
+            var mockConfigurationsApi = new Mock<IConfigurationsApi>();
+
+            var config = new QaseConfig
+            {
+                TestOps = new TestOpsConfig
+                {
+                    Project = "TEST",
+                    Api = new ApiConfig
+                    {
+                        Token = "test-token",
+                        Host = "qase.io"
+                    }
+                }
+            };
+
+            var client = new ClientV1(mockLogger.Object, config, mockRunApi.Object, mockAttachmentsApi.Object, mockConfigurationsApi.Object);
+
+            var expectedUrl = "https://app.qase.io/public/report/test";
+            var mockResponse = new Mock<IUpdateRunPublicityApiResponse>();
+            mockResponse.Setup(x => x.IsSuccessStatusCode).Returns(true);
+            mockResponse.Setup(x => x.Ok()).Returns(new RunPublicResponse
+            {
+                Status = true,
+                Result = new RunPublicResponseAllOfResult
+                {
+                    Url = expectedUrl
+                }
+            });
+
+            mockRunApi.Setup(x => x.UpdateRunPublicityAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<RunPublic>(),
+                It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(mockResponse.Object);
+
+            // Act
+            var result = await client.EnablePublicReportAsync(runId);
+
+            // Assert
+            result.Should().Be(expectedUrl);
+            mockRunApi.Verify(x => x.UpdateRunPublicityAsync(
+                It.Is<string>(p => p == "TEST"),
+                It.Is<int>(id => id == (int)runId),
+                It.Is<RunPublic>(rp => rp.Status == true),
+                It.IsAny<System.Threading.CancellationToken>()), Times.Once);
+        }
     }
 } 

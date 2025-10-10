@@ -18,6 +18,11 @@ namespace Qase.Csharp.Commons.Config
         public bool Defect { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets whether to show public report link after test run completion
+        /// </summary>
+        public bool ShowPublicReportLink { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the API config
         /// </summary>
         public ApiConfig Api { get; set; } = new ApiConfig();

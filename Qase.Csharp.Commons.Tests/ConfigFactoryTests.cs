@@ -20,6 +20,9 @@ namespace Qase.Csharp.Commons.Tests
             {
                 File.Delete(ConfigFileName);
             }
+            
+            // Clean up environment variables that might affect tests
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
         }
 
         [Fact]
@@ -944,6 +947,131 @@ namespace Qase.Csharp.Commons.Tests
 
             // Cleanup
             Environment.SetEnvironmentVariable("QASE_LOGGING_FILE", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadShowPublicReportLinkFromEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", "true");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.ShowPublicReportLink.Should().BeTrue();
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadShowPublicReportLinkFromJsonFile()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
+            var jsonConfig = @"{
+  ""testops"": {
+    ""run"": {
+      ""showPublicReportLink"": true
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Debug: Check file existence and content
+            var currentDir = Directory.GetCurrentDirectory();
+            var fullPath = Path.Combine(currentDir, ConfigFileName);
+            var fileExists = File.Exists(fullPath);
+            var fileContent = fileExists ? File.ReadAllText(fullPath) : "File not found";
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            // Debug: Check what value we actually got
+            var actualValue = config.TestOps.ShowPublicReportLink;
+            var envValue = Environment.GetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK");
+            
+            actualValue.Should().BeTrue($"Expected true but got {actualValue}, env var was: {envValue}, current dir: {currentDir}, file exists: {fileExists}, file content: {fileContent}");
+            
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHaveShowPublicReportLinkDefaultValue()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.ShowPublicReportLink.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("true", true)]
+        [InlineData("false", false)]
+        [InlineData("TRUE", true)]
+        [InlineData("FALSE", false)]
+        [InlineData("True", true)]
+        [InlineData("False", false)]
+        public void LoadConfig_ShouldHandleDifferentBooleanValuesForShowPublicReportLink(string envValue, bool expectedValue)
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", envValue);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.ShowPublicReportLink.Should().Be(expectedValue);
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldMergeShowPublicReportLinkFromFileAndEnvironment()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""run"": {
+      ""showPublicReportLink"": false
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", "true");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.ShowPublicReportLink.Should().BeTrue(); // Environment should override file
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldHandleInvalidBooleanValueForShowPublicReportLink()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", "invalid");
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.ShowPublicReportLink.Should().BeFalse(); // Should fall back to default
+
+            // Cleanup
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
         }
     }
 } 

@@ -38,5 +38,13 @@ namespace Qase.Csharp.Commons.Clients
         /// <returns>List of test case IDs</returns>
         /// <exception cref="QaseException">Thrown when an error occurs during API communication</exception>
         Task<List<long>> GetTestCaseIdsForExecutionAsync();
+
+        /// <summary>
+        /// Enables public report for a specific test run
+        /// </summary>
+        /// <param name="runId">The ID of the test run</param>
+        /// <returns>The public report URL</returns>
+        /// <exception cref="QaseException">Thrown when an error occurs during API communication</exception>
+        Task<string> EnablePublicReportAsync(long runId);
     }
 }
