@@ -96,6 +96,12 @@ namespace Qase.Csharp.Commons.Clients
         {
             return _apiClientV1.GetTestCaseIdsForExecutionAsync();
         }
+
+        /// <inheritdoc />
+        public Task<string> EnablePublicReportAsync(long runId)
+        {
+            return _apiClientV1.EnablePublicReportAsync(runId);
+        }
         
         internal ResultCreate ConvertResult(TestResult result)
         {

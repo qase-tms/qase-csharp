@@ -60,7 +60,8 @@ namespace Qase.Csharp.Commons.Config
 
             try
             {
-                var jsonString = File.ReadAllText(CONFIG_FILE_NAME);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), CONFIG_FILE_NAME);
+                var jsonString = File.ReadAllText(filePath);
                 ApplyJsonConfig(qaseConfig, JsonDocument.Parse(jsonString).RootElement);
             }
             catch (Exception e)
@@ -116,6 +117,7 @@ namespace Qase.Csharp.Commons.Config
             qaseConfig.TestOps.Run.Id = GetLongEnv("QASE_TESTOPS_RUN_ID", qaseConfig.TestOps.Run.Id);
             qaseConfig.TestOps.Run.Complete = GetBooleanEnv("QASE_TESTOPS_RUN_COMPLETE", qaseConfig.TestOps.Run.Complete);
             qaseConfig.TestOps.Run.Tags = GetListEnv("QASE_TESTOPS_RUN_TAGS", qaseConfig.TestOps.Run.Tags);
+            qaseConfig.TestOps.ShowPublicReportLink = GetBooleanEnv("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", qaseConfig.TestOps.ShowPublicReportLink);
             // Try separate environment variables first, then fallback to combined variable
             qaseConfig.TestOps.Run.ExternalLink = GetExternalLinkFromSeparateEnvVars(qaseConfig.TestOps.Run.ExternalLink) 
                 ?? GetExternalLinkEnv("QASE_TESTOPS_RUN_EXTERNAL_LINK", qaseConfig.TestOps.Run.ExternalLink);
@@ -225,7 +227,13 @@ namespace Qase.Csharp.Commons.Config
         private static bool GetBooleanEnv(string key, bool defaultValue)
         {
             var value = Environment.GetEnvironmentVariable(key);
-            return value != null ? bool.Parse(value) : defaultValue;
+            if (value == null)
+                return defaultValue;
+            
+            if (bool.TryParse(value, out bool result))
+                return result;
+            
+            return defaultValue;
         }
 
         /// <summary>
@@ -409,6 +417,12 @@ namespace Qase.Csharp.Commons.Config
                         externalLinkElement.ValueKind == JsonValueKind.Object)
                     {
                         qaseConfig.TestOps.Run.ExternalLink = ParseExternalLinkFromJson(externalLinkElement);
+                    }
+
+                    if (runElement.TryGetProperty("showPublicReportLink", out var showPublicReportLinkElement) &&
+                        showPublicReportLinkElement.ValueKind == JsonValueKind.True)
+                    {
+                        qaseConfig.TestOps.ShowPublicReportLink = true;
                     }
                 }
 

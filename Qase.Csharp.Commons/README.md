@@ -52,6 +52,7 @@ All configuration options are listed in the table below:
 | Configuration values for test run                                                                                          | `testops.configurations.values` | `QASE_TESTOPS_CONFIGURATIONS_VALUES` | `QASE_TESTOPS_CONFIGURATIONS_VALUES` | `[]`                                    | No       | Comma-separated key=value pairs |
 | Whether to create configuration groups and values if they don't exist                                                      | `testops.configurations.createIfNotExists` | `QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS` | `QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS` | `False`                                 | No       | `True`, `False`            |
 | Filter results by status                      | `testops.statusFilter`                | `QASE_TESTOPS_STATUS_FILTER`     | `QASE_TESTOPS_STATUS_FILTER`     | None, don't filter any results          | No       | Comma-separated list of statuses |
+| Whether to show public report link after test run completion              | `testops.showPublicReportLink`                | `QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK`     | `QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK`     | `False`                                 | No       | `True`, `False`            |
 | Status mapping for test results               | `statusMapping`                       | `QASE_STATUS_MAPPING`            | `QASE_STATUS_MAPPING`            | None, don't map any statuses            | No       | JSON object or comma-separated key=value pairs |
 
 ### Example `qase.config.json` config
@@ -91,6 +92,7 @@ All configuration options are listed in the table below:
       }
     },
     "defect": false,
+    "showPublicReportLink": false,
     "project": "<project_code>",
     "batch": {
       "size": 100

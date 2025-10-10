@@ -58,6 +58,20 @@ namespace Qase.Csharp.Commons.Reporters
         {
             await _client.CompleteTestRunAsync(_testRunId);
             _logger.LogInformation("Test run {RunId} completed", _testRunId);
+
+            // Enable public report if configured
+            if (_config.TestOps.ShowPublicReportLink)
+            {
+                try
+                {
+                    var publicUrl = await _client.EnablePublicReportAsync(_testRunId);
+                    _logger.LogInformation("Public report link: {PublicUrl}", publicUrl);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to generate public report link: {ErrorMessage}", ex.Message);
+                }
+            }
         }
 
         /// <inheritdoc />

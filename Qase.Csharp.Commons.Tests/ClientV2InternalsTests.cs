@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -9,6 +10,7 @@ using Qase.ApiClient.V2.Api;
 using Qase.ApiClient.V2.Model;
 using Qase.Csharp.Commons.Clients;
 using Qase.Csharp.Commons.Config;
+using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
 using Xunit;
 
@@ -249,6 +251,63 @@ namespace Qase.Csharp.Commons.Tests
             };
             var result = _client.ConvertStepResult(step);
             result.Execution!.Status.Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task EnablePublicReportAsync_ShouldDelegateToClientV1()
+        {
+            // Arrange
+            var runId = 12345L;
+            var expectedUrl = "https://app.qase.io/public/report/abc123";
+            
+            var mockClientV1 = new Mock<ClientV1>(_clientV1LoggerMock.Object, _config, _runsApiMock.Object, _attachmentsApiMock.Object, _configurationsApiMock.Object);
+            mockClientV1.Setup(x => x.EnablePublicReportAsync(runId)).ReturnsAsync(expectedUrl);
+            
+            var client = new ClientV2(_loggerMock.Object, _config, mockClientV1.Object, _resultsApiMock.Object);
+
+            // Act
+            var result = await client.EnablePublicReportAsync(runId);
+
+            // Assert
+            result.Should().Be(expectedUrl);
+        }
+
+        [Fact]
+        public async Task EnablePublicReportAsync_WithClientV1Exception_ShouldPropagateException()
+        {
+            // Arrange
+            var runId = 12345L;
+            var expectedException = new QaseException("API Error");
+            
+            var mockClientV1 = new Mock<ClientV1>(_clientV1LoggerMock.Object, _config, _runsApiMock.Object, _attachmentsApiMock.Object, _configurationsApiMock.Object);
+            mockClientV1.Setup(x => x.EnablePublicReportAsync(runId)).ThrowsAsync(expectedException);
+            
+            var client = new ClientV2(_loggerMock.Object, _config, mockClientV1.Object, _resultsApiMock.Object);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<QaseException>(() => client.EnablePublicReportAsync(runId));
+            exception.Should().Be(expectedException);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(long.MaxValue)]
+        public async Task EnablePublicReportAsync_WithDifferentRunIds_ShouldDelegateCorrectly(long runId)
+        {
+            // Arrange
+            var expectedUrl = "https://app.qase.io/public/report/test";
+            
+            var mockClientV1 = new Mock<ClientV1>(_clientV1LoggerMock.Object, _config, _runsApiMock.Object, _attachmentsApiMock.Object, _configurationsApiMock.Object);
+            mockClientV1.Setup(x => x.EnablePublicReportAsync(runId)).ReturnsAsync(expectedUrl);
+            
+            var client = new ClientV2(_loggerMock.Object, _config, mockClientV1.Object, _resultsApiMock.Object);
+
+            // Act
+            var result = await client.EnablePublicReportAsync(runId);
+
+            // Assert
+            result.Should().Be(expectedUrl);
         }
     }
 } 

@@ -342,6 +342,40 @@ namespace Qase.Csharp.Commons.Clients
             }
         }
 
+        /// <inheritdoc />
+        public virtual async Task<string> EnablePublicReportAsync(long runId)
+        {
+            _logger.LogDebug("Enabling public report for run {RunId}", runId);
+
+            try
+            {
+                var runPublic = new RunPublic(status: true);
+                var resp = await _runApi.UpdateRunPublicityAsync(_config.TestOps.Project!, (int)runId, runPublic);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    var publicUrl = resp.Ok()?.Result?.Url;
+                    if (!string.IsNullOrEmpty(publicUrl))
+                    {
+                        _logger.LogInformation("Public report enabled successfully. URL: {PublicUrl}", publicUrl);
+                        return publicUrl;
+                    }
+                    else
+                    {
+                        throw new QaseException("Failed to get public report URL from response");
+                    }
+                }
+                else
+                {
+                    throw new QaseException($"Failed to enable public report: {resp.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex) when (!(ex is QaseException))
+            {
+                throw new QaseException($"Failed to enable public report: {ex.Message}", ex);
+            }
+        }
+
         /// <summary>
         /// Attaches external link to the test run
         /// </summary>

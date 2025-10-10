@@ -1145,5 +1145,173 @@ namespace Qase.Csharp.Commons.Tests
             results.Should().NotContain(skippedResult);
             results.Should().Contain(failedResult);
         }
+
+        [Fact]
+        public async Task CompleteTestRun_WithShowPublicReportLinkEnabled_ShouldCallEnablePublicReport()
+        {
+            // Arrange
+            _config.TestOps!.ShowPublicReportLink = true;
+            var runId = 12345L;
+            var expectedPublicUrl = "https://app.qase.io/public/report/abc123";
+            
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+            _clientMock.Setup(x => x.EnablePublicReportAsync(runId)).ReturnsAsync(expectedPublicUrl);
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
+            _clientMock.Verify(x => x.EnablePublicReportAsync(runId), Times.Once);
+            
+            // Verify that public URL is logged
+            _loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Public report link") && v.ToString()!.Contains(expectedPublicUrl)),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_WithShowPublicReportLinkDisabled_ShouldNotCallEnablePublicReport()
+        {
+            // Arrange
+            _config.TestOps!.ShowPublicReportLink = false;
+            var runId = 12345L;
+            
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
+            _clientMock.Verify(x => x.EnablePublicReportAsync(It.IsAny<long>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_WithShowPublicReportLinkEnabledButClientThrows_ShouldLogWarning()
+        {
+            // Arrange
+            _config.TestOps!.ShowPublicReportLink = true;
+            var runId = 12345L;
+            var exceptionMessage = "API Error";
+            
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+            _clientMock.Setup(x => x.EnablePublicReportAsync(runId))
+                .ThrowsAsync(new QaseException(exceptionMessage));
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
+            _clientMock.Verify(x => x.EnablePublicReportAsync(runId), Times.Once);
+            
+            // Verify that warning is logged
+            _loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Warning,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Failed to generate public report link") && v.ToString()!.Contains(exceptionMessage)),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_WithShowPublicReportLinkEnabledButClientThrowsGenericException_ShouldLogWarning()
+        {
+            // Arrange
+            _config.TestOps!.ShowPublicReportLink = true;
+            var runId = 12345L;
+            var exceptionMessage = "Network Error";
+            
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+            _clientMock.Setup(x => x.EnablePublicReportAsync(runId))
+                .ThrowsAsync(new InvalidOperationException(exceptionMessage));
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
+            _clientMock.Verify(x => x.EnablePublicReportAsync(runId), Times.Once);
+            
+            // Verify that warning is logged
+            _loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Warning,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Failed to generate public report link") && v.ToString()!.Contains(exceptionMessage)),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_WithShowPublicReportLinkEnabledAndEmptyUrl_ShouldLogWarning()
+        {
+            // Arrange
+            _config.TestOps!.ShowPublicReportLink = true;
+            var runId = 12345L;
+            
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+            _clientMock.Setup(x => x.EnablePublicReportAsync(runId))
+                .ThrowsAsync(new QaseException("Failed to get public report URL from response"));
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
+            _clientMock.Verify(x => x.EnablePublicReportAsync(runId), Times.Once);
+            
+            // Verify that warning is logged
+            _loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Warning,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Failed to generate public report link")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CompleteTestRun_WithDifferentShowPublicReportLinkValues_ShouldBehaveCorrectly(bool showPublicReportLink)
+        {
+            // Arrange
+            _config.TestOps!.ShowPublicReportLink = showPublicReportLink;
+            var runId = 12345L;
+            
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
+            
+            if (showPublicReportLink)
+            {
+                _clientMock.Verify(x => x.EnablePublicReportAsync(runId), Times.Once);
+            }
+            else
+            {
+                _clientMock.Verify(x => x.EnablePublicReportAsync(It.IsAny<long>()), Times.Never);
+            }
+        }
     }
 } 
