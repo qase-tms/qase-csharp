@@ -42,11 +42,20 @@ namespace Qase.ApiClient.V2.Client
             _jsonOptions.Converters.Add(new JsonStringEnumConverter());
             _jsonOptions.Converters.Add(new DateTimeJsonConverter());
             _jsonOptions.Converters.Add(new DateTimeNullableJsonConverter());
+            _jsonOptions.Converters.Add(new BaseResponseJsonConverter());
             _jsonOptions.Converters.Add(new CreateResultsRequestV2JsonConverter());
+            _jsonOptions.Converters.Add(new CustomFieldJsonConverter());
+            _jsonOptions.Converters.Add(new CustomFieldListResponseJsonConverter());
+            _jsonOptions.Converters.Add(new CustomFieldListResponseAllOfResultJsonConverter());
+            _jsonOptions.Converters.Add(new CustomFieldOptionJsonConverter());
+            _jsonOptions.Converters.Add(new CustomFieldResponseJsonConverter());
             _jsonOptions.Converters.Add(new RelationSuiteJsonConverter());
             _jsonOptions.Converters.Add(new RelationSuiteItemJsonConverter());
             _jsonOptions.Converters.Add(new ResultCreateJsonConverter());
+            _jsonOptions.Converters.Add(new ResultCreateBulkResponseJsonConverter());
             _jsonOptions.Converters.Add(new ResultCreateFieldsJsonConverter());
+            _jsonOptions.Converters.Add(new ResultCreateResponseJsonConverter());
+            _jsonOptions.Converters.Add(new ResultCreateResponseAllOfResultJsonConverter());
             _jsonOptions.Converters.Add(new ResultExecutionJsonConverter());
             _jsonOptions.Converters.Add(new ResultRelationsJsonConverter());
             _jsonOptions.Converters.Add(new ResultStepJsonConverter());
@@ -59,8 +68,8 @@ namespace Qase.ApiClient.V2.Client
             JsonSerializerOptionsProvider jsonSerializerOptionsProvider = new JsonSerializerOptionsProvider(_jsonOptions);
             _services.AddSingleton(jsonSerializerOptionsProvider);
             _services.AddSingleton<IApiFactory, ApiFactory>();
+            _services.AddSingleton<CustomFieldsApiEvents>();
             _services.AddSingleton<ResultsApiEvents>();
-            _services.AddTransient<IResultsApi, ResultsApi>();
         }
 
         /// <summary>
@@ -78,6 +87,7 @@ namespace Qase.ApiClient.V2.Client
 
             List<IHttpClientBuilder> builders = new List<IHttpClientBuilder>();
 
+            builders.Add(_services.AddHttpClient<ICustomFieldsApi, CustomFieldsApi>(client));
             builders.Add(_services.AddHttpClient<IResultsApi, ResultsApi>(client));
             
             if (builder != null)

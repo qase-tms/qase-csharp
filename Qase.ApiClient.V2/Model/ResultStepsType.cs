@@ -132,7 +132,7 @@ namespace Qase.ApiClient.V2.Model
         /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, ResultStepsType resultStepsType, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(resultStepsType.ToString());
+            writer.WriteStringValue(ResultStepsTypeValueConverter.ToJsonValue(resultStepsType).ToString());
         }
     }
 
@@ -163,14 +163,14 @@ namespace Qase.ApiClient.V2.Model
         }
 
         /// <summary>
-        /// Writes the DateTime to the json writer
+        /// Writes the ResultStepsType to the json writer
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="resultStepsType"></param>
         /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, ResultStepsType? resultStepsType, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(resultStepsType?.ToString() ?? "null");
+            writer.WriteStringValue(resultStepsType.HasValue ? ResultStepsTypeValueConverter.ToJsonValue(resultStepsType.Value).ToString() : "null");
         }
     }
 }

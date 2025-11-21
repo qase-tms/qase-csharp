@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.15
+
+- AUpdated API clients to the latest specification versions
+
 ## qase-scharp 1.0.14
 
 - Added support for showing public report link after test run completion

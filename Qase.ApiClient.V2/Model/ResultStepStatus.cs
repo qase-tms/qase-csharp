@@ -49,7 +49,12 @@ namespace Qase.ApiClient.V2.Model
         /// <summary>
         /// Enum Skipped for value: skipped
         /// </summary>
-        Skipped = 4
+        Skipped = 4,
+
+        /// <summary>
+        /// Enum InProgress for value: in_progress
+        /// </summary>
+        InProgress = 5
     }
 
     /// <summary>
@@ -76,6 +81,9 @@ namespace Qase.ApiClient.V2.Model
             if (value.Equals("skipped"))
                 return ResultStepStatus.Skipped;
 
+            if (value.Equals("in_progress"))
+                return ResultStepStatus.InProgress;
+
             throw new NotImplementedException($"Could not convert value to type ResultStepStatus: '{value}'");
         }
 
@@ -97,6 +105,9 @@ namespace Qase.ApiClient.V2.Model
 
             if (value.Equals("skipped"))
                 return ResultStepStatus.Skipped;
+
+            if (value.Equals("in_progress"))
+                return ResultStepStatus.InProgress;
 
             return null;
         }
@@ -120,6 +131,9 @@ namespace Qase.ApiClient.V2.Model
 
             if (value == ResultStepStatus.Skipped)
                 return "skipped";
+
+            if (value == ResultStepStatus.InProgress)
+                return "in_progress";
 
             throw new NotImplementedException($"Value could not be handled: '{value}'");
         }
@@ -160,7 +174,7 @@ namespace Qase.ApiClient.V2.Model
         /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, ResultStepStatus resultStepStatus, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(resultStepStatus.ToString());
+            writer.WriteStringValue(ResultStepStatusValueConverter.ToJsonValue(resultStepStatus).ToString());
         }
     }
 
@@ -191,14 +205,14 @@ namespace Qase.ApiClient.V2.Model
         }
 
         /// <summary>
-        /// Writes the DateTime to the json writer
+        /// Writes the ResultStepStatus to the json writer
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="resultStepStatus"></param>
         /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, ResultStepStatus? resultStepStatus, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(resultStepStatus?.ToString() ?? "null");
+            writer.WriteStringValue(resultStepStatus.HasValue ? ResultStepStatusValueConverter.ToJsonValue(resultStepStatus.Value).ToString() : "null");
         }
     }
 }
