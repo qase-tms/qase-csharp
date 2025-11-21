@@ -179,6 +179,8 @@ namespace Qase.Csharp.Commons.Tests
             }";
             var configPath = "qase.config.json";
             File.WriteAllText(configPath, jsonConfig);
+            // Clear environment variable to ensure JSON config is used
+            Environment.SetEnvironmentVariable("QASE_STATUS_MAPPING", null);
 
             try
             {
@@ -195,6 +197,7 @@ namespace Qase.Csharp.Commons.Tests
                 {
                     File.Delete(configPath);
                 }
+                Environment.SetEnvironmentVariable("QASE_STATUS_MAPPING", null);
             }
         }
 

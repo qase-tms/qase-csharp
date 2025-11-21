@@ -9,70 +9,12 @@ All URIs are relative to *https://api.qase.io/v2*
 
 <a id="createresultv2"></a>
 # **CreateResultV2**
-> void CreateResultV2 (string projectCode, long runId, ResultCreate resultCreate)
+> ResultCreateResponse CreateResultV2 (string projectCode, long runId, ResultCreate resultCreate)
 
 Create test run result
 
 This method allows to create single test run result.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V2.Api;
-using Qase.ApiClient.V2.Client;
-using Qase.ApiClient.V2.Model;
-
-namespace Example
-{
-    public class CreateResultV2Example
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v2";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var projectCode = "projectCode_example";  // string | 
-            var runId = 789L;  // long | 
-            var resultCreate = new ResultCreate(); // ResultCreate | 
-
-            try
-            {
-                // Create test run result
-                apiInstance.CreateResultV2(projectCode, runId, resultCreate);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.CreateResultV2: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreateResultV2WithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Create test run result
-    apiInstance.CreateResultV2WithHttpInfo(projectCode, runId, resultCreate);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.CreateResultV2WithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -84,7 +26,7 @@ catch (ApiException e)
 
 ### Return type
 
-void (empty response body)
+[**ResultCreateResponse**](ResultCreateResponse.md)
 
 ### Authorization
 
@@ -93,7 +35,7 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -110,70 +52,12 @@ void (empty response body)
 
 <a id="createresultsv2"></a>
 # **CreateResultsV2**
-> void CreateResultsV2 (string projectCode, long runId, CreateResultsRequestV2 createResultsRequestV2)
+> ResultCreateBulkResponse CreateResultsV2 (string projectCode, long runId, CreateResultsRequestV2 createResultsRequestV2)
 
 Bulk create test run result
 
 This method allows to create several test run results at once.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
 
-### Example
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using Qase.ApiClient.V2.Api;
-using Qase.ApiClient.V2.Client;
-using Qase.ApiClient.V2.Model;
-
-namespace Example
-{
-    public class CreateResultsV2Example
-    {
-        public static void Main()
-        {
-            Configuration config = new Configuration();
-            config.BasePath = "https://api.qase.io/v2";
-            // Configure API key authorization: TokenAuth
-            config.AddApiKey("Token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // config.AddApiKeyPrefix("Token", "Bearer");
-
-            var apiInstance = new ResultsApi(config);
-            var projectCode = "projectCode_example";  // string | 
-            var runId = 789L;  // long | 
-            var createResultsRequestV2 = new CreateResultsRequestV2(); // CreateResultsRequestV2 | 
-
-            try
-            {
-                // Bulk create test run result
-                apiInstance.CreateResultsV2(projectCode, runId, createResultsRequestV2);
-            }
-            catch (ApiException  e)
-            {
-                Debug.Print("Exception when calling ResultsApi.CreateResultsV2: " + e.Message);
-                Debug.Print("Status Code: " + e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-#### Using the CreateResultsV2WithHttpInfo variant
-This returns an ApiResponse object which contains the response data, status code and headers.
-
-```csharp
-try
-{
-    // Bulk create test run result
-    apiInstance.CreateResultsV2WithHttpInfo(projectCode, runId, createResultsRequestV2);
-}
-catch (ApiException e)
-{
-    Debug.Print("Exception when calling ResultsApi.CreateResultsV2WithHttpInfo: " + e.Message);
-    Debug.Print("Status Code: " + e.ErrorCode);
-    Debug.Print(e.StackTrace);
-}
-```
 
 ### Parameters
 
@@ -185,7 +69,7 @@ catch (ApiException e)
 
 ### Return type
 
-void (empty response body)
+[**ResultCreateBulkResponse**](ResultCreateBulkResponse.md)
 
 ### Authorization
 
@@ -194,7 +78,7 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details

@@ -93,7 +93,7 @@ namespace Qase.ApiClient.V2.Api
     /// <summary>
     /// The <see cref="ICreateResultV2ApiResponse"/>
     /// </summary>
-    public interface ICreateResultV2ApiResponse : Qase.ApiClient.V2.Client.IApiResponse
+    public interface ICreateResultV2ApiResponse : Qase.ApiClient.V2.Client.IApiResponse, IAccepted<Qase.ApiClient.V2.Model.ResultCreateResponse?>
     {
         /// <summary>
         /// Returns true if the response is 202 Accepted
@@ -135,7 +135,7 @@ namespace Qase.ApiClient.V2.Api
     /// <summary>
     /// The <see cref="ICreateResultsV2ApiResponse"/>
     /// </summary>
-    public interface ICreateResultsV2ApiResponse : Qase.ApiClient.V2.Client.IApiResponse
+    public interface ICreateResultsV2ApiResponse : Qase.ApiClient.V2.Client.IApiResponse, IAccepted<Qase.ApiClient.V2.Model.ResultCreateBulkResponse?>
     {
         /// <summary>
         /// Returns true if the response is 202 Accepted
@@ -408,17 +408,31 @@ namespace Qase.ApiClient.V2.Api
                     if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
                         httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
 
+                    string[] acceptLocalVars = new string[] {
+                        "application/json"
+                    };
+
+                    string? acceptLocalVar = ClientUtils.SelectHeaderAccept(acceptLocalVars);
+
+                    if (acceptLocalVar != null)
+                        httpRequestMessageLocalVar.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptLocalVar));
                     httpRequestMessageLocalVar.Method = new HttpMethod("POST");
 
                     DateTime requestedAtLocalVar = DateTime.UtcNow;
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CreateResultV2ApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CreateResultV2ApiResponse>();
+                        CreateResultV2ApiResponse apiResponseLocalVar;
 
-                        CreateResultV2ApiResponse apiResponseLocalVar = new CreateResultV2ApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/{project_code}/run/{run_id}/result", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CreateResultV2ApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/{project_code}/run/{run_id}/result", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterCreateResultV2DefaultImplementation(apiResponseLocalVar, projectCode, runId, resultCreate);
 
@@ -466,6 +480,22 @@ namespace Qase.ApiClient.V2.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
+            /// <summary>
+            /// The <see cref="CreateResultV2ApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CreateResultV2ApiResponse(ILogger<CreateResultV2ApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
             partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
 
             /// <summary>
@@ -473,6 +503,38 @@ namespace Qase.ApiClient.V2.Api
             /// </summary>
             /// <returns></returns>
             public bool IsAccepted => 202 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 202 Accepted
+            /// </summary>
+            /// <returns></returns>
+            public Qase.ApiClient.V2.Model.ResultCreateResponse? Accepted()
+            {
+                // This logic may be modified with the AsModel.mustache template
+                return IsAccepted
+                    ? System.Text.Json.JsonSerializer.Deserialize<Qase.ApiClient.V2.Model.ResultCreateResponse>(RawContent, _jsonSerializerOptions)
+                    : default;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 202 Accepted and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryAccepted(out Qase.ApiClient.V2.Model.ResultCreateResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Accepted();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)202);
+                }
+
+                return result != null;
+            }
 
             /// <summary>
             /// Returns true if the response is 400 BadRequest
@@ -656,17 +718,31 @@ namespace Qase.ApiClient.V2.Api
                     if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
                         httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
 
+                    string[] acceptLocalVars = new string[] {
+                        "application/json"
+                    };
+
+                    string? acceptLocalVar = ClientUtils.SelectHeaderAccept(acceptLocalVars);
+
+                    if (acceptLocalVar != null)
+                        httpRequestMessageLocalVar.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptLocalVar));
                     httpRequestMessageLocalVar.Method = new HttpMethod("POST");
 
                     DateTime requestedAtLocalVar = DateTime.UtcNow;
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         ILogger<CreateResultsV2ApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<CreateResultsV2ApiResponse>();
+                        CreateResultsV2ApiResponse apiResponseLocalVar;
 
-                        CreateResultsV2ApiResponse apiResponseLocalVar = new CreateResultsV2ApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/{project_code}/run/{run_id}/results", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                apiResponseLocalVar = new CreateResultsV2ApiResponse(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/{project_code}/run/{run_id}/results", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterCreateResultsV2DefaultImplementation(apiResponseLocalVar, projectCode, runId, createResultsRequestV2);
 
@@ -714,6 +790,22 @@ namespace Qase.ApiClient.V2.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
+            /// <summary>
+            /// The <see cref="CreateResultsV2ApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public CreateResultsV2ApiResponse(ILogger<CreateResultsV2ApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
             partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
 
             /// <summary>
@@ -721,6 +813,38 @@ namespace Qase.ApiClient.V2.Api
             /// </summary>
             /// <returns></returns>
             public bool IsAccepted => 202 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 202 Accepted
+            /// </summary>
+            /// <returns></returns>
+            public Qase.ApiClient.V2.Model.ResultCreateBulkResponse? Accepted()
+            {
+                // This logic may be modified with the AsModel.mustache template
+                return IsAccepted
+                    ? System.Text.Json.JsonSerializer.Deserialize<Qase.ApiClient.V2.Model.ResultCreateBulkResponse>(RawContent, _jsonSerializerOptions)
+                    : default;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 202 Accepted and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryAccepted(out Qase.ApiClient.V2.Model.ResultCreateBulkResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Accepted();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)202);
+                }
+
+                return result != null;
+            }
 
             /// <summary>
             /// Returns true if the response is 400 BadRequest
