@@ -1,8 +1,12 @@
 # Changelog
 
+## qase-scharp 1.0.16
+
+- Added support for uploading multiple attachments in a single request
+
 ## qase-scharp 1.0.15
 
-- AUpdated API clients to the latest specification versions
+- Updated API clients to the latest specification versions
 
 ## qase-scharp 1.0.14
 

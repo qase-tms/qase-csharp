@@ -59,7 +59,7 @@ namespace Qase.ApiClient.V1.Api
         Task<ICreateCustomFieldApiResponse?> CreateCustomFieldOrDefaultAsync(CustomFieldCreate customFieldCreate, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Delete Custom Field by id
+        /// Delete Custom Field
         /// </summary>
         /// <remarks>
         /// This method allows to delete custom field. 
@@ -71,7 +71,7 @@ namespace Qase.ApiClient.V1.Api
         Task<IDeleteCustomFieldApiResponse> DeleteCustomFieldAsync(int id, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Delete Custom Field by id
+        /// Delete Custom Field
         /// </summary>
         /// <remarks>
         /// This method allows to delete custom field. 
@@ -82,7 +82,7 @@ namespace Qase.ApiClient.V1.Api
         Task<IDeleteCustomFieldApiResponse?> DeleteCustomFieldOrDefaultAsync(int id, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Get Custom Field by id
+        /// Get Custom Field
         /// </summary>
         /// <remarks>
         /// This method allows to retrieve custom field. 
@@ -94,7 +94,7 @@ namespace Qase.ApiClient.V1.Api
         Task<IGetCustomFieldApiResponse> GetCustomFieldAsync(int id, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Get Custom Field by id
+        /// Get Custom Field
         /// </summary>
         /// <remarks>
         /// This method allows to retrieve custom field. 
@@ -134,7 +134,7 @@ namespace Qase.ApiClient.V1.Api
         Task<IGetCustomFieldsApiResponse?> GetCustomFieldsOrDefaultAsync(Option<string> entity = default, Option<string> type = default, Option<int> limit = default, Option<int> offset = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Update Custom Field by id
+        /// Update Custom Field
         /// </summary>
         /// <remarks>
         /// This method allows to update custom field. 
@@ -147,7 +147,7 @@ namespace Qase.ApiClient.V1.Api
         Task<IUpdateCustomFieldApiResponse> UpdateCustomFieldAsync(int id, CustomFieldUpdate customFieldUpdate, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Update Custom Field by id
+        /// Update Custom Field
         /// </summary>
         /// <remarks>
         /// This method allows to update custom field. 
@@ -863,7 +863,7 @@ namespace Qase.ApiClient.V1.Api
         partial void OnErrorDeleteCustomField(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id);
 
         /// <summary>
-        /// Delete Custom Field by id This method allows to delete custom field. 
+        /// Delete Custom Field This method allows to delete custom field. 
         /// </summary>
         /// <param name="id">Identifier.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
@@ -881,7 +881,7 @@ namespace Qase.ApiClient.V1.Api
         }
 
         /// <summary>
-        /// Delete Custom Field by id This method allows to delete custom field. 
+        /// Delete Custom Field This method allows to delete custom field. 
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
@@ -1130,7 +1130,7 @@ namespace Qase.ApiClient.V1.Api
         partial void OnErrorGetCustomField(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id);
 
         /// <summary>
-        /// Get Custom Field by id This method allows to retrieve custom field. 
+        /// Get Custom Field This method allows to retrieve custom field. 
         /// </summary>
         /// <param name="id">Identifier.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
@@ -1148,7 +1148,7 @@ namespace Qase.ApiClient.V1.Api
         }
 
         /// <summary>
-        /// Get Custom Field by id This method allows to retrieve custom field. 
+        /// Get Custom Field This method allows to retrieve custom field. 
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
@@ -1723,7 +1723,7 @@ namespace Qase.ApiClient.V1.Api
         partial void OnErrorUpdateCustomField(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id, CustomFieldUpdate customFieldUpdate);
 
         /// <summary>
-        /// Update Custom Field by id This method allows to update custom field. 
+        /// Update Custom Field This method allows to update custom field. 
         /// </summary>
         /// <param name="id">Identifier.</param>
         /// <param name="customFieldUpdate"></param>
@@ -1742,7 +1742,7 @@ namespace Qase.ApiClient.V1.Api
         }
 
         /// <summary>
-        /// Update Custom Field by id This method allows to update custom field. 
+        /// Update Custom Field This method allows to update custom field. 
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
