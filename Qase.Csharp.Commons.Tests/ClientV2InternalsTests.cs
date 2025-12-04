@@ -48,7 +48,7 @@ namespace Qase.Csharp.Commons.Tests
         }
 
         [Fact]
-        public void ConvertResult_ShouldConvertAllFieldsCorrectly()
+        public async Task ConvertResult_ShouldConvertAllFieldsCorrectly()
         {
             // Arrange
             var testResult = new TestResult
@@ -96,7 +96,7 @@ namespace Qase.Csharp.Commons.Tests
             };
 
             // Act
-            var result = _client.ConvertResult(testResult);
+            var result = await _client.ConvertResult(testResult);
 
             // Assert
             result.Title.Should().Be("Test Title");
@@ -131,7 +131,7 @@ namespace Qase.Csharp.Commons.Tests
         }
 
         [Fact]
-        public void ConvertResult_ShouldHandleNullAndEmptyCollections()
+        public async Task ConvertResult_ShouldHandleNullAndEmptyCollections()
         {
             // Arrange
             var testResult = new TestResult
@@ -147,7 +147,7 @@ namespace Qase.Csharp.Commons.Tests
             };
 
             // Act
-            var result = _client.ConvertResult(testResult);
+            var result = await _client.ConvertResult(testResult);
 
             // Assert
             result.Title.Should().Be("Test");
@@ -165,19 +165,19 @@ namespace Qase.Csharp.Commons.Tests
         [InlineData(TestResultStatus.Failed, "failed")]
         [InlineData(TestResultStatus.Skipped, "skipped")]
         [InlineData(null, "failed")]
-        public void ConvertResult_ShouldMapStatusCorrectly(TestResultStatus? status, string expected)
+        public async Task ConvertResult_ShouldMapStatusCorrectly(TestResultStatus? status, string expected)
         {
             var testResult = new TestResult
             {
                 Title = "Test",
                 Execution = status.HasValue ? new TestResultExecution { Status = status.Value } : null
             };
-            var result = _client.ConvertResult(testResult);
+            var result = await _client.ConvertResult(testResult);
             result.Execution.Status.Should().Be(expected);
         }
 
         [Fact]
-        public void ConvertStepResult_ShouldConvertAllFieldsCorrectly()
+        public async Task ConvertStepResult_ShouldConvertAllFieldsCorrectly()
         {
             // Arrange
             var step = new StepResult
@@ -195,7 +195,7 @@ namespace Qase.Csharp.Commons.Tests
             };
 
             // Act
-            var result = _client.ConvertStepResult(step);
+            var result = await _client.ConvertStepResult(step);
 
             // Assert
             result.Data!.Action.Should().Be("act");
@@ -211,7 +211,7 @@ namespace Qase.Csharp.Commons.Tests
         }
 
         [Fact]
-        public void ConvertStepResult_ShouldHandleNullsAndEmptyCollections()
+        public async Task ConvertStepResult_ShouldHandleNullsAndEmptyCollections()
         {
             // Arrange
             var step = new StepResult
@@ -222,7 +222,7 @@ namespace Qase.Csharp.Commons.Tests
             };
 
             // Act
-            var result = _client.ConvertStepResult(step);
+            var result = await _client.ConvertStepResult(step);
 
             // Assert
             result.Data!.Action.Should().Be("");
@@ -242,14 +242,14 @@ namespace Qase.Csharp.Commons.Tests
         [InlineData(StepResultStatus.Skipped, ResultStepStatus.Skipped)]
         [InlineData(StepResultStatus.Blocked, ResultStepStatus.Blocked)]
         [InlineData(null, ResultStepStatus.Skipped)]
-        public void ConvertStepResult_ShouldMapStatusCorrectly(StepResultStatus? status, ResultStepStatus expected)
+        public async Task ConvertStepResult_ShouldMapStatusCorrectly(StepResultStatus? status, ResultStepStatus expected)
         {
             var step = new StepResult
             {
                 Data = new Data { Action = "a" },
                 Execution = status.HasValue ? new StepExecution { Status = status.Value } : null
             };
-            var result = _client.ConvertStepResult(step);
+            var result = await _client.ConvertStepResult(step);
             result.Execution!.Status.Should().Be(expected);
         }
 

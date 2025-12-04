@@ -1422,7 +1422,7 @@ namespace Qase.ApiClient.V1.Api
                                 fileStream.Position = 0;
                             }
                                                         
-                            multipartContentLocalVar.Add(new StreamContent(fileStream), "file", fileName);
+                            multipartContentLocalVar.Add(new StreamContent(fileStream), "file[]", fileName);
                         }
                     }
 

@@ -59,7 +59,12 @@ namespace Qase.Csharp.Commons.Clients
         {
             _logger.LogDebug("Uploading {Count} test results for run {RunId}", results.Count, runId);
             
-            var convertedResults = results.Select(ConvertResult).ToList();
+            var convertedResults = new List<ResultCreate>();
+            foreach (var result in results)
+            {
+                var converted = await ConvertResult(result);
+                convertedResults.Add(converted);
+            }
             
             var model = new CreateResultsRequestV2
             {
@@ -103,20 +108,25 @@ namespace Qase.Csharp.Commons.Clients
             return _apiClientV1.EnablePublicReportAsync(runId);
         }
         
-        internal ResultCreate ConvertResult(TestResult result)
+        internal async Task<ResultCreate> ConvertResult(TestResult result)
         {
             _logger.LogDebug("Converting test result: {@TestResult}", result);
             
-            var attachments = result.Attachments
-                .Select(async a => await _apiClientV1.UploadAttachmentAsync(a))
-                .Select(t => t.Result)
-                .Where(attachment => !string.IsNullOrEmpty(attachment))
-                .ToList();
+            var attachments = new List<string>();
+            if (result.Attachments != null && result.Attachments.Count > 0)
+            {
+                var hashes = await _apiClientV1.UploadAttachmentsAsync(result.Attachments);
+                attachments = hashes.Where(h => !string.IsNullOrEmpty(h)).ToList();
+            }
             
             var steps = new List<ResultStep>();
             if (result.Steps != null && result.Steps.Count > 0)
             {
-                steps = result.Steps.Select(ConvertStepResult).ToList();
+                foreach (var step in result.Steps)
+                {
+                    var convertedStep = await ConvertStepResult(step);
+                    steps.Add(convertedStep);
+                }
             }
             
             var execution = new ResultExecution(
@@ -215,7 +225,7 @@ namespace Qase.Csharp.Commons.Clients
             return convertedResult;
         }
         
-        internal ResultStep ConvertStepResult(StepResult step)
+        internal async Task<ResultStep> ConvertStepResult(StepResult step)
         {
             _logger.LogDebug("Converting step result: {@StepResult}", step);
             
@@ -231,11 +241,12 @@ namespace Qase.Csharp.Commons.Clients
                 data.InputData = step.Data.InputData;
             }
             
-            var attachments = step.Execution?.Attachments
-                .Select(async a => await _apiClientV1.UploadAttachmentAsync(a))
-                .Select(t => t.Result)
-                .Where(attachment => !string.IsNullOrEmpty(attachment))
-                .ToList() ?? new List<string>();
+            var attachments = new List<string>();
+            if (step.Execution?.Attachments != null && step.Execution.Attachments.Count > 0)
+            {
+                var hashes = await _apiClientV1.UploadAttachmentsAsync(step.Execution.Attachments);
+                attachments = hashes.Where(h => !string.IsNullOrEmpty(h)).ToList();
+            }
             
             var execution = new ResultStepExecution(
                 status: MapStepStatus(step.Execution?.Status),
@@ -245,10 +256,20 @@ namespace Qase.Csharp.Commons.Clients
                 attachments: attachments
             );
             
+            var nestedSteps = new List<ResultStep>();
+            if (step.Steps != null && step.Steps.Count > 0)
+            {
+                foreach (var nestedStep in step.Steps)
+                {
+                    var convertedNestedStep = await ConvertStepResult(nestedStep);
+                    nestedSteps.Add(convertedNestedStep);
+                }
+            }
+            
             var convertedStep = new ResultStep(
                 data: data,
                 execution: execution,
-                steps: step.Steps.Select(ConvertStepResult).ToList()
+                steps: nestedSteps
             );
             
             _logger.LogDebug("Converted step result: {@ConvertedStep}", convertedStep);

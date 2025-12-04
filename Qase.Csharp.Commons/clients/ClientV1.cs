@@ -165,74 +165,96 @@ namespace Qase.Csharp.Commons.Clients
             }
         }
 
+        private const long MaxFileSize = 32 * 1024 * 1024; // 32 MB
+        private const long MaxRequestSize = 128 * 1024 * 1024; // 128 MB
+        private const int MaxFilesPerRequest = 20;
+
         /// <summary>
-        /// Uploads an attachment to Qase TMS
+        /// Uploads attachments to Qase TMS
         /// </summary>
-        /// <param name="attachment">The attachment to upload</param>
-        /// <returns>The hash of the uploaded attachment</returns>
-        public async Task<string> UploadAttachmentAsync(Models.Domain.Attachment attachment)
+        /// <param name="attachments">The attachments to upload</param>
+        /// <returns>List of hashes of the uploaded attachments</returns>
+        /// <exception cref="QaseException">Thrown when validation fails or upload fails</exception>
+        public async Task<List<string>> UploadAttachmentsAsync(List<Models.Domain.Attachment> attachments)
         {
-            var tempFiles = new List<string>(1);
-            var fileName = attachment.FileName;
-            if (string.IsNullOrEmpty(fileName))
+            if (attachments == null || attachments.Count == 0)
             {
-                if (attachment.FilePath != null && File.Exists(attachment.FilePath))
-                {
-                    fileName = Path.GetFileName(attachment.FilePath);
-                }
-                else
-                {
-                    fileName = Path.GetRandomFileName();
-                }
+                _logger.LogWarning("No attachments provided for upload");
+                return new List<string>();
             }
 
-            _logger.LogDebug("Uploading attachment: {FileName}", fileName);
+            _logger.LogDebug("Uploading {Count} attachments", attachments.Count);
+
+            var allHashes = new List<string>();
+            var tempFiles = new List<string>();
+            var fileInfos = new List<(Stream Stream, string FileName, long Size)>();
 
             try
             {
-                var filePath = string.Empty;
-
-                if (!string.IsNullOrEmpty(attachment.FilePath) && File.Exists(attachment.FilePath))
+                // Prepare file streams
+                foreach (var attachment in attachments)
                 {
-                    filePath = attachment.FilePath;
-                }
-                else if (!string.IsNullOrEmpty(attachment.Content))
-                {
-                    filePath = Path.Combine(Path.GetTempPath(), fileName);
-                    File.WriteAllText(filePath, attachment.Content);
-                    tempFiles.Add(filePath);
-                }
-                else if (attachment.ContentBytes != null && attachment.ContentBytes.Length > 0)
-                {
-                    filePath = Path.Combine(Path.GetTempPath(), fileName);
-                    File.WriteAllBytes(filePath, attachment.ContentBytes);
-                    tempFiles.Add(filePath);
-                }
-                else
-                {
-                    _logger.LogWarning("Attachment has no content");
-                    return "";
+                    var fileInfo = PrepareAttachmentFileAsync(attachment, tempFiles);
+                    if (fileInfo.HasValue)
+                    {
+                        fileInfos.Add(fileInfo.Value);
+                    }
                 }
 
-                var resp = await _attachmentsApi.UploadAttachmentAsync(_config.TestOps.Project!, new List<(Stream Stream, string FileName)> { (File.OpenRead(filePath), fileName!) });
+                // Validate attachments after preparing files
+                ValidateAttachments(fileInfos);
 
-                if (resp.IsSuccessStatusCode)
+                // Group files into batches respecting limits
+                var batches = CreateBatches(fileInfos);
+
+                _logger.LogDebug("Created {BatchCount} batches for upload", batches.Count);
+
+                // Upload each batch
+                foreach (var batch in batches)
                 {
-                    return resp.Ok()?.Result?.FirstOrDefault()?.Hash ?? "";
+                    var fileStreams = batch.Select(f => (f.Stream, f.FileName)).ToList();
+                    var resp = await _attachmentsApi.UploadAttachmentAsync(_config.TestOps.Project!, fileStreams);
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        var hashes = resp.Ok()?.Result?.Select(r => r.Hash).Where(h => !string.IsNullOrEmpty(h)).Select(h => h!).ToList() ?? new List<string>();
+                        allHashes.AddRange(hashes);
+                        _logger.LogDebug("Successfully uploaded batch of {Count} files, got {HashCount} hashes", batch.Count, hashes.Count);
+                    }
+                    else
+                    {
+                        _logger.LogError("Failed to upload attachment batch: {Reason}", resp.ReasonPhrase + " " + resp.RawContent);
+                        throw new QaseException($"Failed to upload attachments: {resp.ReasonPhrase}");
+                    }
                 }
-                else
-                {
-                    _logger.LogError("Failed to upload attachment: {Reason}", resp.ReasonPhrase + " " + resp.RawContent);
-                    return "";
-                }
+
+                return allHashes;
+            }
+            catch (QaseException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error uploading attachment");
-                return "";
+                _logger.LogError(ex, "Error uploading attachments");
+                throw new QaseException($"Failed to upload attachments: {ex.Message}", ex);
             }
             finally
             {
+                // Close all streams
+                foreach (var fileInfo in fileInfos)
+                {
+                    try
+                    {
+                        fileInfo.Stream?.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to dispose stream");
+                    }
+                }
+
+                // Delete temporary files
                 foreach (var tempFile in tempFiles)
                 {
                     try
@@ -249,6 +271,123 @@ namespace Qase.Csharp.Commons.Clients
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Uploads an attachment to Qase TMS (for backward compatibility)
+        /// </summary>
+        /// <param name="attachment">The attachment to upload</param>
+        /// <returns>The hash of the uploaded attachment</returns>
+        public async Task<string> UploadAttachmentAsync(Models.Domain.Attachment attachment)
+        {
+            var hashes = await UploadAttachmentsAsync(new List<Models.Domain.Attachment> { attachment });
+            return hashes.FirstOrDefault() ?? "";
+        }
+
+        private void ValidateAttachments(List<(Stream Stream, string FileName, long Size)> fileInfos)
+        {
+            if (fileInfos.Count > MaxFilesPerRequest)
+            {
+                throw new QaseException($"Maximum {MaxFilesPerRequest} files per request allowed, but {fileInfos.Count} files provided");
+            }
+
+            foreach (var fileInfo in fileInfos)
+            {
+                if (fileInfo.Size > MaxFileSize)
+                {
+                    throw new QaseException($"File '{fileInfo.FileName}' size {fileInfo.Size} bytes exceeds maximum allowed size of {MaxFileSize} bytes (32 MB)");
+                }
+            }
+        }
+
+        private (Stream Stream, string FileName, long Size)? PrepareAttachmentFileAsync(Models.Domain.Attachment attachment, List<string> tempFiles)
+        {
+            var fileName = attachment.FileName;
+            if (string.IsNullOrEmpty(fileName))
+            {
+                if (attachment.FilePath != null && File.Exists(attachment.FilePath))
+                {
+                    fileName = Path.GetFileName(attachment.FilePath);
+                }
+                else
+                {
+                    fileName = Path.GetRandomFileName();
+                }
+            }
+
+            Stream? stream = null;
+            long size = 0;
+
+            if (!string.IsNullOrEmpty(attachment.FilePath) && File.Exists(attachment.FilePath))
+            {
+                var fileInfo = new FileInfo(attachment.FilePath);
+                size = fileInfo.Length;
+                stream = File.OpenRead(attachment.FilePath);
+            }
+            else if (!string.IsNullOrEmpty(attachment.Content))
+            {
+                var filePath = Path.Combine(Path.GetTempPath(), fileName);
+                File.WriteAllText(filePath, attachment.Content);
+                tempFiles.Add(filePath);
+                var fileInfo = new FileInfo(filePath);
+                size = fileInfo.Length;
+                stream = File.OpenRead(filePath);
+            }
+            else if (attachment.ContentBytes != null && attachment.ContentBytes.Length > 0)
+            {
+                var filePath = Path.Combine(Path.GetTempPath(), fileName);
+                File.WriteAllBytes(filePath, attachment.ContentBytes);
+                tempFiles.Add(filePath);
+                size = attachment.ContentBytes.Length;
+                stream = File.OpenRead(filePath);
+            }
+            else
+            {
+                _logger.LogWarning("Attachment has no content, skipping");
+                return null;
+            }
+
+            return (stream, fileName!, size);
+        }
+
+        private List<List<(Stream Stream, string FileName, long Size)>> CreateBatches(List<(Stream Stream, string FileName, long Size)> fileInfos)
+        {
+            var batches = new List<List<(Stream Stream, string FileName, long Size)>>();
+            var currentBatch = new List<(Stream Stream, string FileName, long Size)>();
+            long currentBatchSize = 0;
+
+            foreach (var fileInfo in fileInfos)
+            {
+                // Check if single file exceeds request size limit
+                if (fileInfo.Size > MaxRequestSize)
+                {
+                    throw new QaseException($"File '{fileInfo.FileName}' size {fileInfo.Size} bytes exceeds maximum request size of {MaxRequestSize} bytes (128 MB)");
+                }
+
+                // Check if adding this file would exceed limits
+                if (currentBatch.Count >= MaxFilesPerRequest || 
+                    currentBatchSize + fileInfo.Size > MaxRequestSize)
+                {
+                    // Start a new batch
+                    if (currentBatch.Count > 0)
+                    {
+                        batches.Add(currentBatch);
+                        currentBatch = new List<(Stream Stream, string FileName, long Size)>();
+                        currentBatchSize = 0;
+                    }
+                }
+
+                currentBatch.Add(fileInfo);
+                currentBatchSize += fileInfo.Size;
+            }
+
+            // Add the last batch if it has files
+            if (currentBatch.Count > 0)
+            {
+                batches.Add(currentBatch);
+            }
+
+            return batches;
         }
 
         /// <summary>
