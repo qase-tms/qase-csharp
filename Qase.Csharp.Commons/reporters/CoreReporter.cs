@@ -36,6 +36,10 @@ namespace Qase.Csharp.Commons.Reporters
             _config = config;
             _reporter = reporter;
             _fallback = fallback;
+
+            // Collect and log host information including all versions
+            var hostInfo = HostInfo.GetHostInfo(null);
+            _logger.LogDebug("Using host info: {HostInfo}", hostInfo.ToString());
         }
 
         /// <inheritdoc />

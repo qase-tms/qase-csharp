@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Qase.ApiClient.V1.Api;
@@ -7,7 +8,9 @@ using Qase.ApiClient.V1.Extensions;
 using Qase.ApiClient.V2.Extensions;
 using Qase.Csharp.Commons.Clients;
 using Qase.Csharp.Commons.Config;
+using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Reporters;
+using Qase.Csharp.Commons.Utils;
 using Qase.Csharp.Commons.Writers;
 using Serilog;
 
@@ -112,15 +115,45 @@ namespace Qase.Csharp.Commons
                     "https://api.qase.io/v2" : 
                     $"https://api-{config.TestOps.Api.Host}/v2";
                 
+                // Detect reporter and framework information
+                var (reporterName, reporterVersion) = HostInfo.DetectReporter();
+                var (framework, frameworkVersion) = HostInfo.DetectTestFramework();
+                
+                // Build headers
+                var xClientHeader = ClientHeadersBuilder.BuildXClientHeader(
+                    reporterName: reporterName,
+                    reporterVersion: reporterVersion,
+                    framework: framework,
+                    frameworkVersion: frameworkVersion);
+                
+                var xPlatformHeader = ClientHeadersBuilder.BuildXPlatformHeader();
+                
                 var apiServices = new ServiceCollection();
                 apiServices.AddApi(options =>
                 {
                     var token = new Qase.ApiClient.V2.Client.ApiKeyToken(config.TestOps.Api.Token!, Qase.ApiClient.V2.Client.ClientUtils.ApiKeyHeader.Token, "");
                     options.AddTokens(token);
-                    options.AddApiHttpClients(client =>
-                    {
-                        client.BaseAddress = new Uri(baseUrl);
-                    });
+                    options.AddApiHttpClients(
+                        client =>
+                        {
+                            client.BaseAddress = new Uri(baseUrl);
+                        },
+                        builder =>
+                        {
+                            // Add headers to all HTTP requests
+                            builder.ConfigureHttpClient(httpClient =>
+                            {
+                                if (!string.IsNullOrWhiteSpace(xClientHeader))
+                                {
+                                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Client", xClientHeader);
+                                }
+                                
+                                if (!string.IsNullOrWhiteSpace(xPlatformHeader))
+                                {
+                                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Platform", xPlatformHeader);
+                                }
+                            });
+                        });
                 });
                 
                 var apiServiceProvider = apiServices.BuildServiceProvider();
