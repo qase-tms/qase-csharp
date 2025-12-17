@@ -38,7 +38,7 @@ namespace Qase.Csharp.Commons.Utils
 
             if (!string.IsNullOrWhiteSpace(reporterVersion))
             {
-                parts.Add($"reporter_version=v{FormatVersion(reporterVersion!)}");
+                parts.Add($"reporter_version={FormatVersion(reporterVersion!)}");
             }
 
             // Add framework information
@@ -55,18 +55,18 @@ namespace Qase.Csharp.Commons.Utils
             // Add client versions
             if (!string.IsNullOrWhiteSpace(apiClientV1Version))
             {
-                parts.Add($"client_version_v1=v{FormatVersion(apiClientV1Version!)}");
+                parts.Add($"client_version_v1={FormatVersion(apiClientV1Version!)}");
             }
 
             if (!string.IsNullOrWhiteSpace(apiClientV2Version))
             {
-                parts.Add($"client_version_v2=v{FormatVersion(apiClientV2Version!)}");
+                parts.Add($"client_version_v2={FormatVersion(apiClientV2Version!)}");
             }
 
             // Add commons version
             if (!string.IsNullOrWhiteSpace(commonsVersion))
             {
-                parts.Add($"core_version=v{FormatVersion(commonsVersion!)}");
+                parts.Add($"core_version={FormatVersion(commonsVersion!)}");
             }
 
             return string.Join(";", parts);
