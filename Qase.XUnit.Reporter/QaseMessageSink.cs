@@ -63,10 +63,10 @@ namespace Qase.Xunit.Reporter
         private void OnTestFailed(MessageHandlerArgs<ITestFailed> args)
         {
             var testResult = qaseTestData[args.Message.Test];
-            
+
             // Determine if the failure is due to assertion or other reasons
             var isAssertionFailure = IsAssertionFailure(args.Message);
-                        
+
             testResult.Execution!.Status = isAssertionFailure ? TestResultStatus.Failed : TestResultStatus.Invalid;
             testResult.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             testResult.Execution!.Duration = (int)(args.Message.ExecutionTime * 1000);
@@ -124,7 +124,18 @@ namespace Qase.Xunit.Reporter
                     parameter,
                     value
                 })
-                .ToDictionary(x => x.parameter.Name, x => x.value?.ToString() ?? "null");
+                .ToDictionary(x => x.parameter.Name, x =>
+                {
+                    if (x.value is null)
+                    {
+                        return "null";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(x.value?.ToString())) return x.value.ToString();
+                    
+                    var size = x.value?.ToString().Length ?? 0;
+                    return size == 0 ? "empty" : $"empty ({size})";
+                });
 
             var result = new TestResult
             {
@@ -188,7 +199,7 @@ namespace Qase.Xunit.Reporter
         {
             // Check stack trace for xUnit assertion methods
             var stackTrace = string.Join("\n", testFailed.StackTraces);
-            
+
             // Look for xUnit assertion methods in stack trace
             // We need to be more specific to avoid false positives
             if (stackTrace.Contains("at Xunit.Assert.Equal") ||
