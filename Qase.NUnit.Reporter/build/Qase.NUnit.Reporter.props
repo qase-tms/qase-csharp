@@ -1,0 +1,13 @@
+<Project>
+  <!-- Automatically copy Qase.NUnit.Reporter.addins file to output directory -->
+  <!-- This file is automatically included when Qase.NUnit.Reporter package is referenced -->
+  <!-- The Qase.NUnit.Reporter.addins file will be copied from the NuGet package to the output directory -->
+  <ItemGroup>
+    <!-- Reference the file from contentFiles in the package -->
+    <!-- From build/ directory, contentFiles is one level up -->
+    <Content Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\Qase.NUnit.Reporter.addins" Condition="Exists('$(MSBuildThisFileDirectory)..\contentFiles\any\any\Qase.NUnit.Reporter.addins')">
+      <Link>Qase.NUnit.Reporter.addins</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

@@ -27,8 +27,9 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test Qase.Csharp.Commons.Tests
-
+        run: |
+          dotnet test Qase.Csharp.Commons.Tests  && \
+          dotnet test Qase.NUnit.Reporter.Tests 
  
   publish:
     runs-on: ubuntu-latest

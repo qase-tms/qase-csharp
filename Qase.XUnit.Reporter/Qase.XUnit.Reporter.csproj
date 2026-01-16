@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>Qase.XUnit.Reporter</PackageId>
@@ -8,6 +8,7 @@
     <IsPackable>true</IsPackable>
     <Description>xUnit Integration with Qase TMS</Description>
     <Nullable>enable</Nullable>
+    <InternalsVisibleTo>Qase.XUnit.Reporter.Tests</InternalsVisibleTo>
   </PropertyGroup>
 
   <ItemGroup>
