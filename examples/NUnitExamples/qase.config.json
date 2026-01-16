@@ -1,0 +1,35 @@
+{
+  "mode": "testops",
+  "fallback": "report",
+  "debug": true,
+  "environment": "local",
+  "logging": {
+    "console": true,
+    "file": false
+  },
+  "report": {
+    "driver": "local",
+    "connection": {
+      "local": {
+        "path": "./build/qase-report",
+        "format": "json"
+      }
+    }
+  },
+  "testops": {
+    "api": {
+      "token": "<your_token_here>",
+      "host": "qase.io"
+    },
+    "run": {
+      "title": "NUnit Example Run",
+      "description": "Example test run from NUnitExamples project",
+      "complete": true
+    },
+    "defect": false,
+    "project": "<your_project_code>",
+    "batch": {
+      "size": 100
+    }
+  }
+}

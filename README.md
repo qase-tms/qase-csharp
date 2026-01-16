@@ -11,7 +11,7 @@ includes reporters and API clients designed to streamline the process of reporti
   Reporter for xUnit.
 
 - **[Qase.NUnit.Reporter](/Qase.NUnit.Reporter)**  
-  Reporter for NUnit. (coming soon)
+  Reporter for NUnit.
 
 - **[Qase.MSTest.Reporter](/Qase.MSTest.Reporter)**  
   Reporter for MSTest. (coming soon)
