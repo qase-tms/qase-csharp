@@ -11,7 +11,7 @@ To install the latest release version, follow the instructions below for NuGet.
 Add the following package to your project:
 
 ```xml
-<PackageReference Include="Qase.XUnit.Reporter" Version="1.0.1" />
+<PackageReference Include="Qase.XUnit.Reporter" Version="1.1.0" />
 ```
 
 ## Getting Started
