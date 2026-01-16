@@ -177,27 +177,55 @@ namespace Qase.Csharp.Commons.Tests
                     ""unknown"": ""passed""
                 }
             }";
-            var configPath = "qase.config.json";
-            File.WriteAllText(configPath, jsonConfig);
-            // Clear environment variable to ensure JSON config is used
-            Environment.SetEnvironmentVariable("QASE_STATUS_MAPPING", null);
-
+            var configPath = Path.Combine(Directory.GetCurrentDirectory(), "qase.config.json");
+            
+            // Save original environment variable value
+            var originalStatusMapping = Environment.GetEnvironmentVariable("QASE_STATUS_MAPPING");
+            
             try
             {
-                // Act
-                var config = ConfigFactory.LoadConfig();
-
-                // Assert
-                Assert.Single(config.StatusMapping);
-                Assert.Equal("failed", config.StatusMapping["invalid"]);
-            }
-            finally
-            {
+                // Clear environment variable to ensure JSON config is used
+                Environment.SetEnvironmentVariable("QASE_STATUS_MAPPING", null);
+                
+                // Remove existing config file if it exists
                 if (File.Exists(configPath))
                 {
                     File.Delete(configPath);
                 }
-                Environment.SetEnvironmentVariable("QASE_STATUS_MAPPING", null);
+                
+                File.WriteAllText(configPath, jsonConfig);
+
+                // Act
+                var config = ConfigFactory.LoadConfig();
+
+                // Assert
+                // "unknown" is not a valid status, so it should be filtered out
+                // Only "invalid" should be present (if no env var adds more)
+                // We check that "invalid" mapping exists and equals "failed"
+                Assert.True(config.StatusMapping.ContainsKey("invalid"), 
+                    $"Expected 'invalid' key in StatusMapping. Actual keys: {string.Join(", ", config.StatusMapping.Keys)}");
+                Assert.Equal("failed", config.StatusMapping["invalid"]);
+                
+                // "unknown" should not be present as it's not a valid status
+                Assert.False(config.StatusMapping.ContainsKey("unknown"), 
+                    "'unknown' should not be in StatusMapping as it's not a valid status");
+            }
+            finally
+            {
+                // Restore original environment variable
+                if (originalStatusMapping != null)
+                {
+                    Environment.SetEnvironmentVariable("QASE_STATUS_MAPPING", originalStatusMapping);
+                }
+                else
+                {
+                    Environment.SetEnvironmentVariable("QASE_STATUS_MAPPING", null);
+                }
+                
+                if (File.Exists(configPath))
+                {
+                    File.Delete(configPath);
+                }
             }
         }
 

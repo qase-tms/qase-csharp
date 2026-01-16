@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Qase.NUnit.Reporter</PackageId>
+    <AssemblyName>Qase.NUnit.Reporter</AssemblyName>
+    <RootNamespace>Qase.NUnit.Reporter</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <Description>NUnit Integration with Qase TMS</Description>
+    <Nullable>enable</Nullable>
+    <InternalsVisibleTo>Qase.NUnit.Reporter.Tests</InternalsVisibleTo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Qase.NUnit.Reporter.addins">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>contentFiles/any/any/Qase.NUnit.Reporter.addins</PackagePath>
+    </Content>
+  </ItemGroup>
+  
+  <!-- Include .props file to automatically copy Qase.NUnit.Reporter.addins to output directory in consuming projects -->
+  <!-- The props file will be automatically imported by NuGet when the package is referenced -->
+  <ItemGroup>
+    <None Include="build/Qase.NUnit.Reporter.props" Pack="true" PackagePath="build/Qase.NUnit.Reporter.props" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit.Engine.Api" Version="3.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Qase.Csharp.Commons/Qase.Csharp.Commons.csproj" />
+  </ItemGroup>
+
+</Project>
