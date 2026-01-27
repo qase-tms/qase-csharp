@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-scharp 1.0.17
+
+- Fixed an issue where the test run link was not being generated correctly when filtering by status.
+
 ## qase-scharp 1.0.16
 
 - Added support for uploading multiple attachments in a single request
