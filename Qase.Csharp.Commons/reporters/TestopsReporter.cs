@@ -177,7 +177,7 @@ namespace Qase.Csharp.Commons.Reporters
         {
             var baseLink = GetBaseUrl(_config.TestOps.Api.Host!) + "/run/" +
                           _config.TestOps.Project + "/dashboard/" + _testRunId +
-                          "?source=logs&status=%5B2%5D&search=";
+                          "?source=logs&search=";
 
             if (id.HasValue)
             {
