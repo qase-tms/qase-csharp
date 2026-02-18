@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -6,42 +5,57 @@ using System.Threading.Tasks;
 namespace Qase.Csharp.Commons.Writers
 {
     /// <summary>
-    /// Writes test results to a file
+    /// Writes test results to a directory-based structure
     /// </summary>
-    public class FileWriter : IDisposable
+    public class FileWriter
     {
-        private readonly StreamWriter _writer;
-        
+        private readonly string _rootPath;
+        private readonly string _resultsPath;
+
         /// <summary>
         /// Initializes a new instance of the FileWriter class
         /// </summary>
-        /// <param name="filePath">The path to the file to write to</param>
-        public FileWriter(string filePath)
+        /// <param name="rootPath">The root directory path for the report</param>
+        public FileWriter(string rootPath)
         {
-            _writer = new StreamWriter(filePath, false, Encoding.UTF8);
+            _rootPath = rootPath;
+            _resultsPath = Path.Combine(rootPath, "results");
         }
-        
+
         /// <summary>
-        /// Writes a line to the file
+        /// Prepares the directory structure for writing
         /// </summary>
-        /// <param name="line">The line to write</param>
-        public async Task WriteLineAsync(string line)
+        public void Prepare()
         {
-            await _writer.WriteLineAsync(line);
+            Directory.CreateDirectory(_rootPath);
+            Directory.CreateDirectory(_resultsPath);
         }
-        
+
         /// <summary>
-        /// Flushes the writer
+        /// Writes the run.json file
         /// </summary>
-        public async Task FlushAsync()
+        /// <param name="json">The JSON content to write</param>
+        public async Task WriteRunAsync(string json)
         {
-            await _writer.FlushAsync();
+            var path = Path.Combine(_rootPath, "run.json");
+            using (var writer = new StreamWriter(path, false, Encoding.UTF8))
+            {
+                await writer.WriteAsync(json);
+            }
         }
-        
-        /// <inheritdoc />
-        public void Dispose()
+
+        /// <summary>
+        /// Writes an individual result file
+        /// </summary>
+        /// <param name="id">The result ID</param>
+        /// <param name="json">The JSON content to write</param>
+        public async Task WriteResultAsync(string id, string json)
         {
-            _writer?.Dispose();
+            var path = Path.Combine(_resultsPath, $"{id}.json");
+            using (var writer = new StreamWriter(path, false, Encoding.UTF8))
+            {
+                await writer.WriteAsync(json);
+            }
         }
     }
 } 

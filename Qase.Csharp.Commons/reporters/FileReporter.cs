@@ -59,6 +59,10 @@ namespace Qase.Csharp.Commons.Reporters
         /// <inheritdoc />
         public async Task uploadResults()
         {
+            // Temporary stub: prepare directory and write results as run.json
+            // This will be replaced in Plan 05-02 with proper directory-based output
+            _writer.Prepare();
+
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true,
@@ -71,9 +75,7 @@ namespace Qase.Csharp.Commons.Reporters
             };
 
             var json = JsonSerializer.Serialize(_results, options);
-
-            await _writer.WriteLineAsync(json);
-            await _writer.FlushAsync();
+            await _writer.WriteRunAsync(json);
             _results.Clear();
         }
         
