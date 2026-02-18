@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
 
 namespace Qase.Csharp.Commons.Writers
@@ -48,6 +49,11 @@ namespace Qase.Csharp.Commons.Writers
             var fileName = attachment.FileName ?? attachment.Id;
             var destName = $"{attachment.Id}-{fileName}";
             var destPath = Path.Combine(_attachmentsPath, destName);
+
+            if (string.IsNullOrEmpty(attachment.MimeType))
+            {
+                attachment.MimeType = MimeTypes.GuessFromFileName(fileName);
+            }
 
             if (attachment.FilePath != null && File.Exists(attachment.FilePath))
             {
