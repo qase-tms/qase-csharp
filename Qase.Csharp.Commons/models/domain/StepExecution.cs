@@ -23,7 +23,7 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// <summary>
         /// Gets or sets the start time in milliseconds
         /// </summary>
-        public long StartTime { get; set; }
+        public long? StartTime { get; set; }
 
         /// <summary>
         /// Gets or sets the end time in milliseconds
@@ -55,7 +55,10 @@ namespace Qase.Csharp.Commons.Models.Domain
         public void Stop()
         {
             EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            Duration = EndTime - StartTime;
+            if (StartTime.HasValue)
+            {
+                Duration = EndTime - StartTime.Value;
+            }
         }
     }
 }
