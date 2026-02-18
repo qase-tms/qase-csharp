@@ -119,10 +119,11 @@ namespace Qase.Csharp.Commons.Tests
             deserialized.Should().NotBeNull();
             deserialized!.Title.Should().Be("Test Title");
             deserialized.Signature.Should().Be("test-signature");
-            deserialized.RunId.Should().Be("run-123");
             deserialized.TestopsIds.Should().BeEquivalentTo(new List<long> { 1, 2, 3 });
             deserialized.Message.Should().Be("Test message");
             deserialized.Muted.Should().BeTrue();
+            // RunId and Ignore are [JsonIgnore] and excluded from serialization
+            deserialized.RunId.Should().BeNull();
             deserialized.Ignore.Should().BeFalse();
         }
 
