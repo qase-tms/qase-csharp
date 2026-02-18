@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Qase.Csharp.Commons.Models.Domain;
 
 namespace Qase.Csharp.Commons.Writers
 {
@@ -11,6 +12,7 @@ namespace Qase.Csharp.Commons.Writers
     {
         private readonly string _rootPath;
         private readonly string _resultsPath;
+        private readonly string _attachmentsPath;
 
         /// <summary>
         /// Initializes a new instance of the FileWriter class
@@ -20,6 +22,7 @@ namespace Qase.Csharp.Commons.Writers
         {
             _rootPath = rootPath;
             _resultsPath = Path.Combine(rootPath, "results");
+            _attachmentsPath = Path.Combine(rootPath, "attachments");
         }
 
         /// <summary>
@@ -29,6 +32,44 @@ namespace Qase.Csharp.Commons.Writers
         {
             Directory.CreateDirectory(_rootPath);
             Directory.CreateDirectory(_resultsPath);
+            Directory.CreateDirectory(_attachmentsPath);
+        }
+
+        /// <summary>
+        /// Writes an attachment file to the attachments directory.
+        /// Copies from FilePath, writes Content string, or writes ContentBytes.
+        /// Updates the attachment's FilePath to the destination path.
+        /// </summary>
+        /// <param name="attachment">The attachment to write</param>
+        public void WriteAttachment(Attachment attachment)
+        {
+            if (attachment == null) return;
+
+            var fileName = attachment.FileName ?? attachment.Id;
+            var destName = $"{attachment.Id}-{fileName}";
+            var destPath = Path.Combine(_attachmentsPath, destName);
+
+            if (attachment.FilePath != null && File.Exists(attachment.FilePath))
+            {
+                File.Copy(attachment.FilePath, destPath, true);
+                attachment.FilePath = Path.GetFullPath(destPath);
+                attachment.Content = null;
+                attachment.ContentBytes = null;
+            }
+            else if (attachment.Content != null)
+            {
+                File.WriteAllText(destPath, attachment.Content, Encoding.UTF8);
+                attachment.FilePath = Path.GetFullPath(destPath);
+                attachment.Content = null;
+                attachment.ContentBytes = null;
+            }
+            else if (attachment.ContentBytes != null)
+            {
+                File.WriteAllBytes(destPath, attachment.ContentBytes);
+                attachment.FilePath = Path.GetFullPath(destPath);
+                attachment.Content = null;
+                attachment.ContentBytes = null;
+            }
         }
 
         /// <summary>

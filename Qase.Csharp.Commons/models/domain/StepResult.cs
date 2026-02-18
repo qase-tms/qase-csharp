@@ -17,7 +17,7 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// <summary>
         /// Gets or sets the step type
         /// </summary>
-        public string? StepType { get; set; }
+        public string? StepType { get; set; } = "text";
 
         /// <summary>
         /// Gets or sets the step data

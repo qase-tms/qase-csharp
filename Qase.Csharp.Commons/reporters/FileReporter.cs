@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Qase.Csharp.Commons.Config;
+using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Models.Report;
 using Qase.Csharp.Commons.Serialization;
@@ -65,9 +67,18 @@ namespace Qase.Csharp.Commons.Reporters
         {
             var endTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            // Write each result as individual file
+            // Write attachments to disk and update paths, then write each result
             foreach (var result in _results)
             {
+                // Process test-level attachments
+                foreach (var attachment in result.Attachments)
+                {
+                    _writer.WriteAttachment(attachment);
+                }
+
+                // Process step-level attachments (recursive)
+                ProcessStepAttachments(result.Steps);
+
                 var json = JsonSerializer.Serialize(result, _options);
                 await _writer.WriteResultAsync(result.Id, json);
             }
@@ -90,6 +101,22 @@ namespace Qase.Csharp.Commons.Reporters
             }
             run.ComputeThreads();
 
+            // Compute suites from test result relations
+            var suites = _results
+                .Where(r => r.Relations?.Suite?.Data != null)
+                .SelectMany(r => r.Relations!.Suite.Data)
+                .Where(s => s.Title != null)
+                .Select(s => s.Title!)
+                .Distinct()
+                .ToList();
+            if (suites.Count > 0)
+            {
+                run.Suites = suites;
+            }
+
+            // Collect host data
+            run.HostData = HostInfo.GetHostInfo().ToDictionary();
+
             // Serialize and write run.json
             var runJson = JsonSerializer.Serialize(run, _options);
             await _writer.WriteRunAsync(runJson);
@@ -105,6 +132,25 @@ namespace Qase.Csharp.Commons.Reporters
             return Task.CompletedTask;
         }
         
+        private void ProcessStepAttachments(List<StepResult> steps)
+        {
+            foreach (var step in steps)
+            {
+                if (step.Execution?.Attachments != null)
+                {
+                    foreach (var attachment in step.Execution.Attachments)
+                    {
+                        _writer.WriteAttachment(attachment);
+                    }
+                }
+
+                if (step.Steps != null && step.Steps.Count > 0)
+                {
+                    ProcessStepAttachments(step.Steps);
+                }
+            }
+        }
+
         /// <inheritdoc />
         public Task uploadResults()
         {

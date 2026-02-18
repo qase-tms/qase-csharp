@@ -83,7 +83,7 @@ namespace Qase.Csharp.Commons
             }
 
             var step = stack.Pop();
-            step.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            step.Execution!.Stop();
             step.Execution!.Status = StepResultStatus.Passed;
 
             if (stack.Count == 0)
@@ -114,7 +114,7 @@ namespace Qase.Csharp.Commons
             }
 
             var step = stack.Pop();
-            step.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            step.Execution!.Stop();
             step.Execution!.Status = StepResultStatus.Failed;
 
             if (stack.Count == 0)
