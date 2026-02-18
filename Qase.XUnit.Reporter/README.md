@@ -1,8 +1,8 @@
-# Qase TMS xUnit Reporter
+# Qase TestOps xUnit Reporter
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](../LICENSE) [![NuGet Downloads](https://img.shields.io/nuget/dt/Qase.XUnit.Reporter)](https://www.nuget.org/packages/Qase.XUnit.Reporter/)
 
-Publish your test results easily and effectively with Qase TMS.
+Publish your test results easily and effectively with Qase TestOps.
 
 ## Features
 

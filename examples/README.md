@@ -1,12 +1,12 @@
 # Qase C# Examples
 
-This directory contains example projects demonstrating how to use Qase TMS integration with different testing frameworks.
+This directory contains example projects demonstrating how to use Qase TestOps integration with different testing frameworks.
 
 ## Available Examples
 
 ### xUnit Examples
 
-The `xUnitExamples` project demonstrates how to use Qase TMS with xUnit testing framework.
+The `xUnitExamples` project demonstrates how to use Qase TestOps with xUnit testing framework.
 
 **Location**: `xUnitExamples/`
 
@@ -28,7 +28,7 @@ For more details, see [xUnitExamples/README.md](xUnitExamples/README.md).
 
 ### NUnit Examples
 
-The `NUnitExamples` project demonstrates how to use Qase TMS with NUnit testing framework.
+The `NUnitExamples` project demonstrates how to use Qase TestOps with NUnit testing framework.
 
 **Location**: `NUnitExamples/`
 
@@ -81,7 +81,7 @@ Example configuration:
 ## Prerequisites
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) or higher
-- Qase TMS account with API token
+- Qase TestOps account with API token
 - For NUnit: NUnit Console Runner (optional, for command-line execution)
 
 ## Additional Resources
