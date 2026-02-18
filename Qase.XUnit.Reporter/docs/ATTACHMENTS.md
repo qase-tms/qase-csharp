@@ -15,7 +15,7 @@ Attachments are files or data associated with test results in Qase TestOps. They
 - The test method must have the `[Qase]` attribute for attachments to be captured
 - Maximum file size: 32MB per file (Qase API limit)
 
-See also: [Usage Guide - Attachments](usage.md#file-attachments-support)
+See also: [Usage Guide - Attachments](usage.md#attachments)
 
 ## Basic Usage
 
