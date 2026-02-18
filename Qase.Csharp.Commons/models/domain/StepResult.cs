@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Qase.Csharp.Commons.Models.Domain
 {
@@ -12,6 +13,11 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// Gets or sets the step ID
         /// </summary>
         public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        /// <summary>
+        /// Gets or sets the step type
+        /// </summary>
+        public string? StepType { get; set; }
 
         /// <summary>
         /// Gets or sets the step data
