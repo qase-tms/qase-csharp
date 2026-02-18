@@ -1,174 +1,87 @@
 # Qase TMS xUnit Reporter
 
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](../LICENSE) [![NuGet Downloads](https://img.shields.io/nuget/dt/Qase.XUnit.Reporter)](https://www.nuget.org/packages/Qase.XUnit.Reporter/)
+
 Publish your test results easily and effectively with Qase TMS.
 
-## Installation
+## Features
 
-To install the latest release version, follow the instructions below for NuGet.
+- Automatic test case generation from xUnit tests
+- Link automated tests to existing Qase test cases using `[QaseIds]` attribute
+- Report test results in real-time to Qase TestOps
+- Support for test steps using `[Step]` attribute
+- Attach files and screenshots to test results
+- Capture test metadata (title, fields, suites)
+- Parametrized test support with `[Theory]` and `[InlineData]`
+- Flexible configuration via `qase.config.json` or environment variables
 
-### NuGet
+## Quick Start
 
-Add the following package to your project:
+### 1. Configure the Reporter
 
-```xml
-<PackageReference Include="Qase.XUnit.Reporter" Version="1.1.0" />
+Create a `qase.config.json` file in your project root:
+
+```json
+{
+  "mode": "testops",
+  "testops": {
+    "api": {
+      "token": "<your-api-token>"
+    },
+    "project": "<your-project-code>"
+  }
+}
 ```
 
-## Getting Started
-
-The xUnit reporter can auto-generate test cases and suites based on your test data. Test results from subsequent runs
-will match the same test cases as long as their names and file paths remain unchanged.
-
-You can also annotate tests with IDs of existing test cases from Qase.io before execution. This approach ensures a
-reliable binding between your automated tests and test cases, even if you rename, move, or parameterize your tests.
-
-### Metadata Annotations
-
-- **`[QaseIds]`**: Set the IDs of the test case.
-- **`[Title]`**: Set the title of the test case.
-- **`[Fields]`**: Set custom fields for the test case.
-- **`[Suites]`**: Specify the suite for the test case.
-- **`[Ignore]`**: Ignore the test case in Qase. The test will execute, but results won't be sent to Qase.
-- **`[Steps]`**: Add steps to the test case.
-
-For detailed instructions on using attributes and methods, refer to [Usage](docs/usage.md).
-
-### Example Test Case
-
-Here's a simple example of using Qase annotations in an xUnit test:
+### 2. Add Qase Attributes to Your Tests
 
 ```csharp
-using System;
 using Xunit;
-using Qase.Xunit.Reporter;
 using Qase.Csharp.Commons.Attributes;
 
-[Suites("Example Suite", "Example Suite 2")]
-[Fields("preconditions", "This is a precondition")]
-public class SimpleTests
+public class ExampleTests
 {
     [Fact]
-    [QaseIds(1, 2)]
+    [QaseIds(1)]
     [Title("Example Test")]
-    [Fields("description", "This is an example test")]
-    [Suites("Example Suite", "Example Suite 2")]
-    public void Test()
+    public void SimpleTest()
     {
-        Console.WriteLine("Running example test");
-    }
-
-    [Fact]
-    [Ignore]
-    public void Test2()
-    {
-        Console.WriteLine("This test will not be reported to Qase");
-    }
-    
-    [Theory]
-    [InlineData(1, 2, 3)]
-    [InlineData(4, 5, 9)]
-    public void Test3(int a, int b, int expected)
-    {
-        Console.WriteLine($"Running test with {a} and {b}");
+        Assert.True(true);
     }
 }
 ```
 
-To execute your xUnit tests and report the results to Qase.io, use the following command:
+### 3. Run Your Tests
+
+Execute your tests using the dotnet CLI:
 
 ```bash
 dotnet test
 ```
 
-After running the tests, results will be available at:
+View your results at: `https://app.qase.io/run/PROJECT_CODE`
 
-```
-https://app.qase.io/run/QASE_PROJECT_CODE
-```
+## Documentation
 
-## Configuration
+| Document | Description | Link |
+|----------|-------------|------|
+| Usage Guide | Comprehensive guide to using all reporter features | [docs/usage.md](docs/usage.md) |
+| Attachments | How to attach files and screenshots to test results | [docs/ATTACHMENTS.md](docs/ATTACHMENTS.md) |
+| Test Steps | How to add structured steps to your tests | [docs/STEPS.md](docs/STEPS.md) |
+| Configuration Reference | Complete configuration options for Qase reporters | [Qase.Csharp.Commons](../Qase.Csharp.Commons/README.md#configuration) |
 
-The Qase xUnit reporter can be configured in multiple ways:
+## Test Result Statuses
 
-- **Configuration File**: Use a separate config file `qase.config.json`.
-- **Environment Variables**: These override values from the configuration file.
-
-### Example `qase.config.json`
-
-```json
-{
-   "mode": "testops",
-   "fallback": "report",
-   "debug": true,
-   "environment": "local",
-   "logging": {
-      "console": true,
-      "file": false
-   },
-   "report": {
-      "driver": "local",
-      "connection": {
-         "local": {
-            "path": "./build/qase-report",
-            "format": "json"
-         }
-      }
-   },
-   "testops": {
-      "api": {
-         "token": "<token>",
-         "host": "qase.io"
-      },
-      "run": {
-         "title": "Regression Run",
-         "description": "Description of the regression run",
-         "complete": true
-      },
-      "defect": false,
-      "project": "<project_code>",
-      "batch": {
-         "size": 100
-      }
-   }
-}
-```
-
-## Logging Configuration
-
-Control logging output with the `logging` option:
-
-### Disable console output (only log to file):
-```json
-{
-  "debug": true,
-  "logging": {
-    "console": false
-  }
-}
-```
-
-### Disable all logging:
-```json
-{
-  "logging": {
-    "console": false,
-    "file": false
-  }
-}
-```
-
-### Environment variables:
-- `QASE_LOGGING_CONSOLE` - enable/disable console output (default: true)
-- `QASE_LOGGING_FILE` - enable/disable file output (default: false, true when debug=true)
-
-**Note:** Log level is controlled by the `debug` parameter:
-- `debug: true` - Debug level (detailed logs)
-- `debug: false` - Information level (standard logs)
+| xUnit Status | Qase Status | Description |
+|--------------|-------------|-------------|
+| Passed | Passed | Test assertions succeeded |
+| Failed (assertion) | Failed | Test assertion failed (Assert.Equal, Assert.True, etc.) |
+| Failed (other) | Invalid | Test failed due to exception or error (not assertion) |
+| Skipped | Skipped | Test was skipped via [Skip] or conditional skip |
 
 ## Requirements
 
 - **xUnit**: Version 2.4.0 or higher is required.
 - **.NET**: Version 6.0 or higher is required.
 
-For further assistance, please refer to
-the [Qase Authentication Documentation](https://developers.qase.io/#authentication).
+For further assistance, please refer to the [Qase Authentication Documentation](https://developers.qase.io/#authentication).
