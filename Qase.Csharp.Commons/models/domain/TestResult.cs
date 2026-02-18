@@ -28,6 +28,7 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// <summary>
         /// Gets or sets the run ID
         /// </summary>
+        [JsonIgnore]
         public string? RunId { get; set; }
 
         /// <summary>
@@ -83,6 +84,7 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// <summary>
         /// Gets or sets whether the test should be ignored
         /// </summary>
+        [JsonIgnore]
         public bool Ignore { get; set; }
 
         /// <summary>

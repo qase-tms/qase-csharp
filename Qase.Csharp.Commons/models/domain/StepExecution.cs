@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Qase.Csharp.Commons.Models.Domain
 {
@@ -16,6 +17,7 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// <summary>
         /// Gets or sets the step comment
         /// </summary>
+        [JsonIgnore]
         public string? Comment { get; set; }
 
         /// <summary>
