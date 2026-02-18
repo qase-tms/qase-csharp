@@ -1,144 +1,194 @@
 # Qase NUnit Reporter - Usage Guide
 
-This guide explains how to use Qase attributes with NUnit to integrate your tests with Qase Test Management System.
+## Table of Contents
 
-## Available Attributes
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Linking Test Cases](#linking-test-cases)
+- [Test Metadata](#test-metadata)
+- [Test Steps](#test-steps)
+- [Attachments](#attachments)
+- [Parameters](#parameters)
+- [Ignoring Tests](#ignoring-tests)
+- [Comments](#comments)
 
-### 1. QaseIds Attribute
+## Installation
 
-Links your test to existing test cases in Qase by their IDs.
+To install the Qase NUnit Reporter, use the NuGet package manager:
 
-```csharp
-[Test]
-[QaseIds(123, 456)]
-public void TestWithMultipleIds()
+### NuGet CLI
+
+```bash
+dotnet add package Qase.NUnit.Reporter
+```
+
+### PackageReference
+
+Add the following to your `.csproj` file:
+
+```xml
+<PackageReference Include="Qase.NUnit.Reporter" Version="1.1.1" />
+```
+
+The `Qase.Csharp.Commons` package is included as a transitive dependency and provides the attributes and metadata APIs used throughout this guide.
+
+## Configuration
+
+The Qase NUnit reporter can be configured using two methods:
+
+1. **Configuration file**: `qase.config.json` in your project root
+2. **Environment variables**: Override values from the configuration file
+
+### Configuration File
+
+Create a `qase.config.json` file with the following structure:
+
+```json
 {
-    // Test implementation
-}
-
-[Test]
-[TestCase("test data")]
-[QaseIds(789)]
-public void TestCaseTestWithId(string data)
-{
-    // Test implementation
+  "mode": "testops",
+  "fallback": "report",
+  "debug": true,
+  "environment": "local",
+  "logging": {
+    "console": true,
+    "file": false
+  },
+  "report": {
+    "driver": "local",
+    "connection": {
+      "local": {
+        "path": "./build/qase-report",
+        "format": "json"
+      }
+    }
+  },
+  "testops": {
+    "api": {
+      "token": "<token>",
+      "host": "qase.io"
+    },
+    "run": {
+      "title": "Regression Run",
+      "description": "Description of the regression run",
+      "complete": true
+    },
+    "defect": false,
+    "project": "<project_code>",
+    "batch": {
+      "size": 100
+    }
+  }
 }
 ```
 
-### 2. Title Attribute
+### Environment Variables
 
-Sets a custom title for the test case in Qase.
+You can override configuration values using environment variables:
 
-```csharp
-[Test]
-[Title("Custom Test Title")]
-public void TestWithCustomTitle()
-{
-    // Test implementation
-}
-```
+- `QASE_MODE` - Reporter mode (testops, report, off)
+- `QASE_TESTOPS_API_TOKEN` - Your Qase API token
+- `QASE_TESTOPS_PROJECT` - Your Qase project code
 
-### 3. Fields Attribute
+For the complete list of configuration options, see [Configuration Reference](../../Qase.Csharp.Commons/README.md#configuration).
 
-Adds custom fields to the test case.
+## Linking Test Cases
 
-```csharp
-[Test]
-[Fields("Priority", "High")]
-[Fields("Component", "Authentication")]
-public void TestWithCustomFields()
-{
-    // Test implementation
-}
-```
+Use the `[QaseIds]` attribute to link your automated tests to existing test cases in Qase. This ensures a reliable binding even if you rename, move, or parameterize your tests.
 
-### 4. Suites Attribute
-
-Specifies the suite structure for the test case.
+### Single Test Case ID
 
 ```csharp
-[Test]
-[Suites("API", "Authentication", "Login")]
-public void TestInSpecificSuite()
-{
-    // Test implementation
-}
-```
+using NUnit.Framework;
+using Qase.Csharp.Commons.Attributes;
 
-### 5. Ignore Attribute
-
-Marks the test to be ignored in Qase (test will still run but results won't be sent).
-
-```csharp
-[Test]
-[Ignore]
-public void TestIgnoredInQase()
-{
-    // Test implementation
-}
-```
-
-## Combining Attributes
-
-You can combine multiple attributes on the same test:
-
-```csharp
-[Test]
-[QaseIds(123)]
-[Title("User Login Test")]
-[Fields("Priority", "High")]
-[Fields("Component", "Authentication")]
-[Suites("API", "Authentication")]
-public void ComprehensiveTest()
-{
-    // Test implementation
-}
-```
-
-## Class-Level Attributes
-
-You can apply attributes at the class level to affect all tests in the class:
-
-```csharp
 [TestFixture]
-[Suites("API")]
-public class AuthenticationTests
+public class LoginTests
 {
     [Test]
-    public void Test1()
+    [QaseIds(123)]
+    public void UserCanLogin()
     {
-        // This test will inherit Suites("API")
-    }
-
-    [Test]
-    [QaseIds(101)] // This will override any class-level QaseIds
-    [Suites("API", "Login")] // This will override class-level Suites
-    public void Test2()
-    {
-        // This test will use QaseIds(101) and Suites("API", "Login")
+        // Test implementation
     }
 }
 ```
 
-## Parameterized Tests
+### Multiple Test Case IDs
 
-For parameterized tests using `[TestCase]` or `[TestCaseSource]`, parameters are automatically captured and included in the test signature:
+```csharp
+[Test]
+[QaseIds(123, 456, 789)]
+public void UserCanLoginMultipleCases()
+{
+    // Test implementation
+}
+```
+
+### Parameterized Tests with QaseIds
 
 ```csharp
 [Test]
 [TestCase("user1", "password1")]
 [TestCase("user2", "password2")]
 [QaseIds(200)]
-public void LoginTest(string username, string password)
+public void LoginWithDifferentUsers(string username, string password)
 {
     // Test implementation
-    // Parameters will be automatically captured and sent to Qase
 }
 ```
 
-## Example Test Class
+### Auto-Generation
 
-Here's a complete example of a test class using Qase attributes:
+If you don't specify `[QaseIds]`, the reporter will automatically generate test cases in Qase based on your test names and file paths. Subsequent runs will match the same test cases as long as names and paths remain unchanged.
+
+## Test Metadata
+
+Enhance your test cases with metadata using attributes.
+
+### Title
+
+Set a custom title for your test case:
+
+```csharp
+[Test]
+[Title("User can successfully log in with valid credentials")]
+public void UserCanLogin()
+{
+    // Test implementation
+}
+```
+
+### Fields
+
+Add custom fields to your test case:
+
+```csharp
+[Test]
+[Fields("priority", "high")]
+[Fields("component", "authentication")]
+[Fields("severity", "critical")]
+public void CriticalLoginTest()
+{
+    // Test implementation
+}
+```
+
+### Suites
+
+Organize test cases into suites:
+
+```csharp
+[Test]
+[Suites("API", "Authentication", "Login")]
+public void TestInSuite()
+{
+    // Test implementation
+}
+```
+
+### Class-Level Attributes
+
+Apply attributes at the class level to affect all tests in the class:
 
 ```csharp
 using NUnit.Framework;
@@ -146,108 +196,294 @@ using Qase.Csharp.Commons.Attributes;
 
 [TestFixture]
 [Suites("API", "User Management")]
+[Fields("component", "user-api")]
 public class UserApiTests
 {
     [Test]
-    [QaseIds(1001)]
-    [Title("Create User - Valid Data")]
-    [Fields("Priority", "High")]
-    [Fields("Component", "User API")]
-    public void CreateUser_WithValidData_ShouldSucceed()
+    [Title("Create User with Valid Data")]
+    public void CreateUser()
     {
-        // Test implementation
-        Assert.That(true, Is.True);
+        // Inherits Suites and Fields from class level
     }
 
     [Test]
-    [TestCase("", "password")]
-    [TestCase("username", "")]
-    [TestCase("", "")]
-    [QaseIds(1002)]
-    [Title("Create User - Invalid Data")]
-    [Fields("Priority", "Medium")]
-    public void CreateUser_WithInvalidData_ShouldFail(string username, string password)
+    [Title("Delete User")]
+    [Suites("API", "User Management", "Deletion")]
+    public void DeleteUser()
     {
-        // Test implementation
-        Assert.That(!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password), Is.True);
-    }
-
-    [Test]
-    [QaseIds(1003)]
-    [Title("Get User by ID")]
-    [Fields("Priority", "Low")]
-    public void GetUser_ById_ShouldReturnUser()
-    {
-        // Test implementation
-        Assert.That(true, Is.True);
+        // Overrides Suites, inherits Fields from class level
     }
 }
 ```
 
-## Steps
+### Combined Metadata Example
 
-For using steps, you need to add the `Qase` attribute to the test method.
+```csharp
+[Test]
+[QaseIds(1001)]
+[Title("Create User - Valid Data")]
+[Fields("priority", "high")]
+[Fields("component", "User API")]
+[Suites("API", "User Management", "Creation")]
+public void CreateUser_WithValidData_ShouldSucceed()
+{
+    // Test implementation
+    Assert.That(true, Is.True);
+}
+```
+
+## Test Steps
+
+The Qase NUnit reporter supports structured test steps using the `[Step]` attribute.
+
+**Important**: You must add the `[Qase]` attribute to the test method to enable step tracking.
+
+### Basic Steps
+
+```csharp
+using NUnit.Framework;
+using Qase.Csharp.Commons.Attributes;
+
+[TestFixture]
+public class LoginTests
+{
+    [Test]
+    [Qase]
+    public void UserCanLogin()
+    {
+        OpenLoginPage();
+        EnterCredentials();
+        ClickLoginButton();
+        VerifyDashboard();
+    }
+
+    [Step]
+    public void OpenLoginPage()
+    {
+        // Step implementation
+    }
+
+    [Step]
+    public void EnterCredentials()
+    {
+        // Step implementation
+    }
+
+    [Step]
+    public void ClickLoginButton()
+    {
+        // Step implementation
+    }
+
+    [Step]
+    public void VerifyDashboard()
+    {
+        // Step implementation
+    }
+}
+```
+
+### Nested Steps
+
+Steps can call other steps to create a hierarchy:
 
 ```csharp
 [Test]
 [Qase]
-public void TestWithSteps()
+public void ComplexUserWorkflow()
 {
-    // Test implementation
-    Step1();
-    Step2();
+    LoginAsUser();
+    PerformActions();
+    Logout();
 }
 
 [Step]
-public void Step1()
+public void LoginAsUser()
+{
+    OpenLoginPage();
+    EnterCredentials();
+    ClickLoginButton();
+}
+
+[Step]
+public void OpenLoginPage()
 {
     // Step implementation
 }
 
 [Step]
-public void Step2()
+public void EnterCredentials()
+{
+    // Step implementation
+}
+
+[Step]
+public void ClickLoginButton()
+{
+    // Step implementation
+}
+
+[Step]
+public void PerformActions()
+{
+    // Step implementation
+}
+
+[Step]
+public void Logout()
 {
     // Step implementation
 }
 ```
+
+For more details, see [Test Steps Guide](STEPS.md).
+
+## Attachments
+
+Attach files, screenshots, and other content to your test results.
+
+**Important**: You must add the `[Qase]` attribute to the test method to enable attachments.
+
+### Attach a File by Path
+
+```csharp
+using NUnit.Framework;
+using Qase.Csharp.Commons.Attributes;
+using Qase.Csharp.Commons;
+
+[TestFixture]
+public class ReportTests
+{
+    [Test]
+    [Qase]
+    public void TestWithAttachment()
+    {
+        // Test implementation
+        Metadata.Attach("path/to/screenshot.png");
+    }
+}
+```
+
+### Attach Multiple Files
+
+```csharp
+[Test]
+[Qase]
+public void TestWithMultipleAttachments()
+{
+    // Test implementation
+    Metadata.Attach(new List<string>
+    {
+        "path/to/screenshot1.png",
+        "path/to/screenshot2.png",
+        "path/to/log.txt"
+    });
+}
+```
+
+### Attach Content from Byte Array
+
+```csharp
+using System.Text;
+
+[Test]
+[Qase]
+public void TestWithByteArrayAttachment()
+{
+    // Generate or capture content
+    byte[] logContent = Encoding.UTF8.GetBytes("Test execution log data");
+
+    // Attach with a custom filename
+    Metadata.Attach(logContent, "execution.log");
+}
+```
+
+For more details, see [Attachments Guide](ATTACHMENTS.md).
+
+## Parameters
+
+NUnit tests with `[TestCase]` parameters are automatically captured and reported to Qase.
+
+### TestCase with Parameters
+
+```csharp
+using NUnit.Framework;
+using Qase.Csharp.Commons.Attributes;
+
+[TestFixture]
+public class CalculatorTests
+{
+    [Test]
+    [TestCase(2, 3, 5)]
+    [TestCase(10, 20, 30)]
+    [TestCase(-5, 5, 0)]
+    [QaseIds(300)]
+    [Title("Addition Test")]
+    public void AdditionTest(int a, int b, int expected)
+    {
+        int result = a + b;
+        Assert.That(result, Is.EqualTo(expected));
+    }
+}
+```
+
+Each set of parameters creates a separate test result in Qase with the parameter values captured and displayed. This allows you to track results for each data variation independently.
+
+## Ignoring Tests
+
+Use the `[Ignore]` attribute from Qase to exclude specific tests from being reported to Qase. The test will still execute normally, but results won't be sent to Qase.
+
+```csharp
+using NUnit.Framework;
+using Qase.Csharp.Commons.Attributes;
+
+[TestFixture]
+public class ExampleTests
+{
+    [Test]
+    [Ignore]
+    public void TestNotReportedToQase()
+    {
+        // This test runs but results are not sent to Qase
+        Assert.That(true, Is.True);
+    }
+
+    [Test]
+    public void NormalTest()
+    {
+        // This test is reported normally
+        Assert.That(true, Is.True);
+    }
+}
+```
+
+**Note**: The `[Ignore]` attribute from Qase is different from NUnit's `[Ignore("reason")]` attribute. When you use NUnit's Ignore attribute, the test is skipped by NUnit itself and reported to Qase with a "Skipped" status.
 
 ## Comments
 
-For using comments, you need to add the `Qase` attribute to the test method.
+Add comments to your test results using the `Metadata.Comment()` method.
+
+**Important**: You must add the `[Qase]` attribute to the test method to enable comments.
 
 ```csharp
-[Test]
-[Qase]
-public void TestWithComments()
+using NUnit.Framework;
+using Qase.Csharp.Commons.Attributes;
+using Qase.Csharp.Commons;
+
+[TestFixture]
+public class CommentTests
 {
-    // Test implementation
-    Metadata.Comment("This is a comment");
+    [Test]
+    [Qase]
+    public void TestWithComment()
+    {
+        // Test implementation
+        Metadata.Comment("This test verifies the login functionality");
+
+        // Add more comments as needed
+        Metadata.Comment("User logged in successfully");
+    }
 }
 ```
 
-## File Attachments Support
-
-The Qase API clients support uploading file attachments to test cases and test runs. This feature allows you to:
-
-- Upload files from file system paths
-- Upload content from strings or byte arrays
-- Properly handle file names and multipart/form-data requests
-- Support multiple file formats and sizes (up to 32MB per file)
-
-### Example Usage
-
-```csharp
-[Test]
-[Qase]
-public void TestWithAttachments()
-{
-    // Test implementation
-    Metadata.Attach("path/to/your/file.xml");
-
-    // or
-    Metadata.Attach(new List<string> { "path/to/your/file.xml", "path/to/your/file2.xml" });
-
-    // or
-    Metadata.Attach(Encoding.UTF8.GetBytes("test data"), "log.txt");
-}
-```
+Comments appear in the test result details in Qase and are useful for adding context, debugging information, or execution notes.
