@@ -165,7 +165,7 @@ namespace Qase.Csharp.Commons
             services.AddSingleton<IClient>(sp => sp.GetRequiredService<ClientV2>());
 
             // Register writers
-            services.AddSingleton<FileWriter>(sp => new FileWriter(config.Report.Connection.ToString()));
+            services.AddSingleton<FileWriter>(sp => new FileWriter(config.Report.Connection.Local.Path ?? "./build/qase-report"));
 
             // Register reporters based on mode
             if (config.Mode == Mode.TestOps)
