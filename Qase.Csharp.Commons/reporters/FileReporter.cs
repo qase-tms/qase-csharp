@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Csharp.Commons.Models.Report;
 using Qase.Csharp.Commons.Serialization;
 using Qase.Csharp.Commons.Writers;
 
@@ -19,7 +21,20 @@ namespace Qase.Csharp.Commons.Reporters
         private readonly QaseConfig _config;
         private readonly FileWriter _writer;
         private readonly List<TestResult> _results;
-        
+        private long _startTime;
+
+        private readonly JsonSerializerOptions _options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = new SnakeCaseNamingPolicy(),
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Converters =
+            {
+                new LowercaseEnumConverter<TestResultStatus>(),
+                new LowercaseEnumConverter<StepResultStatus>()
+            }
+        };
+
         /// <summary>
         /// Initializes a new instance of the FileReporter class
         /// </summary>
@@ -40,13 +55,47 @@ namespace Qase.Csharp.Commons.Reporters
         /// <inheritdoc />
         public Task startTestRun()
         {
+            _startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            _writer.Prepare();
             return Task.CompletedTask;
         }
         
         /// <inheritdoc />
-        public Task completeTestRun()
+        public async Task completeTestRun()
         {
-            return Task.CompletedTask;
+            var endTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            // Write each result as individual file
+            foreach (var result in _results)
+            {
+                var json = JsonSerializer.Serialize(result, _options);
+                await _writer.WriteResultAsync(result.Id, json);
+            }
+
+            // Build the Run model
+            var run = new Run(
+                _config.TestOps?.Run?.Title ?? "Test run",
+                _startTime,
+                endTime,
+                _config.Environment
+            );
+
+            // Populate run with result summaries
+            foreach (var result in _results)
+            {
+                var status = result.Execution?.Status.ToString().ToLowerInvariant() ?? "invalid";
+                var duration = result.Execution?.Duration ?? 0;
+                var thread = result.Execution?.Thread;
+                run.AddResult(result.Id, result.Title ?? "", status, duration, thread, result.Muted);
+            }
+            run.ComputeThreads();
+
+            // Serialize and write run.json
+            var runJson = JsonSerializer.Serialize(run, _options);
+            await _writer.WriteRunAsync(runJson);
+
+            // Clear results
+            _results.Clear();
         }
         
         /// <inheritdoc />
@@ -57,26 +106,9 @@ namespace Qase.Csharp.Commons.Reporters
         }
         
         /// <inheritdoc />
-        public async Task uploadResults()
+        public Task uploadResults()
         {
-            // Temporary stub: prepare directory and write results as run.json
-            // This will be replaced in Plan 05-02 with proper directory-based output
-            _writer.Prepare();
-
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                PropertyNamingPolicy = new SnakeCaseNamingPolicy(),
-                Converters =
-                {
-                    new LowercaseEnumConverter<TestResultStatus>(),
-                    new LowercaseEnumConverter<StepResultStatus>()
-                }
-            };
-
-            var json = JsonSerializer.Serialize(_results, options);
-            await _writer.WriteRunAsync(json);
-            _results.Clear();
+            return Task.CompletedTask;
         }
         
         /// <inheritdoc />
