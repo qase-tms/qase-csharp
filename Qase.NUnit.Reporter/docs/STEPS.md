@@ -15,7 +15,7 @@ Test steps are named sub-actions within a test that appear in Qase TestOps as a 
 2. Step methods must have the `[Step]` attribute
 3. Both attributes come from `Qase.Csharp.Commons.Attributes`
 
-See also: [Usage Guide - Test Steps](usage.md#steps)
+See also: [Usage Guide - Test Steps](usage.md#test-steps)
 
 ## Basic Steps
 
