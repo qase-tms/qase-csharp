@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Csharp.Commons.Serialization;
 using Qase.Csharp.Commons.Writers;
 
 namespace Qase.Csharp.Commons.Reporters
@@ -58,11 +59,19 @@ namespace Qase.Csharp.Commons.Reporters
         /// <inheritdoc />
         public async Task uploadResults()
         {
-            var json = JsonSerializer.Serialize(_results, new JsonSerializerOptions
+            var options = new JsonSerializerOptions
             {
-                WriteIndented = true
-            });
-            
+                WriteIndented = true,
+                PropertyNamingPolicy = new SnakeCaseNamingPolicy(),
+                Converters =
+                {
+                    new LowercaseEnumConverter<TestResultStatus>(),
+                    new LowercaseEnumConverter<StepResultStatus>()
+                }
+            };
+
+            var json = JsonSerializer.Serialize(_results, options);
+
             await _writer.WriteLineAsync(json);
             await _writer.FlushAsync();
             _results.Clear();
