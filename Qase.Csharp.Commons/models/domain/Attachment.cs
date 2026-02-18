@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace Qase.Csharp.Commons.Models.Domain
 {
@@ -30,6 +31,7 @@ namespace Qase.Csharp.Commons.Models.Domain
         /// <summary>
         /// Gets or sets the content as bytes
         /// </summary>
+        [JsonIgnore]
         public byte[]? ContentBytes { get; set; }
 
         /// <summary>
