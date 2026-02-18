@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Qase.Csharp.Commons.Tests
 {
+    [Collection("Config")]
     public class ConfigFactoryTests
     {
         private const string ConfigFileName = "qase.config.json";

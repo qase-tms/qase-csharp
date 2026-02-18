@@ -12,6 +12,7 @@ namespace Qase.Csharp.Commons.Tests
     /// <summary>
     /// Tests for status mapping configuration
     /// </summary>
+    [Collection("Config")]
     public class StatusMappingConfigTests
     {
         private readonly ILogger _logger = NullLogger.Instance;
