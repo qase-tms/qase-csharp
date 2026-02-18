@@ -1,14 +1,17 @@
 # Qase C# Commons
 
-This module is an SDK for developing test reporters for Qase TMS.
-It's using `Qase.ApiClient.V1` and `Qase.ApiClient.V2` as an API clients, and all Qase reporters are, in turn, using this package.
-You should use it if you're developing your own test reporter for a special-purpose framework.
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](../LICENSE) [![NuGet Downloads](https://img.shields.io/nuget/dt/Qase.Csharp.Commons)](https://www.nuget.org/packages/Qase.Csharp.Commons/)
 
-To report results from tests using a popular framework or test runner,
-don't install this module directly and
-use the corresponding reporter module instead:
+This module is an SDK for developing test reporters for Qase TestOps. It uses Qase.ApiClient.V1 and Qase.ApiClient.V2 as API clients.
 
-* [xUnit](https://github.com/qase-tms/qase-csharp/tree/main/Qase.XUnit.Reporter#readme)
+## Used By
+
+To report results from tests using a popular framework, use one of these reporters instead:
+
+- [Qase.xUnit.Reporter](../Qase.XUnit.Reporter/README.md) - xUnit test framework integration
+- [Qase.NUnit.Reporter](../Qase.NUnit.Reporter/README.md) - NUnit test framework integration
+
+You should only use this package directly if you're developing a custom reporter for a specialized test framework.
 
 ## Configuration
 
