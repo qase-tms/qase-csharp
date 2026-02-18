@@ -4,6 +4,18 @@
 
 Publish your test results easily and effectively with Qase TestOps.
 
+## Installation
+
+```bash
+dotnet add package Qase.XUnit.Reporter
+```
+
+Or add directly to your `.csproj` file:
+
+```xml
+<PackageReference Include="Qase.XUnit.Reporter" Version="1.1.0" />
+```
+
 ## Features
 
 - Automatic test case generation from xUnit tests
