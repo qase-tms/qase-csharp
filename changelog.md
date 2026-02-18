@@ -1,5 +1,23 @@
 # Changelog
 
+## qase-csharp 1.1.2
+
+- Fixed step `step_type` field to default to `"text"` so it is always present in report JSON
+- Fixed step `duration` computation using `Stop()` method
+- Added attachment saving to `attachments/` directory (file copy, string content, byte content)
+- Added `suites` field to `run.json` populated from test result relations
+- Added `host_data` field to `run.json` with machine info
+
+## qase-csharp 1.1.1
+
+- Added custom `SnakeCaseNamingPolicy` for `netstandard2.0` JSON serialization
+- Added `LowercaseEnumConverter<T>` for enum-to-lowercase-string serialization
+- Added report model classes (`Run`, `RunStats`, `RunExecution`, `ShortResult`) for `run.json`
+- Rewritten `FileReporter` for directory-based output with custom serialization
+- Refactored `FileWriter` to write `run.json`, individual results, and attachments
+- Made `StepExecution.StartTime` nullable to match spec
+- Excluded non-spec fields from JSON serialization (`RunId`, `Ignore`, `ContentBytes`, `Comment`)
+
 ## qase-scharp 1.0.17
 
 - Fixed an issue where the test run link was not being generated correctly when filtering by status.
