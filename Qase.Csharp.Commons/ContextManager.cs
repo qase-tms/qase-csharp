@@ -209,12 +209,12 @@ namespace Qase.Csharp.Commons
             {
                 var attachment = new Attachment
                 {
-                    FilePath = path
+                    FilePath = path,
+                    FileName = System.IO.Path.GetFileName(path)
                 };
 
                 AddAttachment(attachment);
             }
-            ;
         }
 
         internal static void AddAttachment(byte[] data, string fileName)
