@@ -1,5 +1,13 @@
 # Changelog
 
+## qase-csharp 1.1.3
+
+- Fixed NUnit reporter incorrectly splitting `fullName` on dots inside decimal parameter values, which caused test method name fragments to appear in suite data and wrong display names for ContextManager lookups
+- Fixed thread-safety issue in `ContextManager` by replacing `Dictionary` with `ConcurrentDictionary` for safe parallel test execution
+- Added logging to `FileWriter` for diagnosing attachment write failures
+- Fixed `FileWriter.Prepare()` to clean results and attachments directories before each test run, preventing stale data accumulation
+- Fixed MIME type detection for attachments by setting `FileName` when creating `Attachment` from file path
+
 ## qase-csharp 1.1.2
 
 - Fixed step `step_type` field to default to `"text"` so it is always present in report JSON
