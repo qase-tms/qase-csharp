@@ -31,6 +31,16 @@ namespace Qase.Csharp.Commons.Writers
         /// </summary>
         public void Prepare()
         {
+            if (Directory.Exists(_resultsPath))
+            {
+                Directory.Delete(_resultsPath, true);
+            }
+
+            if (Directory.Exists(_attachmentsPath))
+            {
+                Directory.Delete(_attachmentsPath, true);
+            }
+
             Directory.CreateDirectory(_rootPath);
             Directory.CreateDirectory(_resultsPath);
             Directory.CreateDirectory(_attachmentsPath);
