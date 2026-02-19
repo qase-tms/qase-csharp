@@ -327,14 +327,16 @@ namespace Qase.NUnit.Reporter
             if (string.IsNullOrEmpty(fullName))
                 return fullName;
 
-            // Extract method name without parameters
-            var parts = fullName.Split('.');
+            // Strip parameters before splitting to avoid splitting on dots inside parameter values (e.g. "50.0")
+            var openParenIndex = fullName.IndexOf('(');
+            var nameWithoutParams = openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
+
+            var parts = nameWithoutParams.Split('.');
             if (parts.Length < 2)
                 return fullName;
 
-            var methodNameWithParams = parts[parts.Length - 1];
-            var methodName = ExtractMethodNameWithoutParameters(methodNameWithParams);
-            
+            var methodName = parts[parts.Length - 1];
+
             // Build full class name (namespace + class)
             var className = parts[parts.Length - 2];
             var namespaceParts = parts.Take(parts.Length - 2);
@@ -357,8 +359,12 @@ namespace Qase.NUnit.Reporter
 
         private List<SuiteData> ParseSuiteFromFullName(string fullName)
         {
-            // FullName format: "Namespace.ClassName.MethodName" or "ClassName.MethodName"
-            var parts = fullName.Split('.');
+            // FullName format: "Namespace.ClassName.MethodName" or "Namespace.ClassName.MethodName(params)"
+            // Strip parameters first to avoid splitting on dots inside parameter values (e.g. "50.0")
+            var openParenIndex = fullName.IndexOf('(');
+            var nameWithoutParams = openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
+
+            var parts = nameWithoutParams.Split('.');
             if (parts.Length >= 2)
             {
                 // Take all parts except the last one (method name)
@@ -366,7 +372,7 @@ namespace Qase.NUnit.Reporter
                     .Select(part => new SuiteData { Title = part })
                     .ToList();
             }
-            
+
             return new List<SuiteData>();
         }
 
@@ -374,14 +380,15 @@ namespace Qase.NUnit.Reporter
         {
             try
             {
-                // Parse fullName to get class and method
-                var parts = fullName.Split('.');
+                // Strip parameters before splitting to avoid splitting on dots inside parameter values (e.g. "50.0")
+                var openParenIndex = fullName.IndexOf('(');
+                var nameWithoutParams = openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
+
+                var parts = nameWithoutParams.Split('.');
                 if (parts.Length < 2)
                     return;
 
-                var methodNameWithParams = parts[parts.Length - 1];
-                // Extract method name without parameters (e.g., "Test2(\"user1\",\"value2\")" -> "Test2")
-                var methodName = ExtractMethodNameWithoutParameters(methodNameWithParams);
+                var methodName = parts[parts.Length - 1];
                 var className = parts[parts.Length - 2];
                 var namespaceName = string.Join(".", parts.Take(parts.Length - 2));
                 var fullClassName = string.IsNullOrEmpty(namespaceName) 
@@ -556,12 +563,14 @@ namespace Qase.NUnit.Reporter
         {
             try
             {
-                // Parse fullName to get class and method
-                var parts = fullName.Split('.');
+                // Strip parameters before splitting to avoid splitting on dots inside parameter values (e.g. "50.0")
+                var openParenIndex = fullName.IndexOf('(');
+                var nameWithoutParams = openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
+
+                var parts = nameWithoutParams.Split('.');
                 if (parts.Length < 2)
                     return;
 
-                var methodNameFromFullName = parts[parts.Length - 1];
                 var className = parts[parts.Length - 2];
                 var namespaceName = string.Join(".", parts.Take(parts.Length - 2));
                 var fullClassName = string.IsNullOrEmpty(namespaceName) 
@@ -591,10 +600,10 @@ namespace Qase.NUnit.Reporter
                 if (method == null)
                     return;
 
-                // Extract parameter values from test name
-                // Format: "MethodName(\"value1\",\"value2\")" or "MethodName(\"value1\", \"value2\")"
-                WriteToFile($"[Qase] Extracting parameters from method name: '{methodNameFromFullName}'");
-                var parameterValues = ExtractParameterValuesFromName(methodNameFromFullName);
+                // Extract parameter values from the original fullName (which still has parameters)
+                // Format: "Namespace.Class.MethodName(\"value1\",\"value2\")"
+                WriteToFile($"[Qase] Extracting parameters from full name: '{fullName}'");
+                var parameterValues = ExtractParameterValuesFromName(fullName);
                 
                 WriteToFile($"[Qase] Extracted parameter values: [{string.Join(", ", parameterValues)}]");
                 
