@@ -8,7 +8,7 @@ namespace xUnitExamples;
 /// Demonstrates combining multiple reporter features in realistic end-to-end scenarios:
 /// steps + attachments + comments + attributes together.
 /// </summary>
-[Fields("layer", "E2E")]
+[Fields("layer", "e2e")]
 [Suites("E2E Tests", "User Workflows")]
 public class CombinedTests
 {

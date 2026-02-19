@@ -9,7 +9,7 @@ namespace NUnitExamples;
 /// steps + attachments + comments + attributes together.
 /// </summary>
 [TestFixture]
-[Fields("layer", "E2E")]
+[Fields("layer", "e2e")]
 [Suites("E2E Tests", "User Workflows")]
 public class CombinedTests
 {

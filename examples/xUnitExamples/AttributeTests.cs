@@ -6,7 +6,7 @@ namespace xUnitExamples;
 /// Demonstrates all Qase reporter attributes in realistic test scenarios.
 /// Class-level attributes apply to all tests in this class.
 /// </summary>
-[Fields("layer", "UI")]
+[Fields("layer", "e2e")]
 [Suites("Authentication", "Smoke Tests")]
 public class AttributeTests
 {
@@ -45,7 +45,7 @@ public class AttributeTests
     [Fact]
     [Fields("severity", "critical")]
     [Fields("priority", "high")]
-    [Fields("layer", "API")]
+    [Fields("layer", "api")]
     public void PasswordReset_SendsEmailToRegisteredUser()
     {
         var email = "john.doe@example.com";
