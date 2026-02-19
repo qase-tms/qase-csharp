@@ -77,36 +77,36 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ATTR-01 | — | Pending |
-| ATTR-02 | — | Pending |
-| ATTR-03 | — | Pending |
-| ATTR-04 | — | Pending |
-| ATTR-05 | — | Pending |
-| ATTR-06 | — | Pending |
-| STEP-01 | — | Pending |
-| STEP-02 | — | Pending |
-| STEP-03 | — | Pending |
-| STEP-04 | — | Pending |
-| ATCH-01 | — | Pending |
-| ATCH-02 | — | Pending |
-| ATCH-03 | — | Pending |
-| ATCH-04 | — | Pending |
-| ATCH-05 | — | Pending |
-| META-01 | — | Pending |
-| PARM-01 | — | Pending |
-| PARM-02 | — | Pending |
-| PARM-03 | — | Pending |
-| PARM-04 | — | Pending |
-| COMB-01 | — | Pending |
-| COMB-02 | — | Pending |
-| DOCS-01 | — | Pending |
-| DOCS-02 | — | Pending |
+| ATTR-01 | Phase 6 | Pending |
+| ATTR-02 | Phase 6 | Pending |
+| ATTR-03 | Phase 6 | Pending |
+| ATTR-04 | Phase 6 | Pending |
+| ATTR-05 | Phase 6 | Pending |
+| ATTR-06 | Phase 6 | Pending |
+| META-01 | Phase 6 | Pending |
+| STEP-01 | Phase 7 | Pending |
+| STEP-02 | Phase 7 | Pending |
+| STEP-03 | Phase 7 | Pending |
+| STEP-04 | Phase 7 | Pending |
+| ATCH-01 | Phase 7 | Pending |
+| ATCH-02 | Phase 7 | Pending |
+| ATCH-03 | Phase 7 | Pending |
+| ATCH-04 | Phase 7 | Pending |
+| ATCH-05 | Phase 7 | Pending |
+| PARM-01 | Phase 8 | Pending |
+| PARM-02 | Phase 8 | Pending |
+| PARM-03 | Phase 8 | Pending |
+| PARM-04 | Phase 8 | Pending |
+| COMB-01 | Phase 9 | Pending |
+| COMB-02 | Phase 9 | Pending |
+| DOCS-01 | Phase 9 | Pending |
+| DOCS-02 | Phase 9 | Pending |
 
 **Coverage:**
 - v1.2 requirements: 24 total
-- Mapped to phases: 0
-- Unmapped: 24 ⚠️
+- Mapped to phases: 24
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after initial definition*
+*Last updated: 2026-02-19 after roadmap creation*
