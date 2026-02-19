@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Qase.Csharp.Commons.Models.Domain;
 
@@ -11,10 +13,10 @@ namespace Qase.Csharp.Commons
     public static class ContextManager
     {
         private static readonly AsyncLocal<string> _testCaseName = new();
-        private static readonly Dictionary<string, Stack<StepResult>> _stepStacks = new();
-        private static readonly Dictionary<string, List<string>> _messages = new();
-        private static readonly Dictionary<string, List<Attachment>> _attachments = new();
-        private static Dictionary<string, List<StepResult>> _completedSteps = new();
+        private static readonly ConcurrentDictionary<string, Stack<StepResult>> _stepStacks = new();
+        private static readonly ConcurrentDictionary<string, List<string>> _messages = new();
+        private static readonly ConcurrentDictionary<string, List<Attachment>> _attachments = new();
+        private static readonly ConcurrentDictionary<string, List<StepResult>> _completedSteps = new();
 
         /// <summary>
         /// Set the test case name.
@@ -23,10 +25,7 @@ namespace Qase.Csharp.Commons
         public static void SetTestCaseName(string name)
         {
             _testCaseName.Value = name;
-            if (!_stepStacks.ContainsKey(name))
-            {
-                _stepStacks[name] = new Stack<StepResult>();
-            }
+            _stepStacks.GetOrAdd(name, _ => new Stack<StepResult>());
         }
 
         /// <summary>
@@ -55,15 +54,17 @@ namespace Qase.Csharp.Commons
 
             configure?.Invoke(step);
 
-            var stack = _stepStacks[_testCaseName.Value];
-            if (stack.Count > 0)
+            if (_stepStacks.TryGetValue(_testCaseName.Value, out var stack))
             {
-                var parentStep = stack.Peek();
-                parentStep.Steps ??= new List<StepResult>();
-                parentStep.Steps.Add(step);
-            }
+                if (stack.Count > 0)
+                {
+                    var parentStep = stack.Peek();
+                    parentStep.Steps ??= new List<StepResult>();
+                    parentStep.Steps.Add(step);
+                }
 
-            stack.Push(step);
+                stack.Push(step);
+            }
         }
 
         /// <summary>
@@ -76,8 +77,7 @@ namespace Qase.Csharp.Commons
                 return;
             }
 
-            var stack = _stepStacks[_testCaseName.Value];
-            if (stack.Count == 0)
+            if (!_stepStacks.TryGetValue(_testCaseName.Value, out var stack) || stack.Count == 0)
             {
                 throw new InvalidOperationException("No active step to pass");
             }
@@ -88,12 +88,8 @@ namespace Qase.Csharp.Commons
 
             if (stack.Count == 0)
             {
-                if (!_completedSteps.ContainsKey(_testCaseName.Value))
-                {
-                    _completedSteps[_testCaseName.Value] = new List<StepResult>();
-                }
-
-                _completedSteps[_testCaseName.Value].Add(step);
+                var steps = _completedSteps.GetOrAdd(_testCaseName.Value, _ => new List<StepResult>());
+                steps.Add(step);
             }
         }
 
@@ -107,8 +103,7 @@ namespace Qase.Csharp.Commons
                 return;
             }
 
-            var stack = _stepStacks[_testCaseName.Value];
-            if (stack.Count == 0)
+            if (!_stepStacks.TryGetValue(_testCaseName.Value, out var stack) || stack.Count == 0)
             {
                 throw new InvalidOperationException("No active step to fail");
             }
@@ -119,12 +114,8 @@ namespace Qase.Csharp.Commons
 
             if (stack.Count == 0)
             {
-                if (!_completedSteps.ContainsKey(_testCaseName.Value))
-                {
-                    _completedSteps[_testCaseName.Value] = new List<StepResult>();
-                }
-
-                _completedSteps[_testCaseName.Value].Add(step);
+                var steps = _completedSteps.GetOrAdd(_testCaseName.Value, _ => new List<StepResult>());
+                steps.Add(step);
             }
         }
 
@@ -135,14 +126,12 @@ namespace Qase.Csharp.Commons
         /// <returns>The completed steps.</returns>
         public static List<StepResult> GetCompletedSteps(string testCaseName)
         {
-            if (!_completedSteps.ContainsKey(testCaseName))
+            if (_completedSteps.TryRemove(testCaseName, out var steps))
             {
-                return new List<StepResult>();
+                return steps;
             }
 
-            var steps = _completedSteps[testCaseName];
-            _completedSteps.Remove(testCaseName);
-            return steps;
+            return new List<StepResult>();
         }
 
         /// <summary>
@@ -176,12 +165,8 @@ namespace Qase.Csharp.Commons
                 return;
             }
 
-            if (!_messages.ContainsKey(_testCaseName.Value))
-            {
-                _messages[_testCaseName.Value] = new List<string>();
-            }
-
-            _messages[_testCaseName.Value].Add(comment);
+            var list = _messages.GetOrAdd(_testCaseName.Value, _ => new List<string>());
+            list.Add(comment);
         }
 
         /// <summary>
@@ -191,12 +176,12 @@ namespace Qase.Csharp.Commons
         /// <returns>The comments for the test case.</returns>
         public static string GetComments(string testCaseName)
         {
-            if (!_messages.ContainsKey(testCaseName))
+            if (_messages.TryGetValue(testCaseName, out var messages))
             {
-                return string.Empty;
+                return string.Join("\n", messages);
             }
 
-            return string.Join("\n", _messages[testCaseName]);
+            return string.Empty;
         }
 
         /// <summary>
@@ -235,19 +220,15 @@ namespace Qase.Csharp.Commons
                 return;
             }
 
-            if (_stepStacks.ContainsKey(_testCaseName.Value) && _stepStacks[_testCaseName.Value].Count > 0)
+            if (_stepStacks.TryGetValue(_testCaseName.Value, out var stack) && stack.Count > 0)
             {
-                var step = _stepStacks[_testCaseName.Value].Peek();
+                var step = stack.Peek();
                 step.Execution!.Attachments.Add(attachment);
                 return;
             }
 
-            if (!_attachments.ContainsKey(_testCaseName.Value))
-            {
-                _attachments[_testCaseName.Value] = new List<Attachment>();
-            }
-
-            _attachments[_testCaseName.Value].Add(attachment);
+            var list = _attachments.GetOrAdd(_testCaseName.Value, _ => new List<Attachment>());
+            list.Add(attachment);
         }
 
         /// <summary>
@@ -257,12 +238,12 @@ namespace Qase.Csharp.Commons
         /// <returns>The attachments for the test case.</returns>
         public static List<Attachment> GetAttachments(string testCaseName)
         {
-            if (!_attachments.ContainsKey(testCaseName))
+            if (_attachments.TryGetValue(testCaseName, out var attachments))
             {
-                return new List<Attachment>();
+                return attachments;
             }
 
-            return _attachments[testCaseName];
+            return new List<Attachment>();
         }
     }
 }
