@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
 
@@ -11,6 +12,7 @@ namespace Qase.Csharp.Commons.Writers
     /// </summary>
     public class FileWriter
     {
+        private readonly ILogger? _logger;
         private readonly string _rootPath;
         private readonly string _resultsPath;
         private readonly string _attachmentsPath;
@@ -19,8 +21,18 @@ namespace Qase.Csharp.Commons.Writers
         /// Initializes a new instance of the FileWriter class
         /// </summary>
         /// <param name="rootPath">The root directory path for the report</param>
-        public FileWriter(string rootPath)
+        public FileWriter(string rootPath) : this(null, rootPath)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the FileWriter class
+        /// </summary>
+        /// <param name="logger">The logger instance</param>
+        /// <param name="rootPath">The root directory path for the report</param>
+        public FileWriter(ILogger<FileWriter>? logger, string rootPath)
+        {
+            _logger = logger;
             _rootPath = rootPath;
             _resultsPath = Path.Combine(rootPath, "results");
             _attachmentsPath = Path.Combine(rootPath, "attachments");
@@ -65,6 +77,12 @@ namespace Qase.Csharp.Commons.Writers
                 attachment.MimeType = MimeTypes.GuessFromFileName(fileName);
             }
 
+            // Ensure the attachments directory exists
+            if (!Directory.Exists(_attachmentsPath))
+            {
+                Directory.CreateDirectory(_attachmentsPath);
+            }
+
             if (attachment.FilePath != null && File.Exists(attachment.FilePath))
             {
                 File.Copy(attachment.FilePath, destPath, true);
@@ -85,6 +103,13 @@ namespace Qase.Csharp.Commons.Writers
                 attachment.FilePath = Path.GetFullPath(destPath);
                 attachment.Content = null;
                 attachment.ContentBytes = null;
+            }
+            else
+            {
+                _logger?.LogWarning(
+                    "Attachment '{FileName}' (id: {Id}) could not be written: " +
+                    "file not found at path '{FilePath}' and no Content or ContentBytes provided",
+                    fileName, attachment.Id, attachment.FilePath);
             }
         }
 

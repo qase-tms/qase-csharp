@@ -70,6 +70,9 @@ namespace Qase.Csharp.Commons.Reporters
             // Write attachments to disk and update paths, then write each result
             foreach (var result in _results)
             {
+                _logger.LogDebug("Processing result '{Title}': {AttachmentCount} test-level attachments, {StepCount} steps",
+                    result.Title, result.Attachments.Count, result.Steps.Count);
+
                 // Process test-level attachments
                 foreach (var attachment in result.Attachments)
                 {
