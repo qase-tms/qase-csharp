@@ -7,7 +7,7 @@ namespace NUnitExamples;
 /// Class-level attributes apply to all tests in this class.
 /// </summary>
 [TestFixture]
-[Fields("layer", "UI")]
+[Fields("layer", "e2e")]
 [Suites("Authentication", "Smoke Tests")]
 public class AttributeTests
 {
@@ -46,7 +46,7 @@ public class AttributeTests
     [Test]
     [Fields("severity", "critical")]
     [Fields("priority", "high")]
-    [Fields("layer", "API")]
+    [Fields("layer", "api")]
     public void PasswordReset_SendsEmailToRegisteredUser()
     {
         var email = "john.doe@example.com";
