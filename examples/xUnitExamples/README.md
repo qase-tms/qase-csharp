@@ -1,30 +1,42 @@
-# xUnit Example
+# xUnit Examples
 
-This is a sample project demonstrating how to write and execute tests using the xUnit framework.
+Demonstrates all Qase TestOps reporter features with the xUnit testing framework.
 
-## Prerequisites
+## Test Files
 
-Ensure that the following tools are installed on your machine:
+| File | What it demonstrates |
+|------|---------------------|
+| `AttributeTests.cs` | `[QaseIds]`, `[Title]`, `[Fields]`, `[Suites]`, `[Ignore]`, class-level attributes |
+| `MetadataTests.cs` | `Metadata.Comment()` — contextual comments on test results |
+| `StepTests.cs` | `[Step]` — basic, nested, custom titles, mixed pass/fail status |
+| `AttachmentTests.cs` | `Metadata.Attach()` — file, multiple files, byte[], step-level |
+| `ParameterizedTests.cs` | `[Theory]` with `[InlineData]` and `[MemberData]` |
+| `CombinedTests.cs` | E2E scenarios combining all features together |
 
-1. [Dotnet 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+## Test Data
 
-## Setup Instructions
+The `testdata/` directory contains real files used by attachment examples:
+- `screenshot.png` — sample screenshot image
+- `test-log.txt` — sample application log
 
-1. Clone this repository by running the following command:
+## Setup
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/qase-tms/qase-csharp.git
    cd qase-csharp/examples/xUnitExamples
    ```
 
-2. Create a `qase.config.json` file in the root of the project. You can follow the instructions
-   on [how to configure the file](https://github.com/qase-tms/qase-java/tree/main/qase-java-commons#readme).
+2. Create a `qase.config.json` file (see [Configuration](../README.md#configuration)).
 
-3. Once the configuration is done, run the tests and upload the results to Qase by executing:
+3. Run the tests:
    ```bash
    dotnet test
    ```
 
-## Additional Resources
+## Resources
 
-For more details on how to use this integration with Qase Test Management, visit
-the [Qase CSharp documentation](https://github.com/qase-tms/qase-csharp).
+- [xUnit Reporter Documentation](../../Qase.XUnit.Reporter/README.md)
+- [Steps Guide](../../Qase.XUnit.Reporter/docs/STEPS.md)
+- [Attachments Guide](../../Qase.XUnit.Reporter/docs/ATTACHMENTS.md)
+- [Usage Guide](../../Qase.XUnit.Reporter/docs/usage.md)

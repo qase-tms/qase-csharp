@@ -1,65 +1,51 @@
 # Qase C# Examples
 
-This directory contains example projects demonstrating how to use Qase TestOps integration with different testing frameworks.
+Example projects demonstrating all Qase TestOps reporter capabilities for xUnit and NUnit frameworks.
 
-## Available Examples
+## Example Categories
+
+Each example project contains the following test files:
+
+| File | Description |
+|------|-------------|
+| `AttributeTests.cs` | All reporter attributes: `[QaseIds]`, `[Title]`, `[Fields]`, `[Suites]`, `[Ignore]`, class-level attributes |
+| `MetadataTests.cs` | `Metadata.Comment()` for adding contextual comments to test results |
+| `StepTests.cs` | Basic steps, nested steps, steps with custom `[Title]`, mixed-status steps |
+| `AttachmentTests.cs` | Single file, multiple files, byte array, step-level attachments |
+| `ParameterizedTests.cs` | Data-driven tests (xUnit: `Theory`/`InlineData`/`MemberData`, NUnit: `TestCase`/`Values`/`Range`) |
+| `CombinedTests.cs` | End-to-end scenarios combining steps, attachments, comments, and attributes |
+
+## Available Projects
 
 ### xUnit Examples
 
-The `xUnitExamples` project demonstrates how to use Qase TestOps with xUnit testing framework.
+**Location**: [`xUnitExamples/`](xUnitExamples/)
 
-**Location**: `xUnitExamples/`
-
-**Features**:
-- Simple tests with Qase attributes
-- Parameterized tests using `[Theory]` and `[InlineData]`
-- Usage of Qase attributes: `[QaseIds]`, `[Title]`, `[Fields]`, `[Suites]`, `[Ignore]`
-- Test steps using `[Step]` attribute
-- Class-level attributes
-
-**Quick Start**:
 ```bash
 cd xUnitExamples
-# Create qase.config.json (see qase.config.json.example)
 dotnet test
 ```
 
-For more details, see [xUnitExamples/README.md](xUnitExamples/README.md).
+For details, see [xUnitExamples/README.md](xUnitExamples/README.md).
 
 ### NUnit Examples
 
-The `NUnitExamples` project demonstrates how to use Qase TestOps with NUnit testing framework.
+**Location**: [`NUnitExamples/`](NUnitExamples/)
 
-**Location**: `NUnitExamples/`
-
-**Features**:
-- Simple tests with Qase attributes
-- Parameterized tests using `[TestCase]`
-- Usage of Qase attributes: `[QaseIds]`, `[Title]`, `[Fields]`, `[Suites]`, `[Ignore]`
-- Test steps using `[Step]` attribute
-- Class-level attributes
-
-**Quick Start**:
 ```bash
 cd NUnitExamples
-# Create qase.config.json (copy from qase.config.json.example)
-# Create .addins file or use NuGet package automatic setup
 dotnet test
-# Or use NUnit Console Runner:
-# nunit3-console NUnitExamples.dll
 ```
 
-For more details, see [NUnitExamples/README.md](NUnitExamples/README.md).
+For details, see [NUnitExamples/README.md](NUnitExamples/README.md).
 
 ## Configuration
 
-Both example projects require a `qase.config.json` configuration file. You can:
+Both projects require a `qase.config.json` configuration file:
 
-1. Copy the example file: `qase.config.json.example` → `qase.config.json`
+1. Copy `qase.config.json.example` to `qase.config.json`
 2. Fill in your Qase API token and project code
-3. Adjust other settings as needed
 
-Example configuration:
 ```json
 {
   "mode": "testops",
@@ -82,7 +68,6 @@ Example configuration:
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) or higher
 - Qase TestOps account with API token
-- For NUnit: NUnit Console Runner (optional, for command-line execution)
 
 ## Additional Resources
 
