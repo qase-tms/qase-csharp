@@ -92,14 +92,12 @@ public class CombinedTests
     [Title("Generate and attach onboarding summary")]
     private void CaptureOnboardingReport()
     {
-        var report = """
-            {
-                "user": "alice@example.com",
-                "steps_completed": ["registration", "email_verification", "profile"],
-                "status": "onboarding_complete",
-                "timestamp": "2026-02-19T10:30:00Z"
-            }
-            """;
+        var report = "{" +
+                     "\"user\": \"alice@example.com\", " +
+                     "\"steps_completed\": [\"registration\", \"email_verification\", \"profile\"], " +
+                     "\"status\": \"onboarding_complete\", " +
+                     "\"timestamp\": \"2026-02-19T10:30:00Z\"" +
+                     "}";
         Metadata.Attach(Encoding.UTF8.GetBytes(report), "onboarding-report.json");
     }
 

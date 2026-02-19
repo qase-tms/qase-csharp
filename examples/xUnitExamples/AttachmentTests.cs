@@ -53,18 +53,14 @@ public class AttachmentTests
     [Qase]
     public void GenerateReport_AttachFromMemory()
     {
-        var html = """
-            <html>
-            <body>
-                <h1>Test Summary Report</h1>
-                <table>
-                    <tr><td>Total Tests</td><td>42</td></tr>
-                    <tr><td>Passed</td><td>40</td></tr>
-                    <tr><td>Failed</td><td>2</td></tr>
-                </table>
-            </body>
-            </html>
-            """;
+        var html = "<html><body>" +
+                   "<h1>Test Summary Report</h1>" +
+                   "<table>" +
+                   "<tr><td>Total Tests</td><td>42</td></tr>" +
+                   "<tr><td>Passed</td><td>40</td></tr>" +
+                   "<tr><td>Failed</td><td>2</td></tr>" +
+                   "</table>" +
+                   "</body></html>";
 
         var reportBytes = Encoding.UTF8.GetBytes(html);
         Metadata.Attach(reportBytes, "test-summary.html");

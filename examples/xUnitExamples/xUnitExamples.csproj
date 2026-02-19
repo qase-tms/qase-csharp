@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="qase.config.json">
+        <Content Include="qase.config.json" Condition="Exists('qase.config.json')">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="testdata/**">

@@ -33,7 +33,7 @@ public class MetadataTests
     {
         var endpoint = "/api/v1/users/42";
         var statusCode = 200;
-        var responseBody = """{"id": 42, "name": "John Doe", "email": "john@example.com"}""";
+        var responseBody = "{\"id\": 42, \"name\": \"John Doe\", \"email\": \"john@example.com\"}";
 
         Metadata.Comment($"GET {endpoint} returned status {statusCode}");
         Metadata.Comment($"Response body: {responseBody}");
