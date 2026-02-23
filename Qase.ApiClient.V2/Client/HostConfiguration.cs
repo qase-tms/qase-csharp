@@ -87,8 +87,8 @@ namespace Qase.ApiClient.V2.Client
 
             List<IHttpClientBuilder> builders = new List<IHttpClientBuilder>();
 
-            builders.Add(_services.AddHttpClient<ICustomFieldsApi, CustomFieldsApi>(client));
-            builders.Add(_services.AddHttpClient<IResultsApi, ResultsApi>(client));
+            builders.Add(_services.AddHttpClient<ICustomFieldsApi, CustomFieldsApi>("Qase.ApiClient.V2.Api.ICustomFieldsApi", client));
+            builders.Add(_services.AddHttpClient<IResultsApi, ResultsApi>("Qase.ApiClient.V2.Api.IResultsApi", client));
             
             if (builder != null)
                 foreach (IHttpClientBuilder instance in builders)

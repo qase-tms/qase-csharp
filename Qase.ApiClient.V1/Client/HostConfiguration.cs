@@ -251,24 +251,24 @@ namespace Qase.ApiClient.V1.Client
 
             List<IHttpClientBuilder> builders = new List<IHttpClientBuilder>();
 
-            builders.Add(_services.AddHttpClient<IAttachmentsApi, AttachmentsApi>(client));
-            builders.Add(_services.AddHttpClient<IAuthorsApi, AuthorsApi>(client));
-            builders.Add(_services.AddHttpClient<ICasesApi, CasesApi>(client));
-            builders.Add(_services.AddHttpClient<IConfigurationsApi, ConfigurationsApi>(client));
-            builders.Add(_services.AddHttpClient<ICustomFieldsApi, CustomFieldsApi>(client));
-            builders.Add(_services.AddHttpClient<IDefectsApi, DefectsApi>(client));
-            builders.Add(_services.AddHttpClient<IEnvironmentsApi, EnvironmentsApi>(client));
-            builders.Add(_services.AddHttpClient<IMilestonesApi, MilestonesApi>(client));
-            builders.Add(_services.AddHttpClient<IPlansApi, PlansApi>(client));
-            builders.Add(_services.AddHttpClient<IProjectsApi, ProjectsApi>(client));
-            builders.Add(_services.AddHttpClient<IResultsApi, ResultsApi>(client));
-            builders.Add(_services.AddHttpClient<IRunsApi, RunsApi>(client));
-            builders.Add(_services.AddHttpClient<ISearchApi, SearchApi>(client));
-            builders.Add(_services.AddHttpClient<ISharedParametersApi, SharedParametersApi>(client));
-            builders.Add(_services.AddHttpClient<ISharedStepsApi, SharedStepsApi>(client));
-            builders.Add(_services.AddHttpClient<ISuitesApi, SuitesApi>(client));
-            builders.Add(_services.AddHttpClient<ISystemFieldsApi, SystemFieldsApi>(client));
-            builders.Add(_services.AddHttpClient<IUsersApi, UsersApi>(client));
+            builders.Add(_services.AddHttpClient<IAttachmentsApi, AttachmentsApi>("Qase.ApiClient.V1.Api.IAttachmentsApi", client));
+            builders.Add(_services.AddHttpClient<IAuthorsApi, AuthorsApi>("Qase.ApiClient.V1.Api.IAuthorsApi", client));
+            builders.Add(_services.AddHttpClient<ICasesApi, CasesApi>("Qase.ApiClient.V1.Api.ICasesApi", client));
+            builders.Add(_services.AddHttpClient<IConfigurationsApi, ConfigurationsApi>("Qase.ApiClient.V1.Api.IConfigurationsApi", client));
+            builders.Add(_services.AddHttpClient<ICustomFieldsApi, CustomFieldsApi>("Qase.ApiClient.V1.Api.ICustomFieldsApi", client));
+            builders.Add(_services.AddHttpClient<IDefectsApi, DefectsApi>("Qase.ApiClient.V1.Api.IDefectsApi", client));
+            builders.Add(_services.AddHttpClient<IEnvironmentsApi, EnvironmentsApi>("Qase.ApiClient.V1.Api.IEnvironmentsApi", client));
+            builders.Add(_services.AddHttpClient<IMilestonesApi, MilestonesApi>("Qase.ApiClient.V1.Api.IMilestonesApi", client));
+            builders.Add(_services.AddHttpClient<IPlansApi, PlansApi>("Qase.ApiClient.V1.Api.IPlansApi", client));
+            builders.Add(_services.AddHttpClient<IProjectsApi, ProjectsApi>("Qase.ApiClient.V1.Api.IProjectsApi", client));
+            builders.Add(_services.AddHttpClient<IResultsApi, ResultsApi>("Qase.ApiClient.V1.Api.IResultsApi", client));
+            builders.Add(_services.AddHttpClient<IRunsApi, RunsApi>("Qase.ApiClient.V1.Api.IRunsApi", client));
+            builders.Add(_services.AddHttpClient<ISearchApi, SearchApi>("Qase.ApiClient.V1.Api.ISearchApi", client));
+            builders.Add(_services.AddHttpClient<ISharedParametersApi, SharedParametersApi>("Qase.ApiClient.V1.Api.ISharedParametersApi", client));
+            builders.Add(_services.AddHttpClient<ISharedStepsApi, SharedStepsApi>("Qase.ApiClient.V1.Api.ISharedStepsApi", client));
+            builders.Add(_services.AddHttpClient<ISuitesApi, SuitesApi>("Qase.ApiClient.V1.Api.ISuitesApi", client));
+            builders.Add(_services.AddHttpClient<ISystemFieldsApi, SystemFieldsApi>("Qase.ApiClient.V1.Api.ISystemFieldsApi", client));
+            builders.Add(_services.AddHttpClient<IUsersApi, UsersApi>("Qase.ApiClient.V1.Api.IUsersApi", client));
             
             if (builder != null)
                 foreach (IHttpClientBuilder instance in builders)

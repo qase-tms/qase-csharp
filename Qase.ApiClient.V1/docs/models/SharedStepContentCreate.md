@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **ExpectedResult** | **string** |  | [optional] 
 **Data** | **string** |  | [optional] 
 **Attachments** | **List&lt;string&gt;** | A list of Attachment hashes. | [optional] 
+**Steps** | **List&lt;Object&gt;** | Nested steps will be here. The same structure is used for them. | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 
