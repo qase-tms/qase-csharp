@@ -39,14 +39,16 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="expectedResult">expectedResult</param>
         /// <param name="data">data</param>
         /// <param name="attachments">A list of Attachment hashes.</param>
+        /// <param name="steps">Nested steps will be here. The same structure is used for them.</param>
         [JsonConstructor]
-        public SharedStepContentCreate(string action, Option<string?> hash = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<List<string>?> attachments = default)
+        public SharedStepContentCreate(string action, Option<string?> hash = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<List<string>?> attachments = default, Option<List<Object>?> steps = default)
         {
             Action = action;
             HashOption = hash;
             ExpectedResultOption = expectedResult;
             DataOption = data;
             AttachmentsOption = attachments;
+            StepsOption = steps;
             OnCreated();
         }
 
@@ -112,6 +114,20 @@ namespace Qase.ApiClient.V1.Model
         public List<string>? Attachments { get { return this.AttachmentsOption; } set { this.AttachmentsOption = new Option<List<string>?>(value); } }
 
         /// <summary>
+        /// Used to track the state of Steps
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<List<Object>?> StepsOption { get; private set; }
+
+        /// <summary>
+        /// Nested steps will be here. The same structure is used for them.
+        /// </summary>
+        /// <value>Nested steps will be here. The same structure is used for them.</value>
+        [JsonPropertyName("steps")]
+        public List<Object>? Steps { get { return this.StepsOption; } set { this.StepsOption = new Option<List<Object>?>(value); } }
+
+        /// <summary>
         /// Gets or Sets additional properties
         /// </summary>
         [JsonExtensionData]
@@ -130,6 +146,7 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  ExpectedResult: ").Append(ExpectedResult).Append("\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Attachments: ").Append(Attachments).Append("\n");
+            sb.Append("  Steps: ").Append(Steps).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -173,6 +190,7 @@ namespace Qase.ApiClient.V1.Model
             Option<string?> expectedResult = default;
             Option<string?> data = default;
             Option<List<string>?> attachments = default;
+            Option<List<Object>?> steps = default;
 
             while (utf8JsonReader.Read())
             {
@@ -204,6 +222,9 @@ namespace Qase.ApiClient.V1.Model
                         case "attachments":
                             attachments = new Option<List<string>?>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
+                        case "steps":
+                            steps = new Option<List<Object>?>(JsonSerializer.Deserialize<List<Object>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            break;
                         default:
                             break;
                     }
@@ -228,7 +249,10 @@ namespace Qase.ApiClient.V1.Model
             if (attachments.IsSet && attachments.Value == null)
                 throw new ArgumentNullException(nameof(attachments), "Property is not nullable for class SharedStepContentCreate.");
 
-            return new SharedStepContentCreate(action.Value!, hash, expectedResult, data, attachments);
+            if (steps.IsSet && steps.Value == null)
+                throw new ArgumentNullException(nameof(steps), "Property is not nullable for class SharedStepContentCreate.");
+
+            return new SharedStepContentCreate(action.Value!, hash, expectedResult, data, attachments, steps);
         }
 
         /// <summary>
@@ -270,6 +294,9 @@ namespace Qase.ApiClient.V1.Model
             if (sharedStepContentCreate.AttachmentsOption.IsSet && sharedStepContentCreate.Attachments == null)
                 throw new ArgumentNullException(nameof(sharedStepContentCreate.Attachments), "Property is required for class SharedStepContentCreate.");
 
+            if (sharedStepContentCreate.StepsOption.IsSet && sharedStepContentCreate.Steps == null)
+                throw new ArgumentNullException(nameof(sharedStepContentCreate.Steps), "Property is required for class SharedStepContentCreate.");
+
             writer.WriteString("action", sharedStepContentCreate.Action);
 
             if (sharedStepContentCreate.HashOption.IsSet)
@@ -285,6 +312,11 @@ namespace Qase.ApiClient.V1.Model
             {
                 writer.WritePropertyName("attachments");
                 JsonSerializer.Serialize(writer, sharedStepContentCreate.Attachments, jsonSerializerOptions);
+            }
+            if (sharedStepContentCreate.StepsOption.IsSet)
+            {
+                writer.WritePropertyName("steps");
+                JsonSerializer.Serialize(writer, sharedStepContentCreate.Steps, jsonSerializerOptions);
             }
         }
     }
