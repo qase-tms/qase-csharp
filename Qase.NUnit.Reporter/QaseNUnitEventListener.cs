@@ -380,7 +380,7 @@ namespace Qase.NUnit.Reporter
         {
             try
             {
-                // Strip parameters before splitting to avoid splitting on dots inside parameter values (e.g. "50.0")
+                // Parse fullName to extract class and method names (this parsing stays in reporter)
                 var openParenIndex = fullName.IndexOf('(');
                 var nameWithoutParams = openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
 
@@ -391,69 +391,24 @@ namespace Qase.NUnit.Reporter
                 var methodName = parts[parts.Length - 1];
                 var className = parts[parts.Length - 2];
                 var namespaceName = string.Join(".", parts.Take(parts.Length - 2));
-                var fullClassName = string.IsNullOrEmpty(namespaceName) 
-                    ? className 
+                var fullClassName = string.IsNullOrEmpty(namespaceName)
+                    ? className
                     : $"{namespaceName}.{className}";
 
-                // Find type
-                var type = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(a => 
-                    {
-                        try
-                        {
-                            return a.GetTypes();
-                        }
-                        catch
-                        {
-                            return Array.Empty<Type>();
-                        }
-                    })
-                    .FirstOrDefault(t => t.FullName == fullClassName || t.Name == className);
-
+                // Use TypeMethodResolver instead of inline AppDomain scan
+                var type = TypeMethodResolver.ResolveType(fullClassName);
                 if (type == null)
                     return;
 
-                // Find method (use method name without parameters)
-                var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                // Use TypeMethodResolver instead of inline type.GetMethod
+                var method = TypeMethodResolver.ResolveMethod(type, methodName);
                 if (method == null)
                     return;
 
-                // Extract method-level attributes
-                var methodAttributes = method.GetCustomAttributes(typeof(IQaseAttribute), false)
-                    .Cast<Attribute>();
-
-                // Extract class-level attributes
-                var classAttributes = type.GetCustomAttributes(typeof(IQaseAttribute), false)
-                    .Cast<Attribute>();
-
-                // Process attributes
-                foreach (var attr in classAttributes.Concat(methodAttributes))
-                {
-                    switch (attr)
-                    {
-                        case QaseIdsAttribute qaseIds:
-                            result.TestopsIds = qaseIds.Ids;
-                            break;
-
-                        case TitleAttribute title:
-                            result.Title = title.Title;
-                            break;
-
-                        case FieldsAttribute fields:
-                            result.Fields.Add(fields.Key, fields.Value);
-                            break;
-
-                        case SuitesAttribute suites:
-                            result.Relations.Suite.Data = suites.Suites
-                                .Select(s => new SuiteData { Title = s })
-                                .ToList();
-                            break;
-
-                        case IgnoreAttribute:
-                            result.Ignore = true;
-                            break;
-                    }
-                }
+                // Use AttributeExtractor instead of inline foreach/switch
+                var classAttributes = type.GetCustomAttributes(typeof(IQaseAttribute), false).Cast<Attribute>();
+                var methodAttributes = method.GetCustomAttributes(typeof(IQaseAttribute), false).Cast<Attribute>();
+                AttributeExtractor.Apply(classAttributes, methodAttributes, result);
             }
             catch (Exception ex)
             {
@@ -563,7 +518,7 @@ namespace Qase.NUnit.Reporter
         {
             try
             {
-                // Strip parameters before splitting to avoid splitting on dots inside parameter values (e.g. "50.0")
+                // Parse fullName to extract class name (this parsing stays in reporter)
                 var openParenIndex = fullName.IndexOf('(');
                 var nameWithoutParams = openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
 
@@ -573,54 +528,36 @@ namespace Qase.NUnit.Reporter
 
                 var className = parts[parts.Length - 2];
                 var namespaceName = string.Join(".", parts.Take(parts.Length - 2));
-                var fullClassName = string.IsNullOrEmpty(namespaceName) 
-                    ? className 
+                var fullClassName = string.IsNullOrEmpty(namespaceName)
+                    ? className
                     : $"{namespaceName}.{className}";
 
-                // Find type
-                var type = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(a => 
-                    {
-                        try
-                        {
-                            return a.GetTypes();
-                        }
-                        catch
-                        {
-                            return Array.Empty<Type>();
-                        }
-                    })
-                    .FirstOrDefault(t => t.FullName == fullClassName || t.Name == className);
-
+                // Use TypeMethodResolver (cached -- same fullClassName resolved in ExtractAttributesFromFullName)
+                var type = TypeMethodResolver.ResolveType(fullClassName);
                 if (type == null)
                     return;
 
-                // Find method (use methodName without parameters)
-                var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                var method = TypeMethodResolver.ResolveMethod(type, methodName);
                 if (method == null)
                     return;
 
-                // Extract parameter values from the original fullName (which still has parameters)
-                // Format: "Namespace.Class.MethodName(\"value1\",\"value2\")"
+                // Use ParameterParser.ParseValues (NOT ParseAndMap -- NUnit does NOT normalize empty to "empty")
                 WriteToFile($"[Qase] Extracting parameters from full name: '{fullName}'");
-                var parameterValues = ExtractParameterValuesFromName(fullName);
-                
+                var parameterValues = ParameterParser.ParseValues(fullName);
+
                 WriteToFile($"[Qase] Extracted parameter values: [{string.Join(", ", parameterValues)}]");
-                
-                if (parameterValues == null || parameterValues.Count == 0)
+
+                if (parameterValues.Count == 0)
                     return;
 
-                // Get method parameters
+                // Map to method parameter names (same logic as current code)
                 var methodParams = method.GetParameters();
-                
-                // Map parameter values to parameter names
                 for (int i = 0; i < Math.Min(parameterValues.Count, methodParams.Length); i++)
                 {
                     var paramName = methodParams[i].Name ?? $"param{i}";
                     var paramValue = parameterValues[i];
-                    
-                    // Parameter values are already extracted without quotes
-                    // Handle null values
+
+                    // Handle null values (same as current code)
                     if (paramValue == "null")
                     {
                         testResult.Params[paramName] = "null";
@@ -630,7 +567,7 @@ namespace Qase.NUnit.Reporter
                         testResult.Params[paramName] = paramValue;
                     }
                 }
-                
+
                 WriteToFile($"[Qase] Extracted parameters from test name - method: {methodName}, params: {string.Join(", ", testResult.Params.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
             }
             catch (Exception ex)
