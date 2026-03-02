@@ -186,89 +186,29 @@ namespace Qase.MSTest.Reporter
                     {
                         Suite = new Suite
                         {
-                            Data = fullTypeName.Split('.')
-                                .Select(part => new SuiteData { Title = part })
-                                .ToList()
+                            Data = SuiteParser.FromTypeName(fullTypeName)
                         }
                     };
 
                     // Resolve Type and MethodInfo for attribute extraction
-                    var type = AppDomain.CurrentDomain.GetAssemblies()
-                        .SelectMany(a =>
-                        {
-                            try { return a.GetTypes(); }
-                            catch { return Array.Empty<Type>(); }
-                        })
-                        .FirstOrDefault(t => t.FullName == fullTypeName);
+                    var type = TypeMethodResolver.ResolveType(fullTypeName);
 
                     if (type is not null)
                     {
-                        MethodInfo? method = null;
-                        if (parameterTypeFullNames.Length > 0)
-                        {
-                            // Use ParameterTypeFullNames for overload resolution
-                            var paramTypes = parameterTypeFullNames
-                                .Select(typeName => AppDomain.CurrentDomain.GetAssemblies()
-                                    .SelectMany(a => { try { return a.GetTypes(); } catch { return Array.Empty<Type>(); } })
-                                    .FirstOrDefault(t => t.FullName == typeName))
-                                .Where(t => t != null)
-                                .Cast<Type>()
-                                .ToArray();
-
-                            if (paramTypes.Length == parameterTypeFullNames.Length)
-                            {
-                                method = type.GetMethod(
-                                    methodName,
-                                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static,
-                                    null, paramTypes, null);
-                            }
-                        }
-
-                        // Fallback to simple lookup for non-parameterized tests
-                        method ??= type.GetMethod(
-                            methodName,
-                            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                        var method = TypeMethodResolver.ResolveMethod(type, methodName, parameterTypeFullNames);
 
                         if (method is not null)
                         {
                             // Extract class-level and method-level Qase attributes
                             var classAttributes = type.GetCustomAttributes(typeof(IQaseAttribute), false).Cast<Attribute>();
                             var methodAttributes = method.GetCustomAttributes(typeof(IQaseAttribute), false).Cast<Attribute>();
-
-                            foreach (var attr in classAttributes.Concat(methodAttributes))
-                            {
-                                switch (attr)
-                                {
-                                    case QaseIdsAttribute qaseIds:
-                                        testResult.TestopsIds = qaseIds.Ids;
-                                        break;
-                                    case TitleAttribute title:
-                                        testResult.Title = title.Title;
-                                        break;
-                                    case FieldsAttribute fields:
-                                        testResult.Fields[fields.Key] = fields.Value;
-                                        break;
-                                    case SuitesAttribute suites:
-                                        testResult.Relations.Suite.Data = suites.Suites
-                                            .Select(s => new SuiteData { Title = s })
-                                            .ToList();
-                                        break;
-                                    case IgnoreAttribute:
-                                        testResult.Ignore = true;
-                                        break;
-                                }
-                            }
+                            AttributeExtractor.Apply(classAttributes, methodAttributes, testResult);
 
                             // Extract parameters from DisplayName for parameterized tests
-                            var paramValues = ExtractParameterValuesFromDisplayName(testNode.DisplayName);
-                            if (paramValues.Count > 0)
+                            var parsedParams = ParameterParser.ParseAndMap(testNode.DisplayName, method);
+                            foreach (var kvp in parsedParams)
                             {
-                                var methodParams = method.GetParameters();
-                                for (int i = 0; i < Math.Min(paramValues.Count, methodParams.Length); i++)
-                                {
-                                    var paramName = methodParams[i].Name ?? $"param{i}";
-                                    testResult.Params[paramName] = string.IsNullOrEmpty(paramValues[i]) ? "empty" : paramValues[i];
-                                }
+                                testResult.Params[kvp.Key] = kvp.Value;
                             }
 
                             // If no [Title] attribute override and parameters were found, use method name as Title
