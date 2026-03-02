@@ -77,4 +77,16 @@ namespace Qase.Csharp.Commons.Tests.Fixtures
     {
         public void TestMethod() { }
     }
+
+    /// <summary>
+    /// Fixture with parameterized methods for ParameterParser.ParseAndMap tests.
+    /// Provides typed method signatures so MethodInfo.GetParameters() returns named parameters.
+    /// </summary>
+    public class ParameterizedMethodFixture
+    {
+        public void TwoStringParams(string user, string value) { }
+        public void ThreeParams(int quantity, double price, int discount) { }
+        public void SingleParam(string email) { }
+        public void NoParams() { }
+    }
 }
