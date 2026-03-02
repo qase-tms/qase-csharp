@@ -1,5 +1,15 @@
 # Changelog
 
+## qase-csharp 1.1.6
+
+- Extracted shared `SuiteParser` utility into Commons for consistent suite hierarchy extraction across all reporters
+- Extracted shared `TypeMethodResolver` utility into Commons with `ConcurrentDictionary` caching for assembly type/method resolution
+- Extracted shared `AttributeExtractor` utility into Commons for unified Qase attribute extraction (`[QaseIds]`, `[Title]`, `[Fields]`, `[Suites]`, `[Ignore]`)
+- Extracted shared `ParameterParser` utility into Commons for consistent parameter value parsing across reporters
+- Refactored xUnit, NUnit, and MSTest reporters to use Commons utilities instead of inline implementations
+- Removed dead private methods from MSTest and NUnit reporters (`ExtractParameterValuesFromDisplayName`, `ParseSuiteFromFullName`, `ExtractParameterValuesFromName`)
+- Removed duplicate attribute extraction tests from xUnit and NUnit reporter test projects (covered by Commons tests)
+
 ## qase-csharp 1.1.5
 
 - Added Qase MSTest Reporter for MSTest v3+ with Microsoft.Testing.Platform (MTP v2) integration
