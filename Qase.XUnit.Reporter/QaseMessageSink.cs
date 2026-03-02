@@ -152,38 +152,18 @@ namespace Qase.Xunit.Reporter
                 {
                     Suite = new Suite()
                     {
-                        Data = testCase.TestMethod.TestClass.Class.Name
-                            .Split('.')
-                            .Select(part => new SuiteData { Title = part })
-                            .ToList()
+                        Data = SuiteParser.FromTypeName(testCase.TestMethod.TestClass.Class.Name)
                     }
                 }
             };
 
-            var attributes = testCase.TestMethod.Method.GetCustomAttributes(typeof(IQaseAttribute));
-            var classAttributes = testCase.TestMethod.TestClass.Class.GetCustomAttributes(typeof(IQaseAttribute));
-
-            foreach (var attribute in classAttributes.Concat(attributes))
-            {
-                switch (((IReflectionAttributeInfo)attribute).Attribute)
-                {
-                    case QaseIdsAttribute qaseIdsAttribute:
-                        result.TestopsIds = qaseIdsAttribute.Ids;
-                        break;
-                    case TitleAttribute titleAttribute:
-                        result.Title = titleAttribute.Title;
-                        break;
-                    case FieldsAttribute fieldsAttribute:
-                        result.Fields.Add(fieldsAttribute.Key, fieldsAttribute.Value);
-                        break;
-                    case SuitesAttribute suitesAttribute:
-                        result.Relations.Suite.Data = suitesAttribute.Suites.Select(suite => new SuiteData { Title = suite }).ToList();
-                        break;
-                    case IgnoreAttribute ignoreAttribute:
-                        result.Ignore = true;
-                        break;
-                }
-            }
+            var classAttrs = testCase.TestMethod.TestClass.Class
+                .GetCustomAttributes(typeof(IQaseAttribute))
+                .Select(a => ((IReflectionAttributeInfo)a).Attribute);
+            var methodAttrs = testCase.TestMethod.Method
+                .GetCustomAttributes(typeof(IQaseAttribute))
+                .Select(a => ((IReflectionAttributeInfo)a).Attribute);
+            AttributeExtractor.Apply(classAttrs, methodAttrs, result);
 
             result.Signature = Signature.Generate(result.TestopsIds, result.Relations?.Suite?.Data?.Select(suite => suite.Title), result.Params);
 
