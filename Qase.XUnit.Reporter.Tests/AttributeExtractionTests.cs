@@ -1,10 +1,10 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using Moq;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Xunit.Reporter;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,44 +12,13 @@ namespace Qase.XUnit.Reporter.Tests
 {
     public class AttributeExtractionTests
     {
-        private object _sink;
         private Type _sinkType;
         private Mock<IRunnerLogger> _mockLogger;
 
         public AttributeExtractionTests()
         {
             _mockLogger = new Mock<IRunnerLogger>();
-            _sinkType = GetSinkType();
-            // Don't create instance in constructor - create it only when needed in tests
-        }
-
-        private Type GetSinkType()
-        {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == "Qase.XUnit.Reporters");
-            
-            if (assembly == null)
-            {
-                var currentDir = Directory.GetCurrentDirectory();
-                var dllPath = Path.Combine(currentDir, "..", "Qase.XUnit.Reporter", "bin", "Debug", "net6.0", "Qase.XUnit.Reporters.dll");
-                if (File.Exists(dllPath))
-                {
-                    assembly = Assembly.LoadFrom(dllPath);
-                }
-            }
-            
-            if (assembly == null)
-            {
-                throw new InvalidOperationException("Could not find Qase.XUnit.Reporters assembly");
-            }
-            
-            var sinkType = assembly.GetType("Qase.Xunit.Reporter.QaseMessageSink");
-            if (sinkType == null)
-            {
-                throw new InvalidOperationException("Could not find QaseMessageSink type");
-            }
-            
-            return sinkType;
+            _sinkType = typeof(QaseMessageSink);
         }
 
         [Fact]
@@ -63,9 +32,8 @@ namespace Qase.XUnit.Reporter.Tests
                 typeof(TestClassWithAttributes).GetMethod("TestMethodWithoutAttributes")!,
                 Array.Empty<IParameterInfo>(),
                 Array.Empty<object>());
-            
+
             var method = _sinkType.GetMethod("CreateBaseTestResult", BindingFlags.NonPublic | BindingFlags.Instance);
-            // Create instance only when needed
             var sink = Activator.CreateInstance(_sinkType, _mockLogger.Object)!;
 
             // Act
@@ -73,16 +41,10 @@ namespace Qase.XUnit.Reporter.Tests
 
             // Assert
             result.Should().NotBeNull();
-            // Class-level attributes should be extracted if the reflection works correctly
-            // Note: This test verifies the flow, but attribute extraction depends on proper reflection setup
-            if (result.Fields.Count > 0 || result.Relations.Suite.Data.Count > 2)
-            {
-                // Attributes were found
-                result.Fields.Should().ContainKey("classField");
-                result.Fields["classField"].Should().Be("classValue");
-                result.Relations.Suite.Data.Should().Contain(s => s.Title == "ClassSuite1");
-                result.Relations.Suite.Data.Should().Contain(s => s.Title == "ClassSuite2");
-            }
+            result!.Fields.Should().ContainKey("classField");
+            result.Fields["classField"].Should().Be("classValue");
+            result.Relations.Suite.Data.Should().Contain(s => s.Title == "ClassSuite1");
+            result.Relations.Suite.Data.Should().Contain(s => s.Title == "ClassSuite2");
         }
 
         [Fact]
@@ -96,9 +58,8 @@ namespace Qase.XUnit.Reporter.Tests
                 typeof(TestClassWithAttributes).GetMethod("TestMethodWithAttributes")!,
                 Array.Empty<IParameterInfo>(),
                 Array.Empty<object>());
-            
+
             var method = _sinkType.GetMethod("CreateBaseTestResult", BindingFlags.NonPublic | BindingFlags.Instance);
-            // Create instance only when needed
             var sink = Activator.CreateInstance(_sinkType, _mockLogger.Object)!;
 
             // Act
@@ -106,17 +67,9 @@ namespace Qase.XUnit.Reporter.Tests
 
             // Assert
             result.Should().NotBeNull();
-            // Method-level attributes should override class-level attributes
-            // Note: This test verifies the flow, but attribute extraction depends on proper reflection setup
-            if (result.TestopsIds != null && result.TestopsIds.Count > 0)
-            {
-                result.TestopsIds.Should().Contain(300);
-                result.TestopsIds.Should().Contain(400);
-            }
-            if (!string.IsNullOrEmpty(result.Title) && result.Title != "TestMethodWithAttributes")
-            {
-                result.Title.Should().Be("Test Method Title");
-            }
+            result!.TestopsIds.Should().Contain(300);
+            result.TestopsIds.Should().Contain(400);
+            result.Title.Should().Be("Test Method Title");
         }
 
         [Fact]
@@ -130,9 +83,8 @@ namespace Qase.XUnit.Reporter.Tests
                 typeof(TestClassWithAttributes).GetMethod("IgnoredTestMethod")!,
                 Array.Empty<IParameterInfo>(),
                 Array.Empty<object>());
-            
+
             var method = _sinkType.GetMethod("CreateBaseTestResult", BindingFlags.NonPublic | BindingFlags.Instance);
-            // Create instance only when needed
             var sink = Activator.CreateInstance(_sinkType, _mockLogger.Object)!;
 
             // Act
@@ -140,12 +92,7 @@ namespace Qase.XUnit.Reporter.Tests
 
             // Assert
             result.Should().NotBeNull();
-            // Note: Ignore attribute extraction depends on proper reflection setup
-            // If attributes are found, Ignore should be true
-            if (result.Ignore)
-            {
-                result.Ignore.Should().BeTrue();
-            }
+            result!.Ignore.Should().BeTrue();
         }
 
         [Fact]
@@ -159,9 +106,8 @@ namespace Qase.XUnit.Reporter.Tests
                 typeof(TestClassWithoutAttributes).GetMethod("TestMethod")!,
                 Array.Empty<IParameterInfo>(),
                 Array.Empty<object>());
-            
+
             var method = _sinkType.GetMethod("CreateBaseTestResult", BindingFlags.NonPublic | BindingFlags.Instance);
-            // Create instance only when needed
             var sink = Activator.CreateInstance(_sinkType, _mockLogger.Object)!;
 
             // Act
@@ -169,7 +115,7 @@ namespace Qase.XUnit.Reporter.Tests
 
             // Assert
             result.Should().NotBeNull();
-            result.TestopsIds.Should().BeNull();
+            result!.TestopsIds.Should().BeNull();
             result.Title.Should().Be("TestMethod");
             result.Fields.Should().BeEmpty();
             result.Ignore.Should().BeFalse();
@@ -186,9 +132,8 @@ namespace Qase.XUnit.Reporter.Tests
                 typeof(TestClassWithAttributes).GetMethod("TestMethodWithSingleQaseId")!,
                 Array.Empty<IParameterInfo>(),
                 Array.Empty<object>());
-            
+
             var method = _sinkType.GetMethod("CreateBaseTestResult", BindingFlags.NonPublic | BindingFlags.Instance);
-            // Create instance only when needed
             var sink = Activator.CreateInstance(_sinkType, _mockLogger.Object)!;
 
             // Act
@@ -196,11 +141,7 @@ namespace Qase.XUnit.Reporter.Tests
 
             // Assert
             result.Should().NotBeNull();
-            // Note: Attribute extraction depends on proper reflection setup
-            if (result.TestopsIds != null && result.TestopsIds.Count > 0)
-            {
-                result.TestopsIds.Should().Contain(500);
-            }
+            result!.TestopsIds.Should().Contain(500);
         }
 
         private Mock<ITestCase> CreateMockTestCaseWithAttributes(
@@ -215,47 +156,39 @@ namespace Qase.XUnit.Reporter.Tests
             var mockMethod = new Mock<IMethodInfo>();
             mockMethod.Setup(x => x.Name).Returns(methodName);
             mockMethod.Setup(x => x.GetParameters()).Returns(parameters);
-            
-            // Setup custom attributes from actual method
-            var methodAttributes = methodInfo.GetCustomAttributes(typeof(Qase.Csharp.Commons.Attributes.IQaseAttribute), false)
-                .Select(attr => new Mock<IAttributeInfo>())
-                .ToList();
-            
-            foreach (var attr in methodAttributes)
-            {
-                var actualAttr = methodInfo.GetCustomAttributes(typeof(Qase.Csharp.Commons.Attributes.IQaseAttribute), false)
-                    .FirstOrDefault();
-                if (actualAttr != null)
+
+            // Get actual attributes from the method and wrap as IReflectionAttributeInfo
+            var methodAttrInfos = methodInfo
+                .GetCustomAttributes(typeof(Qase.Csharp.Commons.Attributes.IQaseAttribute), false)
+                .Cast<Attribute>()
+                .Select(attr =>
                 {
-                    attr.Setup(x => x.GetCustomAttributes(It.IsAny<Type>())).Returns(Array.Empty<IAttributeInfo>());
-                    attr.Setup(x => x.GetType()).Returns(actualAttr.GetType());
-                }
-            }
-            
-            mockMethod.Setup(x => x.GetCustomAttributes(It.IsAny<Type>()))
-                .Returns(methodAttributes.Select(m => m.Object).ToArray());
+                    var mock = new Mock<IReflectionAttributeInfo>();
+                    mock.Setup(x => x.Attribute).Returns(attr);
+                    return (IAttributeInfo)mock.Object;
+                })
+                .ToList();
+
+            mockMethod.Setup(x => x.GetCustomAttributes(It.IsAny<string>()))
+                .Returns(methodAttrInfos);
 
             var mockTypeInfo = new Mock<ITypeInfo>();
             mockTypeInfo.Setup(x => x.Name).Returns(classType.Name);
-            
-            // Setup class-level attributes
-            var classAttributes = classType.GetCustomAttributes(typeof(Qase.Csharp.Commons.Attributes.IQaseAttribute), false)
-                .Select(attr => new Mock<IAttributeInfo>())
-                .ToList();
-            
-            foreach (var attr in classAttributes)
-            {
-                var actualAttr = classType.GetCustomAttributes(typeof(Qase.Csharp.Commons.Attributes.IQaseAttribute), false)
-                    .FirstOrDefault();
-                if (actualAttr != null)
+
+            // Get actual attributes from the class and wrap as IReflectionAttributeInfo
+            var classAttrInfos = classType
+                .GetCustomAttributes(typeof(Qase.Csharp.Commons.Attributes.IQaseAttribute), false)
+                .Cast<Attribute>()
+                .Select(attr =>
                 {
-                    attr.Setup(x => x.GetCustomAttributes(It.IsAny<Type>())).Returns(Array.Empty<IAttributeInfo>());
-                    attr.Setup(x => x.GetType()).Returns(actualAttr.GetType());
-                }
-            }
-            
-            mockTypeInfo.Setup(x => x.GetCustomAttributes(It.IsAny<Type>()))
-                .Returns(classAttributes.Select(m => m.Object).ToArray());
+                    var mock = new Mock<IReflectionAttributeInfo>();
+                    mock.Setup(x => x.Attribute).Returns(attr);
+                    return (IAttributeInfo)mock.Object;
+                })
+                .ToList();
+
+            mockTypeInfo.Setup(x => x.GetCustomAttributes(It.IsAny<string>()))
+                .Returns(classAttrInfos);
 
             var mockTestClass = new Mock<ITestClass>();
             mockTestClass.Setup(x => x.Class).Returns(mockTypeInfo.Object);

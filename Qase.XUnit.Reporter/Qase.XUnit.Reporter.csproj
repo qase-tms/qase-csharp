@@ -8,8 +8,11 @@
     <IsPackable>true</IsPackable>
     <Description>xUnit Integration with Qase TMS</Description>
     <Nullable>enable</Nullable>
-    <InternalsVisibleTo>Qase.XUnit.Reporter.Tests</InternalsVisibleTo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Qase.XUnit.Reporter.Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />

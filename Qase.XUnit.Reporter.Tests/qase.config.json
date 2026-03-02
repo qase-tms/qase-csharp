@@ -1,0 +1,12 @@
+{
+  "mode": "report",
+  "report": {
+    "driver": "local",
+    "connection": {
+      "local": {
+        "path": "./build/qase-report",
+        "format": "json"
+      }
+    }
+  }
+}

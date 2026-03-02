@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <ItemGroup>
+    <TestingPlatformBuilderHook Include="5B749ED6-F3A3-4379-A25C-CC1044118342">
+      <DisplayName>Qase.MSTest.Reporter</DisplayName>
+      <TypeFullName>Qase.MSTest.Reporter.TestingPlatformBuilderHook</TypeFullName>
+    </TestingPlatformBuilderHook>
+  </ItemGroup>
+</Project>

@@ -1,5 +1,14 @@
 # Changelog
 
+## qase-csharp 1.1.5
+
+- Added Qase MSTest Reporter for MSTest v3+ with Microsoft.Testing.Platform (MTP v2) integration
+- Supports all Qase attributes: `[QaseIds]`, `[Title]`, `[Fields]`, `[Suites]`, `[Ignore]`
+- Step tracking via `[Step]`/`[Qase]` attributes through ContextManager
+- Attachments via `Metadata.Attach()` and comments via `Metadata.Comment()`
+- Parameterized test support with `[DataRow]` and `[DynamicData]`
+- Test signature generation for cross-run correlation
+
 ## qase-csharp 1.1.3
 
 - Fixed NUnit reporter incorrectly splitting `fullName` on dots inside decimal parameter values, which caused test method name fragments to appear in suite data and wrong display names for ContextManager lookups

@@ -26,14 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Qase.XUnit.Reporter/Qase.XUnit.Reporter.csproj" />
+    <ProjectReference Include="../Qase.MSTest.Reporter/Qase.MSTest.Reporter.csproj" />
     <ProjectReference Include="../Qase.Csharp.Commons/Qase.Csharp.Commons.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="qase.config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

@@ -197,6 +197,9 @@ namespace Qase.Xunit.Reporter
         /// <returns>True if the failure is due to assertion, false otherwise</returns>
         public static bool IsAssertionFailure(ITestFailed testFailed)
         {
+            if (testFailed.StackTraces == null)
+                return false;
+
             // Check stack trace for xUnit assertion methods
             var stackTrace = string.Join("\n", testFailed.StackTraces);
 

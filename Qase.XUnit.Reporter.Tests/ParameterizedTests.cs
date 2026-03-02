@@ -1,9 +1,9 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using Moq;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Xunit.Reporter;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -11,15 +11,13 @@ namespace Qase.XUnit.Reporter.Tests
 {
     public class ParameterizedTests
     {
-        private object _sink;
         private Type _sinkType;
         private Mock<IRunnerLogger> _mockLogger;
 
         public ParameterizedTests()
         {
             _mockLogger = new Mock<IRunnerLogger>();
-            _sinkType = GetSinkType();
-            // Don't create instance in constructor - create it only when needed in tests
+            _sinkType = typeof(QaseMessageSink);
         }
 
         [Fact]
@@ -142,46 +140,17 @@ namespace Qase.XUnit.Reporter.Tests
             result.Params.Should().BeEmpty();
         }
 
-        private Type GetSinkType()
-        {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == "Qase.XUnit.Reporters");
-            
-            if (assembly == null)
-            {
-                var currentDir = System.IO.Directory.GetCurrentDirectory();
-                var dllPath = System.IO.Path.Combine(currentDir, "..", "Qase.XUnit.Reporter", "bin", "Debug", "net6.0", "Qase.XUnit.Reporters.dll");
-                if (System.IO.File.Exists(dllPath))
-                {
-                    assembly = Assembly.LoadFrom(dllPath);
-                }
-            }
-            
-            if (assembly == null)
-            {
-                throw new InvalidOperationException("Could not find Qase.XUnit.Reporters assembly");
-            }
-            
-            var sinkType = assembly.GetType("Qase.Xunit.Reporter.QaseMessageSink");
-            if (sinkType == null)
-            {
-                throw new InvalidOperationException("Could not find QaseMessageSink type");
-            }
-            
-            return sinkType;
-        }
-
         private Mock<ITestCase> CreateMockTestCase(string methodName, string className, IParameterInfo[] parameters, object[] arguments)
         {
             var mockTestCase = new Mock<ITestCase>();
             var mockMethod = new Mock<IMethodInfo>();
             mockMethod.Setup(x => x.Name).Returns(methodName);
             mockMethod.Setup(x => x.GetParameters()).Returns(parameters);
-            mockMethod.Setup(x => x.GetCustomAttributes(It.IsAny<Type>())).Returns(Array.Empty<IAttributeInfo>());
+            mockMethod.Setup(x => x.GetCustomAttributes(It.IsAny<string>())).Returns(Array.Empty<IAttributeInfo>());
 
             var mockTypeInfo = new Mock<ITypeInfo>();
             mockTypeInfo.Setup(x => x.Name).Returns(className);
-            mockTypeInfo.Setup(x => x.GetCustomAttributes(It.IsAny<Type>())).Returns(Array.Empty<IAttributeInfo>());
+            mockTypeInfo.Setup(x => x.GetCustomAttributes(It.IsAny<string>())).Returns(Array.Empty<IAttributeInfo>());
 
             var mockTestClass = new Mock<ITestClass>();
             mockTestClass.Setup(x => x.Class).Returns(mockTypeInfo.Object);
