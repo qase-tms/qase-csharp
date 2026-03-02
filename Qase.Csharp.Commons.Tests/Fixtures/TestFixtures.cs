@@ -28,4 +28,53 @@ namespace Qase.Csharp.Commons.Tests.Fixtures
     {
         public void TestMethod() { }
     }
+
+    /// <summary>
+    /// Fixture with all five Qase attribute types on a single method.
+    /// Used for ATTR-01 tests (single-attribute and combined extraction).
+    /// </summary>
+    public class FullyAnnotatedFixture
+    {
+        [QaseIds(1, 2)]
+        [Title("Custom Title")]
+        [Fields("env", "staging")]
+        [Suites("Login", "Auth")]
+        public void AnnotatedMethod() { }
+    }
+
+    /// <summary>
+    /// Fixture with class-level and method-level attributes for override testing.
+    /// Used for ATTR-02 (duplicate field keys) and ATTR-03 (class-first ordering).
+    /// </summary>
+    [Fields("env", "staging")]
+    [Fields("priority", "high")]
+    [Suites("ClassSuite")]
+    [Ignore]
+    public class ClassAndMethodAttributeFixture
+    {
+        [Fields("env", "production")]
+        [Fields("browser", "chrome")]
+        [Suites("MethodSuite")]
+        public void MethodWithOverrides() { }
+
+        public void PlainMethod() { }
+    }
+
+    /// <summary>
+    /// Fixture with no Qase attributes (edge case for empty extraction).
+    /// </summary>
+    public class NoAttributeFixture
+    {
+        public void PlainMethod() { }
+    }
+
+    /// <summary>
+    /// Fixture with Ignore attribute on class level only.
+    /// Used for ATTR-03 (class-level Ignore preserved when no method-level override).
+    /// </summary>
+    [Ignore]
+    public class IgnoredClassFixture
+    {
+        public void TestMethod() { }
+    }
 }
