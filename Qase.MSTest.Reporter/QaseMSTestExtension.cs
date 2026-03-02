@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Testing.Platform.Extensions;
@@ -339,84 +338,6 @@ namespace Qase.MSTest.Reporter
             }
 
             return (managedType, methodName, parameterTypeFullNames);
-        }
-
-        /// <summary>
-        /// Extracts parameter values from MSTest's default DisplayName format.
-        /// MSTest format: "MethodName (value1,\"string value\",True,null)"
-        /// Also handles: "MethodName(value1,value2)" (no space before paren).
-        /// Returns empty list if DisplayName does not contain parseable parameter values.
-        /// </summary>
-        private static List<string> ExtractParameterValuesFromDisplayName(string displayName)
-        {
-            var parameters = new List<string>();
-            if (string.IsNullOrEmpty(displayName))
-                return parameters;
-
-            var openParenIndex = displayName.IndexOf('(');
-            var closeParenIndex = displayName.LastIndexOf(')');
-
-            if (openParenIndex < 0 || closeParenIndex <= openParenIndex)
-                return parameters;
-
-            var paramsString = displayName
-                .Substring(openParenIndex + 1, closeParenIndex - openParenIndex - 1)
-                .Trim();
-
-            if (string.IsNullOrEmpty(paramsString))
-                return parameters;
-
-            // Character-by-character parse handling quotes and escapes
-            var currentParam = new StringBuilder();
-            bool inQuotes = false;
-            bool escapeNext = false;
-
-            for (int i = 0; i < paramsString.Length; i++)
-            {
-                char ch = paramsString[i];
-
-                if (escapeNext)
-                {
-                    if (ch == '"' || ch == '\\')
-                    {
-                        currentParam.Append(ch);
-                    }
-                    else
-                    {
-                        currentParam.Append('\\');
-                        currentParam.Append(ch);
-                    }
-                    escapeNext = false;
-                    continue;
-                }
-
-                if (ch == '\\')
-                {
-                    escapeNext = true;
-                    continue;
-                }
-
-                if (ch == '"')
-                {
-                    inQuotes = !inQuotes;
-                    continue; // Strip quotes from output
-                }
-
-                if (ch == ',' && !inQuotes)
-                {
-                    parameters.Add(currentParam.ToString().Trim());
-                    currentParam.Clear();
-                    continue;
-                }
-
-                currentParam.Append(ch);
-            }
-
-            var lastParam = currentParam.ToString().Trim();
-            if (!string.IsNullOrEmpty(lastParam))
-                parameters.Add(lastParam);
-
-            return parameters;
         }
 
         /// <inheritdoc />
