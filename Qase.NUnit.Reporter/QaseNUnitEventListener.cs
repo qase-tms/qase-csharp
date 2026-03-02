@@ -357,25 +357,6 @@ namespace Qase.NUnit.Reporter
             return displayName;
         }
 
-        private List<SuiteData> ParseSuiteFromFullName(string fullName)
-        {
-            // FullName format: "Namespace.ClassName.MethodName" or "Namespace.ClassName.MethodName(params)"
-            // Strip parameters first to avoid splitting on dots inside parameter values (e.g. "50.0")
-            var openParenIndex = fullName.IndexOf('(');
-            var nameWithoutParams = openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
-
-            var parts = nameWithoutParams.Split('.');
-            if (parts.Length >= 2)
-            {
-                // Take all parts except the last one (method name)
-                return parts.Take(parts.Length - 1)
-                    .Select(part => new SuiteData { Title = part })
-                    .ToList();
-            }
-
-            return new List<SuiteData>();
-        }
-
         private void ExtractAttributesFromFullName(string fullName, TestResult result)
         {
             try
@@ -574,91 +555,6 @@ namespace Qase.NUnit.Reporter
             {
                 WriteToFile($"[Qase] Error extracting parameters from test name: {ex.Message}");
             }
-        }
-
-        /// <summary>
-        /// Extracts parameter values from test name
-        /// Example: "Test2(\"user1\",\"value2\")" -> ["user1", "value2"]
-        /// Handles both escaped quotes (\") and regular quotes (")
-        /// </summary>
-        private List<string> ExtractParameterValuesFromName(string testName)
-        {
-            var parameters = new List<string>();
-            
-            if (string.IsNullOrEmpty(testName))
-                return parameters;
-
-            var openParenIndex = testName.IndexOf('(');
-            var closeParenIndex = testName.LastIndexOf(')');
-            
-            if (openParenIndex < 0 || closeParenIndex < 0 || closeParenIndex <= openParenIndex)
-                return parameters;
-
-            var paramsString = testName.Substring(openParenIndex + 1, closeParenIndex - openParenIndex - 1).Trim();
-            
-            if (string.IsNullOrEmpty(paramsString))
-                return parameters;
-
-            // Parse comma-separated values, handling quoted strings
-            // XML may have escaped quotes: \" or regular quotes: "
-            var currentParam = new System.Text.StringBuilder();
-            var inQuotes = false;
-            var escapeNext = false;
-
-            for (int i = 0; i < paramsString.Length; i++)
-            {
-                var ch = paramsString[i];
-
-                if (escapeNext)
-                {
-                    // Handle escaped characters
-                    if (ch == '"' || ch == '\\')
-                    {
-                        currentParam.Append(ch);
-                    }
-                    else
-                    {
-                        currentParam.Append('\\').Append(ch);
-                    }
-                    escapeNext = false;
-                    continue;
-                }
-
-                if (ch == '\\')
-                {
-                    escapeNext = true;
-                    continue;
-                }
-
-                if (ch == '"')
-                {
-                    inQuotes = !inQuotes;
-                    // Don't include quotes in the parameter value
-                    continue;
-                }
-
-                if (ch == ',' && !inQuotes)
-                {
-                    var param = currentParam.ToString().Trim();
-                    if (!string.IsNullOrEmpty(param))
-                    {
-                        parameters.Add(param);
-                    }
-                    currentParam.Clear();
-                    continue;
-                }
-
-                currentParam.Append(ch);
-            }
-
-            // Add last parameter
-            var lastParam = currentParam.ToString().Trim();
-            if (!string.IsNullOrEmpty(lastParam))
-            {
-                parameters.Add(lastParam);
-            }
-
-            return parameters;
         }
 
         private TestResultStatus MapResultStatus(string result)
