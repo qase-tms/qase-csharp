@@ -277,7 +277,7 @@ namespace Qase.NUnit.Reporter
                 {
                     Suite = new Suite
                     {
-                        Data = ParseSuiteFromFullName(fullName)
+                        Data = SuiteParser.FromFullTestName(fullName)
                     }
                 }
             };
