@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using Moq;
+using Qase.Xunit.Reporter;
 
 namespace Qase.XUnit.Reporter.Tests
 {
@@ -156,39 +155,7 @@ namespace Qase.XUnit.Reporter.Tests
 
         private bool InvokeIsAssertionFailure(ITestFailed testFailed)
         {
-            // Get type from assembly since class is internal
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == "Qase.XUnit.Reporter");
-            
-            if (assembly == null)
-            {
-                // Try to load from project reference
-                var currentDir = Directory.GetCurrentDirectory();
-                var dllPath = Path.Combine(currentDir, "..", "Qase.XUnit.Reporter", "bin", "Debug", "net6.0", "Qase.XUnit.Reporter.dll");
-                if (File.Exists(dllPath))
-                {
-                    assembly = Assembly.LoadFrom(dllPath);
-                }
-            }
-            
-            if (assembly == null)
-            {
-                throw new InvalidOperationException("Could not find Qase.XUnit.Reporter assembly");
-            }
-            
-            var sinkType = assembly.GetType("Qase.Xunit.Reporter.QaseMessageSink");
-            if (sinkType == null)
-            {
-                throw new InvalidOperationException("Could not find QaseMessageSink type");
-            }
-            
-            var method = sinkType.GetMethod("IsAssertionFailure", BindingFlags.Public | BindingFlags.Static);
-            if (method == null)
-            {
-                throw new InvalidOperationException("Could not find IsAssertionFailure method");
-            }
-            
-            return (bool)method.Invoke(null, new object[] { testFailed })!;
+            return QaseMessageSink.IsAssertionFailure(testFailed);
         }
     }
 }

@@ -10,6 +10,7 @@ To report results from tests using a popular framework, use one of these reporte
 
 - [Qase.xUnit.Reporter](../Qase.XUnit.Reporter/README.md) - xUnit test framework integration
 - [Qase.NUnit.Reporter](../Qase.NUnit.Reporter/README.md) - NUnit test framework integration
+- [Qase.MSTest.Reporter](../Qase.MSTest.Reporter/README.md) - MSTest test framework integration
 
 You should only use this package directly if you're developing a custom reporter for a specialized test framework.
 

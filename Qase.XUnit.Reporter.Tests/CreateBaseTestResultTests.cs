@@ -1,10 +1,9 @@
 using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using Moq;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Xunit.Reporter;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,38 +18,8 @@ namespace Qase.XUnit.Reporter.Tests
         public CreateBaseTestResultTests()
         {
             _mockLogger = new Mock<IRunnerLogger>();
-            _sinkType = GetSinkType();
-            // Create instance using reflection
+            _sinkType = typeof(QaseMessageSink);
             _sink = Activator.CreateInstance(_sinkType, _mockLogger.Object)!;
-        }
-
-        private Type GetSinkType()
-        {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == "Qase.XUnit.Reporters");
-            
-            if (assembly == null)
-            {
-                var currentDir = Directory.GetCurrentDirectory();
-                var dllPath = Path.Combine(currentDir, "..", "Qase.XUnit.Reporter", "bin", "Debug", "net6.0", "Qase.XUnit.Reporters.dll");
-                if (File.Exists(dllPath))
-                {
-                    assembly = Assembly.LoadFrom(dllPath);
-                }
-            }
-            
-            if (assembly == null)
-            {
-                throw new InvalidOperationException("Could not find Qase.XUnit.Reporters assembly");
-            }
-            
-            var sinkType = assembly.GetType("Qase.Xunit.Reporter.QaseMessageSink");
-            if (sinkType == null)
-            {
-                throw new InvalidOperationException("Could not find QaseMessageSink type");
-            }
-            
-            return sinkType;
         }
 
         [Fact]
@@ -195,11 +164,11 @@ namespace Qase.XUnit.Reporter.Tests
             var mockMethod = new Mock<IMethodInfo>();
             mockMethod.Setup(x => x.Name).Returns(methodName);
             mockMethod.Setup(x => x.GetParameters()).Returns(parameters);
-            mockMethod.Setup(x => x.GetCustomAttributes(It.IsAny<Type>())).Returns(Array.Empty<IAttributeInfo>());
+            mockMethod.Setup(x => x.GetCustomAttributes(It.IsAny<string>())).Returns(Array.Empty<IAttributeInfo>());
 
             var mockTypeInfo = new Mock<ITypeInfo>();
             mockTypeInfo.Setup(x => x.Name).Returns(className);
-            mockTypeInfo.Setup(x => x.GetCustomAttributes(It.IsAny<Type>())).Returns(Array.Empty<IAttributeInfo>());
+            mockTypeInfo.Setup(x => x.GetCustomAttributes(It.IsAny<string>())).Returns(Array.Empty<IAttributeInfo>());
 
             var mockTestClass = new Mock<ITestClass>();
             mockTestClass.Setup(x => x.Class).Returns(mockTypeInfo.Object);

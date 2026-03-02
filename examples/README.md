@@ -1,6 +1,6 @@
 # Qase C# Examples
 
-Example projects demonstrating all Qase TestOps reporter capabilities for xUnit and NUnit frameworks.
+Example projects demonstrating all Qase TestOps reporter capabilities for xUnit, NUnit, and MSTest frameworks.
 
 ## Example Categories
 
@@ -12,7 +12,7 @@ Each example project contains the following test files:
 | `MetadataTests.cs` | `Metadata.Comment()` for adding contextual comments to test results |
 | `StepTests.cs` | Basic steps, nested steps, steps with custom `[Title]`, mixed-status steps |
 | `AttachmentTests.cs` | Single file, multiple files, byte array, step-level attachments |
-| `ParameterizedTests.cs` | Data-driven tests (xUnit: `Theory`/`InlineData`/`MemberData`, NUnit: `TestCase`/`Values`/`Range`) |
+| `ParameterizedTests.cs` | Data-driven tests (xUnit: `Theory`/`InlineData`/`MemberData`, NUnit: `TestCase`/`Values`/`Range`, MSTest: `DataRow`/`DynamicData`) |
 | `CombinedTests.cs` | End-to-end scenarios combining steps, attachments, comments, and attributes |
 
 ## Available Projects
@@ -39,9 +39,20 @@ dotnet test
 
 For details, see [NUnitExamples/README.md](NUnitExamples/README.md).
 
+### MSTest Examples
+
+**Location**: [`MSTestExamples/`](MSTestExamples/)
+
+```bash
+cd MSTestExamples
+dotnet test
+```
+
+For details, see [MSTestExamples/README.md](MSTestExamples/README.md).
+
 ## Configuration
 
-Both projects require a `qase.config.json` configuration file:
+All projects require a `qase.config.json` configuration file:
 
 1. Copy `qase.config.json.example` to `qase.config.json`
 2. Fill in your Qase API token and project code
@@ -75,3 +86,4 @@ Both projects require a `qase.config.json` configuration file:
 - [Qase API Documentation](https://developers.qase.io/)
 - [xUnit Documentation](https://xunit.net/)
 - [NUnit Documentation](https://docs.nunit.org/)
+- [MSTest Documentation](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-mstest-intro)
