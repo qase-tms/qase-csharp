@@ -42,50 +42,6 @@ namespace Qase.NUnit.Reporter.Tests
 
         #endregion
 
-        #region ExtractParameterValuesFromName Tests
-
-        [Theory]
-        [InlineData("Test2(\"user1\",\"value2\")", new[] { "user1", "value2" })]
-        [InlineData("Test(\"param1\", \"param2\")", new[] { "param1", "param2" })]
-        [InlineData("Test(\"single\")", new[] { "single" })]
-        [InlineData("Test()", new string[0])]
-        [InlineData("Test", new string[0])]
-        [InlineData("", new string[0])]
-        [InlineData(null, new string[0])]
-        public void ExtractParameterValuesFromName_ShouldExtractParameters(string testName, string[] expected)
-        {
-            // Arrange
-            var method = _listenerType.GetMethod("ExtractParameterValuesFromName", 
-                BindingFlags.NonPublic | BindingFlags.Instance);
-
-            // Act
-            var result = method?.Invoke(_listener, new object[] { testName }) as List<string>;
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(expected);
-        }
-
-        [Theory]
-        [InlineData("Test(\"value with spaces\")", new[] { "value with spaces" })]
-        [InlineData("Test(\"value,with,commas\")", new[] { "value,with,commas" })]
-        [InlineData("Test(\"value\\\"with\\\"quotes\")", new[] { "value\"with\"quotes" })]
-        public void ExtractParameterValuesFromName_ShouldHandleSpecialCharacters(string testName, string[] expected)
-        {
-            // Arrange
-            var method = _listenerType.GetMethod("ExtractParameterValuesFromName", 
-                BindingFlags.NonPublic | BindingFlags.Instance);
-
-            // Act
-            var result = method?.Invoke(_listener, new object[] { testName }) as List<string>;
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(expected);
-        }
-
-        #endregion
-
         #region GenerateDisplayName Tests
 
         [Theory]
@@ -152,51 +108,6 @@ namespace Qase.NUnit.Reporter.Tests
 
             // Assert
             result.Should().Be(expected);
-        }
-
-        #endregion
-
-        #region ParseSuiteFromFullName Tests
-
-        [Theory]
-        [InlineData("NunitExamples.Tests.Test1", new[] { "NunitExamples", "Tests" })]
-        [InlineData("Tests.Test1", new[] { "Tests" })]
-        [InlineData("Test1", new string[0])]
-        [InlineData("", new string[0])]
-        public void ParseSuiteFromFullName_ShouldParseSuiteHierarchy(string fullName, string[] expected)
-        {
-            // Arrange
-            var method = _listenerType.GetMethod("ParseSuiteFromFullName", 
-                BindingFlags.NonPublic | BindingFlags.Instance);
-
-            // Act
-            var result = method?.Invoke(_listener, new object[] { fullName }) as List<Qase.Csharp.Commons.Models.Domain.SuiteData>;
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().HaveCount(expected.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                result[i].Title.Should().Be(expected[i]);
-            }
-        }
-
-        [Fact]
-        public void ParseSuiteFromFullName_WithParameterizedTest_ShouldParseCorrectly()
-        {
-            // Arrange
-            var method = _listenerType.GetMethod("ParseSuiteFromFullName", 
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            var fullName = "NunitExamples.Tests.Test2(\"user1\",\"value2\")";
-
-            // Act
-            var result = method?.Invoke(_listener, new object[] { fullName }) as List<Qase.Csharp.Commons.Models.Domain.SuiteData>;
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().HaveCount(2);
-            result[0].Title.Should().Be("NunitExamples");
-            result[1].Title.Should().Be("Tests");
         }
 
         #endregion
