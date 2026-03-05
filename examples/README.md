@@ -1,6 +1,6 @@
 # Qase C# Examples
 
-Example projects demonstrating all Qase TestOps reporter capabilities for xUnit, NUnit, and MSTest frameworks.
+Example projects demonstrating all Qase TestOps reporter capabilities for xUnit, xUnit v3, NUnit, and MSTest frameworks.
 
 ## Example Categories
 
@@ -27,6 +27,19 @@ dotnet test
 ```
 
 For details, see [xUnitExamples/README.md](xUnitExamples/README.md).
+
+### xUnit v3 Examples
+
+**Location**: [`xUnitV3Examples/`](xUnitV3Examples/)
+
+```bash
+cd xUnitV3Examples
+dotnet test
+```
+
+For details, see [xUnitV3Examples/README.md](xUnitV3Examples/README.md).
+
+> **Note:** xUnit v3 requires Microsoft Testing Platform v2 (MTP). The example project's `.csproj` includes `OutputType=Exe` and `TestingPlatformDotnetTestSupport=true` as required by MTP v2.
 
 ### NUnit Examples
 
@@ -86,4 +99,5 @@ All projects require a `qase.config.json` configuration file:
 - [Qase API Documentation](https://developers.qase.io/)
 - [xUnit Documentation](https://xunit.net/)
 - [NUnit Documentation](https://docs.nunit.org/)
+- [xUnit v3 Documentation](https://xunit.net/docs/getting-started/v3/getting-started)
 - [MSTest Documentation](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-mstest-intro)

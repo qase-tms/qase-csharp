@@ -10,6 +10,7 @@ includes reporters and API clients designed to streamline the process of reporti
 | [Qase.xUnit.Reporter](Qase.XUnit.Reporter/) | xUnit test framework integration with real-time result reporting | [README](Qase.XUnit.Reporter/README.md) · [Usage](Qase.XUnit.Reporter/docs/usage.md) · [Docs](Qase.XUnit.Reporter/docs/) | [![NuGet](https://img.shields.io/nuget/v/Qase.XUnit.Reporter)](https://nuget.org/packages/Qase.XUnit.Reporter) |
 | [Qase.NUnit.Reporter](Qase.NUnit.Reporter/) | NUnit test framework integration with real-time result reporting | [README](Qase.NUnit.Reporter/README.md) · [Usage](Qase.NUnit.Reporter/docs/usage.md) · [Docs](Qase.NUnit.Reporter/docs/) | [![NuGet](https://img.shields.io/nuget/v/Qase.NUnit.Reporter)](https://nuget.org/packages/Qase.NUnit.Reporter) |
 | [Qase.MSTest.Reporter](Qase.MSTest.Reporter/) | MSTest v3+ integration with Microsoft.Testing.Platform v2 | [README](Qase.MSTest.Reporter/README.md) · [Usage](Qase.MSTest.Reporter/docs/usage.md) · [Docs](Qase.MSTest.Reporter/docs/) | [![NuGet](https://img.shields.io/nuget/v/Qase.MSTest.Reporter)](https://nuget.org/packages/Qase.MSTest.Reporter) |
+| [Qase.XUnit.V3.Reporter](Qase.XUnit.V3.Reporter/) | xUnit v3 integration with Microsoft.Testing.Platform v2 | [README](Qase.XUnit.V3.Reporter/README.md) · [Usage](Qase.XUnit.V3.Reporter/docs/usage.md) · [Docs](Qase.XUnit.V3.Reporter/docs/) | [![NuGet](https://img.shields.io/nuget/v/Qase.XUnit.V3.Reporter)](https://nuget.org/packages/Qase.XUnit.V3.Reporter) |
 | Qase.SpecFlow.Reporter | SpecFlow BDD framework integration | Coming soon | - |
 
 ## Libraries
@@ -31,4 +32,4 @@ All Qase reporters share a common configuration through `qase.config.json`. See 
 
 ## Examples
 
-Example projects are available in the [examples/](examples/) directory for xUnit, NUnit, and MSTest frameworks.
+Example projects are available in the [examples/](examples/) directory for xUnit, xUnit v3, NUnit, and MSTest frameworks.
