@@ -1,0 +1,10 @@
+2026-02-19 10:15:32.001 [INFO]  Application started on port 8080
+2026-02-19 10:15:32.045 [INFO]  Database connection established (PostgreSQL 16.2)
+2026-02-19 10:15:33.102 [INFO]  GET /api/v1/health -> 200 OK (12ms)
+2026-02-19 10:15:34.210 [INFO]  POST /api/v1/auth/login -> 200 OK (45ms)
+2026-02-19 10:15:34.890 [WARN]  Rate limit approaching for IP 192.168.1.42 (85/100)
+2026-02-19 10:15:35.001 [INFO]  GET /api/v1/users/42 -> 200 OK (8ms)
+2026-02-19 10:15:36.150 [ERROR] POST /api/v1/orders -> 500 Internal Server Error (320ms)
+2026-02-19 10:15:36.151 [ERROR] Stack trace: NullReferenceException at OrderService.Create()
+2026-02-19 10:15:37.200 [INFO]  GET /api/v1/products?page=1&size=20 -> 200 OK (15ms)
+2026-02-19 10:15:38.000 [INFO]  Application shutdown initiated
