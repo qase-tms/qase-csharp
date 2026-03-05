@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <ItemGroup>
+    <TestingPlatformBuilderHook Include="A3F7B2D1-E8C4-4A6F-9D5B-7C1E3F8A2B64">
+      <DisplayName>Qase.XUnit.V3.Reporter</DisplayName>
+      <TypeFullName>Qase.XUnit.V3.Reporter.TestingPlatformBuilderHook</TypeFullName>
+    </TestingPlatformBuilderHook>
+  </ItemGroup>
+</Project>
