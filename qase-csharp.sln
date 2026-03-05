@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qase.MSTest.Reporter.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qase.XUnit.V3.Reporter", "Qase.XUnit.V3.Reporter\Qase.XUnit.V3.Reporter.csproj", "{C571414B-684B-4827-901D-E18CEA5358F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qase.XUnit.V3.Reporter.Tests", "Qase.XUnit.V3.Reporter.Tests\Qase.XUnit.V3.Reporter.Tests.csproj", "{99EC0F6B-B1C8-4758-9D07-F32644471FFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,18 @@ Global
 		{C571414B-684B-4827-901D-E18CEA5358F4}.Release|x64.Build.0 = Release|Any CPU
 		{C571414B-684B-4827-901D-E18CEA5358F4}.Release|x86.ActiveCfg = Release|Any CPU
 		{C571414B-684B-4827-901D-E18CEA5358F4}.Release|x86.Build.0 = Release|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Debug|x64.Build.0 = Debug|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Debug|x86.Build.0 = Debug|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Release|x64.ActiveCfg = Release|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Release|x64.Build.0 = Release|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Release|x86.ActiveCfg = Release|Any CPU
+		{99EC0F6B-B1C8-4758-9D07-F32644471FFF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
