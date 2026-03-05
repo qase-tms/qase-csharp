@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Qase.XUnit.V3.Reporter</PackageId>
+    <AssemblyName>Qase.XUnit.V3.Reporter</AssemblyName>
+    <RootNamespace>Qase.XUnit.V3.Reporter</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <Description>xUnit v3 Integration with Qase TMS</Description>
+    <Nullable>enable</Nullable>
+    <InternalsVisibleTo>Qase.XUnit.V3.Reporter.Tests</InternalsVisibleTo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="build/Qase.XUnit.V3.Reporter.props" Pack="true" PackagePath="build/Qase.XUnit.V3.Reporter.props" />
+    <None Include="build/Qase.XUnit.V3.Reporter.props" Pack="true" PackagePath="buildTransitive/Qase.XUnit.V3.Reporter.props" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Testing.Platform" Version="2.0.2" />
+    <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Qase.Csharp.Commons/Qase.Csharp.Commons.csproj" />
+  </ItemGroup>
+
+</Project>
