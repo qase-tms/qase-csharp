@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -17,6 +17,11 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="FluentAssertions" Version="8.8.0" />
+    <!-- Suppress xunit.v3.extensibility.core transitive reference from SUT to avoid
+         ambiguous FactAttribute between xunit 2.x and xunit v3 -->
+    <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2">
+      <ExcludeAssets>compile</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
