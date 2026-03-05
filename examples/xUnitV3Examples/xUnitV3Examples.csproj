@@ -19,6 +19,8 @@
     <Using Include="Xunit"/>
   </ItemGroup>
 
+  <Import Project="../../Qase.XUnit.V3.Reporter/build/Qase.XUnit.V3.Reporter.props"/>
+
   <ItemGroup>
     <Content Include="qase.config.json" Condition="Exists('qase.config.json')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

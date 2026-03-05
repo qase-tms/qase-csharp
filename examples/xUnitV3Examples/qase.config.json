@@ -2,10 +2,10 @@
   "mode": "testops",
   "fallback": "report",
   "debug": true,
-  "environment": "local",
+  "environment": null,
   "logging": {
     "console": true,
-    "file": false
+    "file": true
   },
   "report": {
     "driver": "local",
