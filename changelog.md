@@ -1,5 +1,18 @@
 # Changelog
 
+## qase-csharp 1.1.7
+
+- Added Qase xUnit v3 Reporter for xUnit v3 with Microsoft.Testing.Platform (MTP v2) integration
+- Supports all Qase attributes: `[QaseIds]`, `[Title]`, `[Fields]`, `[Suites]`, `[Ignore]`
+- Step tracking via `[Step]`/`[Qase]` attributes through ContextManager
+- Attachments via `Metadata.Attach()` and comments via `Metadata.Comment()`
+- Parameterized test support with `[Theory]`, `[InlineData]`, and `[MemberData]`
+- Native `TestMethodIdentifierProperty` extraction (no VSTest bridge needed)
+- Auto-registration via `TestingPlatformBuilderHook` and MSBuild `.props` import
+- Added xUnit v3 example project with comprehensive test coverage
+- Added xUnit v3 reporter documentation (README, usage guide, steps, attachments)
+- Requires `global.json` with `"test": {"runner": "Microsoft.Testing.Platform"}` on .NET 10 SDK
+
 ## qase-csharp 1.1.6
 
 - Extracted shared `SuiteParser` utility into Commons for consistent suite hierarchy extraction across all reporters
