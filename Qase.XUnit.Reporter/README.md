@@ -13,7 +13,7 @@ dotnet add package Qase.XUnit.Reporter
 Or add directly to your `.csproj` file:
 
 ```xml
-<PackageReference Include="Qase.XUnit.Reporter" Version="1.1.0" />
+<PackageReference Include="Qase.XUnit.Reporter" Version="1.1.7" />
 ```
 
 ## Features
