@@ -31,7 +31,8 @@ jobs:
           dotnet test Qase.Csharp.Commons.Tests && \
           dotnet test Qase.NUnit.Reporter.Tests && \
           dotnet test Qase.MSTest.Reporter.Tests && \
-          dotnet test Qase.XUnit.Reporter.Tests
+          dotnet test Qase.XUnit.Reporter.Tests && \
+          dotnet test Qase.XUnit.V3.Reporter.Tests
  
   publish:
     runs-on: ubuntu-latest
