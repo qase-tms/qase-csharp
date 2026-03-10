@@ -13,7 +13,7 @@ dotnet add package Qase.XUnit.V3.Reporter
 Or add directly to your `.csproj` file:
 
 ```xml
-<PackageReference Include="Qase.XUnit.V3.Reporter" Version="1.0.0" />
+<PackageReference Include="Qase.XUnit.V3.Reporter" Version="1.1.7" />
 ```
 
 ## Features
@@ -45,7 +45,7 @@ The Qase xUnit v3 reporter uses Microsoft Testing Platform (MTP) v2. Your test p
   <ItemGroup>
     <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.1" />
-    <PackageReference Include="Qase.XUnit.V3.Reporter" Version="1.0.0" />
+    <PackageReference Include="Qase.XUnit.V3.Reporter" Version="1.1.7" />
   </ItemGroup>
 
   <ItemGroup>
