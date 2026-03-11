@@ -1294,7 +1294,7 @@ namespace Qase.Csharp.Commons.Tests
             // Arrange
             _config.TestOps!.ShowPublicReportLink = showPublicReportLink;
             var runId = 12345L;
-            
+
             _config.TestOps.Run.Id = runId;
             await _reporter.startTestRun();
 
@@ -1303,7 +1303,7 @@ namespace Qase.Csharp.Commons.Tests
 
             // Assert
             _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
-            
+
             if (showPublicReportLink)
             {
                 _clientMock.Verify(x => x.EnablePublicReportAsync(runId), Times.Once);
@@ -1312,6 +1312,56 @@ namespace Qase.Csharp.Commons.Tests
             {
                 _clientMock.Verify(x => x.EnablePublicReportAsync(It.IsAny<long>()), Times.Never);
             }
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_WhenRunCompleteFalse_ShouldNotCallClient()
+        {
+            // Arrange
+            _config.TestOps.Run.Complete = false;
+            var runId = 12345L;
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(It.IsAny<long>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_WhenRunCompleteFalse_ShouldNotCallEnablePublicReport()
+        {
+            // Arrange
+            _config.TestOps.Run.Complete = false;
+            _config.TestOps.ShowPublicReportLink = true;
+            var runId = 12345L;
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(It.IsAny<long>()), Times.Never);
+            _clientMock.Verify(x => x.EnablePublicReportAsync(It.IsAny<long>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_WhenRunCompleteTrue_ShouldCallClient()
+        {
+            // Arrange
+            _config.TestOps.Run.Complete = true;
+            var runId = 12345L;
+            _config.TestOps.Run.Id = runId;
+            await _reporter.startTestRun();
+
+            // Act
+            await _reporter.completeTestRun();
+
+            // Assert
+            _clientMock.Verify(x => x.CompleteTestRunAsync(runId), Times.Once);
         }
     }
 } 

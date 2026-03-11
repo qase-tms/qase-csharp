@@ -1074,5 +1074,65 @@ namespace Qase.Csharp.Commons.Tests
             // Cleanup
             Environment.SetEnvironmentVariable("QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK", null);
         }
+
+        [Fact]
+        public void LoadConfig_FromJsonFile_WithRunCompleteFalse_SetsCompleteFalse()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""run"": {
+      ""complete"": false
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.Complete.Should().BeFalse();
+        }
+
+        [Fact]
+        public void LoadConfig_FromJsonFile_WithRunCompleteTrue_SetsCompleteTrue()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""run"": {
+      ""complete"": true
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.Complete.Should().BeTrue();
+        }
+
+        [Fact]
+        public void LoadConfig_FromJsonFile_WithoutRunComplete_PreservesDefault()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""run"": {
+      ""title"": ""Test Run""
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Run.Complete.Should().BeTrue(); // Default is true
+        }
     }
 } 

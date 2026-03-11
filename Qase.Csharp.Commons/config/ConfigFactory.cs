@@ -398,10 +398,16 @@ namespace Qase.Csharp.Commons.Config
                         qaseConfig.TestOps.Run.Description = descElement.GetString();
                     }
 
-                    if (runElement.TryGetProperty("complete", out var completeElement) &&
-                        completeElement.ValueKind == JsonValueKind.True)
+                    if (runElement.TryGetProperty("complete", out var completeElement))
                     {
-                        qaseConfig.TestOps.Run.Complete = true;
+                        if (completeElement.ValueKind == JsonValueKind.True)
+                        {
+                            qaseConfig.TestOps.Run.Complete = true;
+                        }
+                        else if (completeElement.ValueKind == JsonValueKind.False)
+                        {
+                            qaseConfig.TestOps.Run.Complete = false;
+                        }
                     }
 
                     if (runElement.TryGetProperty("tags", out var tagsElement) &&
