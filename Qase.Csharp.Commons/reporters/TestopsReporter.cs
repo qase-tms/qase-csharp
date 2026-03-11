@@ -56,6 +56,12 @@ namespace Qase.Csharp.Commons.Reporters
         /// <inheritdoc />
         public async Task completeTestRun()
         {
+            if (!_config.TestOps.Run.Complete)
+            {
+                _logger.LogInformation("Test run {RunId} completion skipped (run.complete=false)", _testRunId);
+                return;
+            }
+
             await _client.CompleteTestRunAsync(_testRunId);
             _logger.LogInformation("Test run {RunId} completed", _testRunId);
 
