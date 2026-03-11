@@ -1,5 +1,10 @@
 # Changelog
 
+## qase-csharp 1.1.8
+
+- Fixed `TestopsReporter` ignoring `QASE_TESTOPS_RUN_COMPLETE` setting — test runs were always marked as complete regardless of environment variable or config file value
+- Fixed `ConfigFactory` JSON parser not handling `"complete": false` in `qase.config.json` — only `true` was recognized, `false` was silently ignored
+
 ## qase-csharp 1.1.7
 
 - Added Qase xUnit v3 Reporter for xUnit v3 with Microsoft.Testing.Platform (MTP v2) integration

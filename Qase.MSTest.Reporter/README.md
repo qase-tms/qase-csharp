@@ -13,7 +13,7 @@ dotnet add package Qase.MSTest.Reporter
 Or add directly to your `.csproj` file:
 
 ```xml
-<PackageReference Include="Qase.MSTest.Reporter" Version="1.1.7" />
+<PackageReference Include="Qase.MSTest.Reporter" Version="1.1.8" />
 ```
 
 ## Features
@@ -46,7 +46,7 @@ The Qase MSTest reporter uses Microsoft Testing Platform (MTP) v2. Your test pro
   <ItemGroup>
     <PackageReference Include="MSTest.TestFramework" Version="3.7.3" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.7.3" />
-    <PackageReference Include="Qase.MSTest.Reporter" Version="1.1.7" />
+    <PackageReference Include="Qase.MSTest.Reporter" Version="1.1.8" />
   </ItemGroup>
 
   <ItemGroup>
