@@ -95,7 +95,14 @@ namespace Qase.Csharp.Commons.Aspects
                 ? SyncHandler
                 : SyncGenericHandler.MakeGenericMethod(returnType);
 
-            return wrappedSync.Invoke(this, new object[] { target, args, metadata });
+            try
+            {
+                return wrappedSync.Invoke(this, new object[] { target, args, metadata });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.GetBaseException();
+            }
         }
 
         private static void WrapSync(Func<object[], object> target, object[] args, MethodBase metadata)
