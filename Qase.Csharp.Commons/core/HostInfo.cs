@@ -43,18 +43,27 @@ namespace Qase.Csharp.Commons.Core
                 model.System = osName!.ToLowerInvariant();
             }
 
-            // csharp - C#/.NET version (equivalent to "java" in Java version)
+            // language - runtime/.NET version
             var csharpVersion = GetCSharpVersion();
             if (!string.IsNullOrWhiteSpace(csharpVersion))
             {
-                model.Csharp = csharpVersion;
+                model.Language = csharpVersion;
             }
 
-            // buildTool - build tool version (NuGet in C#, equivalent to Maven/Gradle in Java)
+            // packageManager - NuGet version
             var buildToolVersion = GetNuGetVersion();
             if (!string.IsNullOrWhiteSpace(buildToolVersion))
             {
-                model.BuildTool = buildToolVersion;
+                model.PackageManager = buildToolVersion;
+            }
+
+            // framework - test framework version
+            var (frameworkName, frameworkVersion) = DetectTestFramework();
+            if (!string.IsNullOrWhiteSpace(frameworkName))
+            {
+                model.Framework = !string.IsNullOrWhiteSpace(frameworkVersion)
+                    ? $"{frameworkName}={frameworkVersion}"
+                    : frameworkName;
             }
 
             // reporter - reporter version
@@ -62,6 +71,27 @@ namespace Qase.Csharp.Commons.Core
             if (!string.IsNullOrWhiteSpace(reporterVersion))
             {
                 model.Reporter = reporterVersion;
+            }
+
+            // commons - commons library version
+            var commonsVersion = GetCommonsVersion();
+            if (!string.IsNullOrWhiteSpace(commonsVersion))
+            {
+                model.Commons = commonsVersion;
+            }
+
+            // apiClientV1 - API client v1 version
+            var apiClientV1Version = GetApiClientV1Version();
+            if (!string.IsNullOrWhiteSpace(apiClientV1Version))
+            {
+                model.ApiClientV1 = apiClientV1Version;
+            }
+
+            // apiClientV2 - API client v2 version
+            var apiClientV2Version = GetApiClientV2Version();
+            if (!string.IsNullOrWhiteSpace(apiClientV2Version))
+            {
+                model.ApiClientV2 = apiClientV2Version;
             }
 
             return model;
