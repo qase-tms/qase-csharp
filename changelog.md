@@ -1,5 +1,13 @@
 # Changelog
 
+## qase-csharp 1.1.9
+
+- Unified HostData model to align field names across all Qase reporter languages
+- Renamed `Csharp` -> `Language` and `BuildTool` -> `PackageManager` in HostInfoModel
+- Added `Framework`, `Commons`, `ApiClientV1`, `ApiClientV2` properties to HostInfoModel
+- Normalized `system` field: macOS -> `darwin`, Windows -> `windows`, Linux -> `linux`
+- X-Platform headers retain language-specific keys (`csharp=`, `nuget=`)
+
 ## qase-csharp 1.1.8
 
 - Fixed `TestopsReporter` ignoring `QASE_TESTOPS_RUN_COMPLETE` setting — test runs were always marked as complete regardless of environment variable or config file value

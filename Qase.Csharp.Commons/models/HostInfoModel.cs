@@ -36,19 +36,39 @@ namespace Qase.Csharp.Commons.Models
         public string Arch { get; set; } = string.Empty;
 
         /// <summary>
-        /// C#/.NET version (equivalent to "java" in Java version)
+        /// Runtime/language version (e.g., .NET version)
         /// </summary>
-        public string? Csharp { get; set; }
+        public string? Language { get; set; }
 
         /// <summary>
-        /// Build tool version (NuGet in C#, equivalent to Maven/Gradle in Java)
+        /// Package manager version (e.g., NuGet)
         /// </summary>
-        public string? BuildTool { get; set; }
+        public string? PackageManager { get; set; }
+
+        /// <summary>
+        /// Test framework name and version
+        /// </summary>
+        public string? Framework { get; set; }
 
         /// <summary>
         /// Reporter version
         /// </summary>
         public string? Reporter { get; set; }
+
+        /// <summary>
+        /// Commons library version
+        /// </summary>
+        public string? Commons { get; set; }
+
+        /// <summary>
+        /// API Client V1 version
+        /// </summary>
+        public string? ApiClientV1 { get; set; }
+
+        /// <summary>
+        /// API Client V2 version
+        /// </summary>
+        public string? ApiClientV2 { get; set; }
 
         /// <summary>
         /// Converts the model to a dictionary
@@ -69,19 +89,39 @@ namespace Qase.Csharp.Commons.Models
                 dict["system"] = System;
             }
 
-            if (!string.IsNullOrWhiteSpace(Csharp))
+            if (!string.IsNullOrWhiteSpace(Language))
             {
-                dict["csharp"] = Csharp;
+                dict["language"] = Language;
             }
 
-            if (!string.IsNullOrWhiteSpace(BuildTool))
+            if (!string.IsNullOrWhiteSpace(PackageManager))
             {
-                dict["buildTool"] = BuildTool;
+                dict["packageManager"] = PackageManager;
+            }
+
+            if (!string.IsNullOrWhiteSpace(Framework))
+            {
+                dict["framework"] = Framework;
             }
 
             if (!string.IsNullOrWhiteSpace(Reporter))
             {
                 dict["reporter"] = Reporter;
+            }
+
+            if (!string.IsNullOrWhiteSpace(Commons))
+            {
+                dict["commons"] = Commons;
+            }
+
+            if (!string.IsNullOrWhiteSpace(ApiClientV1))
+            {
+                dict["apiClientV1"] = ApiClientV1;
+            }
+
+            if (!string.IsNullOrWhiteSpace(ApiClientV2))
+            {
+                dict["apiClientV2"] = ApiClientV2;
             }
 
             return dict;
