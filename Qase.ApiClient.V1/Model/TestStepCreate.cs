@@ -34,18 +34,20 @@ namespace Qase.ApiClient.V1.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="TestStepCreate" /> class.
         /// </summary>
-        /// <param name="action">action</param>
+        /// <param name="action">Step action text. Used for classic steps. For gherkin steps, use the \&quot;value\&quot; property instead.</param>
         /// <param name="expectedResult">expectedResult</param>
         /// <param name="data">data</param>
+        /// <param name="value">Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;. Example: \&quot;Given a user exists\\nWhen they log in\\nThen they see the dashboard\&quot;</param>
         /// <param name="position">position</param>
         /// <param name="attachments">A list of Attachment hashes.</param>
         /// <param name="steps">Nested steps may be passed here. Use same structure for them.</param>
         [JsonConstructor]
-        public TestStepCreate(Option<string?> action = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<int?> position = default, Option<List<string>?> attachments = default, Option<List<Object>?> steps = default)
+        public TestStepCreate(Option<string?> action = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<string?> value = default, Option<int?> position = default, Option<List<string>?> attachments = default, Option<List<Object>?> steps = default)
         {
             ActionOption = action;
             ExpectedResultOption = expectedResult;
             DataOption = data;
+            ValueOption = value;
             PositionOption = position;
             AttachmentsOption = attachments;
             StepsOption = steps;
@@ -62,8 +64,9 @@ namespace Qase.ApiClient.V1.Model
         public Option<string?> ActionOption { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Action
+        /// Step action text. Used for classic steps. For gherkin steps, use the \&quot;value\&quot; property instead.
         /// </summary>
+        /// <value>Step action text. Used for classic steps. For gherkin steps, use the \&quot;value\&quot; property instead.</value>
         [JsonPropertyName("action")]
         public string? Action { get { return this.ActionOption; } set { this.ActionOption = new Option<string?>(value); } }
 
@@ -92,6 +95,20 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         [JsonPropertyName("data")]
         public string? Data { get { return this.DataOption; } set { this.DataOption = new Option<string?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of Value
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<string?> ValueOption { get; private set; }
+
+        /// <summary>
+        /// Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;. Example: \&quot;Given a user exists\\nWhen they log in\\nThen they see the dashboard\&quot;
+        /// </summary>
+        /// <value>Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;. Example: \&quot;Given a user exists\\nWhen they log in\\nThen they see the dashboard\&quot;</value>
+        [JsonPropertyName("value")]
+        public string? Value { get { return this.ValueOption; } set { this.ValueOption = new Option<string?>(value); } }
 
         /// <summary>
         /// Used to track the state of Position
@@ -152,6 +169,7 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ExpectedResult: ").Append(ExpectedResult).Append("\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
+            sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("  Position: ").Append(Position).Append("\n");
             sb.Append("  Attachments: ").Append(Attachments).Append("\n");
             sb.Append("  Steps: ").Append(Steps).Append("\n");
@@ -196,6 +214,7 @@ namespace Qase.ApiClient.V1.Model
             Option<string?> action = default;
             Option<string?> expectedResult = default;
             Option<string?> data = default;
+            Option<string?> value = default;
             Option<int?> position = default;
             Option<List<string>?> attachments = default;
             Option<List<Object>?> steps = default;
@@ -224,6 +243,9 @@ namespace Qase.ApiClient.V1.Model
                         case "data":
                             data = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
+                        case "value":
+                            value = new Option<string?>(utf8JsonReader.GetString()!);
+                            break;
                         case "position":
                             position = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
                             break;
@@ -248,6 +270,9 @@ namespace Qase.ApiClient.V1.Model
             if (data.IsSet && data.Value == null)
                 throw new ArgumentNullException(nameof(data), "Property is not nullable for class TestStepCreate.");
 
+            if (value.IsSet && value.Value == null)
+                throw new ArgumentNullException(nameof(value), "Property is not nullable for class TestStepCreate.");
+
             if (position.IsSet && position.Value == null)
                 throw new ArgumentNullException(nameof(position), "Property is not nullable for class TestStepCreate.");
 
@@ -257,7 +282,7 @@ namespace Qase.ApiClient.V1.Model
             if (steps.IsSet && steps.Value == null)
                 throw new ArgumentNullException(nameof(steps), "Property is not nullable for class TestStepCreate.");
 
-            return new TestStepCreate(action, expectedResult, data, position, attachments, steps);
+            return new TestStepCreate(action, expectedResult, data, value, position, attachments, steps);
         }
 
         /// <summary>
@@ -293,6 +318,9 @@ namespace Qase.ApiClient.V1.Model
             if (testStepCreate.DataOption.IsSet && testStepCreate.Data == null)
                 throw new ArgumentNullException(nameof(testStepCreate.Data), "Property is required for class TestStepCreate.");
 
+            if (testStepCreate.ValueOption.IsSet && testStepCreate.Value == null)
+                throw new ArgumentNullException(nameof(testStepCreate.Value), "Property is required for class TestStepCreate.");
+
             if (testStepCreate.AttachmentsOption.IsSet && testStepCreate.Attachments == null)
                 throw new ArgumentNullException(nameof(testStepCreate.Attachments), "Property is required for class TestStepCreate.");
 
@@ -307,6 +335,9 @@ namespace Qase.ApiClient.V1.Model
 
             if (testStepCreate.DataOption.IsSet)
                 writer.WriteString("data", testStepCreate.Data);
+
+            if (testStepCreate.ValueOption.IsSet)
+                writer.WriteString("value", testStepCreate.Value);
 
             if (testStepCreate.PositionOption.IsSet)
                 writer.WriteNumber("position", testStepCreate.PositionOption.Value!.Value);
