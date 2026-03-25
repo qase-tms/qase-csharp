@@ -48,6 +48,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="milestoneId">milestoneId</param>
         /// <param name="automation">automation</param>
         /// <param name="status">status</param>
+        /// <param name="stepsType">Determines the format of the steps field. When \&quot;classic\&quot;, steps use the standard action/expected_result/data format. When \&quot;gherkin\&quot;, steps use the {value: \&quot;Given...\\nWhen...\\nThen...\&quot;} format. (default to StepsTypeEnum.Classic)</param>
         /// <param name="attachments">A list of Attachment hashes.</param>
         /// <param name="steps">steps</param>
         /// <param name="tags">tags</param>
@@ -58,7 +59,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="updatedAt">updatedAt</param>
         /// <param name="id">id</param>
         [JsonConstructor]
-        public TestCasebulkCasesInner(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<List<TestCaseParameterCreate>?> parameters = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default, Option<int?> id = default)
+        public TestCasebulkCasesInner(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<StepsTypeEnum?> stepsType = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<List<TestCaseParameterCreate>?> parameters = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default, Option<int?> id = default)
         {
             Title = title;
             DescriptionOption = description;
@@ -74,6 +75,7 @@ namespace Qase.ApiClient.V1.Model
             MilestoneIdOption = milestoneId;
             AutomationOption = automation;
             StatusOption = status;
+            StepsTypeOption = stepsType;
             AttachmentsOption = attachments;
             StepsOption = steps;
             TagsOption = tags;
@@ -87,6 +89,87 @@ namespace Qase.ApiClient.V1.Model
         }
 
         partial void OnCreated();
+
+        /// <summary>
+        /// Determines the format of the steps field. When \&quot;classic\&quot;, steps use the standard action/expected_result/data format. When \&quot;gherkin\&quot;, steps use the {value: \&quot;Given...\\nWhen...\\nThen...\&quot;} format.
+        /// </summary>
+        /// <value>Determines the format of the steps field. When \&quot;classic\&quot;, steps use the standard action/expected_result/data format. When \&quot;gherkin\&quot;, steps use the {value: \&quot;Given...\\nWhen...\\nThen...\&quot;} format.</value>
+        public enum StepsTypeEnum
+        {
+            /// <summary>
+            /// Enum Classic for value: classic
+            /// </summary>
+            Classic = 1,
+
+            /// <summary>
+            /// Enum Gherkin for value: gherkin
+            /// </summary>
+            Gherkin = 2
+        }
+
+        /// <summary>
+        /// Returns a <see cref="StepsTypeEnum"/>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static StepsTypeEnum StepsTypeEnumFromString(string value)
+        {
+            if (value.Equals("classic"))
+                return StepsTypeEnum.Classic;
+
+            if (value.Equals("gherkin"))
+                return StepsTypeEnum.Gherkin;
+
+            throw new NotImplementedException($"Could not convert value to type StepsTypeEnum: '{value}'");
+        }
+
+        /// <summary>
+        /// Returns a <see cref="StepsTypeEnum"/>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static StepsTypeEnum? StepsTypeEnumFromStringOrDefault(string value)
+        {
+            if (value.Equals("classic"))
+                return StepsTypeEnum.Classic;
+
+            if (value.Equals("gherkin"))
+                return StepsTypeEnum.Gherkin;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="StepsTypeEnum"/> to the json value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static string StepsTypeEnumToJsonValue(StepsTypeEnum? value)
+        {
+            if (value == StepsTypeEnum.Classic)
+                return "classic";
+
+            if (value == StepsTypeEnum.Gherkin)
+                return "gherkin";
+
+            throw new NotImplementedException($"Value could not be handled: '{value}'");
+        }
+
+        /// <summary>
+        /// Used to track the state of StepsType
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<StepsTypeEnum?> StepsTypeOption { get; private set; }
+
+        /// <summary>
+        /// Determines the format of the steps field. When \&quot;classic\&quot;, steps use the standard action/expected_result/data format. When \&quot;gherkin\&quot;, steps use the {value: \&quot;Given...\\nWhen...\\nThen...\&quot;} format.
+        /// </summary>
+        /// <value>Determines the format of the steps field. When \&quot;classic\&quot;, steps use the standard action/expected_result/data format. When \&quot;gherkin\&quot;, steps use the {value: \&quot;Given...\\nWhen...\\nThen...\&quot;} format.</value>
+        [JsonPropertyName("steps_type")]
+        public StepsTypeEnum? StepsType { get { return this.StepsTypeOption; } set { this.StepsTypeOption = new Option<StepsTypeEnum?>(value); } }
 
         /// <summary>
         /// Gets or Sets Title
@@ -412,6 +495,7 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  MilestoneId: ").Append(MilestoneId).Append("\n");
             sb.Append("  Automation: ").Append(Automation).Append("\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
+            sb.Append("  StepsType: ").Append(StepsType).Append("\n");
             sb.Append("  Attachments: ").Append(Attachments).Append("\n");
             sb.Append("  Steps: ").Append(Steps).Append("\n");
             sb.Append("  Tags: ").Append(Tags).Append("\n");
@@ -479,6 +563,7 @@ namespace Qase.ApiClient.V1.Model
             Option<long?> milestoneId = default;
             Option<int?> automation = default;
             Option<int?> status = default;
+            Option<TestCasebulkCasesInner.StepsTypeEnum?> stepsType = default;
             Option<List<string>?> attachments = default;
             Option<List<TestStepCreate>?> steps = default;
             Option<List<string>?> tags = default;
@@ -545,6 +630,11 @@ namespace Qase.ApiClient.V1.Model
                             break;
                         case "status":
                             status = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
+                            break;
+                        case "steps_type":
+                            string? stepsTypeRawValue = utf8JsonReader.GetString();
+                            if (stepsTypeRawValue != null)
+                                stepsType = new Option<TestCasebulkCasesInner.StepsTypeEnum?>(TestCasebulkCasesInner.StepsTypeEnumFromStringOrDefault(stepsTypeRawValue));
                             break;
                         case "attachments":
                             attachments = new Option<List<string>?>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions)!);
@@ -624,6 +714,9 @@ namespace Qase.ApiClient.V1.Model
             if (status.IsSet && status.Value == null)
                 throw new ArgumentNullException(nameof(status), "Property is not nullable for class TestCasebulkCasesInner.");
 
+            if (stepsType.IsSet && stepsType.Value == null)
+                throw new ArgumentNullException(nameof(stepsType), "Property is not nullable for class TestCasebulkCasesInner.");
+
             if (attachments.IsSet && attachments.Value == null)
                 throw new ArgumentNullException(nameof(attachments), "Property is not nullable for class TestCasebulkCasesInner.");
 
@@ -642,7 +735,7 @@ namespace Qase.ApiClient.V1.Model
             if (updatedAt.IsSet && updatedAt.Value == null)
                 throw new ArgumentNullException(nameof(updatedAt), "Property is not nullable for class TestCasebulkCasesInner.");
 
-            return new TestCasebulkCasesInner(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, suiteId, milestoneId, automation, status, attachments, steps, tags, varParams, parameters, customField, createdAt, updatedAt, id);
+            return new TestCasebulkCasesInner(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, suiteId, milestoneId, automation, status, stepsType, attachments, steps, tags, varParams, parameters, customField, createdAt, updatedAt, id);
         }
 
         /// <summary>
@@ -740,6 +833,8 @@ namespace Qase.ApiClient.V1.Model
             if (testCasebulkCasesInner.StatusOption.IsSet)
                 writer.WriteNumber("status", testCasebulkCasesInner.StatusOption.Value!.Value);
 
+            var stepsTypeRawValue = TestCasebulkCasesInner.StepsTypeEnumToJsonValue(testCasebulkCasesInner.StepsTypeOption.Value!.Value);
+            writer.WriteString("steps_type", stepsTypeRawValue);
             if (testCasebulkCasesInner.AttachmentsOption.IsSet)
             {
                 writer.WritePropertyName("attachments");

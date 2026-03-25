@@ -149,6 +149,8 @@ namespace Qase.ApiClient.V1.Client
                 return MilestoneUpdate.StatusEnumToJsonValue(milestoneUpdateStatusEnum);
             if (obj is ProjectCreate.AccessEnum projectCreateAccessEnum)
                 return ProjectCreate.AccessEnumToJsonValue(projectCreateAccessEnum);
+            if (obj is QqlTestCase.StepsTypeEnum qqlTestCaseStepsTypeEnum)
+                return QqlTestCase.StepsTypeEnumToJsonValue(qqlTestCaseStepsTypeEnum);
             if (obj is Requirement.StatusEnum requirementStatusEnum)
                 return Requirement.StatusEnumToJsonValue(requirementStatusEnum);
             if (obj is Requirement.TypeEnum requirementTypeEnum)
@@ -167,12 +169,22 @@ namespace Qase.ApiClient.V1.Client
                 return SharedParameter.TypeEnumToJsonValue(sharedParameterTypeEnum);
             if (obj is SharedParameterCreate.TypeEnum sharedParameterCreateTypeEnum)
                 return SharedParameterCreate.TypeEnumToJsonValue(sharedParameterCreateTypeEnum);
+            if (obj is TestCase.StepsTypeEnum testCaseStepsTypeEnum)
+                return TestCase.StepsTypeEnumToJsonValue(testCaseStepsTypeEnum);
+            if (obj is TestCaseCreate.StepsTypeEnum testCaseCreateStepsTypeEnum)
+                return TestCaseCreate.StepsTypeEnumToJsonValue(testCaseCreateStepsTypeEnum);
             if (obj is TestCaseExternalIssues.TypeEnum testCaseExternalIssuesTypeEnum)
                 return TestCaseExternalIssues.TypeEnumToJsonValue(testCaseExternalIssuesTypeEnum);
             if (obj is TestCaseParameterGroup.TypeEnum testCaseParameterGroupTypeEnum)
                 return TestCaseParameterGroup.TypeEnumToJsonValue(testCaseParameterGroupTypeEnum);
             if (obj is TestCaseParameterSingle.TypeEnum testCaseParameterSingleTypeEnum)
                 return TestCaseParameterSingle.TypeEnumToJsonValue(testCaseParameterSingleTypeEnum);
+            if (obj is TestCaseQuery.StepsTypeEnum testCaseQueryStepsTypeEnum)
+                return TestCaseQuery.StepsTypeEnumToJsonValue(testCaseQueryStepsTypeEnum);
+            if (obj is TestCaseUpdate.StepsTypeEnum testCaseUpdateStepsTypeEnum)
+                return TestCaseUpdate.StepsTypeEnumToJsonValue(testCaseUpdateStepsTypeEnum);
+            if (obj is TestCasebulkCasesInner.StepsTypeEnum testCasebulkCasesInnerStepsTypeEnum)
+                return TestCasebulkCasesInner.StepsTypeEnumToJsonValue(testCasebulkCasesInnerStepsTypeEnum);
             if (obj is TestStepResultCreate.StatusEnum testStepResultCreateStatusEnum)
                 return TestStepResultCreate.StatusEnumToJsonValue(testStepResultCreateStatusEnum);
             if (obj is ICollection collection)

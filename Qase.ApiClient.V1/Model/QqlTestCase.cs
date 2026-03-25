@@ -63,7 +63,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="updatedAt">updatedAt</param>
         /// <param name="updatedBy">Author ID of the last update.</param>
         [JsonConstructor]
-        public QqlTestCase(long testCaseId, Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<string?> stepsType = default, Option<List<TestStep>?> steps = default, Option<QqlTestCaseParams?> @params = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<long?> updatedBy = default)
+        public QqlTestCase(long testCaseId, Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<StepsTypeEnum?> stepsType = default, Option<List<TestStep>?> steps = default, Option<QqlTestCaseParams?> @params = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<long?> updatedBy = default)
         {
             TestCaseId = testCaseId;
             IdOption = id;
@@ -97,6 +97,88 @@ namespace Qase.ApiClient.V1.Model
         }
 
         partial void OnCreated();
+
+        /// <summary>
+        /// Defines StepsType
+        /// </summary>
+        public enum StepsTypeEnum
+        {
+            /// <summary>
+            /// Enum Classic for value: classic
+            /// </summary>
+            Classic = 1,
+
+            /// <summary>
+            /// Enum Gherkin for value: gherkin
+            /// </summary>
+            Gherkin = 2
+        }
+
+        /// <summary>
+        /// Returns a <see cref="StepsTypeEnum"/>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static StepsTypeEnum StepsTypeEnumFromString(string value)
+        {
+            if (value.Equals("classic"))
+                return StepsTypeEnum.Classic;
+
+            if (value.Equals("gherkin"))
+                return StepsTypeEnum.Gherkin;
+
+            throw new NotImplementedException($"Could not convert value to type StepsTypeEnum: '{value}'");
+        }
+
+        /// <summary>
+        /// Returns a <see cref="StepsTypeEnum"/>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static StepsTypeEnum? StepsTypeEnumFromStringOrDefault(string value)
+        {
+            if (value.Equals("classic"))
+                return StepsTypeEnum.Classic;
+
+            if (value.Equals("gherkin"))
+                return StepsTypeEnum.Gherkin;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="StepsTypeEnum"/> to the json value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static string? StepsTypeEnumToJsonValue(StepsTypeEnum? value)
+        {
+            if (value == null)
+                return null;
+
+            if (value == StepsTypeEnum.Classic)
+                return "classic";
+
+            if (value == StepsTypeEnum.Gherkin)
+                return "gherkin";
+
+            throw new NotImplementedException($"Value could not be handled: '{value}'");
+        }
+
+        /// <summary>
+        /// Used to track the state of StepsType
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<StepsTypeEnum?> StepsTypeOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets StepsType
+        /// </summary>
+        [JsonPropertyName("steps_type")]
+        public StepsTypeEnum? StepsType { get { return this.StepsTypeOption; } set { this.StepsTypeOption = new Option<StepsTypeEnum?>(value); } }
 
         /// <summary>
         /// Gets or Sets TestCaseId
@@ -339,19 +421,6 @@ namespace Qase.ApiClient.V1.Model
         public List<Attachment>? Attachments { get { return this.AttachmentsOption; } set { this.AttachmentsOption = new Option<List<Attachment>?>(value); } }
 
         /// <summary>
-        /// Used to track the state of StepsType
-        /// </summary>
-        [JsonIgnore]
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<string?> StepsTypeOption { get; private set; }
-
-        /// <summary>
-        /// Gets or Sets StepsType
-        /// </summary>
-        [JsonPropertyName("steps_type")]
-        public string? StepsType { get { return this.StepsTypeOption; } set { this.StepsTypeOption = new Option<string?>(value); } }
-
-        /// <summary>
         /// Used to track the state of Steps
         /// </summary>
         [JsonIgnore]
@@ -569,7 +638,7 @@ namespace Qase.ApiClient.V1.Model
             Option<long?> suiteId = default;
             Option<List<CustomFieldValue>?> customFields = default;
             Option<List<Attachment>?> attachments = default;
-            Option<string?> stepsType = default;
+            Option<QqlTestCase.StepsTypeEnum?> stepsType = default;
             Option<List<TestStep>?> steps = default;
             Option<QqlTestCaseParams?> varParams = default;
             Option<List<TagValue>?> tags = default;
@@ -652,7 +721,9 @@ namespace Qase.ApiClient.V1.Model
                             attachments = new Option<List<Attachment>?>(JsonSerializer.Deserialize<List<Attachment>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "steps_type":
-                            stepsType = new Option<string?>(utf8JsonReader.GetString());
+                            string? stepsTypeRawValue = utf8JsonReader.GetString();
+                            if (stepsTypeRawValue != null)
+                                stepsType = new Option<QqlTestCase.StepsTypeEnum?>(QqlTestCase.StepsTypeEnumFromStringOrDefault(stepsTypeRawValue));
                             break;
                         case "steps":
                             steps = new Option<List<TestStep>?>(JsonSerializer.Deserialize<List<TestStep>>(ref utf8JsonReader, jsonSerializerOptions)!);
@@ -873,11 +944,11 @@ namespace Qase.ApiClient.V1.Model
                 writer.WritePropertyName("attachments");
                 JsonSerializer.Serialize(writer, qqlTestCase.Attachments, jsonSerializerOptions);
             }
-            if (qqlTestCase.StepsTypeOption.IsSet)
-                if (qqlTestCase.StepsTypeOption.Value != null)
-                    writer.WriteString("steps_type", qqlTestCase.StepsType);
-                else
-                    writer.WriteNull("steps_type");
+            var stepsTypeRawValue = QqlTestCase.StepsTypeEnumToJsonValue(qqlTestCase.StepsTypeOption.Value!.Value);
+            if (stepsTypeRawValue != null)
+                writer.WriteString("steps_type", stepsTypeRawValue);
+            else
+                writer.WriteNull("steps_type");
 
             if (qqlTestCase.StepsOption.IsSet)
             {

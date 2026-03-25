@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-csharp 1.1.10
+
+- Updated API clients to the latest specification versions
+
 ## qase-csharp 1.1.9
 
 - Unified HostData model to align field names across all Qase reporter languages
