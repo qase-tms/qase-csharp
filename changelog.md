@@ -1,5 +1,12 @@
 # Changelog
 
+## qase-csharp 1.1.11
+
+- Fixed StepAspect swallowing exceptions in sync and async step wrappers — tests with failing steps were incorrectly marked as passed
+- Fixed async steps being marked as passed before the Task actually completed
+- Fixed `InvalidCastException` for `void` and non-generic `Task` step methods by adding dedicated wrappers
+- Re-throw exceptions from steps to ensure tests are properly marked as failed
+
 ## qase-csharp 1.1.10
 
 - Updated API clients to the latest specification versions
