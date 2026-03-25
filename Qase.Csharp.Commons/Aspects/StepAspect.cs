@@ -12,9 +12,15 @@ namespace Qase.Csharp.Commons.Aspects
     [Aspect(Scope.Global)]
     public class StepAspect
     {
+        private static readonly MethodInfo AsyncGenericHandler =
+            typeof(StepAspect).GetMethod(nameof(WrapGenericAsync), BindingFlags.NonPublic | BindingFlags.Static);
+    
         private static readonly MethodInfo AsyncHandler =
             typeof(StepAspect).GetMethod(nameof(WrapAsync), BindingFlags.NonPublic | BindingFlags.Static);
 
+        private static readonly MethodInfo SyncGenericHandler =
+            typeof(StepAspect).GetMethod(nameof(WrapGenericSync), BindingFlags.NonPublic | BindingFlags.Static);
+        
         private static readonly MethodInfo SyncHandler =
             typeof(StepAspect).GetMethod(nameof(WrapSync), BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -25,8 +31,6 @@ namespace Qase.Csharp.Commons.Aspects
             [Argument(Source.Metadata)] MethodBase metadata,
             [Argument(Source.ReturnType)] Type returnType)
         {
-            object executionResult;
-
             var stepParameters = metadata.GetParameters()
                 .Zip(args, (parameter, value) => new
                 {
@@ -36,27 +40,18 @@ namespace Qase.Csharp.Commons.Aspects
                 .ToDictionary(x => x.parameter.Name ?? "param", x => x.value?.ToString() ?? "null");
 
             var stepName = metadata.GetCustomAttribute<TitleAttribute>()?.Title ?? name;
-            try
+            
+            StartStep(metadata, stepName, step =>
             {
-                StartStep(metadata, stepName, step =>
+                if (stepParameters.Count == 0)
                 {
-                    if (stepParameters.Count == 0)
-                    {
-                        return;
-                    }
+                    return;
+                }
 
-                    step.Data!.InputData = JsonSerializer.Serialize(stepParameters);
-                });
+                step.Data!.InputData = JsonSerializer.Serialize(stepParameters);
+            });
 
-                executionResult = GetStepExecutionResult(returnType, target, args);
-
-                PassStep(metadata);
-            }
-            catch (Exception)
-            {
-                ThrowStep(metadata);
-                throw;
-            }
+            var executionResult = GetStepExecutionResult(returnType, target, args, metadata);
 
             return executionResult;
         }
@@ -85,47 +80,86 @@ namespace Qase.Csharp.Commons.Aspects
             }
         }
 
-        private object GetStepExecutionResult(Type returnType, Func<object[], object> target, object[] args)
+        private object GetStepExecutionResult(Type returnType, Func<object[], object> target, object[] args, MethodBase metadata)
         {
             if (typeof(Task).IsAssignableFrom(returnType))
             {
-                var syncResultType = returnType.IsConstructedGenericType
-                    ? returnType.GenericTypeArguments[0]
-                    : typeof(object);
-                return AsyncHandler.MakeGenericMethod(syncResultType)
-                    .Invoke(this, new object[] { target, args });
+                var wrappedAsync = returnType.IsConstructedGenericType
+                    ? AsyncGenericHandler.MakeGenericMethod(returnType.GenericTypeArguments[0])
+                    : AsyncHandler;
+                
+                return wrappedAsync.Invoke(this, new object[] { target, args, metadata });
             }
 
-            if (typeof(void).IsAssignableFrom(returnType))
-            {
-                return target(args);
-            }
+            var wrappedSync = typeof(void).IsAssignableFrom(returnType)
+                ? SyncHandler
+                : SyncGenericHandler.MakeGenericMethod(returnType);
 
-            return SyncHandler.MakeGenericMethod(returnType)
-                .Invoke(this, new object[] { target, args });
-        }
-
-        private static T WrapSync<T>(Func<object[], object> target, object[] args)
-        {
             try
             {
-                return (T)target(args);
+                return wrappedSync.Invoke(this, new object[] { target, args, metadata });
             }
-            catch (Exception)
+            catch (TargetInvocationException ex)
             {
-                return default!;
+                throw ex.GetBaseException();
             }
         }
 
-        private static async Task<T> WrapAsync<T>(Func<object[], object> target, object[] args)
+        private static void WrapSync(Func<object[], object> target, object[] args, MethodBase metadata)
         {
             try
             {
-                return await (Task<T>)target(args);
+                target(args);
+                PassStep(metadata);
             }
             catch (Exception)
             {
-                return default!;
+                ThrowStep(metadata);
+                throw;
+            }
+        }
+        
+        private static T WrapGenericSync<T>(Func<object[], object> target, object[] args, MethodBase metadata)
+        {
+            try
+            {
+                var result = (T)target(args);
+                PassStep(metadata);
+                return result;
+            }
+            catch (Exception)
+            {
+                ThrowStep(metadata);
+                throw;
+            }
+        }
+        
+        private static async Task WrapAsync(Func<object[], object> target, object[] args, MethodBase metadata)
+        {
+            try
+            {
+                await (Task)target(args);
+                PassStep(metadata);
+            }
+            catch (Exception)
+            {
+                ThrowStep(metadata);
+                throw;
+            }
+        }
+
+        private static async Task<T> WrapGenericAsync<T>(Func<object[], object> target, object[] args, MethodBase metadata)
+        {
+            try
+            {
+                var result = await (Task<T>)target(args);
+                PassStep(metadata);
+                return result;
+            }
+            catch (Exception)
+            {
+                ThrowStep(metadata);
+                throw;
             }
         }
     }
