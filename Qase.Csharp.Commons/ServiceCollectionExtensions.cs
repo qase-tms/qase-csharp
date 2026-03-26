@@ -89,16 +89,26 @@ namespace Qase.Csharp.Commons
                     $"https://api-{config.TestOps.Api.Host}/v1";
                 
                 var apiServices = new ServiceCollection();
+                var userAgent = ClientHeadersBuilder.BuildUserAgentHeader();
+
                 apiServices.AddApi(options =>
                 {
                     var token = new Qase.ApiClient.V1.Client.ApiKeyToken(config.TestOps.Api.Token!, Qase.ApiClient.V1.Client.ClientUtils.ApiKeyHeader.Token, "");
                     options.AddTokens(token);
-                    options.AddApiHttpClients(client =>
-                    {
-                        client.BaseAddress = new Uri(baseUrl);
-                    });
+                    options.AddApiHttpClients(
+                        client =>
+                        {
+                            client.BaseAddress = new Uri(baseUrl);
+                        },
+                        builder =>
+                        {
+                            builder.ConfigureHttpClient(httpClient =>
+                            {
+                                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+                            });
+                        });
                 });
-                
+
                 var apiServiceProvider = apiServices.BuildServiceProvider();
                 var runApi = apiServiceProvider.GetRequiredService<IRunsApi>();
                 var attachmentsApi = apiServiceProvider.GetRequiredService<IAttachmentsApi>();
@@ -133,6 +143,8 @@ namespace Qase.Csharp.Commons
                 {
                     var token = new Qase.ApiClient.V2.Client.ApiKeyToken(config.TestOps.Api.Token!, Qase.ApiClient.V2.Client.ClientUtils.ApiKeyHeader.Token, "");
                     options.AddTokens(token);
+                    var userAgentV2 = ClientHeadersBuilder.BuildUserAgentHeader();
+
                     options.AddApiHttpClients(
                         client =>
                         {
@@ -143,11 +155,13 @@ namespace Qase.Csharp.Commons
                             // Add headers to all HTTP requests
                             builder.ConfigureHttpClient(httpClient =>
                             {
+                                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgentV2);
+
                                 if (!string.IsNullOrWhiteSpace(xClientHeader))
                                 {
                                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Client", xClientHeader);
                                 }
-                                
+
                                 if (!string.IsNullOrWhiteSpace(xPlatformHeader))
                                 {
                                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Platform", xPlatformHeader);
