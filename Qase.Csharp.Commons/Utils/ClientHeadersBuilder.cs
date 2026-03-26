@@ -136,9 +136,23 @@ namespace Qase.Csharp.Commons.Utils
         }
 
         /// <summary>
+        /// Builds the User-Agent header value in the format: qase-api-client-csharp/{version}
+        /// </summary>
+        /// <returns>The User-Agent header value</returns>
+        public static string BuildUserAgentHeader()
+        {
+            var version = HostInfo.GetCommonsVersion();
+            var formattedVersion = !string.IsNullOrWhiteSpace(version)
+                ? FormatVersion(version!)
+                : "unknown";
+
+            return $"qase-api-client-csharp/{formattedVersion}";
+        }
+
+        /// <summary>
         /// Formats version string (removes 'v' prefix if present, ensures proper format)
         /// </summary>
-        private static string FormatVersion(string version)
+        internal static string FormatVersion(string version)
         {
             if (string.IsNullOrWhiteSpace(version))
             {
@@ -147,6 +161,12 @@ namespace Qase.Csharp.Commons.Utils
 
             // Remove 'v' prefix if present
             var formatted = version.TrimStart('v', 'V');
+
+            // Remove trailing ".0" from assembly version (e.g., "1.1.11.0" -> "1.1.11")
+            if (formatted.EndsWith(".0") && formatted.Split('.').Length >= 4)
+            {
+                formatted = formatted.Substring(0, formatted.Length - 2);
+            }
 
             return formatted;
         }
