@@ -1,6 +1,8 @@
-# Qase.Reqnroll.Reporter
+# Qase TestOps Reqnroll Reporter
 
-Qase TMS reporter for [Reqnroll](https://reqnroll.net/) — the open-source BDD test automation framework for .NET.
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](../LICENSE) [![NuGet Downloads](https://img.shields.io/nuget/dt/Qase.Reqnroll.Reporter)](https://www.nuget.org/packages/Qase.Reqnroll.Reporter/)
+
+Publish your test results easily and effectively with Qase TestOps.
 
 ## Installation
 
@@ -8,11 +10,30 @@ Qase TMS reporter for [Reqnroll](https://reqnroll.net/) — the open-source BDD 
 dotnet add package Qase.Reqnroll.Reporter
 ```
 
+Or add directly to your `.csproj` file:
+
+```xml
+<PackageReference Include="Qase.Reqnroll.Reporter" Version="1.1.12" />
+```
+
 The plugin is auto-discovered by Reqnroll. No additional configuration in `reqnroll.json` is needed.
 
-## Configuration
+## Features
 
-Create a `qase.config.json` in your project root:
+- Automatic test case generation from Reqnroll scenarios
+- Link scenarios to existing Qase test cases using `@QaseId` Gherkin tags
+- Report test results in real-time to Qase TestOps
+- Automatic step reporting from Given/When/Then steps
+- Attach files and screenshots to test results
+- Capture test metadata via tags (title, fields, suites)
+- Scenario Outline parameter support
+- Flexible configuration via `qase.config.json` or environment variables
+
+## Quick Start
+
+### 1. Configure the Reporter
+
+Create a `qase.config.json` file in your project root:
 
 ```json
 {
@@ -31,21 +52,7 @@ Create a `qase.config.json` in your project root:
 }
 ```
 
-Make sure to copy it to the output directory:
-
-```xml
-<ItemGroup>
-  <Content Include="qase.config.json" Condition="Exists('qase.config.json')">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-  </Content>
-</ItemGroup>
-```
-
-## Usage
-
-### Linking scenarios to Qase test cases
-
-Use Gherkin tags to link scenarios to Qase:
+### 2. Add Qase Tags to Your Scenarios
 
 ```gherkin
 @QaseId:123
@@ -55,7 +62,26 @@ Scenario: User can login with valid credentials
   Then the user should see the dashboard
 ```
 
-### Available tags
+### 3. Run Your Tests
+
+Execute your tests using the dotnet CLI:
+
+```bash
+dotnet test
+```
+
+View your results at: `https://app.qase.io/run/PROJECT_CODE`
+
+## Documentation
+
+| Document | Description | Link |
+|----------|-------------|------|
+| Usage Guide | Comprehensive guide to using all reporter features | [docs/usage.md](docs/usage.md) |
+| Attachments | How to attach files and screenshots to test results | [docs/ATTACHMENTS.md](docs/ATTACHMENTS.md) |
+| Test Steps | How automatic step reporting works | [docs/STEPS.md](docs/STEPS.md) |
+| Configuration Reference | Complete configuration options for Qase reporters | [Qase.Csharp.Commons](../Qase.Csharp.Commons/README.md#configuration) |
+
+## Available Tags
 
 | Tag | Description | Example |
 |-----|-------------|---------|
@@ -67,31 +93,20 @@ Scenario: User can login with valid credentials
 
 All tag prefixes are case-insensitive.
 
-### Automatic step reporting
+## Test Result Statuses
 
-Every Given/When/Then step is automatically reported as a test step in Qase with its own status and timing. No additional code is required.
-
-### Scenario Outline parameters
-
-Scenario Outline examples are automatically captured as test parameters:
-
-```gherkin
-@QaseId:200
-Scenario Outline: Login validation
-  When the user enters "<username>" and "<password>"
-  Then the result should be "<result>"
-
-  Examples:
-    | username | password | result  |
-    | admin    | pass123  | success |
-    | invalid  | wrong    | failure |
-```
-
-### Suite hierarchy
-
-By default, the Feature name becomes the test suite. Override with `@QaseSuite:Parent\Child` tag.
+| Reqnroll Status | Qase Status | Description |
+|-----------------|-------------|-------------|
+| OK | Passed | All steps executed successfully |
+| TestError | Failed | A step definition threw an exception or assertion failure |
+| UndefinedStep | Invalid | A step has no matching step definition |
+| BindingError | Invalid | A step definition binding is invalid |
+| StepDefinitionPending | Skipped | A step definition is marked as pending |
+| Skipped | Skipped | Scenario was skipped |
 
 ## Requirements
 
-- .NET 6.0 or later
-- Reqnroll 2.0.0 or later
+- **Reqnroll**: Version 2.0.0 or higher is required.
+- **.NET**: Version 6.0 or higher is required (or .NET Standard 2.0).
+
+For further assistance, please refer to the [Qase Authentication Documentation](https://developers.qase.io/#authentication).
