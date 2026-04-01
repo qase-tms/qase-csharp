@@ -1,5 +1,22 @@
 # Changelog
 
+## qase-csharp 1.1.13
+
+- Added Qase Reqnroll Reporter for [Reqnroll](https://reqnroll.net/) BDD framework integration
+- Automatic step reporting from Given/When/Then Gherkin steps — no code changes required
+- Gherkin tag-based metadata: `@QaseId`, `@QaseTitle`, `@QaseFields`, `@QaseSuite`, `@QaseIgnore`
+- Scenario Outline parameter capture from Examples tables
+- Suite hierarchy from Feature name or `@QaseSuite` tag override
+- Attachments and comments via `Metadata.Attach()` / `Metadata.Comment()` from step definitions
+- Auto-discovered as Reqnroll runtime plugin (`*.ReqnrollPlugin.dll` naming convention)
+- Added Reqnroll example project with 6 feature files demonstrating all reporter capabilities
+- Added Reqnroll reporter documentation (README, usage guide, steps, attachments)
+
+## qase-csharp 1.1.12
+
+- Added `User-Agent: qase-api-client-csharp/<version>` header to all API requests (V1 and V2 clients)
+- Fixed `FormatVersion` to trim trailing `.0` from 4-part assembly versions
+
 ## qase-csharp 1.1.11
 
 - Fixed StepAspect swallowing exceptions in sync and async step wrappers — tests with failing steps were incorrectly marked as passed
