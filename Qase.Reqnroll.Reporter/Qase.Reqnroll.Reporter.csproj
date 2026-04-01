@@ -8,8 +8,11 @@
     <IsPackable>true</IsPackable>
     <Description>Reqnroll Integration with Qase TMS</Description>
     <Nullable>enable</Nullable>
-    <InternalsVisibleTo>Qase.Reqnroll.Reporter.Tests</InternalsVisibleTo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Qase.Reqnroll.Reporter.Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
