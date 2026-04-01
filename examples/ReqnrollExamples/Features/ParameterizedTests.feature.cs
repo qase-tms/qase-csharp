@@ -80,7 +80,7 @@ namespace ReqnrollExamples.Features
         [NUnit.Framework.TestCaseAttribute("admin@example.com", "Admin123!", "true", null)]
         [NUnit.Framework.TestCaseAttribute("user@example.com", "UserPass1!", "true", null)]
         [NUnit.Framework.TestCaseAttribute("guest", "guest", "false", null)]
-        [NUnit.Framework.TestCaseAttribute("", "nouser", "false", null)]
+        [NUnit.Framework.TestCaseAttribute("(empty)", "nouser", "false", null)]
         public async System.Threading.Tasks.Task LoginWithVariousCredentials(string username, string password, string expected, string[] exampleTags)
         {
             string[] @__tags = new string[] {
@@ -120,12 +120,12 @@ namespace ReqnrollExamples.Features
         [NUnit.Framework.DescriptionAttribute("Email validation rejects invalid formats")]
         [NUnit.Framework.CategoryAttribute("QaseId:502")]
         [NUnit.Framework.CategoryAttribute("QaseTitle:Email_validation_rejects_invalid_formats")]
-        [NUnit.Framework.TestCaseAttribute("", "empty string", null)]
+        [NUnit.Framework.TestCaseAttribute("(empty)", "empty string", null)]
         [NUnit.Framework.TestCaseAttribute("plaintext", "missing @ symbol", null)]
         [NUnit.Framework.TestCaseAttribute("@example.com", "missing local part", null)]
         [NUnit.Framework.TestCaseAttribute("user@", "missing domain", null)]
         [NUnit.Framework.TestCaseAttribute("user@example.", "trailing dot in domain", null)]
-        public async System.Threading.Tasks.Task EmailValidationRejectsInvalidFormats(string email, string reason, string[] exampleTags)
+        public async System.Threading.Tasks.Task EmailValidationRejectsInvalidFormats(string emailInput, string reason, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "QaseId:502",
@@ -136,7 +136,7 @@ namespace ReqnrollExamples.Features
             }
             string[] tagsOfScenario = @__tags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("email", email);
+            argumentsOfScenario.Add("emailInput", emailInput);
             argumentsOfScenario.Add("reason", reason);
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Email validation rejects invalid formats", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 21
@@ -150,7 +150,7 @@ namespace ReqnrollExamples.Features
             {
                 await this.ScenarioStartAsync();
 #line 22
-    await testRunner.WhenAsync(string.Format("the email \"{0}\" is validated", email), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync(string.Format("the email \"{0}\" is validated", emailInput), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 23
     await testRunner.ThenAsync(string.Format("it should be rejected because \"{0}\"", reason), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");

@@ -12,7 +12,8 @@ public class ParameterizedTestsSteps
     [When(@"the user logs in with ""(.*)"" and ""(.*)""")]
     public void WhenLoginWith(string username, string password)
     {
-        var isValidUsername = !string.IsNullOrEmpty(username) && username.Contains("@");
+        var actualUsername = username == "(empty)" ? "" : username;
+        var isValidUsername = !string.IsNullOrEmpty(actualUsername) && actualUsername.Contains("@");
         var isValidPassword = password.Length >= 8;
         _loginResult = isValidUsername && isValidPassword;
     }
@@ -24,8 +25,9 @@ public class ParameterizedTestsSteps
     }
 
     [When(@"the email ""(.*)"" is validated")]
-    public void WhenEmailValidated(string email)
+    public void WhenEmailValidated(string emailInput)
     {
+        var email = emailInput == "(empty)" ? "" : emailInput;
         _emailValid = !string.IsNullOrEmpty(email)
                       && email.Contains("@")
                       && email.Contains(".")

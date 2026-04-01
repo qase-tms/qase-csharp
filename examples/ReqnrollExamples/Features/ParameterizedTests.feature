@@ -14,17 +14,17 @@ Feature: Parameterized Tests
       | admin@example.com   | Admin123!   | true     |
       | user@example.com    | UserPass1!  | true     |
       | guest               | guest       | false    |
-      |                     | nouser      | false    |
+      | (empty)             | nouser      | false    |
 
   @QaseId:502
   @QaseTitle:Email_validation_rejects_invalid_formats
   Scenario Outline: Email validation rejects invalid formats
-    When the email "<email>" is validated
+    When the email "<emailInput>" is validated
     Then it should be rejected because "<reason>"
 
     Examples:
-      | email         | reason                  |
-      |               | empty string            |
+      | emailInput    | reason                  |
+      | (empty)       | empty string            |
       | plaintext     | missing @ symbol        |
       | @example.com  | missing local part      |
       | user@         | missing domain          |

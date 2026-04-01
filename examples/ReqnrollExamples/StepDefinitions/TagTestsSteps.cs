@@ -25,7 +25,7 @@ public class TagTestsSteps
     [Given(@"the login page is open")]
     public void GivenLoginPageIsOpen()
     {
-        Assert.Pass();
+        Assert.That(true, Is.True);
     }
 
     [When(@"the user logs in with email ""(.*)""")]
@@ -69,7 +69,7 @@ public class TagTestsSteps
     [When(@"a password reset is requested")]
     public void WhenPasswordResetRequested()
     {
-        Assert.Pass();
+        Assert.That(true, Is.True);
     }
 
     [Then(@"a reset email should be sent")]
@@ -99,7 +99,7 @@ public class TagTestsSteps
     [Given(@"the legacy password policy is active")]
     public void GivenLegacyPasswordPolicy()
     {
-        Assert.Pass();
+        Assert.That(true, Is.True);
     }
 
     [Then(@"the policy check should pass")]

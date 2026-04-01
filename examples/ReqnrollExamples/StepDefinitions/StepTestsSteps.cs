@@ -91,7 +91,7 @@ public class StepTestsSteps
     public void WhenCorruptedRecords()
     {
         // Simulates that corrupted records were logged but migration continues
-        Assert.Pass();
+        Assert.That(true, Is.True);
     }
 
     [Then(@"the migration summary should show (.*) migrated and (.*) failed")]
