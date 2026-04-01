@@ -20,22 +20,22 @@ namespace ReqnrollExamples.Features
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "2.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Calculator")]
-    public partial class CalculatorFeature
+    [NUnit.Framework.DescriptionAttribute("Metadata Tests")]
+    public partial class MetadataTestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = ((string[])(null));
         
-#line 1 "Calculator.feature"
+#line 1 "MetadataTests.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual async System.Threading.Tasks.Task FeatureSetupAsync()
         {
             testRunner = global::Reqnroll.TestRunnerManager.GetTestRunnerForAssembly(null, NUnit.Framework.TestContext.CurrentContext.WorkerId);
-            global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Calculator", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
+            global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Metadata Tests", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
             await testRunner.OnFeatureStartAsync(featureInfo);
         }
         
@@ -74,15 +74,17 @@ namespace ReqnrollExamples.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Add two numbers")]
+        [NUnit.Framework.DescriptionAttribute("Failed login logs attempt details")]
         [NUnit.Framework.CategoryAttribute("QaseId:201")]
-        public async System.Threading.Tasks.Task AddTwoNumbers()
+        [NUnit.Framework.CategoryAttribute("QaseTitle:Failed_login_records_attempt_details_in_report")]
+        public async System.Threading.Tasks.Task FailedLoginLogsAttemptDetails()
         {
             string[] tagsOfScenario = new string[] {
-                    "QaseId:201"};
+                    "QaseId:201",
+                    "QaseTitle:Failed_login_records_attempt_details_in_report"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Add two numbers", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 4
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Failed login logs attempt details", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 8
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -92,75 +94,31 @@ namespace ReqnrollExamples.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 5
-    await testRunner.GivenAsync("the calculator is open", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line 9
+    await testRunner.GivenAsync("a login attempt by \"admin@example.com\" from IP \"192.168.1.42\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 6
-    await testRunner.WhenAsync("I add 5 and 3", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 10
+    await testRunner.WhenAsync("the login is denied", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 7
-    await testRunner.ThenAsync("the result should be 8", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Arithmetic operations")]
-        [NUnit.Framework.CategoryAttribute("QaseId:202")]
-        [NUnit.Framework.CategoryAttribute("QaseFields:priority:low")]
-        [NUnit.Framework.TestCaseAttribute("add", "10", "20", "30", null)]
-        [NUnit.Framework.TestCaseAttribute("subtract", "50", "15", "35", null)]
-        [NUnit.Framework.TestCaseAttribute("multiply", "7", "6", "42", null)]
-        public async System.Threading.Tasks.Task ArithmeticOperations(string operation, string a, string b, string expected, string[] exampleTags)
-        {
-            string[] @__tags = new string[] {
-                    "QaseId:202",
-                    "QaseFields:priority:low"};
-            if ((exampleTags != null))
-            {
-                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
-            }
-            string[] tagsOfScenario = @__tags;
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("operation", operation);
-            argumentsOfScenario.Add("a", a);
-            argumentsOfScenario.Add("b", b);
-            argumentsOfScenario.Add("expected", expected);
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Arithmetic operations", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 11
-  this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 12
-    await testRunner.GivenAsync("the calculator is open", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 13
-    await testRunner.WhenAsync(string.Format("I perform \"{0}\" on {1} and {2}", operation, a, b), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 14
-    await testRunner.ThenAsync(string.Format("the result should be {0}", expected), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("the attempt details should be recorded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("WIP division by zero")]
-        [NUnit.Framework.CategoryAttribute("QaseIgnore")]
-        public async System.Threading.Tasks.Task WIPDivisionByZero()
+        [NUnit.Framework.DescriptionAttribute("API response records payload details")]
+        [NUnit.Framework.CategoryAttribute("QaseId:202")]
+        [NUnit.Framework.CategoryAttribute("QaseTitle:API_response_details_are_recorded_for_debugging")]
+        public async System.Threading.Tasks.Task APIResponseRecordsPayloadDetails()
         {
             string[] tagsOfScenario = new string[] {
-                    "QaseIgnore"};
+                    "QaseId:202",
+                    "QaseTitle:API_response_details_are_recorded_for_debugging"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("WIP division by zero", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 23
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("API response records payload details", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 15
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -170,14 +128,44 @@ namespace ReqnrollExamples.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 24
-    await testRunner.GivenAsync("the calculator is open", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line 16
+    await testRunner.WhenAsync("a GET request is made to \"/api/v1/users/42\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 25
-    await testRunner.WhenAsync("I divide 10 by 0", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 17
+    await testRunner.ThenAsync("the response status code should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 26
-    await testRunner.ThenAsync("an error should be shown", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 18
+    await testRunner.AndAsync("the response body should be recorded", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Order processing adds tracking comment")]
+        public async System.Threading.Tasks.Task OrderProcessingAddsTrackingComment()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Order processing adds tracking comment", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 20
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 21
+    await testRunner.GivenAsync("an order \"ORD-2026-0042\" with total 149.99", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 22
+    await testRunner.WhenAsync("the order is processed", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 23
+    await testRunner.ThenAsync("the processing result should be recorded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
