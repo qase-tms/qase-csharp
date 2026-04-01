@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Qase.Reqnroll.Reporter</PackageId>
+    <AssemblyName>Qase.Reqnroll.Reporter</AssemblyName>
+    <RootNamespace>Qase.Reqnroll.Reporter</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <Description>Reqnroll Integration with Qase TMS</Description>
+    <Nullable>enable</Nullable>
+    <InternalsVisibleTo>Qase.Reqnroll.Reporter.Tests</InternalsVisibleTo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Reqnroll" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Qase.Csharp.Commons/Qase.Csharp.Commons.csproj" />
+  </ItemGroup>
+
+</Project>
