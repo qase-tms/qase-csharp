@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Qase.Reqnroll.Reporter</PackageId>
-    <AssemblyName>Qase.Reqnroll.Reporter</AssemblyName>
+    <AssemblyName>Qase.ReqnrollPlugin</AssemblyName>
     <RootNamespace>Qase.Reqnroll.Reporter</RootNamespace>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <IsPackable>true</IsPackable>

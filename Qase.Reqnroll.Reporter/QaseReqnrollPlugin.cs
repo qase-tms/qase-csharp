@@ -1,3 +1,4 @@
+using System.Reflection;
 using Reqnroll.Plugins;
 using Reqnroll.UnitTestProvider;
 using Qase.Csharp.Commons.Reporters;
@@ -13,7 +14,8 @@ namespace Qase.Reqnroll.Reporter
     public class QaseReqnrollPlugin : IRuntimePlugin
     {
         /// <summary>
-        /// Initializes the plugin by registering Qase reporter in the DI container.
+        /// Initializes the plugin by registering Qase reporter in the DI container
+        /// and registering this assembly's bindings with Reqnroll.
         /// </summary>
         public void Initialize(
             RuntimePluginEvents runtimePluginEvents,
@@ -24,6 +26,12 @@ namespace Qase.Reqnroll.Reporter
             {
                 args.ObjectContainer.RegisterInstanceAs<ICoreReporter>(
                     CoreReporterFactory.GetInstance());
+            };
+
+            runtimePluginEvents.ConfigurationDefaults += (sender, args) =>
+            {
+                args.ReqnrollConfiguration.AdditionalStepAssemblies.Add(
+                    Assembly.GetExecutingAssembly().FullName);
             };
         }
     }
