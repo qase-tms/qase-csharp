@@ -1,0 +1,23 @@
+.github/workflows/build.yaml
+  6a7d157ba1eb9f1e 35-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "b9c744afca4ff3222f309da02f3100f47a12f195",
+  "prompts": {
+    "6a7d157ba1eb9f1e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "407854c2-bf84-409d-9904-8fdbd90c641e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 1,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
