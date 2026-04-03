@@ -18,12 +18,14 @@ Feature: Tag Tests
     When the user logs in with username "admin"
     Then login should succeed
 
+  @QaseId:104
   @QaseTitle:Verify_that_the_login_page_displays_the_correct_title_and_branding
   Scenario: Login page displays correct branding
     Given the login page is open
     Then the page title should be "Welcome to Qase"
     And the logo should be visible
 
+  @QaseId:105
   @QaseFields:severity:critical
   @QaseFields:priority:high
   @QaseFields:layer:api

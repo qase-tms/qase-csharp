@@ -1,0 +1,731 @@
+run:
+  stats:
+    total: 45
+    passed: 44
+    failed: 1
+    skipped: 0
+    blocked: 0
+    invalid: 0
+    muted: 0
+results:
+- title: Login page captures screenshot on successful load
+  signature: 401::nunitexamples::attachmenttests
+  testops_ids:
+  - 401
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: AttachmentTests
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+- title: LoginPage_AcceptsBothEmailAndUsername
+  signature: 102-103::authentication::smoke-tests
+  testops_ids:
+  - 102
+  - 103
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+- title: User registration completes all required steps
+  signature: 301::nunitexamples::steptests
+  testops_ids:
+  - 301
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: StepTests
+  steps:
+  - data:
+      action: OpenRegistrationPage
+    execution:
+      status: passed
+  - data:
+      action: FillRegistrationForm
+    execution:
+      status: passed
+  - data:
+      action: SubmitForm
+    execution:
+      status: passed
+  - data:
+      action: VerifyConfirmationEmail
+    execution:
+      status: passed
+- title: Login accepts valid credential combinations
+  signature: 501::nunitexamples::parameterizedtests::"username":""::"password":"nouser"::"expectedsuccess":"false"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: ''
+    password: nouser
+    expectedSuccess: 'False'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Email validation rejects invalid formats
+  signature: 502::nunitexamples::parameterizedtests::"email":"user@example."::"reason":"trailing
+    dot in domain"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    email: user@example.
+    reason: trailing dot in domain
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::"query":"mechanical keyboard"::"expectedminresults":"15"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  params:
+    query: mechanical keyboard
+    expectedMinResults: '15'
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  steps:
+  - data:
+      action: Execute product search query
+    execution:
+      status: passed
+  - data:
+      action: Verify search returns minimum expected results
+    execution:
+      status: passed
+  - data:
+      action: Capture search results page
+    execution:
+      status: passed
+- title: Login accepts valid credential combinations
+  signature: 501::nunitexamples::parameterizedtests::"username":"admin@example.com"::"password":"admin123!"::"expectedsuccess":"true"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: admin@example.com
+    password: Admin123!
+    expectedSuccess: 'True'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"25"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '25'
+    pageNumber: '1'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::"query":"usb hub"::"expectedminresults":"8"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  params:
+    query: usb hub
+    expectedMinResults: '8'
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  steps:
+  - data:
+      action: Execute product search query
+    execution:
+      status: passed
+  - data:
+      action: Verify search returns minimum expected results
+    execution:
+      status: passed
+  - data:
+      action: Capture search results page
+    execution:
+      status: passed
+- title: PasswordReset_SendsEmailToRegisteredUser
+  signature: 105::authentication::smoke-tests
+  testops_ids:
+  - 105
+  status: passed
+  fields:
+    layer: api
+    severity: critical
+    priority: high
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+- title: Login accepts valid credential combinations
+  signature: 501::nunitexamples::parameterizedtests::"username":"guest"::"password":"guest"::"expectedsuccess":"false"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: guest
+    password: guest
+    expectedSuccess: 'False'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"10"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '10'
+    pageNumber: '1'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"50"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '50'
+    pageNumber: '1'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: UserProfile_UpdatesDisplayName
+  signature: user-profile::settings
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: User Profile
+      - title: Settings
+- title: Checkout step captures state screenshot at each stage
+  signature: 404::nunitexamples::attachmenttests
+  testops_ids:
+  - 404
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: AttachmentTests
+  steps:
+  - data:
+      action: Fill shopping cart
+    execution:
+      status: passed
+  - data:
+      action: Enter shipping details
+    execution:
+      status: passed
+  - data:
+      action: Confirm order
+    execution:
+      status: passed
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"100"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '100'
+    pageNumber: '2'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::"query":"wireless mouse"::"expectedminresults":"23"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  params:
+    query: wireless mouse
+    expectedMinResults: '23'
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  steps:
+  - data:
+      action: Execute product search query
+    execution:
+      status: passed
+  - data:
+      action: Verify search returns minimum expected results
+    execution:
+      status: passed
+  - data:
+      action: Capture search results page
+    execution:
+      status: passed
+- title: Shopping cart calculates total correctly
+  signature: 504::nunitexamples::parameterizedtests::"quantity":"1"::"unitprice":"29.99d"::"discountpercent":"0"
+  testops_ids:
+  - 504
+  status: passed
+  params:
+    quantity: '1'
+    unitPrice: 29.99d
+    discountPercent: '0'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"25"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '25'
+    pageNumber: '2'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Email validation rejects invalid formats
+  signature: 502::nunitexamples::parameterizedtests::"email":"user@"::"reason":"missing
+    domain"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    email: user@
+    reason: missing domain
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Failed login records attempt details in report
+  signature: 201::nunitexamples::metadatatests
+  testops_ids:
+  - 201
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: MetadataTests
+- title: Shopping cart calculates total correctly
+  signature: 504::nunitexamples::parameterizedtests::"quantity":"3"::"unitprice":"9.99d"::"discountpercent":"0"
+  testops_ids:
+  - 504
+  status: passed
+  params:
+    quantity: '3'
+    unitPrice: 9.99d
+    discountPercent: '0'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Email validation rejects invalid formats
+  signature: 502::nunitexamples::parameterizedtests::"email":"@example.com"::"reason":"missing
+    local part"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    email: '@example.com'
+    reason: missing local part
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: UserRegistration_CreatesNewAccount
+  signature: 101::authentication::smoke-tests
+  testops_ids:
+  - 101
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+- title: Email validation rejects invalid formats
+  signature: 502::nunitexamples::parameterizedtests::"email":"plaintext"::"reason":"missing
+    @ symbol"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    email: plaintext
+    reason: missing @ symbol
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"10"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '10'
+    pageNumber: '2'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"50"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '50'
+    pageNumber: '2'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Login accepts valid credential combinations
+  signature: 501::nunitexamples::parameterizedtests::"username":"user@example.com"::"password":"userpass1!"::"expectedsuccess":"true"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: user@example.com
+    password: UserPass1!
+    expectedSuccess: 'True'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Shopping cart calculates total correctly
+  signature: 504::nunitexamples::parameterizedtests::"quantity":"1"::"unitprice":"100.0d"::"discountpercent":"25"
+  testops_ids:
+  - 504
+  status: passed
+  params:
+    quantity: '1'
+    unitPrice: 100.0d
+    discountPercent: '25'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Email validation rejects invalid formats
+  signature: 502::nunitexamples::parameterizedtests::"email":""::"reason":"empty string"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    email: ''
+    reason: empty string
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Shopping cart calculates total correctly
+  signature: 504::nunitexamples::parameterizedtests::"quantity":"2"::"unitprice":"50.0d"::"discountpercent":"10"
+  testops_ids:
+  - 504
+  status: passed
+  params:
+    quantity: '2'
+    unitPrice: 50.0d
+    discountPercent: '10'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"50"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '50'
+    pageNumber: '3'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: API test captures both request log and response screenshot
+  signature: 402::nunitexamples::attachmenttests
+  testops_ids:
+  - 402
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: AttachmentTests
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+  - file_name: test-log.txt
+    mime_type: text/plain
+- title: 'New user onboarding: register, verify, complete profile'
+  signature: 601::e2e-tests::user-workflows
+  testops_ids:
+  - 601
+  status: passed
+  fields:
+    layer: e2e
+    severity: critical
+    priority: high
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  steps:
+  - data:
+      action: Register new user account
+    execution:
+      status: passed
+  - data:
+      action: Verify email address via confirmation link
+    execution:
+      status: passed
+  - data:
+      action: Complete user profile with personal info
+    execution:
+      status: passed
+  - data:
+      action: Generate and attach onboarding summary
+    execution:
+      status: passed
+- title: Order processing adds tracking comment
+  signature: nunitexamples::metadatatests
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: MetadataTests
+- title: Checkout process with nested address and payment steps
+  signature: 302::nunitexamples::steptests
+  testops_ids:
+  - 302
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: StepTests
+  steps:
+  - data:
+      action: AddItemToCart
+    execution:
+      status: passed
+  - data:
+      action: FillShippingAddress
+    execution:
+      status: passed
+    steps:
+    - data:
+        action: FillStreetAddress
+      execution:
+        status: passed
+    - data:
+        action: FillCityStateZip
+      execution:
+        status: passed
+  - data:
+      action: FillPaymentDetails
+    execution:
+      status: passed
+  - data:
+      action: ConfirmOrder
+    execution:
+      status: passed
+- title: Verify that the login page displays the correct title and branding
+  signature: 104::authentication::smoke-tests
+  testops_ids:
+  - 104
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"100"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  status: failed
+  params:
+    pageSize: '100'
+    pageNumber: '3'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"100"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '100'
+    pageNumber: '1'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Order creation with custom step names for clarity
+  signature: 303::nunitexamples::steptests
+  testops_ids:
+  - 303
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: StepTests
+  steps:
+  - data:
+      action: Select product and set quantity
+    execution:
+      status: passed
+  - data:
+      action: Apply promotional discount code
+    execution:
+      status: passed
+  - data:
+      action: Calculate total with discount applied
+    execution:
+      status: passed
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"25"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '25'
+    pageNumber: '3'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: API response details are recorded for debugging
+  signature: 202::nunitexamples::metadatatests
+  testops_ids:
+  - 202
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: MetadataTests
+- title: Data migration partially succeeds with expected failures
+  signature: 304::nunitexamples::steptests
+  testops_ids:
+  - 304
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: StepTests
+  steps:
+  - data:
+      action: MigrateUserRecords
+    execution:
+      status: passed
+  - data:
+      action: MigrateOrderRecords
+    execution:
+      status: passed
+  - data:
+      action: MigrateCorruptedRecords
+    execution:
+      status: failed
+  - data:
+      action: VerifyMigrationSummary
+    execution:
+      status: passed
+- title: Pagination returns correct page size
+  signature: 503::nunitexamples::parameterizedtests::"pagesize":"10"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    pageSize: '10'
+    pageNumber: '3'
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: ParameterizedTests
+- title: Generate HTML report and attach from memory
+  signature: 403::nunitexamples::attachmenttests
+  testops_ids:
+  - 403
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: NUnitExamples
+      - title: AttachmentTests
+  attachments:
+  - file_name: test-summary.html
+    mime_type: text/html

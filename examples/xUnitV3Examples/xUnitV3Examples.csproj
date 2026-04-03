@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../Qase.XUnit.V3.Reporter/build/Qase.XUnit.V3.Reporter.props" />
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -12,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.2"/>
-    <PackageReference Include="Qase.XUnit.V3.Reporter" Version="1.1.8"/>
+    <ProjectReference Include="../../Qase.XUnit.V3.Reporter/Qase.XUnit.V3.Reporter.csproj" />
   </ItemGroup>
 
   <ItemGroup>

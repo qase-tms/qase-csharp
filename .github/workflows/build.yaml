@@ -35,6 +35,69 @@ jobs:
           dotnet test Qase.XUnit.V3.Reporter.Tests && \
           dotnet test Qase.Reqnroll.Reporter.Tests
  
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install reporters-validator
+        run: pip install git+https://github.com/qase-tms/reporters-validator.git
+
+      - name: Download report schemas
+        run: git clone --depth 1 https://github.com/qase-tms/specs.git /tmp/specs
+
+      - name: Build
+        run: dotnet build
+
+      - name: Validate NUnit
+        run: |
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/nunit-report dotnet test examples/NUnitExamples/ || true
+          reporters-validator validate \
+            --report-dir ${{ github.workspace }}/build/nunit-report \
+            --expected expected/nunit-examples.yaml \
+            --schema-dir /tmp/specs/report/schemas
+
+      # xUnit v2: IRunnerReporter not invoked by xunit.runner.visualstudio on Linux.
+      # Works on macOS but not on ubuntu-latest CI runner.
+      # xUnit v3 (MTP v2) works correctly and is validated below.
+
+      - name: Validate MSTest
+        run: |
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/mstest-report dotnet test examples/MSTestExamples/MSTestExamples.csproj || true
+          reporters-validator validate \
+            --report-dir ${{ github.workspace }}/build/mstest-report \
+            --expected expected/mstest-examples.yaml \
+            --schema-dir /tmp/specs/report/schemas
+
+      - name: Validate xUnit V3
+        run: |
+          cd examples/xUnitV3Examples
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/xunitv3-report dotnet test --project xUnitV3Examples.csproj || true
+          cd ../..
+          reporters-validator validate \
+            --report-dir ${{ github.workspace }}/build/xunitv3-report \
+            --expected expected/xunit-v3-examples.yaml \
+            --schema-dir /tmp/specs/report/schemas
+
+      - name: Validate Reqnroll
+        run: |
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/reqnroll-report dotnet test examples/ReqnrollExamples/ || true
+          reporters-validator validate \
+            --report-dir ${{ github.workspace }}/build/reqnroll-report \
+            --expected expected/reqnroll-examples.yaml \
+            --schema-dir /tmp/specs/report/schemas
+
   publish:
     runs-on: ubuntu-latest
     permissions:

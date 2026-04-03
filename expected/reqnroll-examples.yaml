@@ -1,0 +1,823 @@
+run:
+  stats:
+    total: 33
+    passed: 33
+    failed: 0
+    skipped: 0
+    blocked: 0
+    invalid: 0
+    muted: 0
+results:
+- title: Login page accepts both email and username
+  signature: 102-103::authentication::smoke_tests
+  testops_ids:
+  - 102
+  - 103
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  steps:
+  - data:
+      action: Given the login page is open
+    execution:
+      status: passed
+  - data:
+      action: When the user logs in with email "admin@example.com"
+    execution:
+      status: passed
+  - data:
+      action: Then login should succeed
+    execution:
+      status: passed
+  - data:
+      action: When the user logs in with username "admin"
+    execution:
+      status: passed
+  - data:
+      action: Then login should succeed
+    execution:
+      status: passed
+- title: API response details are recorded for debugging
+  signature: 202::metadata-tests
+  testops_ids:
+  - 202
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Metadata Tests
+  steps:
+  - data:
+      action: When a GET request is made to "/api/v1/users/42"
+    execution:
+      status: passed
+  - data:
+      action: Then the response status code should be 200
+    execution:
+      status: passed
+  - data:
+      action: Then the response body should be recorded
+    execution:
+      status: passed
+- title: 'New user onboarding: register, verify, complete profile'
+  signature: 601::e2e_tests::user_workflows
+  testops_ids:
+  - 601
+  status: passed
+  fields:
+    severity: critical
+    priority: high
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  steps:
+  - data:
+      action: Given a new user registration for "alice@example.com" with password
+        "SecurePass123!"
+    execution:
+      status: passed
+  - data:
+      action: When the email "alice@example.com" is verified
+    execution:
+      status: passed
+  - data:
+      action: When the profile is completed with first name "Alice" and last name
+        "Johnson"
+    execution:
+      status: passed
+  - data:
+      action: Then the onboarding report should be generated
+    execution:
+      status: passed
+  attachments:
+  - file_name: test-log.txt
+    mime_type: text/plain
+  - file_name: screenshot.png
+    mime_type: image/png
+  - file_name: onboarding-report.json
+    mime_type: application/json
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"(empty)"::"password":"nouser"::"expected":"false"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: (empty)
+    password: nouser
+    expected: 'false'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the user logs in with "(empty)" and "nouser"
+    execution:
+      status: passed
+  - data:
+      action: Then the login result should be false
+    execution:
+      status: passed
+- title: Generate HTML report and attach from memory
+  signature: 403::attachment-tests
+  testops_ids:
+  - 403
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  steps:
+  - data:
+      action: When a test summary report is generated with 42 total, 40 passed and
+        2 failed
+    execution:
+      status: passed
+  - data:
+      action: Then the HTML report should be attached as byte array
+    execution:
+      status: passed
+  attachments:
+  - file_name: test-summary.html
+    mime_type: text/html
+- title: Verify that the login page displays the correct title and branding
+  signature: 104::authentication::smoke_tests
+  testops_ids:
+  - 104
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  steps:
+  - data:
+      action: Given the login page is open
+    execution:
+      status: passed
+  - data:
+      action: Then the page title should be "Welcome to Qase"
+    execution:
+      status: passed
+  - data:
+      action: Then the logo should be visible
+    execution:
+      status: passed
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"(empty)"::"reason":"empty string"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    emailInput: (empty)
+    reason: empty string
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the email "(empty)" is validated
+    execution:
+      status: passed
+  - data:
+      action: Then it should be rejected because "empty string"
+    execution:
+      status: passed
+- title: Product search returns relevant results
+  signature: 602::e2e_tests::user_workflows::"query":"usb hub"::"minresults":"8"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    severity: normal
+    layer: e2e
+  params:
+    query: usb hub
+    minResults: '8'
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  steps:
+  - data:
+      action: When a search is performed for "usb hub"
+    execution:
+      status: passed
+  - data:
+      action: Then at least 8 results should be returned
+    execution:
+      status: passed
+  - data:
+      action: Then the search results page should be captured
+    execution:
+      status: passed
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+- title: Data migration partially succeeds with expected failures
+  signature: 304::step-tests
+  testops_ids:
+  - 304
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  steps:
+  - data:
+      action: Given 100 user records to migrate
+    execution:
+      status: passed
+  - data:
+      action: Given 50 order records to migrate
+    execution:
+      status: passed
+  - data:
+      action: When corrupted records are encountered
+    execution:
+      status: passed
+  - data:
+      action: Then the migration summary should show 150 migrated and 3 failed
+    execution:
+      status: passed
+- title: Failed login records attempt details in report
+  signature: 201::metadata-tests
+  testops_ids:
+  - 201
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Metadata Tests
+  steps:
+  - data:
+      action: Given a login attempt by "admin@example.com" from IP "192.168.1.42"
+    execution:
+      status: passed
+  - data:
+      action: When the login is denied
+    execution:
+      status: passed
+  - data:
+      action: Then the attempt details should be recorded
+    execution:
+      status: passed
+- title: Login page captures screenshot on successful load
+  signature: 401::attachment-tests
+  testops_ids:
+  - 401
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  steps:
+  - data:
+      action: Given the login page is loaded with title "Login - MyApp"
+    execution:
+      status: passed
+  - data:
+      action: Then a screenshot should be attached
+    execution:
+      status: passed
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+- title: Checkout process with nested address and payment steps
+  signature: 302::step-tests
+  testops_ids:
+  - 302
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  steps:
+  - data:
+      action: Given an item "Wireless Keyboard" priced at 49.99 is in the cart
+    execution:
+      status: passed
+  - data:
+      action: When the shipping address is entered
+    execution:
+      status: passed
+  - data:
+      action: When payment details are entered for card "4111111111111111"
+    execution:
+      status: passed
+  - data:
+      action: Then the order should be confirmed
+    execution:
+      status: passed
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"3"::"unitprice":"9.99"::"discountpercent":"0"::"expectedtotal":"29.97"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    quantity: '3'
+    unitPrice: '9.99'
+    discountPercent: '0'
+    expectedTotal: '29.97'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When 3 items at 9.99 with 0 percent discount are added
+    execution:
+      status: passed
+  - data:
+      action: Then the cart total should be 29.97
+    execution:
+      status: passed
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"admin@example.com"::"password":"admin123!"::"expected":"true"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: admin@example.com
+    password: Admin123!
+    expected: 'true'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the user logs in with "admin@example.com" and "Admin123!"
+    execution:
+      status: passed
+  - data:
+      action: Then the login result should be true
+    execution:
+      status: passed
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"guest"::"password":"guest"::"expected":"false"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: guest
+    password: guest
+    expected: 'false'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the user logs in with "guest" and "guest"
+    execution:
+      status: passed
+  - data:
+      action: Then the login result should be false
+    execution:
+      status: passed
+- title: Product search returns relevant results
+  signature: 602::e2e_tests::user_workflows::"query":"wireless mouse"::"minresults":"23"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    severity: normal
+    layer: e2e
+  params:
+    query: wireless mouse
+    minResults: '23'
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  steps:
+  - data:
+      action: When a search is performed for "wireless mouse"
+    execution:
+      status: passed
+  - data:
+      action: Then at least 23 results should be returned
+    execution:
+      status: passed
+  - data:
+      action: Then the search results page should be captured
+    execution:
+      status: passed
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+- title: API test captures both request log and response screenshot
+  signature: 402::attachment-tests
+  testops_ids:
+  - 402
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  steps:
+  - data:
+      action: When an API call returns status code 200
+    execution:
+      status: passed
+  - data:
+      action: Then both the screenshot and log should be attached
+    execution:
+      status: passed
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+  - file_name: test-log.txt
+    mime_type: text/plain
+- title: User registration completes all required steps
+  signature: 301::step-tests
+  testops_ids:
+  - 301
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  steps:
+  - data:
+      action: Given the registration page is open
+    execution:
+      status: passed
+  - data:
+      action: When the user fills in email "john.doe@example.com" and password "SecurePass123!"
+    execution:
+      status: passed
+  - data:
+      action: When the form is submitted
+    execution:
+      status: passed
+  - data:
+      action: Then a confirmation email should be sent to "john.doe@example.com"
+    execution:
+      status: passed
+- title: Order creation with product selection and discount
+  signature: 303::step-tests
+  testops_ids:
+  - 303
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  steps:
+  - data:
+      action: Given a product "Mechanical Keyboard" with quantity 2 is selected
+    execution:
+      status: passed
+  - data:
+      action: When a discount code "SAVE10" is applied
+    execution:
+      status: passed
+  - data:
+      action: Then the total should be calculated with 10 percent discount on 99.98
+    execution:
+      status: passed
+- title: Order processing adds tracking comment
+  signature: metadata-tests
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Metadata Tests
+  steps:
+  - data:
+      action: Given an order "ORD-2026-0042" with total 149.99
+    execution:
+      status: passed
+  - data:
+      action: When the order is processed
+    execution:
+      status: passed
+  - data:
+      action: Then the processing result should be recorded
+    execution:
+      status: passed
+- title: User registration creates new account
+  signature: 101::authentication::smoke_tests
+  testops_ids:
+  - 101
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  steps:
+  - data:
+      action: Given a registration form is submitted for "john.doe@example.com"
+    execution:
+      status: passed
+  - data:
+      action: Then the account should be created successfully
+    execution:
+      status: passed
+- title: Product search returns relevant results
+  signature: 602::e2e_tests::user_workflows::"query":"mechanical keyboard"::"minresults":"15"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    severity: normal
+    layer: e2e
+  params:
+    query: mechanical keyboard
+    minResults: '15'
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  steps:
+  - data:
+      action: When a search is performed for "mechanical keyboard"
+    execution:
+      status: passed
+  - data:
+      action: Then at least 15 results should be returned
+    execution:
+      status: passed
+  - data:
+      action: Then the search results page should be captured
+    execution:
+      status: passed
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+- title: Checkout step captures state screenshot at each stage
+  signature: 404::attachment-tests
+  testops_ids:
+  - 404
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  steps:
+  - data:
+      action: Given a shopping cart with total 149.99
+    execution:
+      status: passed
+  - data:
+      action: When shipping details are entered for "123 Main St, San Francisco, CA"
+    execution:
+      status: passed
+  - data:
+      action: Then the order "ORD-2026-0042" should be confirmed with attachment
+    execution:
+      status: passed
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+  - file_name: test-log.txt
+    mime_type: text/plain
+  - file_name: order-confirmation.json
+    mime_type: application/json
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"user@"::"reason":"missing domain"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    emailInput: user@
+    reason: missing domain
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the email "user@" is validated
+    execution:
+      status: passed
+  - data:
+      action: Then it should be rejected because "missing domain"
+    execution:
+      status: passed
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"1"::"unitprice":"29.99"::"discountpercent":"0"::"expectedtotal":"29.99"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    quantity: '1'
+    unitPrice: '29.99'
+    discountPercent: '0'
+    expectedTotal: '29.99'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When 1 items at 29.99 with 0 percent discount are added
+    execution:
+      status: passed
+  - data:
+      action: Then the cart total should be 29.99
+    execution:
+      status: passed
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"2"::"unitprice":"50.00"::"discountpercent":"10"::"expectedtotal":"90.00"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    quantity: '2'
+    unitPrice: '50.00'
+    discountPercent: '10'
+    expectedTotal: '90.00'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When 2 items at 50.00 with 10 percent discount are added
+    execution:
+      status: passed
+  - data:
+      action: Then the cart total should be 90.00
+    execution:
+      status: passed
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"plaintext"::"reason":"missing
+    @ symbol"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    emailInput: plaintext
+    reason: missing @ symbol
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the email "plaintext" is validated
+    execution:
+      status: passed
+  - data:
+      action: Then it should be rejected because "missing @ symbol"
+    execution:
+      status: passed
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"@example.com"::"reason":"missing
+    local part"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    emailInput: '@example.com'
+    reason: missing local part
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the email "@example.com" is validated
+    execution:
+      status: passed
+  - data:
+      action: Then it should be rejected because "missing local part"
+    execution:
+      status: passed
+- title: User profile updates display name
+  signature: authentication::smoke_tests
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  steps:
+  - data:
+      action: Given a user with display name "John"
+    execution:
+      status: passed
+  - data:
+      action: When the display name is changed to "John Doe"
+    execution:
+      status: passed
+  - data:
+      action: Then the display name should be "John Doe"
+    execution:
+      status: passed
+- title: Password reset sends email to registered user
+  signature: 105::authentication::smoke_tests
+  testops_ids:
+  - 105
+  status: passed
+  fields:
+    severity: critical
+    priority: high
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  steps:
+  - data:
+      action: Given a registered user "john.doe@example.com"
+    execution:
+      status: passed
+  - data:
+      action: When a password reset is requested
+    execution:
+      status: passed
+  - data:
+      action: Then a reset email should be sent
+    execution:
+      status: passed
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"user@example.com"::"password":"userpass1!"::"expected":"true"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: user@example.com
+    password: UserPass1!
+    expected: 'true'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the user logs in with "user@example.com" and "UserPass1!"
+    execution:
+      status: passed
+  - data:
+      action: Then the login result should be true
+    execution:
+      status: passed
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"user@example."::"reason":"trailing
+    dot in domain"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    emailInput: user@example.
+    reason: trailing dot in domain
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When the email "user@example." is validated
+    execution:
+      status: passed
+  - data:
+      action: Then it should be rejected because "trailing dot in domain"
+    execution:
+      status: passed
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"1"::"unitprice":"100.00"::"discountpercent":"25"::"expectedtotal":"75.00"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    quantity: '1'
+    unitPrice: '100.00'
+    discountPercent: '25'
+    expectedTotal: '75.00'
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  steps:
+  - data:
+      action: When 1 items at 100.00 with 25 percent discount are added
+    execution:
+      status: passed
+  - data:
+      action: Then the cart total should be 75.00
+    execution:
+      status: passed
