@@ -62,7 +62,7 @@ jobs:
 
       - name: Validate NUnit
         run: |
-          QASE_MODE=report dotnet test examples/NUnitExamples/
+          QASE_MODE=report dotnet test examples/NUnitExamples/ || true
           reporters-validator validate \
             --report-dir examples/NUnitExamples/bin/Debug/net10.0/build/qase-report \
             --expected expected/nunit-examples.yaml \
@@ -70,7 +70,7 @@ jobs:
 
       - name: Validate xUnit
         run: |
-          QASE_MODE=report dotnet test examples/xUnitExamples/
+          QASE_MODE=report dotnet test examples/xUnitExamples/ || true
           reporters-validator validate \
             --report-dir examples/xUnitExamples/bin/Debug/net10.0/build/qase-report \
             --expected expected/xunit-examples.yaml \
@@ -78,7 +78,7 @@ jobs:
 
       - name: Validate MSTest
         run: |
-          QASE_MODE=report dotnet test examples/MSTestExamples/MSTestExamples.csproj
+          QASE_MODE=report dotnet test examples/MSTestExamples/MSTestExamples.csproj || true
           reporters-validator validate \
             --report-dir examples/MSTestExamples/build/qase-report \
             --expected expected/mstest-examples.yaml \
@@ -87,7 +87,7 @@ jobs:
       - name: Validate xUnit V3
         run: |
           cd examples/xUnitV3Examples
-          QASE_MODE=report dotnet test --project xUnitV3Examples.csproj
+          QASE_MODE=report dotnet test --project xUnitV3Examples.csproj || true
           cd ../..
           reporters-validator validate \
             --report-dir examples/xUnitV3Examples/build/qase-report \
@@ -96,7 +96,7 @@ jobs:
 
       - name: Validate Reqnroll
         run: |
-          QASE_MODE=report dotnet test examples/ReqnrollExamples/
+          QASE_MODE=report dotnet test examples/ReqnrollExamples/ || true
           reporters-validator validate \
             --report-dir examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report \
             --expected expected/reqnroll-examples.yaml \
