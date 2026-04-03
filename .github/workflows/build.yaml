@@ -52,10 +52,10 @@ jobs:
           python-version: '3.12'
 
       - name: Install reporters-validator
-        run: pip install git+https://github.com/qase-tms/reporters-validator.git
+        run: pip install git+https://${{ secrets.GH_PAT }}@github.com/qase-tms/reporters-validator.git
 
       - name: Download report schemas
-        run: git clone --depth 1 https://github.com/qase-tms/specs.git /tmp/specs
+        run: git clone --depth 1 https://${{ secrets.GH_PAT }}@github.com/qase-tms/specs.git /tmp/specs
 
       - name: Build
         run: dotnet build
