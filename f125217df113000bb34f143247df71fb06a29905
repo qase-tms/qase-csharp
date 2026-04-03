@@ -1,0 +1,29 @@
+examples/xUnitExamples/xUnitExamples.csproj
+  5519baaaf18427ce 15
+examples/MSTestExamples/MSTestExamples.csproj
+  5519baaaf18427ce 3-4,20
+examples/NUnitExamples/NUnitExamples.csproj
+  5519baaaf18427ce 15
+examples/xUnitV3Examples/xUnitV3Examples.csproj
+  5519baaaf18427ce 3-4,17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "f125217df113000bb34f143247df71fb06a29905",
+  "prompts": {
+    "5519baaaf18427ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7c93cce3-98ca-4af8-9fc4-eae23bf3df6e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 256,
+      "total_deletions": 5,
+      "accepted_lines": 250,
+      "overriden_lines": 0
+    }
+  }
+}
