@@ -70,7 +70,7 @@ jobs:
 
       - name: Validate xUnit
         run: |
-          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/xunit-report dotnet test examples/xUnitExamples/ --no-build || true
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/xunit-report dotnet test examples/xUnitExamples/ || true
           echo "=== Searching for qase report files ==="
           find ${{ github.workspace }} -name "run.json" -path "*/qase-report/*" 2>/dev/null || echo "No run.json found"
           find ${{ github.workspace }} -name "qase-report" -type d 2>/dev/null || echo "No qase-report dirs found"
