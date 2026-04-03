@@ -33,6 +33,7 @@ public class AttributeTests
     }
 
     [Test]
+    [QaseIds(104)]
     [Title("Verify that the login page displays the correct title and branding")]
     public void LoginPage_DisplaysCorrectBranding()
     {
@@ -44,6 +45,7 @@ public class AttributeTests
     }
 
     [Test]
+    [QaseIds(105)]
     [Fields("severity", "critical")]
     [Fields("priority", "high")]
     [Fields("layer", "api")]

@@ -146,14 +146,16 @@ namespace ReqnrollExamples.Features
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Login page displays correct branding")]
+        [NUnit.Framework.CategoryAttribute("QaseId:104")]
         [NUnit.Framework.CategoryAttribute("QaseTitle:Verify_that_the_login_page_displays_the_correct_title_and_branding")]
         public async System.Threading.Tasks.Task LoginPageDisplaysCorrectBranding()
         {
             string[] tagsOfScenario = new string[] {
+                    "QaseId:104",
                     "QaseTitle:Verify_that_the_login_page_displays_the_correct_title_and_branding"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Login page displays correct branding", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 22
+#line 23
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -163,13 +165,13 @@ namespace ReqnrollExamples.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 23
+#line 24
     await testRunner.GivenAsync("the login page is open", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 24
+#line 25
     await testRunner.ThenAsync("the page title should be \"Welcome to Qase\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 25
+#line 26
     await testRunner.AndAsync("the logo should be visible", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -178,18 +180,20 @@ namespace ReqnrollExamples.Features
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Password reset sends email to registered user")]
+        [NUnit.Framework.CategoryAttribute("QaseId:105")]
         [NUnit.Framework.CategoryAttribute("QaseFields:severity:critical")]
         [NUnit.Framework.CategoryAttribute("QaseFields:priority:high")]
         [NUnit.Framework.CategoryAttribute("QaseFields:layer:api")]
         public async System.Threading.Tasks.Task PasswordResetSendsEmailToRegisteredUser()
         {
             string[] tagsOfScenario = new string[] {
+                    "QaseId:105",
                     "QaseFields:severity:critical",
                     "QaseFields:priority:high",
                     "QaseFields:layer:api"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Password reset sends email to registered user", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 30
+#line 32
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -199,13 +203,13 @@ namespace ReqnrollExamples.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 31
+#line 33
     await testRunner.GivenAsync("a registered user \"john.doe@example.com\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 32
+#line 34
     await testRunner.WhenAsync("a password reset is requested", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 33
+#line 35
     await testRunner.ThenAsync("a reset email should be sent", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -221,7 +225,7 @@ namespace ReqnrollExamples.Features
                     "QaseSuite:User_Profile\\Settings"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User profile updates display name", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 36
+#line 38
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -231,13 +235,13 @@ namespace ReqnrollExamples.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 37
+#line 39
     await testRunner.GivenAsync("a user with display name \"John\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 38
+#line 40
     await testRunner.WhenAsync("the display name is changed to \"John Doe\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 39
+#line 41
     await testRunner.ThenAsync("the display name should be \"John Doe\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -253,7 +257,7 @@ namespace ReqnrollExamples.Features
                     "QaseIgnore"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Deprecated feature - legacy password policy", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 42
+#line 44
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -263,10 +267,10 @@ namespace ReqnrollExamples.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 43
+#line 45
     await testRunner.GivenAsync("the legacy password policy is active", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 44
+#line 46
     await testRunner.ThenAsync("the policy check should pass", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
