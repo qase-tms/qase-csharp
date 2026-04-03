@@ -62,43 +62,43 @@ jobs:
 
       - name: Validate NUnit
         run: |
-          QASE_MODE=report dotnet test examples/NUnitExamples/ || true
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/nunit-report dotnet test examples/NUnitExamples/ || true
           reporters-validator validate \
-            --report-dir examples/NUnitExamples/bin/Debug/net10.0/build/qase-report \
+            --report-dir ${{ github.workspace }}/build/nunit-report \
             --expected expected/nunit-examples.yaml \
             --schema-dir /tmp/specs/report/schemas
 
       - name: Validate xUnit
         run: |
-          QASE_MODE=report dotnet test examples/xUnitExamples/ || true
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/xunit-report dotnet test examples/xUnitExamples/ || true
           reporters-validator validate \
-            --report-dir examples/xUnitExamples/bin/Debug/net10.0/build/qase-report \
+            --report-dir ${{ github.workspace }}/build/xunit-report \
             --expected expected/xunit-examples.yaml \
             --schema-dir /tmp/specs/report/schemas
 
       - name: Validate MSTest
         run: |
-          QASE_MODE=report dotnet test examples/MSTestExamples/MSTestExamples.csproj || true
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/mstest-report dotnet test examples/MSTestExamples/MSTestExamples.csproj || true
           reporters-validator validate \
-            --report-dir examples/MSTestExamples/build/qase-report \
+            --report-dir ${{ github.workspace }}/build/mstest-report \
             --expected expected/mstest-examples.yaml \
             --schema-dir /tmp/specs/report/schemas
 
       - name: Validate xUnit V3
         run: |
           cd examples/xUnitV3Examples
-          QASE_MODE=report dotnet test --project xUnitV3Examples.csproj || true
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/xunitv3-report dotnet test --project xUnitV3Examples.csproj || true
           cd ../..
           reporters-validator validate \
-            --report-dir examples/xUnitV3Examples/build/qase-report \
+            --report-dir ${{ github.workspace }}/build/xunitv3-report \
             --expected expected/xunit-v3-examples.yaml \
             --schema-dir /tmp/specs/report/schemas
 
       - name: Validate Reqnroll
         run: |
-          QASE_MODE=report dotnet test examples/ReqnrollExamples/ || true
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/reqnroll-report dotnet test examples/ReqnrollExamples/ || true
           reporters-validator validate \
-            --report-dir examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report \
+            --report-dir ${{ github.workspace }}/build/reqnroll-report \
             --expected expected/reqnroll-examples.yaml \
             --schema-dir /tmp/specs/report/schemas
 
