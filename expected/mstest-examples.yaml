@@ -1,0 +1,1380 @@
+run:
+  stats:
+    total: 45
+    passed: 44
+    failed: 1
+    skipped: 0
+    blocked: 0
+    invalid: 0
+    muted: 0
+results:
+- title: Email validation rejects invalid formats
+  signature: 502::mstestexamples::parameterizedtests::"email":"plaintext"::"reason":"missing
+    @ symbol"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: plaintext
+    reason: missing @ symbol
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: UserProfile_UpdatesDisplayName
+  signature: user-profile::settings
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: User Profile
+      - title: Settings
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: 501::mstestexamples::parameterizedtests::"username":"user@example.com"::"password":"userpass1!"::"expectedsuccess":"true"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: user@example.com
+    password: UserPass1!
+    expectedSuccess: 'True'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Order processing adds tracking comment
+  signature: mstestexamples::metadatatests
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: MetadataTests
+  muted: false
+  message: 'Processing order ORD-2026-0042, total: $149.99
+
+    Order ORD-2026-0042 processed successfully'
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::"query":"usb hub"::"expectedminresults":"8"
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  attachments: []
+  steps:
+  - id: cea9d9d3-88fc-4731-946d-7e70a3ca61ee
+    step_type: text
+    data:
+      action: Execute product search query
+      input_data: '{"query":"usb hub"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 7d72d1b8-ab03-4fae-82b6-6105432cdc97
+    step_type: text
+    data:
+      action: Verify search returns minimum expected results
+      input_data: '{"expectedMin":"8"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 2b8ef378-78b5-4bbe-9401-db756b2deaa6
+    step_type: text
+    data:
+      action: Capture search results page
+      input_data: '{"query":"usb hub"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments:
+      - id: f5ff06b2-23da-460d-988b-aed2777a942f
+        file_name: screenshot.png
+        mime_type: image/png
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/f5ff06b2-23da-460d-988b-aed2777a942f-screenshot.png
+    steps: []
+  params:
+    query: usb hub
+    expectedMinResults: '8'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+  message: 'Searching for: ''usb hub''
+
+    Search results page captured for query: ''usb hub''
+
+    Search for ''usb hub'' returned >= 8 results'
+- title: Login page captures screenshot on successful load
+  signature: 401::mstestexamples::attachmenttests
+  testops_ids:
+  - 401
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: 0bea9add-5d1c-4ad0-a994-70c166412b3b
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/0bea9add-5d1c-4ad0-a994-70c166412b3b-screenshot.png
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: AttachmentTests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: 501::mstestexamples::parameterizedtests::"username":"empty"::"password":"nouser"::"expectedsuccess":"false"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: empty
+    password: nouser
+    expectedSuccess: 'False'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Verify that the login page displays the correct title and branding
+  signature: authentication::smoke-tests
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"25"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '25'
+    pageNumber: '1'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: 502::mstestexamples::parameterizedtests::"email":"user@"::"reason":"missing
+    domain"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: user@
+    reason: missing domain
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"10"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '10'
+    pageNumber: '1'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: 501::mstestexamples::parameterizedtests::"username":"admin@example.com"::"password":"admin123!"::"expectedsuccess":"true"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: admin@example.com
+    password: Admin123!
+    expectedSuccess: 'True'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"100"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '100'
+    pageNumber: '1'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: 'New user onboarding: register, verify, complete profile'
+  signature: 601::e2e-tests::user-workflows
+  testops_ids:
+  - 601
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: critical
+    priority: high
+  attachments: []
+  steps:
+  - id: 0d8a0db8-9133-496a-8dbf-07c271435de0
+    step_type: text
+    data:
+      action: Register new user account
+      input_data: '{"email":"alice@example.com","password":"SecurePass123!"}'
+    execution:
+      status: passed
+      start_time: 1775206979465
+      end_time: 1775206979469
+      duration: 4
+      attachments: []
+    steps: []
+  - id: 99fe16f9-d8ed-44dd-889d-56af16f8aaa5
+    step_type: text
+    data:
+      action: Verify email address via confirmation link
+      input_data: '{"email":"alice@example.com"}'
+    execution:
+      status: passed
+      start_time: 1775206979469
+      end_time: 1775206979469
+      duration: 0
+      attachments:
+      - id: 354a6bc2-d30c-446b-bffe-6f47da7538ea
+        file_name: test-log.txt
+        mime_type: text/plain
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/354a6bc2-d30c-446b-bffe-6f47da7538ea-test-log.txt
+    steps: []
+  - id: ab87f6e5-34fb-4ffd-9208-e1bfd634add6
+    step_type: text
+    data:
+      action: Complete user profile with personal info
+      input_data: '{"firstName":"Alice","lastName":"Johnson"}'
+    execution:
+      status: passed
+      start_time: 1775206979469
+      end_time: 1775206979469
+      duration: 0
+      attachments:
+      - id: 98288eb5-4e05-4860-b66f-ed95204af658
+        file_name: screenshot.png
+        mime_type: image/png
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/98288eb5-4e05-4860-b66f-ed95204af658-screenshot.png
+    steps: []
+  - id: 337a4ce3-5013-4c3b-a6aa-c88422e375d7
+    step_type: text
+    data:
+      action: Generate and attach onboarding summary
+    execution:
+      status: passed
+      start_time: 1775206979469
+      end_time: 1775206979469
+      duration: 0
+      attachments:
+      - id: 81068300-ae12-4325-8f16-c7000a0e9e5e
+        file_name: onboarding-report.json
+        mime_type: application/json
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/81068300-ae12-4325-8f16-c7000a0e9e5e-onboarding-report.json
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+  message: 'Starting E2E onboarding flow for new user
+
+    Registered user: alice@example.com
+
+    Onboarding flow completed successfully'
+- title: Email validation rejects invalid formats
+  signature: 502::mstestexamples::parameterizedtests::"email":"empty"::"reason":"empty
+    string"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: empty
+    reason: empty string
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: 504::mstestexamples::parameterizedtests::"quantity":"3"::"unitprice":"9.99"::"discountpercent":"0"::"expectedtotal":"29.97"
+  testops_ids:
+  - 504
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: '3'
+    unitPrice: '9.99'
+    discountPercent: '0'
+    expectedTotal: '29.97'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"25"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '25'
+    pageNumber: '2'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"25"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '25'
+    pageNumber: '3'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"50"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '50'
+    pageNumber: '3'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"10"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '10'
+    pageNumber: '2'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Checkout process with nested address and payment steps
+  signature: 302::mstestexamples::steptests
+  testops_ids:
+  - 302
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: e722fd49-0d36-4038-9288-f4276ed97a31
+    step_type: text
+    data:
+      action: AddItemToCart
+      input_data: '{"productName":"Wireless Keyboard","price":"49.99"}'
+    execution:
+      status: passed
+      start_time: 1775206979496
+      end_time: 1775206979496
+      duration: 0
+      attachments: []
+    steps: []
+  - id: bc9ff384-6a3c-454b-84a2-5b88e93980fc
+    step_type: text
+    data:
+      action: FillShippingAddress
+    execution:
+      status: passed
+      start_time: 1775206979496
+      end_time: 1775206979497
+      duration: 1
+      attachments: []
+    steps:
+    - id: e1ff37d0-1e6c-4dd6-8d9b-bde6fd2bbe23
+      step_type: text
+      data:
+        action: FillStreetAddress
+        input_data: '{"street":"123 Main St"}'
+      execution:
+        status: passed
+        start_time: 1775206979497
+        end_time: 1775206979497
+        duration: 0
+        attachments: []
+      steps: []
+    - id: 014cc876-004b-48c2-ae5a-9cf5b3a9876e
+      step_type: text
+      data:
+        action: FillCityStateZip
+        input_data: '{"city":"San Francisco","state":"CA","zip":"94102"}'
+      execution:
+        status: passed
+        start_time: 1775206979497
+        end_time: 1775206979497
+        duration: 0
+        attachments: []
+      steps: []
+  - id: c8fb4ba7-518d-4d62-8433-be0b0018b73d
+    step_type: text
+    data:
+      action: FillPaymentDetails
+      input_data: '{"cardNumber":"4111111111111111"}'
+    execution:
+      status: passed
+      start_time: 1775206979497
+      end_time: 1775206979497
+      duration: 0
+      attachments: []
+    steps: []
+  - id: bac8ff90-c453-4e8a-a2c0-e48f2c7ac268
+    step_type: text
+    data:
+      action: ConfirmOrder
+    execution:
+      status: passed
+      start_time: 1775206979497
+      end_time: 1775206979497
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: StepTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"50"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '50'
+    pageNumber: '2'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Checkout step captures state screenshot at each stage
+  signature: 404::mstestexamples::attachmenttests
+  testops_ids:
+  - 404
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 7b33d1fc-5c59-4f22-9806-79d026388bd8
+    step_type: text
+    data:
+      action: Fill shopping cart
+    execution:
+      status: passed
+      start_time: 1775206979460
+      end_time: 1775206979461
+      duration: 1
+      attachments:
+      - id: 2716a31c-e2fc-4cc9-8845-af11c3132fd7
+        file_name: screenshot.png
+        mime_type: image/png
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/2716a31c-e2fc-4cc9-8845-af11c3132fd7-screenshot.png
+    steps: []
+  - id: 795edbbf-9aeb-43e1-8507-ee72940199cb
+    step_type: text
+    data:
+      action: Enter shipping details
+    execution:
+      status: passed
+      start_time: 1775206979461
+      end_time: 1775206979461
+      duration: 0
+      attachments:
+      - id: d06dbe27-0eb1-4536-9df4-388e7b5aedb2
+        file_name: test-log.txt
+        mime_type: text/plain
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/d06dbe27-0eb1-4536-9df4-388e7b5aedb2-test-log.txt
+    steps: []
+  - id: 567fb55a-bc30-47e3-a6e2-458b89b8a25a
+    step_type: text
+    data:
+      action: Confirm order
+    execution:
+      status: passed
+      start_time: 1775206979462
+      end_time: 1775206979462
+      duration: 0
+      attachments:
+      - id: eaf40e90-00fd-4912-9b4a-d4273fc33246
+        file_name: order-confirmation.json
+        mime_type: application/json
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/eaf40e90-00fd-4912-9b4a-d4273fc33246-order-confirmation.json
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: AttachmentTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"10"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '10'
+    pageNumber: '3'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: 504::mstestexamples::parameterizedtests::"quantity":"2"::"unitprice":"50"::"discountpercent":"10"::"expectedtotal":"90"
+  testops_ids:
+  - 504
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: '2'
+    unitPrice: '50'
+    discountPercent: '10'
+    expectedTotal: '90'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: 504::mstestexamples::parameterizedtests::"quantity":"1"::"unitprice":"29.99"::"discountpercent":"0"::"expectedtotal":"29.99"
+  testops_ids:
+  - 504
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: '1'
+    unitPrice: '29.99'
+    discountPercent: '0'
+    expectedTotal: '29.99'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: API response details are recorded for debugging
+  signature: 202::mstestexamples::metadatatests
+  testops_ids:
+  - 202
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: MetadataTests
+  muted: false
+  message: 'GET /api/v1/users/42 returned status 200
+
+    Response body: {"id": 42, "name": "John Doe", "email": "john@example.com"}'
+- title: Failed login records attempt details in report
+  signature: 201::mstestexamples::metadatatests
+  testops_ids:
+  - 201
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: MetadataTests
+  muted: false
+  message: 'Login attempt by ''admin@example.com'' from IP 192.168.1.42 at 2026-04-03T09:02:59.4733240Z
+
+    Expected result: login denied for invalid credentials'
+- title: User registration completes all required steps
+  signature: 301::mstestexamples::steptests
+  testops_ids:
+  - 301
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: fba90c47-480e-4207-a89e-3dfd2844d431
+    step_type: text
+    data:
+      action: OpenRegistrationPage
+    execution:
+      status: passed
+      start_time: 1775206979495
+      end_time: 1775206979495
+      duration: 0
+      attachments: []
+    steps: []
+  - id: f5da4d9e-1fc0-428a-904a-8e336cfc348b
+    step_type: text
+    data:
+      action: FillRegistrationForm
+      input_data: '{"email":"john.doe@example.com","password":"SecurePass123!"}'
+    execution:
+      status: passed
+      start_time: 1775206979496
+      end_time: 1775206979496
+      duration: 0
+      attachments: []
+    steps: []
+  - id: ecbda1cd-4fa7-4ac0-acd8-d26cf5217f5c
+    step_type: text
+    data:
+      action: SubmitForm
+    execution:
+      status: passed
+      start_time: 1775206979496
+      end_time: 1775206979496
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 8eb94acf-ccf0-4ffc-871e-4f34a7268946
+    step_type: text
+    data:
+      action: VerifyConfirmationEmail
+      input_data: '{"email":"john.doe@example.com"}'
+    execution:
+      status: passed
+      start_time: 1775206979496
+      end_time: 1775206979496
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: StepTests
+  muted: false
+- title: Generate HTML report and attach from memory
+  signature: 403::mstestexamples::attachmenttests
+  testops_ids:
+  - 403
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: 26386ab2-d218-4d01-a99f-7745011b7dd2
+    file_name: test-summary.html
+    mime_type: text/html
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/26386ab2-d218-4d01-a99f-7745011b7dd2-test-summary.html
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: AttachmentTests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: 504::mstestexamples::parameterizedtests::"quantity":"1"::"unitprice":"100"::"discountpercent":"25"::"expectedtotal":"75"
+  testops_ids:
+  - 504
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: '1'
+    unitPrice: '100'
+    discountPercent: '25'
+    expectedTotal: '75'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: 502::mstestexamples::parameterizedtests::"email":"@example.com"::"reason":"missing
+    local part"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: '@example.com'
+    reason: missing local part
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"100"::"pagenumber":"3"
+  testops_ids:
+  - 503
+  execution:
+    status: failed
+    stacktrace: "   at MSTestExamples.ParameterizedTests.__a$_around_Pagination_ReturnsCorrectPageSize_100663334_o(Int32\
+      \ pageSize, Int32 pageNumber) in /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/ParameterizedTests.cs:line\
+      \ 59\n   at MSTestExamples.ParameterizedTests.__a$_around_Pagination_ReturnsCorrectPageSize_100663334_u(Object[])\n\
+      \   at Qase.Csharp.Commons.Aspects.QaseAspect.Around(String name, Object[] args,\
+      \ Func`2 target, MethodBase metadata, Type returnType) in /Users/gda/Documents/github/qase-tms/qase-csharp/Qase.Csharp.Commons/Aspects/QaseAspect.cs:line\
+      \ 38\n   at MSTestExamples.ParameterizedTests.__a$_around_Pagination_ReturnsCorrectPageSize_100663334_w_0(Object[])\n\
+      \   at MSTestExamples.ParameterizedTests.Pagination_ReturnsCorrectPageSize(Int32\
+      \ pageSize, Int32 pageNumber)\n   at InvokeStub_ParameterizedTests.Pagination_ReturnsCorrectPageSize(Object,\
+      \ Span`1)\n   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object\
+      \ obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo\
+      \ culture)\n"
+  status: failed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '100'
+    pageNumber: '3'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+  message: Assert.IsTrue failed. Page 3 with size 100 should have items
+- title: PasswordReset_SendsEmailToRegisteredUser
+  signature: authentication::smoke-tests
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: api
+    severity: critical
+    priority: high
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false
+- title: Data migration partially succeeds with expected failures
+  signature: 304::mstestexamples::steptests
+  testops_ids:
+  - 304
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: fc07ae02-46e1-42a4-8dc5-bc10106e759f
+    step_type: text
+    data:
+      action: MigrateUserRecords
+    execution:
+      status: passed
+      start_time: 1775206979498
+      end_time: 1775206979498
+      duration: 0
+      attachments: []
+    steps: []
+  - id: ad33f8b2-1e76-424e-8360-c6fcd921270f
+    step_type: text
+    data:
+      action: MigrateOrderRecords
+    execution:
+      status: passed
+      start_time: 1775206979498
+      end_time: 1775206979498
+      duration: 0
+      attachments: []
+    steps: []
+  - id: feb0e3c7-ae4d-4b29-aabb-aee23934fceb
+    step_type: text
+    data:
+      action: MigrateCorruptedRecords
+    execution:
+      status: failed
+      start_time: 1775206979498
+      end_time: 1775206979498
+      duration: 0
+      attachments: []
+    steps: []
+  - id: e2bc8172-1010-442f-90d1-165317d60005
+    step_type: text
+    data:
+      action: VerifyMigrationSummary
+      input_data: '{"migrated":"150","failed":"3"}'
+    execution:
+      status: passed
+      start_time: 1775206979499
+      end_time: 1775206979499
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: StepTests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: 502::mstestexamples::parameterizedtests::"email":"user@example."::"reason":"trailing
+    dot in domain"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: user@example.
+    reason: trailing dot in domain
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: API test captures both request log and response screenshot
+  signature: 402::mstestexamples::attachmenttests
+  testops_ids:
+  - 402
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: ccf4fdd5-1de0-4b61-9526-f9073808dfcd
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/ccf4fdd5-1de0-4b61-9526-f9073808dfcd-screenshot.png
+  - id: 9bdb7340-84ba-40ab-8425-f7341457dd87
+    file_name: test-log.txt
+    mime_type: text/plain
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/9bdb7340-84ba-40ab-8425-f7341457dd87-test-log.txt
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: AttachmentTests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"100"::"pagenumber":"2"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '100'
+    pageNumber: '2'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::"query":"wireless mouse"::"expectedminresults":"23"
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  attachments: []
+  steps:
+  - id: 8106f9eb-acd5-41fb-98ad-91fafa413323
+    step_type: text
+    data:
+      action: Execute product search query
+      input_data: '{"query":"wireless mouse"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 8a6031d6-9265-4fc1-a891-18b3331ba238
+    step_type: text
+    data:
+      action: Verify search returns minimum expected results
+      input_data: '{"expectedMin":"23"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 24cb5eb1-9c31-42c6-ae61-3d2c3a899bd5
+    step_type: text
+    data:
+      action: Capture search results page
+      input_data: '{"query":"wireless mouse"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments:
+      - id: cbc9f4af-e236-4eb3-886d-a8751be0d8ba
+        file_name: screenshot.png
+        mime_type: image/png
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/cbc9f4af-e236-4eb3-886d-a8751be0d8ba-screenshot.png
+    steps: []
+  params:
+    query: wireless mouse
+    expectedMinResults: '23'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+  message: 'Searching for: ''wireless mouse''
+
+    Search results page captured for query: ''wireless mouse''
+
+    Search for ''wireless mouse'' returned >= 23 results'
+- title: Login accepts valid credential combinations
+  signature: 501::mstestexamples::parameterizedtests::"username":"guest"::"password":"guest"::"expectedsuccess":"false"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: guest
+    password: guest
+    expectedSuccess: 'False'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: Order creation with custom step names for clarity
+  signature: 303::mstestexamples::steptests
+  testops_ids:
+  - 303
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 9a72bdc8-0d05-4838-b425-5b656441bb13
+    step_type: text
+    data:
+      action: Select product and set quantity
+      input_data: '{"name":"Mechanical Keyboard","quantity":"2"}'
+    execution:
+      status: passed
+      start_time: 1775206979497
+      end_time: 1775206979497
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 701c8a8b-6b42-42f8-a834-180a82ea4a4c
+    step_type: text
+    data:
+      action: Apply promotional discount code
+      input_data: '{"code":"SAVE10"}'
+    execution:
+      status: passed
+      start_time: 1775206979497
+      end_time: 1775206979497
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 060d020d-8eb6-4584-8946-9081a4811c46
+    step_type: text
+    data:
+      action: Calculate total with discount applied
+      input_data: '{"subtotal":"99.98","discountPercent":"10"}'
+    execution:
+      status: passed
+      start_time: 1775206979498
+      end_time: 1775206979498
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: StepTests
+  muted: false
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::"query":"mechanical keyboard"::"expectedminresults":"15"
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  attachments: []
+  steps:
+  - id: 314d0be2-469d-47c9-8d1d-d7eff0094cd5
+    step_type: text
+    data:
+      action: Execute product search query
+      input_data: '{"query":"mechanical keyboard"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 4b00f946-a0fb-4c48-aa28-4a3b0444d63c
+    step_type: text
+    data:
+      action: Verify search returns minimum expected results
+      input_data: '{"expectedMin":"15"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments: []
+    steps: []
+  - id: ee657e27-1aee-45df-9476-ee98a7f931ec
+    step_type: text
+    data:
+      action: Capture search results page
+      input_data: '{"query":"mechanical keyboard"}'
+    execution:
+      status: passed
+      start_time: 1775206979472
+      end_time: 1775206979472
+      duration: 0
+      attachments:
+      - id: 3857be77-33d4-4530-9bbb-0c9bd65f26dc
+        file_name: screenshot.png
+        mime_type: image/png
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/MSTestExamples/build/qase-report/attachments/3857be77-33d4-4530-9bbb-0c9bd65f26dc-screenshot.png
+    steps: []
+  params:
+    query: mechanical keyboard
+    expectedMinResults: '15'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+  message: 'Searching for: ''mechanical keyboard''
+
+    Search results page captured for query: ''mechanical keyboard''
+
+    Search for ''mechanical keyboard'' returned >= 15 results'
+- title: UserRegistration_CreatesNewAccount
+  signature: 101::authentication::smoke-tests
+  testops_ids:
+  - 101
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false
+- title: Pagination returns correct page size for various configurations
+  signature: 503::mstestexamples::parameterizedtests::"pagesize":"50"::"pagenumber":"1"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    pageSize: '50'
+    pageNumber: '1'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: MSTestExamples
+      - title: ParameterizedTests
+  muted: false
+- title: LoginPage_AcceptsBothEmailAndUsername
+  signature: 102-103::authentication::smoke-tests
+  testops_ids:
+  - 102
+  - 103
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false

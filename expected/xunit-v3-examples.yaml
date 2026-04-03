@@ -1,0 +1,1008 @@
+run:
+  stats:
+    total: 33
+    passed: 33
+    failed: 0
+    skipped: 0
+    blocked: 0
+    invalid: 0
+    muted: 0
+results:
+- title: Product search returns relevant results
+  signature: '602::e2e-tests::user-workflows::"query":"query: mechanical keyboard"::"expectedminresults":"expectedminresults:
+    15"'
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  attachments: []
+  steps: []
+  params:
+    query: 'query: mechanical keyboard'
+    expectedMinResults: 'expectedMinResults: 15'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+- title: User registration completes all required steps
+  signature: 301::xunitv3examples::steptests
+  testops_ids:
+  - 301
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 5fb0b9d1-807a-45f7-848f-a50a656b7569
+    step_type: text
+    data:
+      action: OpenRegistrationPage
+    execution:
+      status: passed
+      start_time: 1775212975446
+      end_time: 1775212975446
+      duration: 0
+      attachments: []
+    steps: []
+  - id: a1573d62-1629-4fe7-93f4-a58e5a96b20b
+    step_type: text
+    data:
+      action: FillRegistrationForm
+      input_data: '{"email":"john.doe@example.com","password":"SecurePass123!"}'
+    execution:
+      status: passed
+      start_time: 1775212975446
+      end_time: 1775212975446
+      duration: 0
+      attachments: []
+    steps: []
+  - id: b1044738-5f9b-4dd6-9537-dcb65cebf5f4
+    step_type: text
+    data:
+      action: SubmitForm
+    execution:
+      status: passed
+      start_time: 1775212975446
+      end_time: 1775212975449
+      duration: 3
+      attachments: []
+    steps: []
+  - id: f62d9988-2d65-441a-ba74-f06b1fcf35fd
+    step_type: text
+    data:
+      action: VerifyConfirmationEmail
+      input_data: '{"email":"john.doe@example.com"}'
+    execution:
+      status: passed
+      start_time: 1775212975449
+      end_time: 1775212975449
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: StepTests
+  muted: false
+- title: xUnitV3Examples.AttributeTests.PasswordReset_SendsEmailToRegisteredUser
+  signature: authentication::smoke-tests
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: api
+    severity: critical
+    priority: high
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: '501::xunitv3examples::parameterizedtests::"username":"username:"::"password":"password:
+    nouser"::"expectedsuccess":"expectedsuccess: false"'
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: 'username:'
+    password: 'password: nouser'
+    expectedSuccess: 'expectedSuccess: False'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: xUnitV3Examples.AttributeTests.LoginPage_AcceptsBothEmailAndUsername
+  signature: 102-103::authentication::smoke-tests
+  testops_ids:
+  - 102
+  - 103
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: '501::xunitv3examples::parameterizedtests::"username":"username: user@example.com"::"password":"password:
+    userpass1!"::"expectedsuccess":"expectedsuccess: true"'
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: 'username: user@example.com'
+    password: 'password: UserPass1!'
+    expectedSuccess: 'expectedSuccess: True'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Product search returns relevant results
+  signature: '602::e2e-tests::user-workflows::"query":"query: usb hub"::"expectedminresults":"expectedminresults:
+    8"'
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  attachments: []
+  steps: []
+  params:
+    query: 'query: usb hub'
+    expectedMinResults: 'expectedMinResults: 8'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+- title: Order processing adds tracking comment
+  signature: xunitv3examples::metadatatests
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: MetadataTests
+  muted: false
+  message: 'Processing order ORD-2026-0042, total: $149.99
+
+    Order ORD-2026-0042 processed successfully'
+- title: Email validation rejects invalid formats
+  signature: '502::xunitv3examples::parameterizedtests::"email":"email: @example.com"::"reason":"reason:
+    missing local part"'
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: 'email: @example.com'
+    reason: 'reason: missing local part'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Login page captures screenshot on successful load
+  signature: 401::xunitv3examples::attachmenttests
+  testops_ids:
+  - 401
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: b30028f7-909d-4d8c-be71-2d74ae068b4a
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/b30028f7-909d-4d8c-be71-2d74ae068b4a-screenshot.png
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: AttachmentTests
+  muted: false
+- title: Data migration partially succeeds with expected failures
+  signature: 304::xunitv3examples::steptests
+  testops_ids:
+  - 304
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 9250f9b1-f389-4c4a-bd2c-7ea0685b1e81
+    step_type: text
+    data:
+      action: MigrateUserRecords
+    execution:
+      status: passed
+      start_time: 1775212975450
+      end_time: 1775212975450
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 5b33f638-c206-4a9d-bcd4-45b5a7e16ec8
+    step_type: text
+    data:
+      action: MigrateOrderRecords
+    execution:
+      status: passed
+      start_time: 1775212975450
+      end_time: 1775212975450
+      duration: 0
+      attachments: []
+    steps: []
+  - id: f4b5cc31-b0e2-4f20-813f-7136d7b0cf84
+    step_type: text
+    data:
+      action: MigrateCorruptedRecords
+    execution:
+      status: failed
+      start_time: 1775212975450
+      end_time: 1775212975450
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 4c523ff6-7040-4653-a7b9-af1f6d7a4ce6
+    step_type: text
+    data:
+      action: VerifyMigrationSummary
+      input_data: '{"migrated":"150","failed":"3"}'
+    execution:
+      status: passed
+      start_time: 1775212975451
+      end_time: 1775212975451
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: StepTests
+  muted: false
+- title: Failed login records attempt details in report
+  signature: 201::xunitv3examples::metadatatests
+  testops_ids:
+  - 201
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: MetadataTests
+  muted: false
+  message: 'Login attempt by ''admin@example.com'' from IP 192.168.1.42 at 2026-04-03T10:42:55.4375210Z
+
+    Expected result: login denied for invalid credentials'
+- title: Email validation rejects invalid formats
+  signature: '502::xunitv3examples::parameterizedtests::"email":"email:"::"reason":"reason:
+    empty string"'
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: 'email:'
+    reason: 'reason: empty string'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 2"::"unitprice":"unitprice:
+    50"::"discountpercent":"discountpercent: 10"::"expectedtotal":"expectedtotal:
+    90"'
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: 'quantity: 2'
+    unitPrice: 'unitPrice: 50'
+    discountPercent: 'discountPercent: 10'
+    expectedTotal: 'expectedTotal: 90'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: 'New user onboarding: register, verify, complete profile'
+  signature: 601::e2e-tests::user-workflows
+  testops_ids:
+  - 601
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: critical
+    priority: high
+  attachments: []
+  steps:
+  - id: ee0ef79b-a373-40a1-8af9-ebd4b024c8e1
+    step_type: text
+    data:
+      action: Register new user account
+      input_data: '{"email":"alice@example.com","password":"SecurePass123!"}'
+    execution:
+      status: passed
+      start_time: 1775212975446
+      end_time: 1775212975446
+      duration: 0
+      attachments: []
+    steps: []
+  - id: e4d92954-15c5-4d40-9e4a-5038e0c1d058
+    step_type: text
+    data:
+      action: Verify email address via confirmation link
+      input_data: '{"email":"alice@example.com"}'
+    execution:
+      status: passed
+      start_time: 1775212975446
+      end_time: 1775212975447
+      duration: 1
+      attachments:
+      - id: d22e2147-1fc2-40a2-9a58-86921cfbda8b
+        file_name: test-log.txt
+        mime_type: text/plain
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/d22e2147-1fc2-40a2-9a58-86921cfbda8b-test-log.txt
+    steps: []
+  - id: 67e6e165-6aad-49cd-8c5e-34dfed668bdb
+    step_type: text
+    data:
+      action: Complete user profile with personal info
+      input_data: '{"firstName":"Alice","lastName":"Johnson"}'
+    execution:
+      status: passed
+      start_time: 1775212975447
+      end_time: 1775212975447
+      duration: 0
+      attachments:
+      - id: 29f62fa2-f909-41fd-b92e-8a714a3a7bbf
+        file_name: screenshot.png
+        mime_type: image/png
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/29f62fa2-f909-41fd-b92e-8a714a3a7bbf-screenshot.png
+    steps: []
+  - id: bc7e7827-db8a-4645-883c-f32e0ad2cbfd
+    step_type: text
+    data:
+      action: Generate and attach onboarding summary
+    execution:
+      status: passed
+      start_time: 1775212975447
+      end_time: 1775212975447
+      duration: 0
+      attachments:
+      - id: 994b4685-cac9-476d-a372-e5f3e7323856
+        file_name: onboarding-report.json
+        mime_type: application/json
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/994b4685-cac9-476d-a372-e5f3e7323856-onboarding-report.json
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+  message: 'Starting E2E onboarding flow for new user
+
+    Registered user: alice@example.com
+
+    Onboarding flow completed successfully'
+- title: xUnitV3Examples.AttributeTests.UserRegistration_CreatesNewAccount
+  signature: 101::authentication::smoke-tests
+  testops_ids:
+  - 101
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: '502::xunitv3examples::parameterizedtests::"email":"email: user@"::"reason":"reason:
+    missing domain"'
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: 'email: user@'
+    reason: 'reason: missing domain'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Generate HTML report and attach from memory
+  signature: 403::xunitv3examples::attachmenttests
+  testops_ids:
+  - 403
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: 64580c7d-f2b4-4033-84d1-b0711bd43dbd
+    file_name: test-summary.html
+    mime_type: text/html
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/64580c7d-f2b4-4033-84d1-b0711bd43dbd-test-summary.html
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: AttachmentTests
+  muted: false
+- title: Product search returns relevant results
+  signature: '602::e2e-tests::user-workflows::"query":"query: wireless mouse"::"expectedminresults":"expectedminresults:
+    23"'
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  attachments: []
+  steps: []
+  params:
+    query: 'query: wireless mouse'
+    expectedMinResults: 'expectedMinResults: 23'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: '501::xunitv3examples::parameterizedtests::"username":"username: admin@example.com"::"password":"password:
+    admin123!"::"expectedsuccess":"expectedsuccess: true"'
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: 'username: admin@example.com'
+    password: 'password: Admin123!'
+    expectedSuccess: 'expectedSuccess: True'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Order creation with custom step names for clarity
+  signature: 303::xunitv3examples::steptests
+  testops_ids:
+  - 303
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: e68ae5a4-99a4-49c0-b367-cccfe533823f
+    step_type: text
+    data:
+      action: Select product and set quantity
+      input_data: '{"name":"Mechanical Keyboard","quantity":"2"}'
+    execution:
+      status: passed
+      start_time: 1775212975438
+      end_time: 1775212975442
+      duration: 4
+      attachments: []
+    steps: []
+  - id: 9f7f0377-53dd-4feb-9dda-6469fbf00cd0
+    step_type: text
+    data:
+      action: Apply promotional discount code
+      input_data: '{"code":"SAVE10"}'
+    execution:
+      status: passed
+      start_time: 1775212975442
+      end_time: 1775212975442
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 96b9914d-ffac-47e3-b657-d1d80fce4404
+    step_type: text
+    data:
+      action: Calculate total with discount applied
+      input_data: '{"subtotal":"99.98","discountPercent":"10"}'
+    execution:
+      status: passed
+      start_time: 1775212975442
+      end_time: 1775212975442
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: StepTests
+  muted: false
+- title: API test captures both request log and response screenshot
+  signature: 402::xunitv3examples::attachmenttests
+  testops_ids:
+  - 402
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: 3395eaf6-69c9-4b92-b46c-c8d58f50c5cf
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/3395eaf6-69c9-4b92-b46c-c8d58f50c5cf-screenshot.png
+  - id: f63079ef-ce92-4a92-8852-dfc503a577ae
+    file_name: test-log.txt
+    mime_type: text/plain
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/f63079ef-ce92-4a92-8852-dfc503a577ae-test-log.txt
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: AttachmentTests
+  muted: false
+- title: API response details are recorded for debugging
+  signature: 202::xunitv3examples::metadatatests
+  testops_ids:
+  - 202
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: MetadataTests
+  muted: false
+  message: 'GET /api/v1/users/42 returned status 200
+
+    Response body: {"id": 42, "name": "John Doe", "email": "john@example.com"}'
+- title: Shopping cart calculates total correctly
+  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 1"::"unitprice":"unitprice:
+    100"::"discountpercent":"discountpercent: 25"::"expectedtotal":"expectedtotal:
+    75"'
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: 'quantity: 1'
+    unitPrice: 'unitPrice: 100'
+    discountPercent: 'discountPercent: 25'
+    expectedTotal: 'expectedTotal: 75'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 1"::"unitprice":"unitprice:
+    29.989999999999998"::"discountpercent":"discountpercent: 0"::"expectedtotal":"expectedtotal:
+    29.989999999999998"'
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: 'quantity: 1'
+    unitPrice: 'unitPrice: 29.989999999999998'
+    discountPercent: 'discountPercent: 0'
+    expectedTotal: 'expectedTotal: 29.989999999999998'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Verify that the login page displays the correct title and branding
+  signature: authentication::smoke-tests
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: '501::xunitv3examples::parameterizedtests::"username":"username: guest"::"password":"password:
+    guest"::"expectedsuccess":"expectedsuccess: false"'
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    username: 'username: guest'
+    password: 'password: guest'
+    expectedSuccess: 'expectedSuccess: False'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 3"::"unitprice":"unitprice:
+    9.9900000000000002"::"discountpercent":"discountpercent: 0"::"expectedtotal":"expectedtotal:
+    29.969999999999999"'
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    quantity: 'quantity: 3'
+    unitPrice: 'unitPrice: 9.9900000000000002'
+    discountPercent: 'discountPercent: 0'
+    expectedTotal: 'expectedTotal: 29.969999999999999'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Checkout process with nested address and payment steps
+  signature: 302::xunitv3examples::steptests
+  testops_ids:
+  - 302
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 1c4cfa3b-9853-415a-989c-d3ae8367fa27
+    step_type: text
+    data:
+      action: AddItemToCart
+      input_data: '{"productName":"Wireless Keyboard","price":"49.99"}'
+    execution:
+      status: passed
+      start_time: 1775212975451
+      end_time: 1775212975451
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 2bb7c25d-4fe0-4eb9-89c6-ec616b06848d
+    step_type: text
+    data:
+      action: FillShippingAddress
+    execution:
+      status: passed
+      start_time: 1775212975452
+      end_time: 1775212975452
+      duration: 0
+      attachments: []
+    steps:
+    - id: 55bc268d-bf90-4b4e-9787-e5a88ffdee6d
+      step_type: text
+      data:
+        action: FillStreetAddress
+        input_data: '{"street":"123 Main St"}'
+      execution:
+        status: passed
+        start_time: 1775212975452
+        end_time: 1775212975452
+        duration: 0
+        attachments: []
+      steps: []
+    - id: 7d7397fa-3039-4ed3-a4ff-1919a65e6a33
+      step_type: text
+      data:
+        action: FillCityStateZip
+        input_data: '{"city":"San Francisco","state":"CA","zip":"94102"}'
+      execution:
+        status: passed
+        start_time: 1775212975452
+        end_time: 1775212975452
+        duration: 0
+        attachments: []
+      steps: []
+  - id: 572182d9-905f-4dfa-bf80-ca67d35b319b
+    step_type: text
+    data:
+      action: FillPaymentDetails
+      input_data: '{"cardNumber":"4111111111111111"}'
+    execution:
+      status: passed
+      start_time: 1775212975452
+      end_time: 1775212975452
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 3e68fafa-707b-4641-b301-e127b2e4c9d0
+    step_type: text
+    data:
+      action: ConfirmOrder
+    execution:
+      status: passed
+      start_time: 1775212975452
+      end_time: 1775212975452
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: StepTests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: '502::xunitv3examples::parameterizedtests::"email":"email: plaintext"::"reason":"reason:
+    missing @ symbol"'
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: 'email: plaintext'
+    reason: 'reason: missing @ symbol'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: '502::xunitv3examples::parameterizedtests::"email":"email: user@example."::"reason":"reason:
+    trailing dot in domain"'
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps: []
+  params:
+    email: 'email: user@example.'
+    reason: 'reason: trailing dot in domain'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+  muted: false
+- title: Checkout step captures state screenshot at each stage
+  signature: 404::xunitv3examples::attachmenttests
+  testops_ids:
+  - 404
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 2f63b25e-a53c-4641-8773-2283d3f3abc1
+    step_type: text
+    data:
+      action: Fill shopping cart
+    execution:
+      status: passed
+      start_time: 1775212975438
+      end_time: 1775212975439
+      duration: 1
+      attachments:
+      - id: 4e83fce4-d156-403e-8317-f6facd3242e7
+        file_name: screenshot.png
+        mime_type: image/png
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/4e83fce4-d156-403e-8317-f6facd3242e7-screenshot.png
+    steps: []
+  - id: ce24ca39-e96d-446d-8b50-ec9da69de01d
+    step_type: text
+    data:
+      action: Enter shipping details
+    execution:
+      status: passed
+      start_time: 1775212975440
+      end_time: 1775212975440
+      duration: 0
+      attachments:
+      - id: ccffdc96-e5d7-4687-9266-cf8a0d936b32
+        file_name: test-log.txt
+        mime_type: text/plain
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/ccffdc96-e5d7-4687-9266-cf8a0d936b32-test-log.txt
+    steps: []
+  - id: 57de1bed-c119-4abd-b420-a3984a556a7d
+    step_type: text
+    data:
+      action: Confirm order
+    execution:
+      status: passed
+      start_time: 1775212975440
+      end_time: 1775212975440
+      duration: 0
+      attachments:
+      - id: c1ee3f9c-085c-4fb9-a696-a8ed16d43b33
+        file_name: order-confirmation.json
+        mime_type: application/json
+        file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/xUnitV3Examples/build/qase-report/attachments/c1ee3f9c-085c-4fb9-a696-a8ed16d43b33-order-confirmation.json
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: AttachmentTests
+  muted: false
+- title: xUnitV3Examples.AttributeTests.UserProfile_UpdatesDisplayName
+  signature: user-profile::settings
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: User Profile
+      - title: Settings
+  muted: false

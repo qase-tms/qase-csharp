@@ -1,0 +1,1682 @@
+run:
+  stats:
+    total: 33
+    passed: 33
+    failed: 0
+    skipped: 0
+    blocked: 0
+    invalid: 0
+    muted: 0
+results:
+- title: Product search returns relevant results
+  signature: 602::e2e_tests::user_workflows::"query":"usb hub"::"minresults":"8"
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    severity: normal
+    layer: e2e
+  attachments:
+  - id: 2960cc64-36ad-4084-bee4-55b898353d8c
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/2960cc64-36ad-4084-bee4-55b898353d8c-screenshot.png
+  steps:
+  - id: 7e4bc6f2-987c-4fee-8dcd-f517512bd603
+    step_type: text
+    data:
+      action: When a search is performed for "usb hub"
+    execution:
+      status: passed
+      start_time: 1775206627204
+      end_time: 1775206627204
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 837100fb-aa3d-42b6-b6b8-971ee0acc1dd
+    step_type: text
+    data:
+      action: Then at least 8 results should be returned
+    execution:
+      status: passed
+      start_time: 1775206627204
+      end_time: 1775206627204
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 8b6fddc9-2268-4908-a7c3-b18a725c7f30
+    step_type: text
+    data:
+      action: Then the search results page should be captured
+    execution:
+      status: passed
+      start_time: 1775206627204
+      end_time: 1775206627204
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    query: usb hub
+    minResults: '8'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  muted: false
+  message: 'Searching for: ''usb hub''
+
+    Search results page captured'
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"3"::"unitprice":"9.99"::"discountpercent":"0"::"expectedtotal":"29.97"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 4369e569-61ba-45d2-b4e2-5c0adcbb398f
+    step_type: text
+    data:
+      action: When 3 items at 9.99 with 0 percent discount are added
+    execution:
+      status: passed
+      start_time: 1775206627227
+      end_time: 1775206627227
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 1d7c64ca-52df-43c8-8361-212f2b4e849a
+    step_type: text
+    data:
+      action: Then the cart total should be 29.97
+    execution:
+      status: passed
+      start_time: 1775206627227
+      end_time: 1775206627227
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    quantity: '3'
+    unitPrice: '9.99'
+    discountPercent: '0'
+    expectedTotal: '29.97'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"user@example.com"::"password":"userpass1!"::"expected":"true"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 424f6e8d-751d-47b4-9d9e-ed833b95f33f
+    step_type: text
+    data:
+      action: When the user logs in with "user@example.com" and "UserPass1!"
+    execution:
+      status: passed
+      start_time: 1775206627218
+      end_time: 1775206627218
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 514b403b-acb3-49f8-8441-150f3596d9f3
+    step_type: text
+    data:
+      action: Then the login result should be true
+    execution:
+      status: passed
+      start_time: 1775206627218
+      end_time: 1775206627218
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    username: user@example.com
+    password: UserPass1!
+    expected: 'true'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"(empty)"::"reason":"empty string"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 0dacbfa6-2a9f-4d3f-a5dd-86a31196c384
+    step_type: text
+    data:
+      action: When the email "(empty)" is validated
+    execution:
+      status: passed
+      start_time: 1775206627213
+      end_time: 1775206627213
+      duration: 0
+      attachments: []
+    steps: []
+  - id: a3f265d8-c5c7-4a68-8f78-ac7c5c2cc6b3
+    step_type: text
+    data:
+      action: Then it should be rejected because "empty string"
+    execution:
+      status: passed
+      start_time: 1775206627213
+      end_time: 1775206627214
+      duration: 1
+      attachments: []
+    steps: []
+  params:
+    emailInput: (empty)
+    reason: empty string
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: 'New user onboarding: register, verify, complete profile'
+  signature: 601::e2e_tests::user_workflows
+  testops_ids:
+  - 601
+  execution:
+    status: passed
+  status: passed
+  fields:
+    severity: critical
+    priority: high
+    layer: e2e
+  attachments:
+  - id: 8246fdcb-30f8-4b84-9418-c4ad3f1462bb
+    file_name: test-log.txt
+    mime_type: text/plain
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/8246fdcb-30f8-4b84-9418-c4ad3f1462bb-test-log.txt
+  - id: b53064a5-acab-4d04-bcc9-bbb0f63c6a3d
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/b53064a5-acab-4d04-bcc9-bbb0f63c6a3d-screenshot.png
+  - id: d28f67e3-8de8-45a4-8d18-877eba67d3a5
+    file_name: onboarding-report.json
+    mime_type: application/json
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/d28f67e3-8de8-45a4-8d18-877eba67d3a5-onboarding-report.json
+  steps:
+  - id: 3b8702a4-25e0-4790-b029-c538f0c26e1d
+    step_type: text
+    data:
+      action: Given a new user registration for "alice@example.com" with password
+        "SecurePass123!"
+    execution:
+      status: passed
+      start_time: 1775206627204
+      end_time: 1775206627205
+      duration: 1
+      attachments: []
+    steps: []
+  - id: cb695a8b-6567-47de-a5cb-1667dd989464
+    step_type: text
+    data:
+      action: When the email "alice@example.com" is verified
+    execution:
+      status: passed
+      start_time: 1775206627205
+      end_time: 1775206627205
+      duration: 0
+      attachments: []
+    steps: []
+  - id: cb8c1ac7-b770-4595-b403-8da1030cd98e
+    step_type: text
+    data:
+      action: When the profile is completed with first name "Alice" and last name
+        "Johnson"
+    execution:
+      status: passed
+      start_time: 1775206627205
+      end_time: 1775206627205
+      duration: 0
+      attachments: []
+    steps: []
+  - id: d7a3abd9-20a3-414e-b226-090a94d0fbac
+    step_type: text
+    data:
+      action: Then the onboarding report should be generated
+    execution:
+      status: passed
+      start_time: 1775206627205
+      end_time: 1775206627206
+      duration: 1
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  muted: false
+  message: 'Starting E2E onboarding flow for new user
+
+    Registered user: alice@example.com
+
+    Onboarding flow completed successfully'
+- title: Generate HTML report and attach from memory
+  signature: 403::attachment-tests
+  testops_ids:
+  - 403
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: d07436b8-5c30-4a90-b552-042d12653ce1
+    file_name: test-summary.html
+    mime_type: text/html
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/d07436b8-5c30-4a90-b552-042d12653ce1-test-summary.html
+  steps:
+  - id: 7c64282f-f786-4f24-8b3c-ae3191eaae83
+    step_type: text
+    data:
+      action: When a test summary report is generated with 42 total, 40 passed and
+        2 failed
+    execution:
+      status: passed
+      start_time: 1775206627195
+      end_time: 1775206627195
+      duration: 0
+      attachments: []
+    steps: []
+  - id: a190550d-5479-4b9a-8495-49a1f1a89437
+    step_type: text
+    data:
+      action: Then the HTML report should be attached as byte array
+    execution:
+      status: passed
+      start_time: 1775206627195
+      end_time: 1775206627195
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"plaintext"::"reason":"missing
+    @ symbol"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: b60b3841-2a0b-403a-95da-91fc2aa15932
+    step_type: text
+    data:
+      action: When the email "plaintext" is validated
+    execution:
+      status: passed
+      start_time: 1775206627214
+      end_time: 1775206627214
+      duration: 0
+      attachments: []
+    steps: []
+  - id: e76cd91c-eeea-44d6-a6e5-ea089799de40
+    step_type: text
+    data:
+      action: Then it should be rejected because "missing @ symbol"
+    execution:
+      status: passed
+      start_time: 1775206627214
+      end_time: 1775206627214
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    emailInput: plaintext
+    reason: missing @ symbol
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Data migration partially succeeds with expected failures
+  signature: 304::step-tests
+  testops_ids:
+  - 304
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 6a2cdf99-23fb-42b1-81e8-be9aee0d382e
+    step_type: text
+    data:
+      action: Given 100 user records to migrate
+    execution:
+      status: passed
+      start_time: 1775206627231
+      end_time: 1775206627231
+      duration: 0
+      attachments: []
+    steps: []
+  - id: dfd4f4d2-5f79-49ca-8832-82b4a9745e99
+    step_type: text
+    data:
+      action: Given 50 order records to migrate
+    execution:
+      status: passed
+      start_time: 1775206627231
+      end_time: 1775206627232
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 9cbc701e-f3b1-4829-8771-aed84efb6d35
+    step_type: text
+    data:
+      action: When corrupted records are encountered
+    execution:
+      status: passed
+      start_time: 1775206627232
+      end_time: 1775206627232
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 2afa6b49-2a4e-443e-b69b-bc6988b846e3
+    step_type: text
+    data:
+      action: Then the migration summary should show 150 migrated and 3 failed
+    execution:
+      status: passed
+      start_time: 1775206627232
+      end_time: 1775206627232
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  muted: false
+- title: Password reset sends email to registered user
+  signature: authentication::smoke_tests
+  execution:
+    status: passed
+  status: passed
+  fields:
+    severity: critical
+    priority: high
+    layer: e2e
+  attachments: []
+  steps:
+  - id: 8f795086-e0a0-4a4b-8a10-8b8b04ac65ad
+    step_type: text
+    data:
+      action: Given a registered user "john.doe@example.com"
+    execution:
+      status: passed
+      start_time: 1775206627240
+      end_time: 1775206627242
+      duration: 2
+      attachments: []
+    steps: []
+  - id: e98f4e6c-0bf3-4392-a3f3-9d687bd41a8b
+    step_type: text
+    data:
+      action: When a password reset is requested
+    execution:
+      status: passed
+      start_time: 1775206627242
+      end_time: 1775206627242
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 920120ca-35bd-4e4b-9e94-240f4ed5657f
+    step_type: text
+    data:
+      action: Then a reset email should be sent
+    execution:
+      status: passed
+      start_time: 1775206627242
+      end_time: 1775206627242
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  muted: false
+- title: Failed login records attempt details in report
+  signature: 201::metadata-tests
+  testops_ids:
+  - 201
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 0ce970fc-0fb6-4462-834e-b82dab512a1d
+    step_type: text
+    data:
+      action: Given a login attempt by "admin@example.com" from IP "192.168.1.42"
+    execution:
+      status: passed
+      start_time: 1775206627209
+      end_time: 1775206627210
+      duration: 1
+      attachments: []
+    steps: []
+  - id: ee748a2c-df75-4947-941d-aff9c82c5715
+    step_type: text
+    data:
+      action: When the login is denied
+    execution:
+      status: passed
+      start_time: 1775206627210
+      end_time: 1775206627210
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 6ad1a569-18f1-4ede-bb9f-d8a9166b18f1
+    step_type: text
+    data:
+      action: Then the attempt details should be recorded
+    execution:
+      status: passed
+      start_time: 1775206627210
+      end_time: 1775206627210
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Metadata Tests
+  muted: false
+  message: 'Login attempt by ''admin@example.com'' from IP 192.168.1.42 at 2026-04-03T08:57:07.2100850Z
+
+    Expected result: login denied for invalid credentials'
+- title: Verify that the login page displays the correct title and branding
+  signature: authentication::smoke_tests
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps:
+  - id: 7f299ffb-13e0-4ec4-a2fb-8f404222f592
+    step_type: text
+    data:
+      action: Given the login page is open
+    execution:
+      status: passed
+      start_time: 1775206627239
+      end_time: 1775206627239
+      duration: 0
+      attachments: []
+    steps: []
+  - id: c339f0da-8f4b-49f7-9da4-b4a16b12cc87
+    step_type: text
+    data:
+      action: Then the page title should be "Welcome to Qase"
+    execution:
+      status: passed
+      start_time: 1775206627239
+      end_time: 1775206627239
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 882cff5f-1e75-4720-81c7-dea5d9f1b3cf
+    step_type: text
+    data:
+      action: Then the logo should be visible
+    execution:
+      status: passed
+      start_time: 1775206627239
+      end_time: 1775206627240
+      duration: 1
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  muted: false
+- title: Product search returns relevant results
+  signature: 602::e2e_tests::user_workflows::"query":"mechanical keyboard"::"minresults":"15"
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    severity: normal
+    layer: e2e
+  attachments:
+  - id: d9095b89-31df-4067-aa8b-e197e8b68750
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/d9095b89-31df-4067-aa8b-e197e8b68750-screenshot.png
+  steps:
+  - id: bfa89b47-4b33-4b51-8441-98b2b7d0781e
+    step_type: text
+    data:
+      action: When a search is performed for "mechanical keyboard"
+    execution:
+      status: passed
+      start_time: 1775206627201
+      end_time: 1775206627201
+      duration: 0
+      attachments: []
+    steps: []
+  - id: c7bd29a7-35c5-4097-9c5c-d385d7b3a5ae
+    step_type: text
+    data:
+      action: Then at least 15 results should be returned
+    execution:
+      status: passed
+      start_time: 1775206627202
+      end_time: 1775206627202
+      duration: 0
+      attachments: []
+    steps: []
+  - id: b3b4a7e0-18c2-4c40-bc85-d2f83aa26f95
+    step_type: text
+    data:
+      action: Then the search results page should be captured
+    execution:
+      status: passed
+      start_time: 1775206627202
+      end_time: 1775206627203
+      duration: 1
+      attachments: []
+    steps: []
+  params:
+    query: mechanical keyboard
+    minResults: '15'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  muted: false
+  message: 'Searching for: ''mechanical keyboard''
+
+    Search results page captured'
+- title: Checkout step captures state screenshot at each stage
+  signature: 404::attachment-tests
+  testops_ids:
+  - 404
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: 2d520256-3d1c-459e-a045-e5b5c2eaa5e7
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/2d520256-3d1c-459e-a045-e5b5c2eaa5e7-screenshot.png
+  - id: cadefab8-cdce-4a39-b884-114fc4fc2e49
+    file_name: test-log.txt
+    mime_type: text/plain
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/cadefab8-cdce-4a39-b884-114fc4fc2e49-test-log.txt
+  - id: e13b2bf9-e59b-48c3-beba-2b9e9c87cdcb
+    file_name: order-confirmation.json
+    mime_type: application/json
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/e13b2bf9-e59b-48c3-beba-2b9e9c87cdcb-order-confirmation.json
+  steps:
+  - id: bfbab2da-3842-46b3-a9b3-219b3b47156c
+    step_type: text
+    data:
+      action: Given a shopping cart with total 149.99
+    execution:
+      status: passed
+      start_time: 1775206627190
+      end_time: 1775206627192
+      duration: 2
+      attachments: []
+    steps: []
+  - id: a091c86a-9499-492c-848b-51933f544ad4
+    step_type: text
+    data:
+      action: When shipping details are entered for "123 Main St, San Francisco, CA"
+    execution:
+      status: passed
+      start_time: 1775206627192
+      end_time: 1775206627193
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 9c14b1a3-5458-4f01-8cd1-27791a7c6e4b
+    step_type: text
+    data:
+      action: Then the order "ORD-2026-0042" should be confirmed with attachment
+    execution:
+      status: passed
+      start_time: 1775206627193
+      end_time: 1775206627194
+      duration: 1
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  muted: false
+- title: Login page accepts both email and username
+  signature: 102-103::authentication::smoke_tests
+  testops_ids:
+  - 102
+  - 103
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps:
+  - id: 114b3a8b-9058-424f-99e4-ad1bad307ac9
+    step_type: text
+    data:
+      action: Given the login page is open
+    execution:
+      status: passed
+      start_time: 1775206627237
+      end_time: 1775206627238
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 1f5d5e11-a3a7-477f-9804-99276d89126d
+    step_type: text
+    data:
+      action: When the user logs in with email "admin@example.com"
+    execution:
+      status: passed
+      start_time: 1775206627238
+      end_time: 1775206627238
+      duration: 0
+      attachments: []
+    steps: []
+  - id: f655906d-bc07-41cd-aa2d-493e3dd4cf2a
+    step_type: text
+    data:
+      action: Then login should succeed
+    execution:
+      status: passed
+      start_time: 1775206627238
+      end_time: 1775206627238
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 2887c264-bf0d-4376-86db-d6b25330d6d3
+    step_type: text
+    data:
+      action: When the user logs in with username "admin"
+    execution:
+      status: passed
+      start_time: 1775206627238
+      end_time: 1775206627239
+      duration: 1
+      attachments: []
+    steps: []
+  - id: c9e4145e-66f5-485d-8a1d-e791f20f875a
+    step_type: text
+    data:
+      action: Then login should succeed
+    execution:
+      status: passed
+      start_time: 1775206627239
+      end_time: 1775206627239
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  muted: false
+- title: API response details are recorded for debugging
+  signature: 202::metadata-tests
+  testops_ids:
+  - 202
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: b9c41317-1649-4a9a-b183-7161c4af9b98
+    step_type: text
+    data:
+      action: When a GET request is made to "/api/v1/users/42"
+    execution:
+      status: passed
+      start_time: 1775206627207
+      end_time: 1775206627208
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 7a237a7f-6f1e-4968-b9f6-aec6a890a96d
+    step_type: text
+    data:
+      action: Then the response status code should be 200
+    execution:
+      status: passed
+      start_time: 1775206627208
+      end_time: 1775206627208
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 5b388028-c2ae-4f86-a14d-9ea43c6aa4ad
+    step_type: text
+    data:
+      action: Then the response body should be recorded
+    execution:
+      status: passed
+      start_time: 1775206627208
+      end_time: 1775206627208
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Metadata Tests
+  muted: false
+  message: 'GET /api/v1/users/42 returned status 200
+
+    Response body: {"id": 42, "name": "John Doe", "email": "john@example.com"}'
+- title: User registration completes all required steps
+  signature: 301::step-tests
+  testops_ids:
+  - 301
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 34e9741b-0d0a-4afb-a295-a74bc57080df
+    step_type: text
+    data:
+      action: Given the registration page is open
+    execution:
+      status: passed
+      start_time: 1775206627234
+      end_time: 1775206627234
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 24dd160e-04b8-4932-8543-b29ec954a222
+    step_type: text
+    data:
+      action: When the user fills in email "john.doe@example.com" and password "SecurePass123!"
+    execution:
+      status: passed
+      start_time: 1775206627234
+      end_time: 1775206627234
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 3f0eed8e-17d4-48fd-9fd5-1a64b452018e
+    step_type: text
+    data:
+      action: When the form is submitted
+    execution:
+      status: passed
+      start_time: 1775206627234
+      end_time: 1775206627235
+      duration: 1
+      attachments: []
+    steps: []
+  - id: dc2cb5cc-e022-4d5b-9ef6-1f8e3b6b0190
+    step_type: text
+    data:
+      action: Then a confirmation email should be sent to "john.doe@example.com"
+    execution:
+      status: passed
+      start_time: 1775206627235
+      end_time: 1775206627235
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  muted: false
+- title: Login page captures screenshot on successful load
+  signature: 401::attachment-tests
+  testops_ids:
+  - 401
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: 9be974fc-f8b1-4a06-8018-87b169c6105b
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/9be974fc-f8b1-4a06-8018-87b169c6105b-screenshot.png
+  steps:
+  - id: 004c0c29-4c37-4b18-ba12-368296a9f621
+    step_type: text
+    data:
+      action: Given the login page is loaded with title "Login - MyApp"
+    execution:
+      status: passed
+      start_time: 1775206627196
+      end_time: 1775206627196
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 7a4e0565-95e0-40a7-80a2-c3561665e2da
+    step_type: text
+    data:
+      action: Then a screenshot should be attached
+    execution:
+      status: passed
+      start_time: 1775206627197
+      end_time: 1775206627197
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  muted: false
+- title: Product search returns relevant results
+  signature: 602::e2e_tests::user_workflows::"query":"wireless mouse"::"minresults":"23"
+  testops_ids:
+  - 602
+  execution:
+    status: passed
+  status: passed
+  fields:
+    severity: normal
+    layer: e2e
+  attachments:
+  - id: 9cc02324-1c0e-4138-9287-e275b3caaf99
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/9cc02324-1c0e-4138-9287-e275b3caaf99-screenshot.png
+  steps:
+  - id: 447dc90a-76ee-45c5-af1e-33bdd922924c
+    step_type: text
+    data:
+      action: When a search is performed for "wireless mouse"
+    execution:
+      status: passed
+      start_time: 1775206627203
+      end_time: 1775206627203
+      duration: 0
+      attachments: []
+    steps: []
+  - id: f782972a-b2ea-401f-8b71-109a48f86077
+    step_type: text
+    data:
+      action: Then at least 23 results should be returned
+    execution:
+      status: passed
+      start_time: 1775206627203
+      end_time: 1775206627203
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 3c21e3cd-4914-4eef-ad15-440e2d878974
+    step_type: text
+    data:
+      action: Then the search results page should be captured
+    execution:
+      status: passed
+      start_time: 1775206627203
+      end_time: 1775206627204
+      duration: 1
+      attachments: []
+    steps: []
+  params:
+    query: wireless mouse
+    minResults: '23'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: E2E_Tests
+      - title: User_Workflows
+  muted: false
+  message: 'Searching for: ''wireless mouse''
+
+    Search results page captured'
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"guest"::"password":"guest"::"expected":"false"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 377ecedb-95d9-4897-8968-150e4b7f13c2
+    step_type: text
+    data:
+      action: When the user logs in with "guest" and "guest"
+    execution:
+      status: passed
+      start_time: 1775206627218
+      end_time: 1775206627218
+      duration: 0
+      attachments: []
+    steps: []
+  - id: c9ab4910-7d91-4941-8696-7d7ab380eeca
+    step_type: text
+    data:
+      action: Then the login result should be false
+    execution:
+      status: passed
+      start_time: 1775206627218
+      end_time: 1775206627218
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    username: guest
+    password: guest
+    expected: 'false'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"2"::"unitprice":"50.00"::"discountpercent":"10"::"expectedtotal":"90.00"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 91e3ef9d-365c-4dbc-98d6-eb21dfd681c7
+    step_type: text
+    data:
+      action: When 2 items at 50.00 with 10 percent discount are added
+    execution:
+      status: passed
+      start_time: 1775206627227
+      end_time: 1775206627227
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 142c8a56-0681-44fe-8354-3c337a221812
+    step_type: text
+    data:
+      action: Then the cart total should be 90.00
+    execution:
+      status: passed
+      start_time: 1775206627227
+      end_time: 1775206627228
+      duration: 1
+      attachments: []
+    steps: []
+  params:
+    quantity: '2'
+    unitPrice: '50.00'
+    discountPercent: '10'
+    expectedTotal: '90.00'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: API test captures both request log and response screenshot
+  signature: 402::attachment-tests
+  testops_ids:
+  - 402
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments:
+  - id: 3a7262a7-b5fd-4b30-b83f-8f412b8d824d
+    file_name: screenshot.png
+    mime_type: image/png
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/3a7262a7-b5fd-4b30-b83f-8f412b8d824d-screenshot.png
+  - id: b955bac8-3e04-4360-957c-95cc2213621e
+    file_name: test-log.txt
+    mime_type: text/plain
+    file_path: /Users/gda/Documents/github/qase-tms/qase-csharp/examples/ReqnrollExamples/bin/Debug/net10.0/build/qase-report/attachments/b955bac8-3e04-4360-957c-95cc2213621e-test-log.txt
+  steps:
+  - id: e563e0fa-9205-41b9-9350-e64e77159ad7
+    step_type: text
+    data:
+      action: When an API call returns status code 200
+    execution:
+      status: passed
+      start_time: 1775206627156
+      end_time: 1775206627162
+      duration: 6
+      attachments: []
+    steps: []
+  - id: 91d2899f-6ccd-43da-931f-4d102aa98607
+    step_type: text
+    data:
+      action: Then both the screenshot and log should be attached
+    execution:
+      status: passed
+      start_time: 1775206627163
+      end_time: 1775206627164
+      duration: 1
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Attachment Tests
+  muted: false
+- title: User registration creates new account
+  signature: 101::authentication::smoke_tests
+  testops_ids:
+  - 101
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps:
+  - id: 44f51180-26f4-4fd6-bf4e-ae39440abd01
+    step_type: text
+    data:
+      action: Given a registration form is submitted for "john.doe@example.com"
+    execution:
+      status: passed
+      start_time: 1775206627245
+      end_time: 1775206627245
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 12735a09-2e99-46b1-a79c-884156f35688
+    step_type: text
+    data:
+      action: Then the account should be created successfully
+    execution:
+      status: passed
+      start_time: 1775206627245
+      end_time: 1775206627245
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  muted: false
+- title: User profile updates display name
+  signature: authentication::smoke_tests
+  execution:
+    status: passed
+  status: passed
+  fields:
+    layer: e2e
+  attachments: []
+  steps:
+  - id: 9ea9925b-dafc-4ac5-8d8a-bbdf6c6be5f9
+    step_type: text
+    data:
+      action: Given a user with display name "John"
+    execution:
+      status: passed
+      start_time: 1775206627244
+      end_time: 1775206627244
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 070bf98b-83c0-4293-8630-ca7f970dc7f3
+    step_type: text
+    data:
+      action: When the display name is changed to "John Doe"
+    execution:
+      status: passed
+      start_time: 1775206627244
+      end_time: 1775206627244
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 5b6ae3aa-51e4-43c6-bc74-140695bc018e
+    step_type: text
+    data:
+      action: Then the display name should be "John Doe"
+    execution:
+      status: passed
+      start_time: 1775206627244
+      end_time: 1775206627244
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke_Tests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"(empty)"::"password":"nouser"::"expected":"false"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 181d3bbd-fd5e-4b71-8be3-fca9532dddad
+    step_type: text
+    data:
+      action: When the user logs in with "(empty)" and "nouser"
+    execution:
+      status: passed
+      start_time: 1775206627218
+      end_time: 1775206627219
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 4278a3c2-aa82-4890-a10a-5aa5e3865ce0
+    step_type: text
+    data:
+      action: Then the login result should be false
+    execution:
+      status: passed
+      start_time: 1775206627219
+      end_time: 1775206627219
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    username: (empty)
+    password: nouser
+    expected: 'false'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Login accepts valid credential combinations
+  signature: 501::parameterized-tests::"username":"admin@example.com"::"password":"admin123!"::"expected":"true"
+  testops_ids:
+  - 501
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: f7f58f71-058a-4ba1-b469-defd1d9c7f8b
+    step_type: text
+    data:
+      action: When the user logs in with "admin@example.com" and "Admin123!"
+    execution:
+      status: passed
+      start_time: 1775206627215
+      end_time: 1775206627216
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 86af2478-8f9a-45de-8ef6-5d9891523739
+    step_type: text
+    data:
+      action: Then the login result should be true
+    execution:
+      status: passed
+      start_time: 1775206627216
+      end_time: 1775206627217
+      duration: 1
+      attachments: []
+    steps: []
+  params:
+    username: admin@example.com
+    password: Admin123!
+    expected: 'true'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"user@"::"reason":"missing domain"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: d95328db-9a61-4879-bf35-a3e52cc9928c
+    step_type: text
+    data:
+      action: When the email "user@" is validated
+    execution:
+      status: passed
+      start_time: 1775206627215
+      end_time: 1775206627215
+      duration: 0
+      attachments: []
+    steps: []
+  - id: f8f5b48e-fea3-4689-ac89-78ba6dd997cb
+    step_type: text
+    data:
+      action: Then it should be rejected because "missing domain"
+    execution:
+      status: passed
+      start_time: 1775206627215
+      end_time: 1775206627215
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    emailInput: user@
+    reason: missing domain
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Order creation with product selection and discount
+  signature: 303::step-tests
+  testops_ids:
+  - 303
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 926a8b32-cf6a-4cd8-9bea-ae29b71c9d1f
+    step_type: text
+    data:
+      action: Given a product "Mechanical Keyboard" with quantity 2 is selected
+    execution:
+      status: passed
+      start_time: 1775206627233
+      end_time: 1775206627233
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 6adf3121-54a8-4473-ba73-fbfa55e67db4
+    step_type: text
+    data:
+      action: When a discount code "SAVE10" is applied
+    execution:
+      status: passed
+      start_time: 1775206627233
+      end_time: 1775206627233
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 5908d436-b21d-4753-b47c-8f0f36feb626
+    step_type: text
+    data:
+      action: Then the total should be calculated with 10 percent discount on 99.98
+    execution:
+      status: passed
+      start_time: 1775206627233
+      end_time: 1775206627233
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  muted: false
+- title: Order processing adds tracking comment
+  signature: metadata-tests
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 595aa33a-0456-44ce-ab72-3de1ae44dc8f
+    step_type: text
+    data:
+      action: Given an order "ORD-2026-0042" with total 149.99
+    execution:
+      status: passed
+      start_time: 1775206627211
+      end_time: 1775206627211
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 364d8c47-122b-4aeb-a05b-df3fa627e029
+    step_type: text
+    data:
+      action: When the order is processed
+    execution:
+      status: passed
+      start_time: 1775206627211
+      end_time: 1775206627212
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 1fda396d-40eb-46de-9d7b-30dedd90f735
+    step_type: text
+    data:
+      action: Then the processing result should be recorded
+    execution:
+      status: passed
+      start_time: 1775206627212
+      end_time: 1775206627212
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Metadata Tests
+  muted: false
+  message: 'Processing order ORD-2026-0042, total: $149.99
+
+    Order processed successfully'
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"user@example."::"reason":"trailing
+    dot in domain"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 41f1af4e-64cc-49bb-8862-9e06dec729dd
+    step_type: text
+    data:
+      action: When the email "user@example." is validated
+    execution:
+      status: passed
+      start_time: 1775206627215
+      end_time: 1775206627215
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 2cdfcac0-9cd8-4872-a01d-d9ca6edccfb8
+    step_type: text
+    data:
+      action: Then it should be rejected because "trailing dot in domain"
+    execution:
+      status: passed
+      start_time: 1775206627215
+      end_time: 1775206627215
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    emailInput: user@example.
+    reason: trailing dot in domain
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"1"::"unitprice":"100.00"::"discountpercent":"25"::"expectedtotal":"75.00"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 908e3ad9-8e1a-448a-9698-7930c75b01a8
+    step_type: text
+    data:
+      action: When 1 items at 100.00 with 25 percent discount are added
+    execution:
+      status: passed
+      start_time: 1775206627228
+      end_time: 1775206627228
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 69a03943-3c9c-42c5-9cfd-2c311bfa8476
+    step_type: text
+    data:
+      action: Then the cart total should be 75.00
+    execution:
+      status: passed
+      start_time: 1775206627228
+      end_time: 1775206627228
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    quantity: '1'
+    unitPrice: '100.00'
+    discountPercent: '25'
+    expectedTotal: '75.00'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Email validation rejects invalid formats
+  signature: 502::parameterized-tests::"emailinput":"@example.com"::"reason":"missing
+    local part"
+  testops_ids:
+  - 502
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 4fe7f81f-849b-4ba0-8232-ac579effded0
+    step_type: text
+    data:
+      action: When the email "@example.com" is validated
+    execution:
+      status: passed
+      start_time: 1775206627214
+      end_time: 1775206627214
+      duration: 0
+      attachments: []
+    steps: []
+  - id: ce6e0664-2241-42db-a49c-d72ef388c15e
+    step_type: text
+    data:
+      action: Then it should be rejected because "missing local part"
+    execution:
+      status: passed
+      start_time: 1775206627214
+      end_time: 1775206627214
+      duration: 0
+      attachments: []
+    steps: []
+  params:
+    emailInput: '@example.com'
+    reason: missing local part
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
+- title: Checkout process with nested address and payment steps
+  signature: 302::step-tests
+  testops_ids:
+  - 302
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 4a56cfe7-8079-4c7c-b3f2-2627724c8688
+    step_type: text
+    data:
+      action: Given an item "Wireless Keyboard" priced at 49.99 is in the cart
+    execution:
+      status: passed
+      start_time: 1775206627229
+      end_time: 1775206627230
+      duration: 1
+      attachments: []
+    steps: []
+  - id: 46a2c11b-3b4b-4d77-b36c-aea7603aa933
+    step_type: text
+    data:
+      action: When the shipping address is entered
+    execution:
+      status: passed
+      start_time: 1775206627230
+      end_time: 1775206627230
+      duration: 0
+      attachments: []
+    steps: []
+  - id: 913da9be-0fbb-4d9b-8b5e-19f7b98e2cee
+    step_type: text
+    data:
+      action: When payment details are entered for card "4111111111111111"
+    execution:
+      status: passed
+      start_time: 1775206627230
+      end_time: 1775206627230
+      duration: 0
+      attachments: []
+    steps: []
+  - id: f1f52023-5a86-4836-bc8f-dd95780156fe
+    step_type: text
+    data:
+      action: Then the order should be confirmed
+    execution:
+      status: passed
+      start_time: 1775206627230
+      end_time: 1775206627230
+      duration: 0
+      attachments: []
+    steps: []
+  params: {}
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Step Tests
+  muted: false
+- title: Shopping cart calculates total correctly
+  signature: 503::parameterized-tests::"quantity":"1"::"unitprice":"29.99"::"discountpercent":"0"::"expectedtotal":"29.99"
+  testops_ids:
+  - 503
+  execution:
+    status: passed
+  status: passed
+  fields: {}
+  attachments: []
+  steps:
+  - id: 2532fcdb-86bb-4d65-bf69-45cd95006e46
+    step_type: text
+    data:
+      action: When 1 items at 29.99 with 0 percent discount are added
+    execution:
+      status: passed
+      start_time: 1775206627220
+      end_time: 1775206627225
+      duration: 5
+      attachments: []
+    steps: []
+  - id: 0d0e38e6-01be-479f-a3af-98f4265b68e6
+    step_type: text
+    data:
+      action: Then the cart total should be 29.99
+    execution:
+      status: passed
+      start_time: 1775206627225
+      end_time: 1775206627226
+      duration: 1
+      attachments: []
+    steps: []
+  params:
+    quantity: '1'
+    unitPrice: '29.99'
+    discountPercent: '0'
+    expectedTotal: '29.99'
+  param_groups: []
+  relations:
+    suite:
+      data:
+      - title: Parameterized Tests
+  muted: false
