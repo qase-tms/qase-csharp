@@ -1,0 +1,36 @@
+expected/reqnroll-examples.yaml
+  2879dbd51adecd10 749
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "9b6f9e7fe09691f7b68779967b780ee7a6ba2885",
+  "prompts": {
+    "2879dbd51adecd10": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "82af27c7-519f-4c31-8c53-c6b80ab90313",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    },
+    "5519baaaf18427ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7c93cce3-98ca-4af8-9fc4-eae23bf3df6e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 366,
+      "overriden_lines": 0
+    }
+  }
+}
