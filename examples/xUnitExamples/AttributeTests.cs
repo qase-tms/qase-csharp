@@ -8,6 +8,7 @@ namespace xUnitExamples;
 /// </summary>
 [Fields("layer", "e2e")]
 [Suites("Authentication", "Smoke Tests")]
+[Tags("smoke")]
 public class AttributeTests
 {
     [Fact]
@@ -48,6 +49,7 @@ public class AttributeTests
     [Fields("severity", "critical")]
     [Fields("priority", "high")]
     [Fields("layer", "api")]
+    [Tags("regression")]
     public void PasswordReset_SendsEmailToRegisteredUser()
     {
         var email = "john.doe@example.com";

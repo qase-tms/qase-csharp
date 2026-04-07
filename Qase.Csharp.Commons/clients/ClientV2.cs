@@ -195,6 +195,9 @@ namespace Qase.Csharp.Commons.Clients
                         case "isFlaky":
                             fields.IsFlaky = result.Fields[key];
                             break;
+                        case "tags":
+                            fields.Tags = result.Fields[key];
+                            break;
                         default:
                             fields.AdditionalProperties[key] = JsonSerializer.Deserialize<JsonElement>(JsonSerializer.Serialize(result.Fields[key]));
                             break;
@@ -202,6 +205,11 @@ namespace Qase.Csharp.Commons.Clients
                 }
             }
             
+            if (result.Tags != null && result.Tags.Count > 0)
+            {
+                fields.Tags = string.Join(",", result.Tags.Distinct());
+            }
+
             var paramGroups = result.ParamGroups?.Select(g => g.Select(p => p.ToString()).ToList()).ToList();
             
             var convertedResult = new ResultCreate(

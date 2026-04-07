@@ -29,6 +29,8 @@ results:
   status: passed
   fields:
     layer: e2e
+  tags:
+  - smoke
   relations:
     suite:
       data:
@@ -183,6 +185,9 @@ results:
     layer: api
     severity: critical
     priority: high
+  tags:
+  - smoke
+  - regression
   relations:
     suite:
       data:
@@ -233,6 +238,8 @@ results:
   status: passed
   fields:
     layer: e2e
+  tags:
+  - smoke
   relations:
     suite:
       data:
@@ -389,6 +396,8 @@ results:
   status: passed
   fields:
     layer: e2e
+  tags:
+  - smoke
   relations:
     suite:
       data:
@@ -599,6 +608,8 @@ results:
   status: passed
   fields:
     layer: e2e
+  tags:
+  - smoke
   relations:
     suite:
       data:

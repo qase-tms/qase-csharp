@@ -152,6 +152,71 @@ public class ReqnrollTagParserTests
 
     #endregion
 
+    #region QaseTags Tests
+
+    [Fact]
+    public void ParseTags_QaseTags_AddsToTags()
+    {
+        var result = new TestResult();
+        var tags = new[] { "QaseTags:smoke" };
+
+        ReqnrollTagParser.ApplyTags(result, tags);
+
+        result.Tags.Should().Contain("smoke");
+    }
+
+    [Fact]
+    public void ParseTags_MultipleQaseTags_AddsAll()
+    {
+        var result = new TestResult();
+        var tags = new[] { "QaseTags:smoke,regression,api" };
+
+        ReqnrollTagParser.ApplyTags(result, tags);
+
+        result.Tags.Should().HaveCount(3);
+        result.Tags.Should().Contain("smoke");
+        result.Tags.Should().Contain("regression");
+        result.Tags.Should().Contain("api");
+    }
+
+    [Fact]
+    public void ParseTags_QaseTagsCaseInsensitive_AddsTags()
+    {
+        var result = new TestResult();
+        var tags = new[] { "qasetags:Smoke" };
+
+        ReqnrollTagParser.ApplyTags(result, tags);
+
+        result.Tags.Should().Contain("Smoke");
+    }
+
+    [Fact]
+    public void ParseTags_QaseTagsWithSpaces_TrimsValues()
+    {
+        var result = new TestResult();
+        var tags = new[] { "QaseTags: smoke , regression " };
+
+        ReqnrollTagParser.ApplyTags(result, tags);
+
+        result.Tags.Should().Contain("smoke");
+        result.Tags.Should().Contain("regression");
+    }
+
+    [Fact]
+    public void ParseTags_MultipleQaseTagsAttributes_Accumulates()
+    {
+        var result = new TestResult();
+        var tags = new[] { "QaseTags:smoke", "QaseTags:regression" };
+
+        ReqnrollTagParser.ApplyTags(result, tags);
+
+        result.Tags.Should().HaveCount(2);
+        result.Tags.Should().Contain("smoke");
+        result.Tags.Should().Contain("regression");
+    }
+
+    #endregion
+
     #region Mixed Tags Tests
 
     [Fact]

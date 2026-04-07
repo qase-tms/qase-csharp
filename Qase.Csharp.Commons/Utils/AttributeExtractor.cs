@@ -52,6 +52,9 @@ namespace Qase.Csharp.Commons.Utils
                             .Select(s => new SuiteData { Title = s })
                             .ToList();
                         break;
+                    case TagsAttribute tags:
+                        testResult.Tags.AddRange(tags.Tags);
+                        break;
                     case IgnoreAttribute:
                         testResult.Ignore = true;
                         break;

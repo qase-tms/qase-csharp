@@ -72,6 +72,11 @@ namespace Qase.Csharp.Commons.Models.Domain
         public Relations? Relations { get; set; }
 
         /// <summary>
+        /// Gets or sets the tags
+        /// </summary>
+        public List<string> Tags { get; set; } = new();
+
+        /// <summary>
         /// Gets or sets whether the test is muted
         /// </summary>
         public bool Muted { get; set; }
