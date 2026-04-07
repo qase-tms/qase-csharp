@@ -1,5 +1,10 @@
 # Changelog
 
+## qase-csharp 1.1.14
+
+- Updated API clients to the latest specification
+
+
 ## qase-csharp 1.1.13
 
 - Added Qase Reqnroll Reporter for [Reqnroll](https://reqnroll.net/) BDD framework integration

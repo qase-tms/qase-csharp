@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **Type** | **string** |  | [optional] 
 **Muted** | **string** |  | [optional] 
 **IsFlaky** | **string** |  | [optional] 
+**Tags** | **string** | Comma-separated list of tag titles to assign to the test case | [optional] 
 **ExecutedBy** | **string** | User who executed the test (member id, name or email) | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
