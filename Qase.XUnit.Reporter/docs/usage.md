@@ -6,6 +6,7 @@
 - [Configuration](#configuration)
 - [Linking Test Cases](#linking-test-cases)
 - [Test Metadata](#test-metadata)
+- [Tags](#tags)
 - [Test Steps](#test-steps)
 - [Attachments](#attachments)
 - [Parameters](#parameters)
@@ -185,6 +186,52 @@ public void TestInSuite()
 }
 ```
 
+### Tags
+
+Assign tags to your test cases. Tags are used for categorization and filtering in Qase:
+
+```csharp
+[Fact]
+[Tags("smoke", "auth")]
+public void QuickLoginCheck()
+{
+    // Test implementation
+}
+```
+
+Multiple `[Tags]` attributes can be combined:
+
+```csharp
+[Fact]
+[Tags("smoke")]
+[Tags("regression")]
+public void LoginWithValidCredentials()
+{
+    // Test implementation
+}
+```
+
+Tags support class-level application. Class and method tags are **merged** (not overwritten):
+
+```csharp
+[Tags("smoke")]
+public class LoginTests
+{
+    [Fact]
+    [Tags("regression")]
+    public void LoginTest()
+    {
+        // This test will have tags: ["smoke", "regression"]
+    }
+
+    [Fact]
+    public void LogoutTest()
+    {
+        // This test will have tags: ["smoke"]
+    }
+}
+```
+
 ### Class-Level Attributes
 
 Apply attributes at the class level to affect all tests in the class:
@@ -195,13 +242,14 @@ using Qase.Csharp.Commons.Attributes;
 
 [Suites("API", "User Management")]
 [Fields("component", "user-api")]
+[Tags("smoke")]
 public class UserApiTests
 {
     [Fact]
     [Title("Create User with Valid Data")]
     public void CreateUser()
     {
-        // Inherits Suites and Fields from class level
+        // Inherits Suites, Fields, and Tags from class level
     }
 
     [Fact]
@@ -209,7 +257,7 @@ public class UserApiTests
     [Suites("API", "User Management", "Deletion")]
     public void DeleteUser()
     {
-        // Overrides Suites, inherits Fields from class level
+        // Overrides Suites, inherits Fields and Tags from class level
     }
 }
 ```
@@ -223,6 +271,7 @@ public class UserApiTests
 [Fields("priority", "high")]
 [Fields("component", "User API")]
 [Suites("API", "User Management", "Creation")]
+[Tags("smoke")]
 public void CreateUser_WithValidData_ShouldSucceed()
 {
     // Test implementation
