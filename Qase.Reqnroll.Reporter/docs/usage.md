@@ -6,6 +6,7 @@
 - [Configuration](#configuration)
 - [Linking Test Cases](#linking-test-cases)
 - [Test Metadata](#test-metadata)
+- [Tags](#tags)
 - [Test Steps](#test-steps)
 - [Attachments](#attachments)
 - [Parameters](#parameters)
@@ -197,6 +198,39 @@ This creates the suite hierarchy: API > Authentication > Login.
 
 By default, the Feature name is used as the suite. The `@QaseSuite` tag overrides this behavior.
 
+### Tags
+
+Assign tags to your test cases using `@QaseTags`:
+
+```gherkin
+@QaseTags:smoke,regression
+Scenario: User can log in
+  Given the login page is open
+  When the user enters valid credentials
+  Then the dashboard should be displayed
+```
+
+Feature-level and scenario-level tags are **merged** (not overwritten):
+
+```gherkin
+@QaseTags:smoke
+Feature: Login
+
+  @QaseTags:regression
+  Scenario: Login with valid credentials
+    # This scenario will have tags: ["regression", "smoke"]
+    Given the login page is open
+    When the user enters valid credentials
+    Then the dashboard should be displayed
+
+  Scenario: Login page displays correctly
+    # This scenario will have tags: ["smoke"]
+    Given the login page is open
+    Then the page title should be correct
+```
+
+> **Note**: Scenario-level tags appear before feature-level tags in the combined list.
+
 ### Feature-Level Tags
 
 Tags placed at the Feature level apply to all scenarios in the file:
@@ -231,6 +265,7 @@ Both scenarios inherit `@QaseFields:component:user-api` and `@QaseSuite:API\User
 @QaseFields:priority:high
 @QaseFields:component:User_API
 @QaseSuite:API\User_Management\Creation
+@QaseTags:smoke
 Scenario: Create user with valid data should succeed
   Given the API is available
   When a new user is created with valid data
