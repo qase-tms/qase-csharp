@@ -38,7 +38,7 @@ namespace Qase.ApiClient.V2.Model
         /// <param name="execution">execution</param>
         /// <param name="steps">Nested steps will be here. The same structure is used for them.</param>
         [JsonConstructor]
-        public ResultStep(Option<ResultStepData?> data = default, Option<ResultStepExecution?> execution = default, Option<List<Object>?> steps = default)
+        public ResultStep(Option<ResultStepData?> data = default, Option<ResultStepExecution?> execution = default, Option<List<ResultStep>?> steps = default)
         {
             DataOption = data;
             ExecutionOption = execution;
@@ -79,14 +79,14 @@ namespace Qase.ApiClient.V2.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<List<Object>?> StepsOption { get; private set; }
+        public Option<List<ResultStep>?> StepsOption { get; private set; }
 
         /// <summary>
         /// Nested steps will be here. The same structure is used for them.
         /// </summary>
         /// <value>Nested steps will be here. The same structure is used for them.</value>
         [JsonPropertyName("steps")]
-        public List<Object>? Steps { get { return this.StepsOption; } set { this.StepsOption = new Option<List<Object>?>(value); } }
+        public List<ResultStep>? Steps { get { return this.StepsOption; } set { this.StepsOption = new Option<List<ResultStep>?>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -145,7 +145,7 @@ namespace Qase.ApiClient.V2.Model
 
             Option<ResultStepData?> data = default;
             Option<ResultStepExecution?> execution = default;
-            Option<List<Object>?> steps = default;
+            Option<List<ResultStep>?> steps = default;
 
             while (utf8JsonReader.Read())
             {
@@ -169,7 +169,7 @@ namespace Qase.ApiClient.V2.Model
                             execution = new Option<ResultStepExecution?>(JsonSerializer.Deserialize<ResultStepExecution>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "steps":
-                            steps = new Option<List<Object>?>(JsonSerializer.Deserialize<List<Object>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            steps = new Option<List<ResultStep>?>(JsonSerializer.Deserialize<List<ResultStep>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         default:
                             break;
