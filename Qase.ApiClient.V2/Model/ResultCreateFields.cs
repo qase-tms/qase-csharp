@@ -45,9 +45,10 @@ namespace Qase.ApiClient.V2.Model
         /// <param name="type">type</param>
         /// <param name="muted">muted</param>
         /// <param name="isFlaky">isFlaky</param>
+        /// <param name="tags">Comma-separated list of tag titles to assign to the test case</param>
         /// <param name="executedBy">User who executed the test (member id, name or email)</param>
         [JsonConstructor]
-        public ResultCreateFields(Option<string?> author = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<string?> layer = default, Option<string?> severity = default, Option<string?> priority = default, Option<string?> behavior = default, Option<string?> type = default, Option<string?> muted = default, Option<string?> isFlaky = default, Option<string?> executedBy = default)
+        public ResultCreateFields(Option<string?> author = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<string?> layer = default, Option<string?> severity = default, Option<string?> priority = default, Option<string?> behavior = default, Option<string?> type = default, Option<string?> muted = default, Option<string?> isFlaky = default, Option<string?> tags = default, Option<string?> executedBy = default)
         {
             AuthorOption = author;
             DescriptionOption = description;
@@ -60,6 +61,7 @@ namespace Qase.ApiClient.V2.Model
             TypeOption = type;
             MutedOption = muted;
             IsFlakyOption = isFlaky;
+            TagsOption = tags;
             ExecutedByOption = executedBy;
             OnCreated();
         }
@@ -211,6 +213,20 @@ namespace Qase.ApiClient.V2.Model
         public string? IsFlaky { get { return this.IsFlakyOption; } set { this.IsFlakyOption = new Option<string?>(value); } }
 
         /// <summary>
+        /// Used to track the state of Tags
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<string?> TagsOption { get; private set; }
+
+        /// <summary>
+        /// Comma-separated list of tag titles to assign to the test case
+        /// </summary>
+        /// <value>Comma-separated list of tag titles to assign to the test case</value>
+        [JsonPropertyName("tags")]
+        public string? Tags { get { return this.TagsOption; } set { this.TagsOption = new Option<string?>(value); } }
+
+        /// <summary>
         /// Used to track the state of ExecutedBy
         /// </summary>
         [JsonIgnore]
@@ -249,6 +265,7 @@ namespace Qase.ApiClient.V2.Model
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Muted: ").Append(Muted).Append("\n");
             sb.Append("  IsFlaky: ").Append(IsFlaky).Append("\n");
+            sb.Append("  Tags: ").Append(Tags).Append("\n");
             sb.Append("  ExecutedBy: ").Append(ExecutedBy).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
@@ -299,6 +316,7 @@ namespace Qase.ApiClient.V2.Model
             Option<string?> type = default;
             Option<string?> muted = default;
             Option<string?> isFlaky = default;
+            Option<string?> tags = default;
             Option<string?> executedBy = default;
 
             while (utf8JsonReader.Read())
@@ -349,6 +367,9 @@ namespace Qase.ApiClient.V2.Model
                         case "is_flaky":
                             isFlaky = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
+                        case "tags":
+                            tags = new Option<string?>(utf8JsonReader.GetString()!);
+                            break;
                         case "executed_by":
                             executedBy = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
@@ -391,10 +412,13 @@ namespace Qase.ApiClient.V2.Model
             if (isFlaky.IsSet && isFlaky.Value == null)
                 throw new ArgumentNullException(nameof(isFlaky), "Property is not nullable for class ResultCreateFields.");
 
+            if (tags.IsSet && tags.Value == null)
+                throw new ArgumentNullException(nameof(tags), "Property is not nullable for class ResultCreateFields.");
+
             if (executedBy.IsSet && executedBy.Value == null)
                 throw new ArgumentNullException(nameof(executedBy), "Property is not nullable for class ResultCreateFields.");
 
-            return new ResultCreateFields(author, description, preconditions, postconditions, layer, severity, priority, behavior, type, muted, isFlaky, executedBy);
+            return new ResultCreateFields(author, description, preconditions, postconditions, layer, severity, priority, behavior, type, muted, isFlaky, tags, executedBy);
         }
 
         /// <summary>
@@ -454,6 +478,9 @@ namespace Qase.ApiClient.V2.Model
             if (resultCreateFields.IsFlakyOption.IsSet && resultCreateFields.IsFlaky == null)
                 throw new ArgumentNullException(nameof(resultCreateFields.IsFlaky), "Property is required for class ResultCreateFields.");
 
+            if (resultCreateFields.TagsOption.IsSet && resultCreateFields.Tags == null)
+                throw new ArgumentNullException(nameof(resultCreateFields.Tags), "Property is required for class ResultCreateFields.");
+
             if (resultCreateFields.ExecutedByOption.IsSet && resultCreateFields.ExecutedBy == null)
                 throw new ArgumentNullException(nameof(resultCreateFields.ExecutedBy), "Property is required for class ResultCreateFields.");
 
@@ -489,6 +516,9 @@ namespace Qase.ApiClient.V2.Model
 
             if (resultCreateFields.IsFlakyOption.IsSet)
                 writer.WriteString("is_flaky", resultCreateFields.IsFlaky);
+
+            if (resultCreateFields.TagsOption.IsSet)
+                writer.WriteString("tags", resultCreateFields.Tags);
 
             if (resultCreateFields.ExecutedByOption.IsSet)
                 writer.WriteString("executed_by", resultCreateFields.ExecutedBy);
