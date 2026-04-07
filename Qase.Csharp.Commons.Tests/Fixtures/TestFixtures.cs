@@ -39,6 +39,7 @@ namespace Qase.Csharp.Commons.Tests.Fixtures
         [Title("Custom Title")]
         [Fields("env", "staging")]
         [Suites("Login", "Auth")]
+        [Tags("tag1", "tag2")]
         public void AnnotatedMethod() { }
     }
 
@@ -50,11 +51,13 @@ namespace Qase.Csharp.Commons.Tests.Fixtures
     [Fields("priority", "high")]
     [Suites("ClassSuite")]
     [Ignore]
+    [Tags("class-tag")]
     public class ClassAndMethodAttributeFixture
     {
         [Fields("env", "production")]
         [Fields("browser", "chrome")]
         [Suites("MethodSuite")]
+        [Tags("method-tag")]
         public void MethodWithOverrides() { }
 
         public void PlainMethod() { }

@@ -3,6 +3,7 @@
 
 @QaseFields:layer:e2e
 @QaseSuite:Authentication\Smoke_Tests
+@QaseTags:smoke
 Feature: Tag Tests
 
   @QaseId:101
@@ -29,6 +30,7 @@ Feature: Tag Tests
   @QaseFields:severity:critical
   @QaseFields:priority:high
   @QaseFields:layer:api
+  @QaseTags:regression
   Scenario: Password reset sends email to registered user
     Given a registered user "john.doe@example.com"
     When a password reset is requested

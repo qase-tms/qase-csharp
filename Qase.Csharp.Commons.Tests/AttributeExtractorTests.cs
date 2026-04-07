@@ -119,6 +119,8 @@ namespace Qase.Csharp.Commons.Tests
             result.Relations!.Suite.Data.Should().HaveCount(2);
             // Note: FullyAnnotatedFixture does not have [Ignore], so Ignore stays false
             result.Ignore.Should().BeFalse();
+            result.Tags.Should().Contain("tag1");
+            result.Tags.Should().Contain("tag2");
         }
 
         [Fact]
@@ -187,6 +189,70 @@ namespace Qase.Csharp.Commons.Tests
             result.TestopsIds.Should().BeNull();
             result.Fields.Should().BeEmpty();
             result.Ignore.Should().BeFalse();
+        }
+
+        // === ATTR-04: Tags extraction ===
+
+        [Fact]
+        public void Apply_WithTags_PopulatesTags()
+        {
+            // Arrange
+            var methodAttrs = GetMethodQaseAttributes(typeof(FullyAnnotatedFixture), "AnnotatedMethod");
+            var result = new TestResult();
+
+            // Act
+            AttributeExtractor.Apply(Enumerable.Empty<Attribute>(), methodAttrs, result);
+
+            // Assert
+            result.Tags.Should().Contain("tag1");
+            result.Tags.Should().Contain("tag2");
+        }
+
+        [Fact]
+        public void Apply_TagsFromClassAndMethod_AreMerged()
+        {
+            // Arrange
+            var classAttrs = GetClassQaseAttributes(typeof(ClassAndMethodAttributeFixture));
+            var methodAttrs = GetMethodQaseAttributes(typeof(ClassAndMethodAttributeFixture), "MethodWithOverrides");
+            var result = new TestResult();
+
+            // Act
+            AttributeExtractor.Apply(classAttrs, methodAttrs, result);
+
+            // Assert -- tags from class and method are merged, not overwritten
+            result.Tags.Should().Contain("class-tag");
+            result.Tags.Should().Contain("method-tag");
+        }
+
+        [Fact]
+        public void Apply_ClassTagsPreservedForPlainMethod()
+        {
+            // Arrange -- PlainMethod has no method-level Tags attribute
+            var classAttrs = GetClassQaseAttributes(typeof(ClassAndMethodAttributeFixture));
+            var methodAttrs = GetMethodQaseAttributes(typeof(ClassAndMethodAttributeFixture), "PlainMethod");
+            var result = new TestResult();
+
+            // Act
+            AttributeExtractor.Apply(classAttrs, methodAttrs, result);
+
+            // Assert -- class-level [Tags("class-tag")] is preserved
+            result.Tags.Should().Contain("class-tag");
+        }
+
+        [Fact]
+        public void Apply_WithEmptyCollections_TagsStayEmpty()
+        {
+            // Arrange
+            var result = new TestResult();
+
+            // Act
+            AttributeExtractor.Apply(
+                Enumerable.Empty<Attribute>(),
+                Enumerable.Empty<Attribute>(),
+                result);
+
+            // Assert
+            result.Tags.Should().BeEmpty();
         }
 
         // === ATTR-02: Indexer semantics for Fields (duplicate key handling) ===

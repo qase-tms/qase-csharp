@@ -16,6 +16,7 @@ namespace Qase.Reqnroll.Reporter
         private const string QaseTitlePrefix = "qasetitle:";
         private const string QaseFieldsPrefix = "qasefields:";
         private const string QaseSuitePrefix = "qasesuite:";
+        private const string QaseTagsPrefix = "qasetags:";
         private const string QaseIgnoreTag = "qaseignore";
 
         /// <summary>
@@ -45,6 +46,10 @@ namespace Qase.Reqnroll.Reporter
                 else if (lower.StartsWith(QaseSuitePrefix))
                 {
                     ApplyQaseSuite(result, tag.Substring(QaseSuitePrefix.Length));
+                }
+                else if (lower.StartsWith(QaseTagsPrefix))
+                {
+                    ApplyQaseTags(result, tag.Substring(QaseTagsPrefix.Length));
                 }
                 else if (lower == QaseIgnoreTag)
                 {
@@ -89,6 +94,19 @@ namespace Qase.Reqnroll.Reporter
                 var key = value.Substring(0, colonIndex);
                 var val = value.Substring(colonIndex + 1);
                 result.Fields[key] = val;
+            }
+        }
+
+        private static void ApplyQaseTags(TestResult result, string value)
+        {
+            var tags = value.Split(',');
+            foreach (var tag in tags)
+            {
+                var trimmed = tag.Trim();
+                if (!string.IsNullOrEmpty(trimmed))
+                {
+                    result.Tags.Add(trimmed);
+                }
             }
         }
 

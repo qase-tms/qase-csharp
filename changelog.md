@@ -1,5 +1,14 @@
 # Changelog
 
+## qase-csharp 1.1.15
+
+- Added `[Tags]` attribute for assigning tags to test cases from test code
+- Tags support on both class and method levels with merge semantics (class + method tags are combined)
+- Added `@QaseTags:tag1,tag2` Gherkin tag support for Reqnroll reporter
+- Tags are passed to Qase API v2 via `ResultCreateFields.Tags` (comma-separated)
+- Added tags to example projects for all frameworks (NUnit, xUnit, xUnit v3, MSTest, Reqnroll)
+- Updated expected YAML files for integration testing with tags validation
+
 ## qase-csharp 1.1.14
 
 - Updated API clients to the latest specification
