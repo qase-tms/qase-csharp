@@ -1,0 +1,31 @@
+Qase.Reqnroll.Reporter/docs/usage.md
+  2879dbd51adecd10 9,201-233,268
+Qase.NUnit.Reporter/docs/usage.md
+  2879dbd51adecd10 9,190-236,248,255,263,277
+Qase.XUnit.V3.Reporter/docs/usage.md
+  2879dbd51adecd10 10,229-274,285,292,300,314
+Qase.MSTest.Reporter/docs/usage.md
+  2879dbd51adecd10 9,190-236,248,255,263,277
+Qase.XUnit.Reporter/docs/usage.md
+  2879dbd51adecd10 9,189-234,245,252,260,274
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "46ca80b4822b2954ff1f87f3d43e1772a1e661d8",
+  "prompts": {
+    "2879dbd51adecd10": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "82af27c7-519f-4c31-8c53-c6b80ab90313",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 241,
+      "total_deletions": 8,
+      "accepted_lines": 241,
+      "overriden_lines": 0
+    }
+  }
+}
