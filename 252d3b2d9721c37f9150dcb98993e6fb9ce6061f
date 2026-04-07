@@ -1,0 +1,74 @@
+Qase.Csharp.Commons/clients/ClientV2.cs
+  2879dbd51adecd10 198-200,208-212
+Qase.Reqnroll.Reporter.Tests/ReqnrollTagParserTests.cs
+  2879dbd51adecd10 155-219
+examples/MSTestExamples/AttributeTests.cs
+  2879dbd51adecd10 12,53
+Qase.Csharp.Commons.Tests/AttributeExtractorTests.cs
+  2879dbd51adecd10 122-123,194-257
+Qase.Csharp.Commons.Tests/Fixtures/TestFixtures.cs
+  2879dbd51adecd10 42,54,60
+Qase.Reqnroll.Reporter/ReqnrollTagParser.cs
+  2879dbd51adecd10 19,50-53,100-112
+changelog.md
+  2879dbd51adecd10 3-11
+expected/xunit-examples.yaml
+  2879dbd51adecd10 45-46,87-88,192-193,289-290,514-516
+expected/mstest-examples.yaml
+  2879dbd51adecd10 32-33,144-145,290-292,457-458,542-543
+Qase.Csharp.Commons/Utils/AttributeExtractor.cs
+  2879dbd51adecd10 55-57
+examples/ReqnrollExamples/Features/TagTests.feature
+  2879dbd51adecd10 6,33
+examples/xUnitExamples/AttributeTests.cs
+  2879dbd51adecd10 11,52
+Qase.Csharp.Commons/Attributes/TagsAttribute.cs
+  2879dbd51adecd10 1-17
+Directory.Build.props
+  2879dbd51adecd10 4
+Qase.Csharp.Commons/models/domain/TestResult.cs
+  2879dbd51adecd10 75-78
+examples/NUnitExamples/AttributeTests.cs
+  2879dbd51adecd10 12,53
+examples/xUnitV3Examples/AttributeTests.cs
+  2879dbd51adecd10 11,52
+expected/nunit-examples.yaml
+  2879dbd51adecd10 32-33,188-190,241-242,399-400,611-612
+expected/xunit-v3-examples.yaml
+  2879dbd51adecd10 98-99,144-145,158-159,320-322,532-533
+expected/reqnroll-examples.yaml
+  2879dbd51adecd10 19-20,160-161,525-526,718-719,747-749
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "252d3b2d9721c37f9150dcb98993e6fb9ce6061f",
+  "prompts": {
+    "2879dbd51adecd10": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "82af27c7-519f-4c31-8c53-c6b80ab90313",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 263,
+      "total_deletions": 1,
+      "accepted_lines": 263,
+      "overriden_lines": 0
+    },
+    "5519baaaf18427ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7c93cce3-98ca-4af8-9fc4-eae23bf3df6e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 366,
+      "overriden_lines": 0
+    }
+  }
+}
