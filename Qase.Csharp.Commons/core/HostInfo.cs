@@ -309,18 +309,24 @@ namespace Qase.Csharp.Commons.Core
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-                // Check for Qase.XUnit.Reporter
-                var xunitReporterAssembly = assemblies.FirstOrDefault(a => 
-                    a.GetName().Name == "Qase.XUnit.Reporters" || 
-                    a.GetName().Name == "Qase.XUnit.Reporter");
-                
-                if (xunitReporterAssembly != null)
+                var reporters = new (string assemblyName, string reporterName)[]
                 {
-                    var version = xunitReporterAssembly.GetName().Version?.ToString();
-                    return ("qase-xunit", version);
-                }
+                    ("Qase.XUnit.V3.Reporter", "qase-xunitv3"),
+                    ("Qase.XUnit.Reporters", "qase-xunit"),
+                    ("Qase.NUnit.Reporter", "qase-nunit"),
+                    ("Qase.MSTest.Reporter", "qase-mstest"),
+                    ("Qase.ReqnrollPlugin", "qase-reqnroll"),
+                };
 
-                // Add more reporter detection logic here as needed
+                foreach (var (assemblyName, reporterName) in reporters)
+                {
+                    var assembly = assemblies.FirstOrDefault(a => a.GetName().Name == assemblyName);
+                    if (assembly != null)
+                    {
+                        var version = assembly.GetName().Version?.ToString();
+                        return (reporterName, version);
+                    }
+                }
             }
             catch
             {
