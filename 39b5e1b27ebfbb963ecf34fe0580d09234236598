@@ -1,0 +1,25 @@
+Qase.Csharp.Commons/core/HostInfo.cs
+  fb2668f7c636db85 312,314-319,321,323-328
+Directory.Build.props
+  fb2668f7c636db85 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "39b5e1b27ebfbb963ecf34fe0580d09234236598",
+  "prompts": {
+    "fb2668f7c636db85": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0e8328be-643c-43ed-b81f-ee7f455860e3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 18,
+      "total_deletions": 12,
+      "accepted_lines": 17,
+      "overriden_lines": 0
+    }
+  }
+}
