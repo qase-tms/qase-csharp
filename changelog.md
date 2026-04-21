@@ -1,5 +1,14 @@
 # Changelog
 
+## qase-csharp 1.1.17
+
+- Improved API error logging across all V1 API calls — error responses now include HTTP status code and full response body with detailed error messages from the Qase API, making it much easier to diagnose issues like invalid environment slugs, missing projects, or authentication problems
+
+## qase-csharp 1.1.16
+
+- Fixed detection of all reporter types in HostInfo
+- Added Tags attribute usage documentation to all reporter docs
+
 ## qase-csharp 1.1.15
 
 - Added `[Tags]` attribute for assigning tags to test cases from test code

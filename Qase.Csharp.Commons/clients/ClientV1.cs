@@ -95,7 +95,9 @@ namespace Qase.Csharp.Commons.Clients
                 }
                 else
                 {
-                    throw new QaseException($"Failed to create test run: {resp.ReasonPhrase}");
+                    _logger.LogError("Failed to create test run. StatusCode={StatusCode}, Reason={Reason}, Response={Response}",
+                        resp.StatusCode, resp.ReasonPhrase, resp.RawContent);
+                    throw new QaseException($"Failed to create test run: {resp.ReasonPhrase}. Response: {resp.RawContent}");
                 }
             }
             catch (Exception ex) when (!(ex is QaseException))
@@ -120,7 +122,9 @@ namespace Qase.Csharp.Commons.Clients
                 }
                 else
                 {
-                    throw new QaseException($"Failed to complete test run: {resp.ReasonPhrase}");
+                    _logger.LogError("Failed to complete test run. StatusCode={StatusCode}, Reason={Reason}, Response={Response}",
+                        resp.StatusCode, resp.ReasonPhrase, resp.RawContent);
+                    throw new QaseException($"Failed to complete test run: {resp.ReasonPhrase}. Response: {resp.RawContent}");
                 }
             }
             catch (Exception ex) when (!(ex is QaseException))
@@ -156,7 +160,9 @@ namespace Qase.Csharp.Commons.Clients
                 }
                 else
                 {
-                    throw new QaseException($"Failed to get test case ids for execution: {resp.ReasonPhrase}");
+                    _logger.LogError("Failed to get test case ids for execution. StatusCode={StatusCode}, Reason={Reason}, Response={Response}",
+                        resp.StatusCode, resp.ReasonPhrase, resp.RawContent);
+                    throw new QaseException($"Failed to get test case ids for execution: {resp.ReasonPhrase}. Response: {resp.RawContent}");
                 }
             }
             catch (Exception ex) when (!(ex is QaseException))
@@ -223,8 +229,9 @@ namespace Qase.Csharp.Commons.Clients
                     }
                     else
                     {
-                        _logger.LogError("Failed to upload attachment batch: {Reason}", resp.ReasonPhrase + " " + resp.RawContent);
-                        throw new QaseException($"Failed to upload attachments: {resp.ReasonPhrase}");
+                        _logger.LogError("Failed to upload attachment batch. StatusCode={StatusCode}, Reason={Reason}, Response={Response}",
+                            resp.StatusCode, resp.ReasonPhrase, resp.RawContent);
+                        throw new QaseException($"Failed to upload attachments: {resp.ReasonPhrase}. Response: {resp.RawContent}");
                     }
                 }
 
@@ -409,7 +416,8 @@ namespace Qase.Csharp.Commons.Clients
                 var resp = await _configurationsApi.GetConfigurationsAsync(_config.TestOps.Project!);
                 if (!resp.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning("Failed to get configurations: {Reason}", resp.ReasonPhrase);
+                    _logger.LogWarning("Failed to get configurations. StatusCode={StatusCode}, Reason={Reason}, Response={Response}",
+                        resp.StatusCode, resp.ReasonPhrase, resp.RawContent);
                     return new List<long>();
                 }
 
@@ -506,7 +514,9 @@ namespace Qase.Csharp.Commons.Clients
                 }
                 else
                 {
-                    throw new QaseException($"Failed to enable public report: {resp.ReasonPhrase}");
+                    _logger.LogError("Failed to enable public report. StatusCode={StatusCode}, Reason={Reason}, Response={Response}",
+                        resp.StatusCode, resp.ReasonPhrase, resp.RawContent);
+                    throw new QaseException($"Failed to enable public report: {resp.ReasonPhrase}. Response: {resp.RawContent}");
                 }
             }
             catch (Exception ex) when (!(ex is QaseException))
@@ -546,7 +556,8 @@ namespace Qase.Csharp.Commons.Clients
                 }
                 else
                 {
-                    _logger.LogWarning("Failed to attach external link to run {RunId}: {ReasonPhrase}", runId, resp.ReasonPhrase);
+                    _logger.LogWarning("Failed to attach external link to run {RunId}. StatusCode={StatusCode}, Reason={Reason}, Response={Response}",
+                        runId, resp.StatusCode, resp.ReasonPhrase, resp.RawContent);
                 }
             }
             catch (Exception ex)
