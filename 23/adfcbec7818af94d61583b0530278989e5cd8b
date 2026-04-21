@@ -1,0 +1,40 @@
+changelog.md
+  78b6e07857bac483 3-11
+Qase.Csharp.Commons/clients/ClientV1.cs
+  78b6e07857bac483 98-100,125-127,163-165,232-234,419-420,517-519,559-560
+Directory.Build.props
+  78b6e07857bac483 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "23adfcbec7818af94d61583b0530278989e5cd8b",
+  "prompts": {
+    "78b6e07857bac483": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ef212cb5-6036-4424-a3bf-c2c4b625b2e4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 36,
+      "total_deletions": 16,
+      "accepted_lines": 32,
+      "overriden_lines": 1
+    },
+    "fb2668f7c636db85": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0e8328be-643c-43ed-b81f-ee7f455860e3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 388,
+      "total_deletions": 0,
+      "accepted_lines": 387,
+      "overriden_lines": 1
+    }
+  }
+}
