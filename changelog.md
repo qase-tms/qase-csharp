@@ -1,5 +1,14 @@
 # Changelog
 
+## qase-csharp 1.1.18
+
+- Refactored all 5 reporters (NUnit, MSTest, xUnit v2, xUnit v3, Reqnroll) to use shared `TestResultBuilder` pipeline — shared logic for type resolution, attribute extraction, parameter parsing, suite hierarchy, failure classification, ContextManager integration, and signature generation is now centralized in Commons
+- Added `RawTestData` intermediate model — each reporter fills framework-specific fields, builder assembles the complete `TestResult`
+- Added `FailureClassifier` — unified assertion vs runtime error detection replacing separate implementations in NUnit and xUnit reporters
+- Added `DisplayNameGenerator` — shared ContextManager key generation
+- Fixed empty parameter values causing Qase API v2 to reject entire batch upload — empty string params (e.g. `email=""`) are now replaced with `"empty"`, preventing silent fallback to local file reporting
+- Added 29 new unit tests for builder, failure classifier, and display name generator
+
 ## qase-csharp 1.1.17
 
 - Improved API error logging across all V1 API calls — error responses now include HTTP status code and full response body with detailed error messages from the Qase API, making it much easier to diagnose issues like invalid environment slugs, missing projects, or authentication problems

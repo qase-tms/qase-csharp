@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -6,6 +8,7 @@ using FluentAssertions;
 using Moq;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
+using Qase.Csharp.Commons.Utils;
 using Qase.Xunit.Reporter;
 using Xunit;
 using Xunit.Abstractions;
@@ -18,11 +21,13 @@ namespace Qase.XUnit.Reporter.Tests
         private Type _sinkType;
         private Mock<ICoreReporter> _mockReporter;
         private Mock<IRunnerLogger> _mockLogger;
+        private Mock<ITestResultBuilder> _mockBuilder;
 
         public EventHandlingTests()
         {
             _mockLogger = new Mock<IRunnerLogger>();
             _mockReporter = new Mock<ICoreReporter>();
+            _mockBuilder = new Mock<ITestResultBuilder>();
             _sinkType = typeof(QaseMessageSink);
 
             // Create instance - accessible via InternalsVisibleTo
@@ -31,6 +36,18 @@ namespace Qase.XUnit.Reporter.Tests
             // Set the reporter using reflection (private field)
             var reporterField = _sinkType.GetField("_reporter", BindingFlags.NonPublic | BindingFlags.Instance);
             reporterField?.SetValue(_sink, _mockReporter.Object);
+
+            // Set the builder using reflection (private field)
+            var builderField = _sinkType.GetField("_builder", BindingFlags.NonPublic | BindingFlags.Instance);
+            builderField?.SetValue(_sink, _mockBuilder.Object);
+
+            // Default: mock builder returns a non-ignored TestResult
+            _mockBuilder.Setup(b => b.Build(It.IsAny<RawTestData>()))
+                .Returns(new TestResult
+                {
+                    Title = "TestMethod",
+                    Execution = new TestResultExecution { Status = TestResultStatus.Passed }
+                });
         }
 
         public void Dispose()
@@ -87,7 +104,7 @@ namespace Qase.XUnit.Reporter.Tests
             mockPassedMessage.Setup(x => x.ExecutionTime).Returns(0.5m);
             var passedArgs = new MessageHandlerArgs<ITestPassed>(mockPassedMessage.Object);
 
-            // First call OnTestStarting to create the test result
+            // First call OnTestStarting to populate qaseTestData
             var onTestStartingMethod = _sinkType.GetMethod("OnTestStarting", BindingFlags.NonPublic | BindingFlags.Instance);
             var mockStartingMessage = new Mock<ITestStarting>();
             mockStartingMessage.Setup(x => x.Test).Returns(mockTest.Object);
@@ -98,13 +115,13 @@ namespace Qase.XUnit.Reporter.Tests
             var method = _sinkType.GetMethod("OnTestPassed", BindingFlags.NonPublic | BindingFlags.Instance);
             method?.Invoke(_sink, new object[] { passedArgs });
 
-            // Assert
+            // Assert — qaseTestData now holds RawTestData
             var qaseTestDataField = _sinkType.GetField("qaseTestData", BindingFlags.NonPublic | BindingFlags.Instance);
-            var qaseTestData = qaseTestDataField?.GetValue(_sink) as System.Collections.Concurrent.ConcurrentDictionary<ITest, TestResult>;
+            var qaseTestData = qaseTestDataField?.GetValue(_sink) as ConcurrentDictionary<ITest, RawTestData>;
             qaseTestData.Should().NotBeNull();
             qaseTestData.Should().ContainKey(mockTest.Object);
-            qaseTestData[mockTest.Object].Execution.Status.Should().Be(TestResultStatus.Passed);
-            qaseTestData[mockTest.Object].Execution.Duration.Should().Be(500); // 0.5 seconds = 500 milliseconds
+            qaseTestData[mockTest.Object].Status.Should().Be(TestResultStatus.Passed);
+            qaseTestData[mockTest.Object].Duration.Should().Be(500); // 0.5 seconds = 500 milliseconds
         }
 
         [Fact]
@@ -122,7 +139,7 @@ namespace Qase.XUnit.Reporter.Tests
             mockFailedMessage.Setup(x => x.StackTraces).Returns(new[] { "at Xunit.Assert.Equal" });
             var failedArgs = new MessageHandlerArgs<ITestFailed>(mockFailedMessage.Object);
 
-            // First call OnTestStarting to create the test result
+            // First call OnTestStarting to populate qaseTestData
             var onTestStartingMethod = _sinkType.GetMethod("OnTestStarting", BindingFlags.NonPublic | BindingFlags.Instance);
             var mockStartingMessage = new Mock<ITestStarting>();
             mockStartingMessage.Setup(x => x.Test).Returns(mockTest.Object);
@@ -133,17 +150,17 @@ namespace Qase.XUnit.Reporter.Tests
             var method = _sinkType.GetMethod("OnTestFailed", BindingFlags.NonPublic | BindingFlags.Instance);
             method?.Invoke(_sink, new object[] { failedArgs });
 
-            // Assert
+            // Assert — qaseTestData now holds RawTestData (status is Failed, classifier runs at Build time)
             var qaseTestDataField = _sinkType.GetField("qaseTestData", BindingFlags.NonPublic | BindingFlags.Instance);
-            var qaseTestData = qaseTestDataField?.GetValue(_sink) as System.Collections.Concurrent.ConcurrentDictionary<ITest, TestResult>;
+            var qaseTestData = qaseTestDataField?.GetValue(_sink) as ConcurrentDictionary<ITest, RawTestData>;
             qaseTestData.Should().NotBeNull();
             qaseTestData.Should().ContainKey(mockTest.Object);
-            qaseTestData[mockTest.Object].Execution.Status.Should().Be(TestResultStatus.Failed);
-            qaseTestData[mockTest.Object].Message.Should().Contain("Assertion failed");
+            qaseTestData[mockTest.Object].Status.Should().Be(TestResultStatus.Failed);
+            qaseTestData[mockTest.Object].ErrorMessage.Should().Contain("Assertion failed");
         }
 
         [Fact]
-        public void OnTestFailed_WithExceptionFailure_ShouldSetInvalidStatus()
+        public void OnTestFailed_WithExceptionFailure_ShouldSetFailedStatus()
         {
             // Arrange
             var mockTest = new Mock<ITest>();
@@ -157,7 +174,7 @@ namespace Qase.XUnit.Reporter.Tests
             mockFailedMessage.Setup(x => x.StackTraces).Returns(new[] { "at System.Exception..ctor()" });
             var failedArgs = new MessageHandlerArgs<ITestFailed>(mockFailedMessage.Object);
 
-            // First call OnTestStarting to create the test result
+            // First call OnTestStarting to populate qaseTestData
             var onTestStartingMethod = _sinkType.GetMethod("OnTestStarting", BindingFlags.NonPublic | BindingFlags.Instance);
             var mockStartingMessage = new Mock<ITestStarting>();
             mockStartingMessage.Setup(x => x.Test).Returns(mockTest.Object);
@@ -168,12 +185,12 @@ namespace Qase.XUnit.Reporter.Tests
             var method = _sinkType.GetMethod("OnTestFailed", BindingFlags.NonPublic | BindingFlags.Instance);
             method?.Invoke(_sink, new object[] { failedArgs });
 
-            // Assert
+            // Assert — raw data stores Failed; FailureClassifier reclassifies to Invalid during Build
             var qaseTestDataField = _sinkType.GetField("qaseTestData", BindingFlags.NonPublic | BindingFlags.Instance);
-            var qaseTestData = qaseTestDataField?.GetValue(_sink) as System.Collections.Concurrent.ConcurrentDictionary<ITest, TestResult>;
+            var qaseTestData = qaseTestDataField?.GetValue(_sink) as ConcurrentDictionary<ITest, RawTestData>;
             qaseTestData.Should().NotBeNull();
             qaseTestData.Should().ContainKey(mockTest.Object);
-            qaseTestData[mockTest.Object].Execution.Status.Should().Be(TestResultStatus.Invalid);
+            qaseTestData[mockTest.Object].Status.Should().Be(TestResultStatus.Failed);
         }
 
         [Fact]
@@ -190,7 +207,7 @@ namespace Qase.XUnit.Reporter.Tests
             mockSkippedMessage.Setup(x => x.Reason).Returns("Test was skipped");
             var skippedArgs = new MessageHandlerArgs<ITestSkipped>(mockSkippedMessage.Object);
 
-            // First call OnTestStarting to create the test result
+            // First call OnTestStarting to populate qaseTestData
             var onTestStartingMethod = _sinkType.GetMethod("OnTestStarting", BindingFlags.NonPublic | BindingFlags.Instance);
             var mockStartingMessage = new Mock<ITestStarting>();
             mockStartingMessage.Setup(x => x.Test).Returns(mockTest.Object);
@@ -201,13 +218,13 @@ namespace Qase.XUnit.Reporter.Tests
             var method = _sinkType.GetMethod("OnTestSkipped", BindingFlags.NonPublic | BindingFlags.Instance);
             method?.Invoke(_sink, new object[] { skippedArgs });
 
-            // Assert
+            // Assert — qaseTestData now holds RawTestData
             var qaseTestDataField = _sinkType.GetField("qaseTestData", BindingFlags.NonPublic | BindingFlags.Instance);
-            var qaseTestData = qaseTestDataField?.GetValue(_sink) as System.Collections.Concurrent.ConcurrentDictionary<ITest, TestResult>;
+            var qaseTestData = qaseTestDataField?.GetValue(_sink) as ConcurrentDictionary<ITest, RawTestData>;
             qaseTestData.Should().NotBeNull();
             qaseTestData.Should().ContainKey(mockTest.Object);
-            qaseTestData[mockTest.Object].Execution.Status.Should().Be(TestResultStatus.Skipped);
-            qaseTestData[mockTest.Object].Message.Should().Be("Test was skipped");
+            qaseTestData[mockTest.Object].Status.Should().Be(TestResultStatus.Skipped);
+            qaseTestData[mockTest.Object].ErrorMessage.Should().Be("Test was skipped");
         }
 
         [Fact]
@@ -225,7 +242,7 @@ namespace Qase.XUnit.Reporter.Tests
 
             _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>())).Returns(Task.CompletedTask);
 
-            // First call OnTestStarting to create the test result
+            // First call OnTestStarting to populate qaseTestData
             var onTestStartingMethod = _sinkType.GetMethod("OnTestStarting", BindingFlags.NonPublic | BindingFlags.Instance);
             var mockStartingMessage = new Mock<ITestStarting>();
             mockStartingMessage.Setup(x => x.Test).Returns(mockTest.Object);
@@ -237,11 +254,12 @@ namespace Qase.XUnit.Reporter.Tests
             method?.Invoke(_sink, new object[] { finishedArgs });
 
             // Assert
+            _mockBuilder.Verify(b => b.Build(It.IsAny<RawTestData>()), Times.Once);
             _mockReporter.Verify(x => x.addResult(It.IsAny<TestResult>()), Times.Once);
 
             // Verify test result was removed from dictionary
             var qaseTestDataField = _sinkType.GetField("qaseTestData", BindingFlags.NonPublic | BindingFlags.Instance);
-            var qaseTestData = qaseTestDataField?.GetValue(_sink) as System.Collections.Concurrent.ConcurrentDictionary<ITest, TestResult>;
+            var qaseTestData = qaseTestDataField?.GetValue(_sink) as ConcurrentDictionary<ITest, RawTestData>;
             qaseTestData.Should().NotContainKey(mockTest.Object);
         }
 
@@ -249,10 +267,18 @@ namespace Qase.XUnit.Reporter.Tests
         public void OnTestFinished_WithIgnoredTest_ShouldNotCallAddResult()
         {
             // Arrange
+            // Setup mock builder to return an ignored TestResult
+            _mockBuilder.Setup(b => b.Build(It.IsAny<RawTestData>()))
+                .Returns(new TestResult
+                {
+                    Title = "IgnoredTestMethod",
+                    Ignore = true,
+                    Execution = new TestResultExecution { Status = TestResultStatus.Skipped }
+                });
+
             var mockTest = new Mock<ITest>();
-            var mockTestCase = CreateMockTestCase("IgnoredTestMethod", "TestClassWithAttributes",
-                new Qase.Csharp.Commons.Attributes.IgnoreAttribute());
-            mockTestCase.Setup(x => x.DisplayName).Returns("TestClassWithAttributes.IgnoredTestMethod");
+            var mockTestCase = CreateMockTestCase("IgnoredTestMethod", "TestClass");
+            mockTestCase.Setup(x => x.DisplayName).Returns("TestClass.IgnoredTestMethod");
             mockTest.Setup(x => x.TestCase).Returns(mockTestCase.Object);
 
             var mockFinishedMessage = new Mock<ITestFinished>();
@@ -261,7 +287,7 @@ namespace Qase.XUnit.Reporter.Tests
 
             _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>())).Returns(Task.CompletedTask);
 
-            // First call OnTestStarting to create the test result
+            // First call OnTestStarting to populate qaseTestData
             var onTestStartingMethod = _sinkType.GetMethod("OnTestStarting", BindingFlags.NonPublic | BindingFlags.Instance);
             var mockStartingMessage = new Mock<ITestStarting>();
             mockStartingMessage.Setup(x => x.Test).Returns(mockTest.Object);
@@ -273,6 +299,7 @@ namespace Qase.XUnit.Reporter.Tests
             method?.Invoke(_sink, new object[] { finishedArgs });
 
             // Assert
+            _mockBuilder.Verify(b => b.Build(It.IsAny<RawTestData>()), Times.Once);
             _mockReporter.Verify(x => x.addResult(It.IsAny<TestResult>()), Times.Never);
         }
 

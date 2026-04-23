@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Testing.Platform.Extensions;
@@ -9,7 +6,6 @@ using Microsoft.Testing.Platform.Extensions.Messages;
 using Microsoft.Testing.Platform.Extensions.TestHost;
 using Microsoft.Testing.Platform.Services;
 using Qase.Csharp.Commons;
-using Qase.Csharp.Commons.Attributes;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
@@ -35,6 +31,7 @@ namespace Qase.XUnit.V3.Reporter
     {
         private ICoreReporter? _reporter;
         private readonly QaseConfig _config;
+        private readonly ITestResultBuilder _builder = new TestResultBuilder();
 
         /// <summary>
         /// Initializes a new instance of QaseXUnitV3Extension.
@@ -71,191 +68,16 @@ namespace Qase.XUnit.V3.Reporter
         {
             try
             {
-                // Cast and validate the IData value
                 if (value is not TestNodeUpdateMessage testNodeUpdateMessage)
-                {
                     return;
-                }
 
                 var testNode = testNodeUpdateMessage.TestNode;
-
-                // Extract state property and determine status
-                var stateProperty = testNode.Properties.SingleOrDefault<TestNodeStateProperty>();
-                if (stateProperty is null
-                    or InProgressTestNodeStateProperty
-                    or DiscoveredTestNodeStateProperty)
-                {
+                var raw = MapToRawTestData(testNode);
+                if (raw == null)
                     return;
-                }
 
-                TestResultStatus status;
-                switch (stateProperty)
-                {
-                    case PassedTestNodeStateProperty:
-                        status = TestResultStatus.Passed;
-                        break;
-                    case FailedTestNodeStateProperty:
-                        status = TestResultStatus.Failed;
-                        break;
-                    case ErrorTestNodeStateProperty:
-                        status = TestResultStatus.Invalid;
-                        break;
-                    case SkippedTestNodeStateProperty:
-                        status = TestResultStatus.Skipped;
-                        break;
-                    default:
-                        return;
-                }
+                var testResult = _builder.Build(raw);
 
-                // Create TestResult and set basic fields
-                var testResult = new TestResult
-                {
-                    Title = testNode.DisplayName,
-                    Execution = new TestResultExecution
-                    {
-                        Status = status,
-                        Thread = Thread.CurrentThread.Name ?? Thread.CurrentThread.ManagedThreadId.ToString()
-                    }
-                };
-
-                // Extract timing from TimingProperty
-                var timingProperty = testNode.Properties.SingleOrDefault<TimingProperty>();
-                if (timingProperty is not null)
-                {
-                    testResult.Execution.StartTime = timingProperty.GlobalTiming.StartTime.ToUnixTimeMilliseconds();
-                    testResult.Execution.EndTime = timingProperty.GlobalTiming.EndTime.ToUnixTimeMilliseconds();
-                    testResult.Execution.Duration = (int)timingProperty.GlobalTiming.Duration.TotalMilliseconds;
-                }
-
-                // Extract error details
-                switch (stateProperty)
-                {
-                    case FailedTestNodeStateProperty failedState:
-                        if (failedState.Exception is not null)
-                        {
-                            testResult.Message = failedState.Exception.Message;
-                            testResult.Execution.Stacktrace = failedState.Exception.StackTrace;
-                        }
-                        else if (failedState.Explanation is not null)
-                        {
-                            testResult.Message = failedState.Explanation;
-                        }
-                        break;
-                    case ErrorTestNodeStateProperty errorState:
-                        if (errorState.Exception is not null)
-                        {
-                            testResult.Message = errorState.Exception.Message;
-                            testResult.Execution.Stacktrace = errorState.Exception.StackTrace;
-                        }
-                        else if (errorState.Explanation is not null)
-                        {
-                            testResult.Message = errorState.Explanation;
-                        }
-                        break;
-                    case SkippedTestNodeStateProperty skippedState:
-                        if (skippedState.Explanation is not null)
-                        {
-                            testResult.Message = skippedState.Explanation;
-                        }
-                        break;
-                }
-
-                // Extract method identification from TestMethodIdentifierProperty (native MTP v2).
-                // xUnit v3 natively populates this property -- no VSTest bridge fallback needed.
-                string? fullTypeName = null;
-                string? methodName = null;
-                string[] parameterTypeFullNames = Array.Empty<string>();
-
-                var methodIdProperty = testNode.Properties.SingleOrDefault<TestMethodIdentifierProperty>();
-                if (methodIdProperty is not null)
-                {
-                    fullTypeName = string.IsNullOrEmpty(methodIdProperty.Namespace)
-                        ? methodIdProperty.TypeName
-                        : $"{methodIdProperty.Namespace}.{methodIdProperty.TypeName}";
-                    methodName = methodIdProperty.MethodName;
-                    parameterTypeFullNames = methodIdProperty.ParameterTypeFullNames;
-                }
-                else
-                {
-                    Console.Error.WriteLine(
-                        $"[Qase] TestMethodIdentifierProperty not found for test: {testNode.DisplayName}");
-                }
-
-                if (fullTypeName is not null && methodName is not null)
-                {
-                    // Set default suite hierarchy from namespace + class name
-                    testResult.Relations = new Relations
-                    {
-                        Suite = new Suite
-                        {
-                            Data = SuiteParser.FromTypeName(fullTypeName)
-                        }
-                    };
-
-                    // Resolve Type and MethodInfo for attribute extraction
-                    var type = TypeMethodResolver.ResolveType(fullTypeName);
-
-                    if (type is not null)
-                    {
-                        var method = TypeMethodResolver.ResolveMethod(type, methodName, parameterTypeFullNames);
-
-                        if (method is not null)
-                        {
-                            // Extract class-level and method-level Qase attributes
-                            var classAttributes = type.GetCustomAttributes(typeof(IQaseAttribute), false)
-                                .Cast<Attribute>();
-                            var methodAttributes = method.GetCustomAttributes(typeof(IQaseAttribute), false)
-                                .Cast<Attribute>();
-                            AttributeExtractor.Apply(classAttributes, methodAttributes, testResult);
-
-                            // Extract parameters from DisplayName for parameterized tests
-                            var parsedParams = ParameterParser.ParseAndMap(testNode.DisplayName, method);
-                            foreach (var kvp in parsedParams)
-                            {
-                                testResult.Params[kvp.Key] = kvp.Value;
-                            }
-
-                            // If no [Title] attribute override and parameters were found, use method name as Title
-                            // (avoid showing "MethodName(val1,val2)" as Title -- params go in Params dict)
-                            if (testResult.Title == testNode.DisplayName && testResult.Params.Count > 0)
-                            {
-                                testResult.Title = methodName;
-                            }
-                        }
-                    }
-
-                    // Generate display name matching QaseAspect format for ContextManager lookup
-                    var contextDisplayName = $"{fullTypeName}.{methodName}";
-                    if (testResult.Params.Count > 0)
-                    {
-                        var parameterStrings = testResult.Params.Select(kvp => $"{kvp.Key}: {kvp.Value}");
-                        contextDisplayName += $"({string.Join(", ", parameterStrings)})";
-                    }
-
-                    // Retrieve steps, comments, and attachments from ContextManager
-                    testResult.Steps = ContextManager.GetCompletedSteps(contextDisplayName);
-                    var comments = ContextManager.GetComments(contextDisplayName);
-                    if (!string.IsNullOrEmpty(comments))
-                    {
-                        testResult.Message = string.IsNullOrEmpty(testResult.Message)
-                            ? comments
-                            : string.Join("\n", testResult.Message, comments);
-                    }
-                    testResult.Attachments = ContextManager.GetAttachments(contextDisplayName);
-                }
-
-                // Generate test signature for cross-run correlation (must always be set -- API v2 requires it)
-                testResult.Signature = Signature.Generate(
-                    testResult.TestopsIds,
-                    testResult.Relations?.Suite?.Data?.Select(suite => suite.Title),
-                    testResult.Params);
-
-                if (string.IsNullOrEmpty(testResult.Signature))
-                {
-                    testResult.Signature = testResult.Title?.ToLower().Trim().Replace(" ", "-") ?? "unknown";
-                }
-
-                // Submit result via CoreReporter (native async), skip when Ignore is set
                 if (_reporter != null && !testResult.Ignore)
                 {
                     await _reporter.addResult(testResult);
@@ -267,6 +89,108 @@ namespace Qase.XUnit.V3.Reporter
                 // after an unhandled exception in ConsumeAsync
                 Console.Error.WriteLine($"[Qase] ConsumeAsync error: {ex.GetType().Name}: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Maps a TestNode to RawTestData, extracting status, timing, error details, and method ID.
+        /// Returns null when the node state should not produce a result (in-progress, discovered, etc.).
+        /// </summary>
+        private static RawTestData? MapToRawTestData(TestNode testNode)
+        {
+            var stateProperty = testNode.Properties.SingleOrDefault<TestNodeStateProperty>();
+            if (stateProperty is null
+                or InProgressTestNodeStateProperty
+                or DiscoveredTestNodeStateProperty)
+            {
+                return null;
+            }
+
+            TestResultStatus status;
+            switch (stateProperty)
+            {
+                case PassedTestNodeStateProperty:
+                    status = TestResultStatus.Passed;
+                    break;
+                case FailedTestNodeStateProperty:
+                    status = TestResultStatus.Failed;
+                    break;
+                case ErrorTestNodeStateProperty:
+                    status = TestResultStatus.Invalid;
+                    break;
+                case SkippedTestNodeStateProperty:
+                    status = TestResultStatus.Skipped;
+                    break;
+                default:
+                    return null;
+            }
+
+            var raw = new RawTestData
+            {
+                DisplayName = testNode.DisplayName,
+                Status = status,
+                Thread = Thread.CurrentThread.Name ?? Thread.CurrentThread.ManagedThreadId.ToString()
+            };
+
+            // Extract timing from TimingProperty
+            var timingProperty = testNode.Properties.SingleOrDefault<TimingProperty>();
+            if (timingProperty is not null)
+            {
+                raw.StartTime = timingProperty.GlobalTiming.StartTime.ToUnixTimeMilliseconds();
+                raw.EndTime = timingProperty.GlobalTiming.EndTime.ToUnixTimeMilliseconds();
+                raw.Duration = (int)timingProperty.GlobalTiming.Duration.TotalMilliseconds;
+            }
+
+            // Extract error details
+            switch (stateProperty)
+            {
+                case FailedTestNodeStateProperty failedState:
+                    if (failedState.Exception is not null)
+                    {
+                        raw.ErrorMessage = failedState.Exception.Message;
+                        raw.StackTrace = failedState.Exception.StackTrace;
+                    }
+                    else if (failedState.Explanation is not null)
+                    {
+                        raw.ErrorMessage = failedState.Explanation;
+                    }
+                    break;
+                case ErrorTestNodeStateProperty errorState:
+                    if (errorState.Exception is not null)
+                    {
+                        raw.ErrorMessage = errorState.Exception.Message;
+                        raw.StackTrace = errorState.Exception.StackTrace;
+                    }
+                    else if (errorState.Explanation is not null)
+                    {
+                        raw.ErrorMessage = errorState.Explanation;
+                    }
+                    break;
+                case SkippedTestNodeStateProperty skippedState:
+                    if (skippedState.Explanation is not null)
+                    {
+                        raw.ErrorMessage = skippedState.Explanation;
+                    }
+                    break;
+            }
+
+            // Extract method identification from TestMethodIdentifierProperty (native MTP v2).
+            // xUnit v3 natively populates this property -- no VSTest bridge fallback needed.
+            var methodIdProperty = testNode.Properties.SingleOrDefault<TestMethodIdentifierProperty>();
+            if (methodIdProperty is not null)
+            {
+                raw.FullTypeName = string.IsNullOrEmpty(methodIdProperty.Namespace)
+                    ? methodIdProperty.TypeName
+                    : $"{methodIdProperty.Namespace}.{methodIdProperty.TypeName}";
+                raw.MethodName = methodIdProperty.MethodName;
+                raw.ParameterTypeFullNames = methodIdProperty.ParameterTypeFullNames;
+            }
+            else
+            {
+                Console.Error.WriteLine(
+                    $"[Qase] TestMethodIdentifierProperty not found for test: {testNode.DisplayName}");
+            }
+
+            return raw;
         }
 
         /// <inheritdoc />
