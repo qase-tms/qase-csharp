@@ -1,0 +1,23 @@
+Qase.Reqnroll.Reporter/QaseReqnrollBindings.cs
+  955f49293906f82e 24,26,62-65,67-69,73-74,76-81,86,93,98-99,102,117,120-121,137,140-141,202,205-208,213-214,216,220,225-226,229,232,235-236,238-242,244-248,251-252,254,257,259-266
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "72f58bfa5c21669f883f115350136cd1842fb6a8",
+  "prompts": {
+    "955f49293906f82e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d955072e-a675-4013-b655-29b2f53f22e6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 65,
+      "overriden_lines": 0
+    }
+  }
+}
