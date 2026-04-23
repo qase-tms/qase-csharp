@@ -1,0 +1,25 @@
+Qase.Csharp.Commons.Tests/DisplayNameGeneratorTests.cs
+  955f49293906f82e 1-48
+Qase.Csharp.Commons/Utils/DisplayNameGenerator.cs
+  955f49293906f82e 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "3f36a9df276dddf10c466ac6e019979d3b9d94dc",
+  "prompts": {
+    "955f49293906f82e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d955072e-a675-4013-b655-29b2f53f22e6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev",
+      "messages": [],
+      "total_additions": 74,
+      "total_deletions": 0,
+      "accepted_lines": 74,
+      "overriden_lines": 0
+    }
+  }
+}
