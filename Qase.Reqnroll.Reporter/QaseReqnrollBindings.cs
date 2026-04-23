@@ -21,8 +21,9 @@ namespace Qase.Reqnroll.Reporter
         private readonly ScenarioContext _scenarioContext;
         private readonly FeatureContext _featureContext;
         private readonly ICoreReporter _reporter;
+        private readonly ITestResultBuilder _builder = new TestResultBuilder();
 
-        private const string TestResultKey = "QaseTestResult";
+        private const string RawTestDataKey = "QaseRawTestData";
         private const string StepStartTimeKey = "QaseStepStartTime";
         private const string StepsKey = "QaseSteps";
         private const string StepFailedKey = "QaseStepFailed";
@@ -56,58 +57,49 @@ namespace Qase.Reqnroll.Reporter
         {
             try
             {
-                var result = new TestResult();
                 var scenarioInfo = _scenarioContext.ScenarioInfo;
 
-                // Apply tags from feature + scenario
-                ReqnrollTagParser.ApplyTags(result, scenarioInfo.CombinedTags);
-
-                // Skip ignored scenarios
-                if (result.Ignore)
+                // Check for @QaseIgnore before creating full raw data
+                var checkResult = new TestResult();
+                ReqnrollTagParser.ApplyTags(checkResult, scenarioInfo.CombinedTags);
+                if (checkResult.Ignore)
                 {
-                    _scenarioContext[TestResultKey] = result;
+                    // Store a marker raw that signals ignore; BeforeStep/AfterStep/AfterScenario will skip
+                    var ignoredRaw = new RawTestData { DisplayName = scenarioInfo.Title };
+                    _scenarioContext[RawTestDataKey] = ignoredRaw;
                     return;
                 }
 
-                // Set title from scenario name if not overridden by tag
-                if (string.IsNullOrEmpty(result.Title))
+                // Build RawTestData
+                var raw = new RawTestData
                 {
-                    result.Title = scenarioInfo.Title;
-                }
-
-                // Set suite from feature title if not overridden by tag
-                if (result.Relations?.Suite.Data == null || result.Relations.Suite.Data.Count == 0)
-                {
-                    result.Relations ??= new Relations();
-                    result.Relations.Suite.Data = new List<SuiteData>
-                    {
-                        new SuiteData { Title = _featureContext.FeatureInfo.Title }
-                    };
-                }
+                    DisplayName = scenarioInfo.Title,
+                    ContextDisplayNameBase = scenarioInfo.Title,
+                    Status = TestResultStatus.Skipped,
+                    StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                    Thread = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString()
+                };
 
                 // Extract Scenario Outline parameters
                 if (scenarioInfo.Arguments != null && scenarioInfo.Arguments.Count > 0)
                 {
+                    raw.PreParsedParams = new Dictionary<string, string>();
                     foreach (DictionaryEntry entry in scenarioInfo.Arguments)
                     {
                         var keyStr = entry.Key?.ToString();
                         var valStr = entry.Value?.ToString();
                         if (keyStr != null)
                         {
-                            result.Params[keyStr] = valStr ?? string.Empty;
+                            raw.PreParsedParams[keyStr] = valStr ?? string.Empty;
                         }
                     }
                 }
 
-                // Set execution timing
-                result.Execution!.StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                result.Execution.Thread = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString();
-
-                // Set display name for ContextManager
-                var displayName = GenerateDisplayName(scenarioInfo.Title, result.Params);
+                // Set display name for ContextManager (using DisplayNameGenerator)
+                var displayName = DisplayNameGenerator.Generate(scenarioInfo.Title, raw.PreParsedParams);
                 ContextManager.SetTestCaseName(displayName);
 
-                _scenarioContext[TestResultKey] = result;
+                _scenarioContext[RawTestDataKey] = raw;
                 _scenarioContext[StepsKey] = new List<StepResult>();
                 _scenarioContext[StepFailedKey] = false;
             }
@@ -122,11 +114,11 @@ namespace Qase.Reqnroll.Reporter
         {
             try
             {
-                if (!_scenarioContext.ContainsKey(TestResultKey))
+                if (!_scenarioContext.ContainsKey(RawTestDataKey))
                     return;
 
-                var testResult = (TestResult)_scenarioContext[TestResultKey];
-                if (testResult.Ignore)
+                // If StepsKey isn't present, the scenario was ignored — skip step tracking
+                if (!_scenarioContext.ContainsKey(StepsKey))
                     return;
 
                 _scenarioContext[StepStartTimeKey] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -142,11 +134,11 @@ namespace Qase.Reqnroll.Reporter
         {
             try
             {
-                if (!_scenarioContext.ContainsKey(TestResultKey))
+                if (!_scenarioContext.ContainsKey(RawTestDataKey))
                     return;
 
-                var testResult = (TestResult)_scenarioContext[TestResultKey];
-                if (testResult.Ignore)
+                // If StepsKey isn't present, the scenario was ignored — skip step tracking
+                if (!_scenarioContext.ContainsKey(StepsKey))
                     return;
 
                 var stepContext = _scenarioContext.StepContext;
@@ -207,68 +199,71 @@ namespace Qase.Reqnroll.Reporter
         {
             try
             {
-                if (!_scenarioContext.ContainsKey(TestResultKey))
+                if (!_scenarioContext.ContainsKey(RawTestDataKey))
                     return;
 
-                var result = (TestResult)_scenarioContext[TestResultKey];
-                if (result.Ignore)
+                var raw = (RawTestData)_scenarioContext[RawTestDataKey];
+
+                // If StepsKey isn't present, the scenario was ignored
+                if (!_scenarioContext.ContainsKey(StepsKey))
                     return;
 
                 // Set execution end time and duration
                 var endTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                result.Execution!.EndTime = endTime;
-                if (result.Execution.StartTime.HasValue)
+                raw.EndTime = endTime;
+                if (raw.StartTime.HasValue)
                 {
-                    result.Execution.Duration = (int)(endTime - result.Execution.StartTime.Value);
+                    raw.Duration = (int)(endTime - raw.StartTime.Value);
                 }
 
                 // Map scenario status
-                result.Execution.Status = MapStatus(_scenarioContext.ScenarioExecutionStatus);
+                raw.Status = MapStatus(_scenarioContext.ScenarioExecutionStatus);
 
                 // Set error info
                 if (_scenarioContext.TestError != null)
                 {
-                    result.Message = _scenarioContext.TestError.Message;
-                    result.Execution.Stacktrace = _scenarioContext.TestError.StackTrace;
+                    raw.ErrorMessage = _scenarioContext.TestError.Message;
+                    raw.StackTrace = _scenarioContext.TestError.StackTrace;
                 }
 
-                // Collect automatic BDD steps
+                // Collect automatic BDD steps as pre-collected steps for the builder
                 if (_scenarioContext.ContainsKey(StepsKey))
                 {
-                    result.Steps = (List<StepResult>)_scenarioContext[StepsKey];
+                    raw.PreCollectedSteps = (List<StepResult>)_scenarioContext[StepsKey];
                 }
 
-                // Collect any manual steps from ContextManager
-                var displayName = GenerateDisplayName(
-                    _scenarioContext.ScenarioInfo.Title, result.Params);
-                var manualSteps = ContextManager.GetCompletedSteps(displayName);
-                if (manualSteps.Count > 0)
+                // Build the test result
+                var result = _builder.Build(raw);
+
+                // Apply Reqnroll/Gherkin tags (builder can't do this — no reflection on type/method)
+                ReqnrollTagParser.ApplyTags(result, _scenarioContext.ScenarioInfo.CombinedTags);
+
+                // Set suite from feature title if tags didn't override it
+                if (result.Relations?.Suite.Data == null || result.Relations.Suite.Data.Count == 0)
                 {
-                    result.Steps.AddRange(manualSteps);
+                    result.Relations ??= new Relations();
+                    result.Relations.Suite.Data = new List<SuiteData>
+                    {
+                        new SuiteData { Title = _featureContext.FeatureInfo.Title }
+                    };
                 }
 
-                // Collect comments and attachments
-                var comments = ContextManager.GetComments(displayName);
-                if (!string.IsNullOrEmpty(comments))
+                // Set title from scenario name if not overridden by tag
+                if (string.IsNullOrEmpty(result.Title))
                 {
-                    result.Message = string.IsNullOrEmpty(result.Message)
-                        ? comments
-                        : $"{result.Message}\n{comments}";
+                    result.Title = _scenarioContext.ScenarioInfo.Title;
                 }
 
-                var attachments = ContextManager.GetAttachments(displayName);
-                if (attachments.Count > 0)
-                {
-                    result.Attachments.AddRange(attachments);
-                }
-
-                // Generate signature
-                var suites = result.Relations?.Suite.Data
-                    .Select(s => s.Title)
-                    .ToList();
-
+                // Regenerate signature now that tags may have updated TestopsIds/suite/params
                 result.Signature = Signature.Generate(
-                    result.TestopsIds, suites, result.Params);
+                    result.TestopsIds,
+                    result.Relations?.Suite?.Data?.Select(s => s.Title),
+                    result.Params);
+
+                if (string.IsNullOrEmpty(result.Signature))
+                {
+                    result.Signature = result.Title?.ToLower().Trim().Replace(" ", "-") ?? "unknown";
+                }
 
                 // Submit result
                 _reporter.addResult(result).GetAwaiter().GetResult();
@@ -311,15 +306,6 @@ namespace Qase.Reqnroll.Reporter
                 default:
                     return TestResultStatus.Skipped;
             }
-        }
-
-        private static string GenerateDisplayName(string title, Dictionary<string, string>? parameters)
-        {
-            if (parameters == null || parameters.Count == 0)
-                return title;
-
-            var paramStr = string.Join(", ", parameters.Select(p => $"{p.Key}: {p.Value}"));
-            return $"{title}({paramStr})";
         }
     }
 }

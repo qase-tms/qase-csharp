@@ -64,12 +64,12 @@ results:
     execution:
       status: passed
 - title: Login accepts valid credential combinations
-  signature: 501::nunitexamples::parameterizedtests::"username":""::"password":"nouser"::"expectedsuccess":"false"
+  signature: 501::nunitexamples::parameterizedtests::"username":"empty"::"password":"nouser"::"expectedsuccess":"false"
   testops_ids:
   - 501
   status: passed
   params:
-    username: ''
+    username: empty
     password: nouser
     expectedSuccess: 'False'
   relations:
@@ -472,12 +472,12 @@ results:
       - title: NUnitExamples
       - title: ParameterizedTests
 - title: Email validation rejects invalid formats
-  signature: 502::nunitexamples::parameterizedtests::"email":""::"reason":"empty string"
+  signature: 502::nunitexamples::parameterizedtests::"email":"empty"::"reason":"empty string"
   testops_ids:
   - 502
   status: passed
   params:
-    email: ''
+    email: empty
     reason: empty string
   relations:
     suite:

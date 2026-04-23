@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using Qase.Csharp.Commons.Attributes;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
 using Xunit;
@@ -15,8 +14,9 @@ namespace Qase.Xunit.Reporter
     {
         internal static QaseMessageSink? CurrentSink { get; private set; }
         private readonly ICoreReporter _reporter;
+        private ITestResultBuilder _builder = new TestResultBuilder();
 
-        private readonly ConcurrentDictionary<ITest, TestResult> qaseTestData = new();
+        private readonly ConcurrentDictionary<ITest, RawTestData> qaseTestData = new();
 
         public QaseMessageSink(IRunnerLogger logger) : base(logger)
         {
@@ -49,47 +49,67 @@ namespace Qase.Xunit.Reporter
 
         private void OnTestStarting(MessageHandlerArgs<ITestStarting> args)
         {
-            qaseTestData[args.Message.Test] = CreateBaseTestResult(args.Message.Test.TestCase);
+            var testCase = args.Message.Test.TestCase;
+
+            // Parse parameters eagerly while we have full ITestCase context
+            var parameters = testCase.TestMethod.Method.GetParameters()
+                .Zip(testCase.TestMethodArguments ?? Array.Empty<object>(), (parameter, value) => new { parameter, value })
+                .ToDictionary(x => x.parameter.Name, x =>
+                {
+                    if (x.value is null) return "null";
+                    if (!string.IsNullOrWhiteSpace(x.value?.ToString())) return x.value.ToString();
+                    var size = x.value?.ToString().Length ?? 0;
+                    return size == 0 ? "empty" : $"empty ({size})";
+                });
+
+            var raw = new RawTestData
+            {
+                DisplayName = testCase.TestMethod.Method.Name,
+                Status = TestResultStatus.Skipped,
+                Thread = System.Threading.Thread.CurrentThread.Name ??
+                    System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(),
+                FullTypeName = testCase.TestMethod.TestClass.Class.Name,
+                MethodName = testCase.TestMethod.Method.Name,
+                PreParsedParams = parameters.Count > 0 ? parameters : null,
+                StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            };
+
+            qaseTestData[args.Message.Test] = raw;
         }
 
         private void OnTestPassed(MessageHandlerArgs<ITestPassed> args)
         {
-            var testResult = qaseTestData[args.Message.Test];
-            testResult.Execution!.Status = TestResultStatus.Passed;
-            testResult.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            testResult.Execution!.Duration = (int)(args.Message.ExecutionTime * 1000);
+            var raw = qaseTestData[args.Message.Test];
+            raw.Status = TestResultStatus.Passed;
+            raw.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            raw.Duration = (int)(args.Message.ExecutionTime * 1000);
         }
 
         private void OnTestFailed(MessageHandlerArgs<ITestFailed> args)
         {
-            var testResult = qaseTestData[args.Message.Test];
-
-            // Determine if the failure is due to assertion or other reasons
-            var isAssertionFailure = IsAssertionFailure(args.Message);
-
-            testResult.Execution!.Status = isAssertionFailure ? TestResultStatus.Failed : TestResultStatus.Invalid;
-            testResult.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            testResult.Execution!.Duration = (int)(args.Message.ExecutionTime * 1000);
-            testResult.Message = string.Join("\n", args.Message.Messages);
-            testResult.Execution.Stacktrace = string.Join("\n", args.Message.StackTraces);
+            var raw = qaseTestData[args.Message.Test];
+            raw.Status = TestResultStatus.Failed;
+            raw.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            raw.Duration = (int)(args.Message.ExecutionTime * 1000);
+            raw.ErrorMessage = string.Join("\n", args.Message.Messages);
+            raw.StackTrace = string.Join("\n", args.Message.StackTraces);
+            raw.ExceptionTypes = args.Message.ExceptionTypes;
         }
 
         private void OnTestSkipped(MessageHandlerArgs<ITestSkipped> args)
         {
-            var testResult = qaseTestData[args.Message.Test];
-            testResult.Execution!.Status = TestResultStatus.Skipped;
-            testResult.Execution!.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            testResult.Execution!.Duration = (int)(args.Message.ExecutionTime * 1000);
-            testResult.Message = args.Message.Reason;
+            var raw = qaseTestData[args.Message.Test];
+            raw.Status = TestResultStatus.Skipped;
+            raw.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            raw.Duration = (int)(args.Message.ExecutionTime * 1000);
+            raw.ErrorMessage = args.Message.Reason;
         }
 
         private void OnTestFinished(MessageHandlerArgs<ITestFinished> args)
         {
-            var testResult = qaseTestData[args.Message.Test];
+            var raw = qaseTestData[args.Message.Test];
+            var testResult = _builder.Build(raw);
 
-            testResult.Steps = ContextManager.GetCompletedSteps(args.Message.Test.TestCase.DisplayName);
-            testResult.Message = string.Join("\n", testResult.Message, ContextManager.GetComments(args.Message.Test.TestCase.DisplayName));
-            testResult.Attachments = ContextManager.GetAttachments(args.Message.Test.TestCase.DisplayName);
             if (!testResult.Ignore)
             {
                 _reporter.addResult(testResult).GetAwaiter().GetResult();
@@ -109,109 +129,6 @@ namespace Qase.Xunit.Reporter
             {
                 this.Logger.LogWarning($"Error in OnTestAssemblyExecutionFinished: {ex}");
             }
-        }
-
-        private TestResult CreateBaseTestResult(ITestCase testCase)
-        {
-            if (testCase == null)
-            {
-                throw new ArgumentNullException(nameof(testCase));
-            }
-
-            var parameters = testCase.TestMethod.Method.GetParameters()
-                .Zip(testCase.TestMethodArguments ?? Array.Empty<object>(), (parameter, value) => new
-                {
-                    parameter,
-                    value
-                })
-                .ToDictionary(x => x.parameter.Name, x =>
-                {
-                    if (x.value is null)
-                    {
-                        return "null";
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(x.value?.ToString())) return x.value.ToString();
-                    
-                    var size = x.value?.ToString().Length ?? 0;
-                    return size == 0 ? "empty" : $"empty ({size})";
-                });
-
-            var result = new TestResult
-            {
-                Title = testCase.TestMethod.Method.Name,
-                Execution = new TestResultExecution
-                {
-                    Status = TestResultStatus.Skipped,
-                    Thread = System.Threading.Thread.CurrentThread.Name ??
-                        System.Threading.Thread.CurrentThread.ManagedThreadId.ToString()
-                },
-                Message = null,
-                Params = parameters,
-                Relations = new Relations()
-                {
-                    Suite = new Suite()
-                    {
-                        Data = SuiteParser.FromTypeName(testCase.TestMethod.TestClass.Class.Name)
-                    }
-                }
-            };
-
-            var classAttrs = testCase.TestMethod.TestClass.Class
-                .GetCustomAttributes(typeof(IQaseAttribute))
-                .Select(a => ((IReflectionAttributeInfo)a).Attribute);
-            var methodAttrs = testCase.TestMethod.Method
-                .GetCustomAttributes(typeof(IQaseAttribute))
-                .Select(a => ((IReflectionAttributeInfo)a).Attribute);
-            AttributeExtractor.Apply(classAttrs, methodAttrs, result);
-
-            result.Signature = Signature.Generate(result.TestopsIds, result.Relations?.Suite?.Data?.Select(suite => suite.Title), result.Params);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Determines if the test failure is due to an assertion failure or other reasons
-        /// </summary>
-        /// <param name="testFailed">The test failed message</param>
-        /// <returns>True if the failure is due to assertion, false otherwise</returns>
-        public static bool IsAssertionFailure(ITestFailed testFailed)
-        {
-            if (testFailed.StackTraces == null)
-                return false;
-
-            // Check stack trace for xUnit assertion methods
-            var stackTrace = string.Join("\n", testFailed.StackTraces);
-
-            // Look for xUnit assertion methods in stack trace
-            // We need to be more specific to avoid false positives
-            if (stackTrace.Contains("at Xunit.Assert.Equal") ||
-                stackTrace.Contains("at Xunit.Assert.NotEqual") ||
-                stackTrace.Contains("at Xunit.Assert.True") ||
-                stackTrace.Contains("at Xunit.Assert.False") ||
-                stackTrace.Contains("at Xunit.Assert.Null") ||
-                stackTrace.Contains("at Xunit.Assert.NotNull") ||
-                stackTrace.Contains("at Xunit.Assert.Empty") ||
-                stackTrace.Contains("at Xunit.Assert.NotEmpty") ||
-                stackTrace.Contains("at Xunit.Assert.Contains") ||
-                stackTrace.Contains("at Xunit.Assert.DoesNotContain") ||
-                stackTrace.Contains("at Xunit.Assert.InRange") ||
-                stackTrace.Contains("at Xunit.Assert.NotInRange") ||
-                stackTrace.Contains("at Xunit.Assert.Single") ||
-                stackTrace.Contains("at Xunit.Assert.Collection") ||
-                stackTrace.Contains("at Xunit.Assert.PropertyChanged") ||
-                stackTrace.Contains("at Xunit.Assert.All") ||
-                stackTrace.Contains("at Xunit.Assert.Any") ||
-                stackTrace.Contains("at Xunit.Assert.Throws") ||
-                stackTrace.Contains("at Xunit.Assert.DoesNotThrow") ||
-                stackTrace.Contains("at Xunit.Assert.Record") ||
-                stackTrace.Contains("at Xunit.Assert.NotRecord") ||
-                stackTrace.Contains("at Xunit.Assert.Fail"))
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

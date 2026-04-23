@@ -7,6 +7,7 @@ using Moq;
 using Xunit;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
+using Qase.Csharp.Commons.Utils;
 using Qase.NUnit.Reporter;
 
 namespace Qase.NUnit.Reporter.Tests
@@ -16,16 +17,30 @@ namespace Qase.NUnit.Reporter.Tests
         private QaseNUnitEventListener _listener;
         private Type _listenerType;
         private Mock<ICoreReporter> _mockReporter;
+        private Mock<ITestResultBuilder> _mockBuilder;
 
         public XmlEventHandlingTests()
         {
             _listener = new QaseNUnitEventListener();
             _listenerType = typeof(QaseNUnitEventListener);
             _mockReporter = new Mock<ICoreReporter>();
-            
+            _mockBuilder = new Mock<ITestResultBuilder>();
+
             // Set the reporter using reflection
             var reporterField = _listenerType.GetField("_reporter", BindingFlags.NonPublic | BindingFlags.Static);
             reporterField?.SetValue(null, _mockReporter.Object);
+
+            // Set the builder using reflection (static field)
+            var builderField = _listenerType.GetField("_builder", BindingFlags.NonPublic | BindingFlags.Static);
+            builderField?.SetValue(null, _mockBuilder.Object);
+
+            // Default: mock builder returns a non-ignored TestResult
+            _mockBuilder.Setup(b => b.Build(It.IsAny<RawTestData>()))
+                .Returns(new TestResult
+                {
+                    Title = "Test1",
+                    Execution = new TestResultExecution { Status = TestResultStatus.Passed }
+                });
         }
 
         public void Dispose()
@@ -33,10 +48,14 @@ namespace Qase.NUnit.Reporter.Tests
             // Clear static state
             var reporterField = _listenerType.GetField("_reporter", BindingFlags.NonPublic | BindingFlags.Static);
             reporterField?.SetValue(null, null);
-            
-            var testResultsField = _listenerType.GetField("_testResults", BindingFlags.NonPublic | BindingFlags.Static);
-            var testResults = testResultsField?.GetValue(null) as System.Collections.Concurrent.ConcurrentDictionary<string, TestResult>;
-            testResults?.Clear();
+
+            // Restore default builder
+            var builderField = _listenerType.GetField("_builder", BindingFlags.NonPublic | BindingFlags.Static);
+            builderField?.SetValue(null, new TestResultBuilder());
+
+            var rawTestDataField = _listenerType.GetField("_rawTestData", BindingFlags.NonPublic | BindingFlags.Static);
+            var rawTestData = rawTestDataField?.GetValue(null) as System.Collections.Concurrent.ConcurrentDictionary<string, Qase.Csharp.Commons.Models.Domain.RawTestData>;
+            rawTestData?.Clear();
         }
 
         [Fact]
@@ -70,7 +89,7 @@ namespace Qase.NUnit.Reporter.Tests
         }
 
         [Fact]
-        public void OnTestEvent_WithStartTestEvent_ShouldCreateTestResult()
+        public void OnTestEvent_WithStartTestEvent_ShouldCreateRawTestData()
         {
             // Arrange
             var xml = @"<start-test id=""0-1001"" name=""Test1"" fullname=""Tests.Test1"" />";
@@ -80,11 +99,11 @@ namespace Qase.NUnit.Reporter.Tests
             _listener.OnTestEvent(xml);
 
             // Assert
-            var testResultsField = _listenerType.GetField("_testResults", BindingFlags.NonPublic | BindingFlags.Static);
-            var testResults = testResultsField?.GetValue(null) as System.Collections.Concurrent.ConcurrentDictionary<string, TestResult>;
-            testResults.Should().NotBeNull();
-            testResults.Should().ContainKey("0-1001");
-            testResults["0-1001"].Title.Should().Be("Test1");
+            var rawTestDataField = _listenerType.GetField("_rawTestData", BindingFlags.NonPublic | BindingFlags.Static);
+            var rawTestData = rawTestDataField?.GetValue(null) as System.Collections.Concurrent.ConcurrentDictionary<string, Qase.Csharp.Commons.Models.Domain.RawTestData>;
+            rawTestData.Should().NotBeNull();
+            rawTestData.Should().ContainKey("0-1001");
+            rawTestData!["0-1001"].DisplayName.Should().Be("Test1");
         }
 
         [Fact]
@@ -93,7 +112,7 @@ namespace Qase.NUnit.Reporter.Tests
             // Arrange
             var startTestXml = @"<start-test id=""0-1001"" name=""Test1"" fullname=""Tests.Test1"" />";
             var testCaseXml = @"<test-case id=""0-1001"" name=""Test1"" fullname=""Tests.Test1"" result=""Passed"" start-time=""2026-01-16T11:38:42.8196620Z"" end-time=""2026-01-16T11:38:42.8200660Z"" duration=""0.000404"" />";
-            
+
             _mockReporter.Setup(x => x.startTestRun()).Returns(System.Threading.Tasks.Task.CompletedTask);
             _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>())).Returns(System.Threading.Tasks.Task.CompletedTask);
 
@@ -104,14 +123,24 @@ namespace Qase.NUnit.Reporter.Tests
             _listener.OnTestEvent(startTestXml);
             _listener.OnTestEvent(testCaseXml);
 
-            // Assert - verify that addResult was called at least once for our test case
-            _mockReporter.Verify(x => x.addResult(It.Is<TestResult>(r => r.Title == "Test1")), Times.AtLeastOnce);
+            // Assert - verify builder was called and result was sent to reporter
+            _mockBuilder.Verify(b => b.Build(It.Is<RawTestData>(r => r.Status == TestResultStatus.Passed)), Times.AtLeastOnce);
+            _mockReporter.Verify(x => x.addResult(It.IsAny<TestResult>()), Times.AtLeastOnce);
         }
 
         [Fact]
         public void OnTestEvent_WithFailedTestCase_ShouldSetFailedStatus()
         {
             // Arrange
+            var failedResult = new TestResult
+            {
+                Title = "Test1",
+                Message = "Assertion failed",
+                Execution = new TestResultExecution { Status = TestResultStatus.Failed }
+            };
+            _mockBuilder.Setup(b => b.Build(It.Is<RawTestData>(r => r.Status == TestResultStatus.Failed)))
+                .Returns(failedResult);
+
             var startTestXml = @"<start-test id=""0-1001"" name=""Test1"" fullname=""Tests.Test1"" />";
             var testCaseXml = @"<test-case id=""0-1001"" name=""Test1"" fullname=""Tests.Test1"" result=""Failed"" start-time=""2026-01-16T11:38:42.8196620Z"" end-time=""2026-01-16T11:38:42.8200660Z"" duration=""0.000404"" asserts=""1"">
                 <failure>
@@ -119,28 +148,33 @@ namespace Qase.NUnit.Reporter.Tests
                     <stack-trace>at NUnit.Framework.Assert.AreEqual</stack-trace>
                 </failure>
             </test-case>";
-            
-            _mockReporter.Setup(x => x.startTestRun()).Returns(System.Threading.Tasks.Task.CompletedTask);
 
-            TestResult capturedResult = null;
-            _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>()))
-                .Callback<TestResult>(r => capturedResult = r)
-                .Returns(System.Threading.Tasks.Task.CompletedTask);
+            _mockReporter.Setup(x => x.startTestRun()).Returns(System.Threading.Tasks.Task.CompletedTask);
+            _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>())).Returns(System.Threading.Tasks.Task.CompletedTask);
 
             // Act
             _listener.OnTestEvent(startTestXml);
             _listener.OnTestEvent(testCaseXml);
 
-            // Assert
-            capturedResult.Should().NotBeNull();
-            capturedResult.Execution.Status.Should().Be(TestResultStatus.Failed);
-            capturedResult.Message.Should().Contain("Assertion failed");
+            // Assert — verify builder received failed raw data and reporter got the result
+            _mockBuilder.Verify(b => b.Build(It.Is<RawTestData>(r =>
+                r.Status == TestResultStatus.Failed &&
+                r.ErrorMessage == "Assertion failed")), Times.AtLeastOnce);
+            _mockReporter.Verify(x => x.addResult(failedResult), Times.Once);
         }
 
         [Fact]
         public void OnTestEvent_WithInvalidTestCase_ShouldSetInvalidStatus()
         {
             // Arrange
+            var invalidResult = new TestResult
+            {
+                Title = "Test1",
+                Execution = new TestResultExecution { Status = TestResultStatus.Invalid }
+            };
+            _mockBuilder.Setup(b => b.Build(It.Is<RawTestData>(r => r.Status == TestResultStatus.Failed)))
+                .Returns(invalidResult);
+
             var startTestXml = @"<start-test id=""0-1001"" name=""Test1"" fullname=""Tests.Test1"" />";
             var testCaseXml = @"<test-case id=""0-1001"" name=""Test1"" fullname=""Tests.Test1"" result=""Failed"" start-time=""2026-01-16T11:38:42.8196620Z"" end-time=""2026-01-16T11:38:42.8200660Z"" duration=""0.000404"" label=""Error"" asserts=""0"">
                 <failure>
@@ -148,31 +182,30 @@ namespace Qase.NUnit.Reporter.Tests
                     <stack-trace>at Tests.Test1()</stack-trace>
                 </failure>
             </test-case>";
-            
-            _mockReporter.Setup(x => x.startTestRun()).Returns(System.Threading.Tasks.Task.CompletedTask);
 
-            TestResult capturedResult = null;
-            _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>()))
-                .Callback<TestResult>(r => capturedResult = r)
-                .Returns(System.Threading.Tasks.Task.CompletedTask);
+            _mockReporter.Setup(x => x.startTestRun()).Returns(System.Threading.Tasks.Task.CompletedTask);
+            _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>())).Returns(System.Threading.Tasks.Task.CompletedTask);
 
             // Act
             _listener.OnTestEvent(startTestXml);
             _listener.OnTestEvent(testCaseXml);
 
-            // Assert
-            capturedResult.Should().NotBeNull();
-            capturedResult.Execution.Status.Should().Be(TestResultStatus.Invalid);
+            // Assert — verify builder received raw data with Error label and reporter got the invalid result
+            _mockBuilder.Verify(b => b.Build(It.Is<RawTestData>(r =>
+                r.Status == TestResultStatus.Failed &&
+                r.FailureLabel == "Error" &&
+                r.AssertsCount == 0)), Times.AtLeastOnce);
+            _mockReporter.Verify(x => x.addResult(invalidResult), Times.Once);
         }
 
         [Fact]
-        public void OnTestEvent_WithParameterizedTest_ShouldExtractParameters()
+        public void OnTestEvent_WithParameterizedTest_ShouldProcessAndRemoveRawData()
         {
             // Arrange
             var startRunXml = @"<start-run />";
-            var startTestXml = @"<start-test id=""0-1001"" name=""Test2(\""user1\"",\""value2\"")"" fullname=""Tests.Test2(\""user1\"",\""value2\"")"" />";
-            var testCaseXml = @"<test-case id=""0-1001"" name=""Test2(\""user1\"",\""value2\"")"" fullname=""Tests.Test2(\""user1\"",\""value2\"")"" result=""Passed"" start-time=""2026-01-16T11:38:42.8196620Z"" end-time=""2026-01-16T11:38:42.8200660Z"" duration=""0.000404"" />";
-            
+            var startTestXml = @"<start-test id=""0-1001"" name=""Test2(&quot;user1&quot;,&quot;value2&quot;)"" fullname=""Tests.Test2(&quot;user1&quot;,&quot;value2&quot;)"" />";
+            var testCaseXml = @"<test-case id=""0-1001"" name=""Test2(&quot;user1&quot;,&quot;value2&quot;)"" fullname=""Tests.Test2(&quot;user1&quot;,&quot;value2&quot;)"" result=""Passed"" start-time=""2026-01-16T11:38:42.8196620Z"" end-time=""2026-01-16T11:38:42.8200660Z"" duration=""0.000404"" />";
+
             _mockReporter.Setup(x => x.startTestRun()).Returns(System.Threading.Tasks.Task.CompletedTask);
             _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>())).Returns(System.Threading.Tasks.Task.CompletedTask);
 
@@ -184,18 +217,14 @@ namespace Qase.NUnit.Reporter.Tests
             _listener.OnTestEvent(startTestXml);
             _listener.OnTestEvent(testCaseXml);
 
-            // Assert
-            // Verify that the test result was created in _testResults
-            var testResultsField = _listenerType.GetField("_testResults", BindingFlags.NonPublic | BindingFlags.Static);
-            var testResults = testResultsField?.GetValue(null) as System.Collections.Concurrent.ConcurrentDictionary<string, TestResult>;
-            
-            // The test result should have been processed and removed from _testResults
-            // If it was ignored, it wouldn't be added to results, but the flow should still work
-            // Note: Parameters extraction requires reflection to find the actual method
-            // This test verifies the flow works - the test case is processed even if the method doesn't exist
-            // If the method doesn't exist, parameters won't be extracted, but the test should still be reported
-            // We verify that the test was processed by checking that it's no longer in _testResults
-            testResults.Should().NotContainKey("0-1001");
+            // Assert — verify builder was called and raw data was cleaned up
+            _mockBuilder.Verify(b => b.Build(It.Is<RawTestData>(r => r.Status == TestResultStatus.Passed)), Times.AtLeastOnce);
+
+            var rawTestDataField = _listenerType.GetField("_rawTestData", BindingFlags.NonPublic | BindingFlags.Static);
+            var rawTestData = rawTestDataField?.GetValue(null) as System.Collections.Concurrent.ConcurrentDictionary<string, Qase.Csharp.Commons.Models.Domain.RawTestData>;
+
+            // The raw test data should have been processed (test-case event) and removed
+            rawTestData.Should().NotContainKey("0-1001");
         }
 
         [Fact]
