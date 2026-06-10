@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-csharp 1.1.19
+
+- Updated API clients to the latest specification
+
 ## qase-csharp 1.1.18
 
 - Refactored all 5 reporters (NUnit, MSTest, xUnit v2, xUnit v3, Reqnroll) to use shared `TestResultBuilder` pipeline — shared logic for type resolution, attribute extraction, parameter parsing, suite hierarchy, failure classification, ContextManager integration, and signature generation is now centralized in Commons
