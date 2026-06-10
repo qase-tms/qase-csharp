@@ -1,0 +1,34 @@
+changelog.md
+  s_db4449b556d9c4::t_0e58cb227f6aee 3-6
+Directory.Build.props
+  s_db4449b556d9c4::t_99a535339252db 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "8ba0174c9378ebc955ff294b459666446c3cf065",
+  "prompts": {
+    "955f49293906f82e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d955072e-a675-4013-b655-29b2f53f22e6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>",
+      "total_additions": 2844,
+      "total_deletions": 0,
+      "accepted_lines": 2843,
+      "overriden_lines": 1
+    }
+  },
+  "sessions": {
+    "s_db4449b556d9c4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a06810e2-9716-4157-80e5-a0d6f84ece52",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
