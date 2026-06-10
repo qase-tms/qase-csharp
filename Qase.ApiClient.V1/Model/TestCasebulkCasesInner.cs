@@ -46,7 +46,9 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="isFlaky">isFlaky</param>
         /// <param name="suiteId">suiteId</param>
         /// <param name="milestoneId">milestoneId</param>
-        /// <param name="automation">automation</param>
+        /// <param name="automation">Deprecated, use &#x60;isManual&#x60; and &#x60;isToBeAutomated&#x60; instead. Encodes the test case automation state as a single integer: &#x60;0&#x60; &#x3D; manual, &#x60;1&#x60; &#x3D; manual planned to be automated, &#x60;2&#x60; &#x3D; automated. If both &#x60;automation&#x60; and &#x60;isManual&#x60;/&#x60;isToBeAutomated&#x60; are provided, &#x60;isManual&#x60; and &#x60;isToBeAutomated&#x60; take precedence.</param>
+        /// <param name="isManual">&#x60;1&#x60; if the case is manual, &#x60;0&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.</param>
+        /// <param name="isToBeAutomated">&#x60;1&#x60; if a manual case is planned to be automated, &#x60;0&#x60; otherwise. Only meaningful when &#x60;isManual &#x3D; 1&#x60;; ignored when &#x60;isManual &#x3D; 0&#x60;.</param>
         /// <param name="status">status</param>
         /// <param name="stepsType">Determines the format of the steps field. When \&quot;classic\&quot;, steps use the standard action/expected_result/data format. When \&quot;gherkin\&quot;, steps use the {value: \&quot;Given...\\nWhen...\\nThen...\&quot;} format. (default to StepsTypeEnum.Classic)</param>
         /// <param name="attachments">A list of Attachment hashes.</param>
@@ -54,12 +56,12 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="tags">tags</param>
         /// <param name="params">Deprecated, use &#x60;parameters&#x60; instead.</param>
         /// <param name="parameters">parameters</param>
-        /// <param name="customField">A map of custom fields values (id &#x3D;&gt; value)</param>
+        /// <param name="customField">Custom field values keyed by the field&#39;s project-scoped &#x60;internal_id&#x60; (see &#x60;GET /custom_field&#x60;). Values are always **scalar strings**; arrays, objects or non-scalars are rejected.  | Field type           | Value format                              | Example                 | |- -- -- -- -- -- -- -- -- -- -- -|- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --|- -- -- -- -- -- -- -- -- -- -- -- --| | &#x60;string&#x60;, &#x60;text&#x60;     | Plain string                              | &#x60;\&quot;hello\&quot;&#x60;               | | &#x60;number&#x60;             | Numeric string                            | &#x60;\&quot;42\&quot;&#x60;                  | | &#x60;url&#x60;                | Valid URL                                 | &#x60;\&quot;https://qase.io\&quot;&#x60;     | | &#x60;datetime&#x60;           | Absolute date (ISO 8601 recommended)      | &#x60;\&quot;2026-04-29T15:00:00Z\&quot;&#x60;| | &#x60;selectbox&#x60;, &#x60;radio&#x60; | Option &#x60;id&#x60; as string                     | &#x60;\&quot;1\&quot;&#x60;                   | | &#x60;multiselect&#x60;        | Comma-separated option &#x60;id&#x60;s (no spaces)  | &#x60;\&quot;1,2,3\&quot;&#x60;               | | &#x60;checkbox&#x60;           | &#x60;\&quot;1\&quot;&#x60; to check, &#x60;\&quot;\&quot;&#x60; to uncheck           | &#x60;\&quot;1\&quot;&#x60;                   | | &#x60;user&#x60;               | Team member &#x60;internal_id&#x60; as string       | &#x60;\&quot;42\&quot;&#x60;                  |  Validation: all required fields without a default value must be present and non-empty; unknown &#x60;internal_id&#x60;s are rejected; option-based values must reference an existing option.  Note: a &#x60;required&#x60; checkbox without a default cannot be unchecked via the API — set a default or clear &#x60;required&#x60; in workspace settings. </param>
         /// <param name="createdAt">createdAt</param>
         /// <param name="updatedAt">updatedAt</param>
         /// <param name="id">id</param>
         [JsonConstructor]
-        public TestCasebulkCasesInner(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> status = default, Option<StepsTypeEnum?> stepsType = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<List<TestCaseParameterCreate>?> parameters = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default, Option<int?> id = default)
+        public TestCasebulkCasesInner(string title, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> behavior = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<long?> suiteId = default, Option<long?> milestoneId = default, Option<int?> automation = default, Option<int?> isManual = default, Option<int?> isToBeAutomated = default, Option<int?> status = default, Option<StepsTypeEnum?> stepsType = default, Option<List<string>?> attachments = default, Option<List<TestStepCreate>?> steps = default, Option<List<string>?> tags = default, Option<Dictionary<string, List<string>>?> @params = default, Option<List<TestCaseParameterCreate>?> parameters = default, Option<Dictionary<string, string>?> customField = default, Option<string?> createdAt = default, Option<string?> updatedAt = default, Option<int?> id = default)
         {
             Title = title;
             DescriptionOption = description;
@@ -74,6 +76,8 @@ namespace Qase.ApiClient.V1.Model
             SuiteIdOption = suiteId;
             MilestoneIdOption = milestoneId;
             AutomationOption = automation;
+            IsManualOption = isManual;
+            IsToBeAutomatedOption = isToBeAutomated;
             StatusOption = status;
             StepsTypeOption = stepsType;
             AttachmentsOption = attachments;
@@ -328,10 +332,40 @@ namespace Qase.ApiClient.V1.Model
         public Option<int?> AutomationOption { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Automation
+        /// Deprecated, use &#x60;isManual&#x60; and &#x60;isToBeAutomated&#x60; instead. Encodes the test case automation state as a single integer: &#x60;0&#x60; &#x3D; manual, &#x60;1&#x60; &#x3D; manual planned to be automated, &#x60;2&#x60; &#x3D; automated. If both &#x60;automation&#x60; and &#x60;isManual&#x60;/&#x60;isToBeAutomated&#x60; are provided, &#x60;isManual&#x60; and &#x60;isToBeAutomated&#x60; take precedence.
         /// </summary>
+        /// <value>Deprecated, use &#x60;isManual&#x60; and &#x60;isToBeAutomated&#x60; instead. Encodes the test case automation state as a single integer: &#x60;0&#x60; &#x3D; manual, &#x60;1&#x60; &#x3D; manual planned to be automated, &#x60;2&#x60; &#x3D; automated. If both &#x60;automation&#x60; and &#x60;isManual&#x60;/&#x60;isToBeAutomated&#x60; are provided, &#x60;isManual&#x60; and &#x60;isToBeAutomated&#x60; take precedence.</value>
         [JsonPropertyName("automation")]
+        [Obsolete]
         public int? Automation { get { return this.AutomationOption; } set { this.AutomationOption = new Option<int?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of IsManual
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<int?> IsManualOption { get; private set; }
+
+        /// <summary>
+        /// &#x60;1&#x60; if the case is manual, &#x60;0&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.
+        /// </summary>
+        /// <value>&#x60;1&#x60; if the case is manual, &#x60;0&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.</value>
+        [JsonPropertyName("isManual")]
+        public int? IsManual { get { return this.IsManualOption; } set { this.IsManualOption = new Option<int?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of IsToBeAutomated
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<int?> IsToBeAutomatedOption { get; private set; }
+
+        /// <summary>
+        /// &#x60;1&#x60; if a manual case is planned to be automated, &#x60;0&#x60; otherwise. Only meaningful when &#x60;isManual &#x3D; 1&#x60;; ignored when &#x60;isManual &#x3D; 0&#x60;.
+        /// </summary>
+        /// <value>&#x60;1&#x60; if a manual case is planned to be automated, &#x60;0&#x60; otherwise. Only meaningful when &#x60;isManual &#x3D; 1&#x60;; ignored when &#x60;isManual &#x3D; 0&#x60;.</value>
+        [JsonPropertyName("isToBeAutomated")]
+        public int? IsToBeAutomated { get { return this.IsToBeAutomatedOption; } set { this.IsToBeAutomatedOption = new Option<int?>(value); } }
 
         /// <summary>
         /// Used to track the state of Status
@@ -422,9 +456,9 @@ namespace Qase.ApiClient.V1.Model
         public Option<Dictionary<string, string>?> CustomFieldOption { get; private set; }
 
         /// <summary>
-        /// A map of custom fields values (id &#x3D;&gt; value)
+        /// Custom field values keyed by the field&#39;s project-scoped &#x60;internal_id&#x60; (see &#x60;GET /custom_field&#x60;). Values are always **scalar strings**; arrays, objects or non-scalars are rejected.  | Field type           | Value format                              | Example                 | |- -- -- -- -- -- -- -- -- -- -- -|- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --|- -- -- -- -- -- -- -- -- -- -- -- --| | &#x60;string&#x60;, &#x60;text&#x60;     | Plain string                              | &#x60;\&quot;hello\&quot;&#x60;               | | &#x60;number&#x60;             | Numeric string                            | &#x60;\&quot;42\&quot;&#x60;                  | | &#x60;url&#x60;                | Valid URL                                 | &#x60;\&quot;https://qase.io\&quot;&#x60;     | | &#x60;datetime&#x60;           | Absolute date (ISO 8601 recommended)      | &#x60;\&quot;2026-04-29T15:00:00Z\&quot;&#x60;| | &#x60;selectbox&#x60;, &#x60;radio&#x60; | Option &#x60;id&#x60; as string                     | &#x60;\&quot;1\&quot;&#x60;                   | | &#x60;multiselect&#x60;        | Comma-separated option &#x60;id&#x60;s (no spaces)  | &#x60;\&quot;1,2,3\&quot;&#x60;               | | &#x60;checkbox&#x60;           | &#x60;\&quot;1\&quot;&#x60; to check, &#x60;\&quot;\&quot;&#x60; to uncheck           | &#x60;\&quot;1\&quot;&#x60;                   | | &#x60;user&#x60;               | Team member &#x60;internal_id&#x60; as string       | &#x60;\&quot;42\&quot;&#x60;                  |  Validation: all required fields without a default value must be present and non-empty; unknown &#x60;internal_id&#x60;s are rejected; option-based values must reference an existing option.  Note: a &#x60;required&#x60; checkbox without a default cannot be unchecked via the API — set a default or clear &#x60;required&#x60; in workspace settings. 
         /// </summary>
-        /// <value>A map of custom fields values (id &#x3D;&gt; value)</value>
+        /// <value>Custom field values keyed by the field&#39;s project-scoped &#x60;internal_id&#x60; (see &#x60;GET /custom_field&#x60;). Values are always **scalar strings**; arrays, objects or non-scalars are rejected.  | Field type           | Value format                              | Example                 | |- -- -- -- -- -- -- -- -- -- -- -|- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --|- -- -- -- -- -- -- -- -- -- -- -- --| | &#x60;string&#x60;, &#x60;text&#x60;     | Plain string                              | &#x60;\&quot;hello\&quot;&#x60;               | | &#x60;number&#x60;             | Numeric string                            | &#x60;\&quot;42\&quot;&#x60;                  | | &#x60;url&#x60;                | Valid URL                                 | &#x60;\&quot;https://qase.io\&quot;&#x60;     | | &#x60;datetime&#x60;           | Absolute date (ISO 8601 recommended)      | &#x60;\&quot;2026-04-29T15:00:00Z\&quot;&#x60;| | &#x60;selectbox&#x60;, &#x60;radio&#x60; | Option &#x60;id&#x60; as string                     | &#x60;\&quot;1\&quot;&#x60;                   | | &#x60;multiselect&#x60;        | Comma-separated option &#x60;id&#x60;s (no spaces)  | &#x60;\&quot;1,2,3\&quot;&#x60;               | | &#x60;checkbox&#x60;           | &#x60;\&quot;1\&quot;&#x60; to check, &#x60;\&quot;\&quot;&#x60; to uncheck           | &#x60;\&quot;1\&quot;&#x60;                   | | &#x60;user&#x60;               | Team member &#x60;internal_id&#x60; as string       | &#x60;\&quot;42\&quot;&#x60;                  |  Validation: all required fields without a default value must be present and non-empty; unknown &#x60;internal_id&#x60;s are rejected; option-based values must reference an existing option.  Note: a &#x60;required&#x60; checkbox without a default cannot be unchecked via the API — set a default or clear &#x60;required&#x60; in workspace settings. </value>
         [JsonPropertyName("custom_field")]
         public Dictionary<string, string>? CustomField { get { return this.CustomFieldOption; } set { this.CustomFieldOption = new Option<Dictionary<string, string>?>(value); } }
 
@@ -494,6 +528,8 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("  SuiteId: ").Append(SuiteId).Append("\n");
             sb.Append("  MilestoneId: ").Append(MilestoneId).Append("\n");
             sb.Append("  Automation: ").Append(Automation).Append("\n");
+            sb.Append("  IsManual: ").Append(IsManual).Append("\n");
+            sb.Append("  IsToBeAutomated: ").Append(IsToBeAutomated).Append("\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
             sb.Append("  StepsType: ").Append(StepsType).Append("\n");
             sb.Append("  Attachments: ").Append(Attachments).Append("\n");
@@ -562,6 +598,8 @@ namespace Qase.ApiClient.V1.Model
             Option<long?> suiteId = default;
             Option<long?> milestoneId = default;
             Option<int?> automation = default;
+            Option<int?> isManual = default;
+            Option<int?> isToBeAutomated = default;
             Option<int?> status = default;
             Option<TestCasebulkCasesInner.StepsTypeEnum?> stepsType = default;
             Option<List<string>?> attachments = default;
@@ -627,6 +665,12 @@ namespace Qase.ApiClient.V1.Model
                             break;
                         case "automation":
                             automation = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
+                            break;
+                        case "isManual":
+                            isManual = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
+                            break;
+                        case "isToBeAutomated":
+                            isToBeAutomated = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
                             break;
                         case "status":
                             status = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
@@ -711,6 +755,12 @@ namespace Qase.ApiClient.V1.Model
             if (automation.IsSet && automation.Value == null)
                 throw new ArgumentNullException(nameof(automation), "Property is not nullable for class TestCasebulkCasesInner.");
 
+            if (isManual.IsSet && isManual.Value == null)
+                throw new ArgumentNullException(nameof(isManual), "Property is not nullable for class TestCasebulkCasesInner.");
+
+            if (isToBeAutomated.IsSet && isToBeAutomated.Value == null)
+                throw new ArgumentNullException(nameof(isToBeAutomated), "Property is not nullable for class TestCasebulkCasesInner.");
+
             if (status.IsSet && status.Value == null)
                 throw new ArgumentNullException(nameof(status), "Property is not nullable for class TestCasebulkCasesInner.");
 
@@ -735,7 +785,7 @@ namespace Qase.ApiClient.V1.Model
             if (updatedAt.IsSet && updatedAt.Value == null)
                 throw new ArgumentNullException(nameof(updatedAt), "Property is not nullable for class TestCasebulkCasesInner.");
 
-            return new TestCasebulkCasesInner(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, suiteId, milestoneId, automation, status, stepsType, attachments, steps, tags, varParams, parameters, customField, createdAt, updatedAt, id);
+            return new TestCasebulkCasesInner(title.Value!, description, preconditions, postconditions, severity, priority, behavior, type, layer, isFlaky, suiteId, milestoneId, automation, isManual, isToBeAutomated, status, stepsType, attachments, steps, tags, varParams, parameters, customField, createdAt, updatedAt, id);
         }
 
         /// <summary>
@@ -829,6 +879,12 @@ namespace Qase.ApiClient.V1.Model
 
             if (testCasebulkCasesInner.AutomationOption.IsSet)
                 writer.WriteNumber("automation", testCasebulkCasesInner.AutomationOption.Value!.Value);
+
+            if (testCasebulkCasesInner.IsManualOption.IsSet)
+                writer.WriteNumber("isManual", testCasebulkCasesInner.IsManualOption.Value!.Value);
+
+            if (testCasebulkCasesInner.IsToBeAutomatedOption.IsSet)
+                writer.WriteNumber("isToBeAutomated", testCasebulkCasesInner.IsToBeAutomatedOption.Value!.Value);
 
             if (testCasebulkCasesInner.StatusOption.IsSet)
                 writer.WriteNumber("status", testCasebulkCasesInner.StatusOption.Value!.Value);
