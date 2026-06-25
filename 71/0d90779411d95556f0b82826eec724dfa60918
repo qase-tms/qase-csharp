@@ -1,0 +1,19 @@
+Qase.Csharp.Commons/Qase.Csharp.Commons.csproj
+  s_ec91764c07132d::t_eacaa3e7c6e333 34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "710d90779411d95556f0b82826eec724dfa60918",
+  "prompts": {},
+  "sessions": {
+    "s_ec91764c07132d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "14bd68e7-21ad-467d-9c20-f397de96e80d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
