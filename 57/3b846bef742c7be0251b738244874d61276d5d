@@ -1,0 +1,21 @@
+Directory.Build.props
+  s_ec91764c07132d::t_c14113065054e2 4
+changelog.md
+  s_ec91764c07132d::t_eb5911469535e5 3-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "573b846bef742c7be0251b738244874d61276d5d",
+  "prompts": {},
+  "sessions": {
+    "s_ec91764c07132d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "14bd68e7-21ad-467d-9c20-f397de96e80d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
