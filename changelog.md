@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-csharp 1.1.20
+
+- Fixed build file lock that blocked rebuilds in projects referencing a Qase reporter — downgraded `AspectInjector` to 2.8.2, avoiding the MSBuild Task in 2.9.0 that held a handle on the output assembly and caused the lock during the `CreateAppHost` step ([pamidur/aspect-injector#244](https://github.com/pamidur/aspect-injector/issues/244))
+
 ## qase-csharp 1.1.19
 
 - Updated API clients to the latest specification
