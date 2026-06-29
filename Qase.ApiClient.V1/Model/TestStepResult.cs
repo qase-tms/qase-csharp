@@ -36,13 +36,21 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         /// <param name="status">1 - passed, 2 - failed, 3 - blocked, 5 - skipped, 7 - in_progress</param>
         /// <param name="position">position</param>
+        /// <param name="comment">Comment left for the step.</param>
+        /// <param name="startTime">Unix timestamp of the step start time.</param>
+        /// <param name="endTime">Unix timestamp of the step end time.</param>
+        /// <param name="durationMs">Step duration in milliseconds.</param>
         /// <param name="attachments">attachments</param>
-        /// <param name="steps">Nested steps results will be here. The same structure is used for them for them.</param>
+        /// <param name="steps">Nested steps results will be here. The same structure is used for them.</param>
         [JsonConstructor]
-        public TestStepResult(Option<int?> status = default, Option<int?> position = default, Option<List<Attachment>?> attachments = default, Option<List<Object>?> steps = default)
+        public TestStepResult(Option<int?> status = default, Option<int?> position = default, Option<string?> comment = default, Option<long?> startTime = default, Option<long?> endTime = default, Option<long?> durationMs = default, Option<List<Attachment>?> attachments = default, Option<List<TestStepResult>?> steps = default)
         {
             StatusOption = status;
             PositionOption = position;
+            CommentOption = comment;
+            StartTimeOption = startTime;
+            EndTimeOption = endTime;
+            DurationMsOption = durationMs;
             AttachmentsOption = attachments;
             StepsOption = steps;
             OnCreated();
@@ -79,6 +87,62 @@ namespace Qase.ApiClient.V1.Model
         public int? Position { get { return this.PositionOption; } set { this.PositionOption = new Option<int?>(value); } }
 
         /// <summary>
+        /// Used to track the state of Comment
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<string?> CommentOption { get; private set; }
+
+        /// <summary>
+        /// Comment left for the step.
+        /// </summary>
+        /// <value>Comment left for the step.</value>
+        [JsonPropertyName("comment")]
+        public string? Comment { get { return this.CommentOption; } set { this.CommentOption = new Option<string?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of StartTime
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<long?> StartTimeOption { get; private set; }
+
+        /// <summary>
+        /// Unix timestamp of the step start time.
+        /// </summary>
+        /// <value>Unix timestamp of the step start time.</value>
+        [JsonPropertyName("start_time")]
+        public long? StartTime { get { return this.StartTimeOption; } set { this.StartTimeOption = new Option<long?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of EndTime
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<long?> EndTimeOption { get; private set; }
+
+        /// <summary>
+        /// Unix timestamp of the step end time.
+        /// </summary>
+        /// <value>Unix timestamp of the step end time.</value>
+        [JsonPropertyName("end_time")]
+        public long? EndTime { get { return this.EndTimeOption; } set { this.EndTimeOption = new Option<long?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of DurationMs
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<long?> DurationMsOption { get; private set; }
+
+        /// <summary>
+        /// Step duration in milliseconds.
+        /// </summary>
+        /// <value>Step duration in milliseconds.</value>
+        [JsonPropertyName("duration_ms")]
+        public long? DurationMs { get { return this.DurationMsOption; } set { this.DurationMsOption = new Option<long?>(value); } }
+
+        /// <summary>
         /// Used to track the state of Attachments
         /// </summary>
         [JsonIgnore]
@@ -96,14 +160,14 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<List<Object>?> StepsOption { get; private set; }
+        public Option<List<TestStepResult>?> StepsOption { get; private set; }
 
         /// <summary>
-        /// Nested steps results will be here. The same structure is used for them for them.
+        /// Nested steps results will be here. The same structure is used for them.
         /// </summary>
-        /// <value>Nested steps results will be here. The same structure is used for them for them.</value>
+        /// <value>Nested steps results will be here. The same structure is used for them.</value>
         [JsonPropertyName("steps")]
-        public List<Object>? Steps { get { return this.StepsOption; } set { this.StepsOption = new Option<List<Object>?>(value); } }
+        public List<TestStepResult>? Steps { get { return this.StepsOption; } set { this.StepsOption = new Option<List<TestStepResult>?>(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -121,6 +185,10 @@ namespace Qase.ApiClient.V1.Model
             sb.Append("class TestStepResult {\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
             sb.Append("  Position: ").Append(Position).Append("\n");
+            sb.Append("  Comment: ").Append(Comment).Append("\n");
+            sb.Append("  StartTime: ").Append(StartTime).Append("\n");
+            sb.Append("  EndTime: ").Append(EndTime).Append("\n");
+            sb.Append("  DurationMs: ").Append(DurationMs).Append("\n");
             sb.Append("  Attachments: ").Append(Attachments).Append("\n");
             sb.Append("  Steps: ").Append(Steps).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
@@ -163,8 +231,12 @@ namespace Qase.ApiClient.V1.Model
 
             Option<int?> status = default;
             Option<int?> position = default;
+            Option<string?> comment = default;
+            Option<long?> startTime = default;
+            Option<long?> endTime = default;
+            Option<long?> durationMs = default;
             Option<List<Attachment>?> attachments = default;
-            Option<List<Object>?> steps = default;
+            Option<List<TestStepResult>?> steps = default;
 
             while (utf8JsonReader.Read())
             {
@@ -187,11 +259,23 @@ namespace Qase.ApiClient.V1.Model
                         case "position":
                             position = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
                             break;
+                        case "comment":
+                            comment = new Option<string?>(utf8JsonReader.GetString()!);
+                            break;
+                        case "start_time":
+                            startTime = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
+                            break;
+                        case "end_time":
+                            endTime = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
+                            break;
+                        case "duration_ms":
+                            durationMs = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
+                            break;
                         case "attachments":
                             attachments = new Option<List<Attachment>?>(JsonSerializer.Deserialize<List<Attachment>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "steps":
-                            steps = new Option<List<Object>?>(JsonSerializer.Deserialize<List<Object>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            steps = new Option<List<TestStepResult>?>(JsonSerializer.Deserialize<List<TestStepResult>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         default:
                             break;
@@ -205,13 +289,16 @@ namespace Qase.ApiClient.V1.Model
             if (position.IsSet && position.Value == null)
                 throw new ArgumentNullException(nameof(position), "Property is not nullable for class TestStepResult.");
 
+            if (comment.IsSet && comment.Value == null)
+                throw new ArgumentNullException(nameof(comment), "Property is not nullable for class TestStepResult.");
+
             if (attachments.IsSet && attachments.Value == null)
                 throw new ArgumentNullException(nameof(attachments), "Property is not nullable for class TestStepResult.");
 
             if (steps.IsSet && steps.Value == null)
                 throw new ArgumentNullException(nameof(steps), "Property is not nullable for class TestStepResult.");
 
-            return new TestStepResult(status, position, attachments, steps);
+            return new TestStepResult(status, position, comment, startTime, endTime, durationMs, attachments, steps);
         }
 
         /// <summary>
@@ -238,6 +325,9 @@ namespace Qase.ApiClient.V1.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, TestStepResult testStepResult, JsonSerializerOptions jsonSerializerOptions)
         {
+            if (testStepResult.CommentOption.IsSet && testStepResult.Comment == null)
+                throw new ArgumentNullException(nameof(testStepResult.Comment), "Property is required for class TestStepResult.");
+
             if (testStepResult.AttachmentsOption.IsSet && testStepResult.Attachments == null)
                 throw new ArgumentNullException(nameof(testStepResult.Attachments), "Property is required for class TestStepResult.");
 
@@ -249,6 +339,27 @@ namespace Qase.ApiClient.V1.Model
 
             if (testStepResult.PositionOption.IsSet)
                 writer.WriteNumber("position", testStepResult.PositionOption.Value!.Value);
+
+            if (testStepResult.CommentOption.IsSet)
+                writer.WriteString("comment", testStepResult.Comment);
+
+            if (testStepResult.StartTimeOption.IsSet)
+                if (testStepResult.StartTimeOption.Value != null)
+                    writer.WriteNumber("start_time", testStepResult.StartTimeOption.Value!.Value);
+                else
+                    writer.WriteNull("start_time");
+
+            if (testStepResult.EndTimeOption.IsSet)
+                if (testStepResult.EndTimeOption.Value != null)
+                    writer.WriteNumber("end_time", testStepResult.EndTimeOption.Value!.Value);
+                else
+                    writer.WriteNull("end_time");
+
+            if (testStepResult.DurationMsOption.IsSet)
+                if (testStepResult.DurationMsOption.Value != null)
+                    writer.WriteNumber("duration_ms", testStepResult.DurationMsOption.Value!.Value);
+                else
+                    writer.WriteNull("duration_ms");
 
             if (testStepResult.AttachmentsOption.IsSet)
             {
