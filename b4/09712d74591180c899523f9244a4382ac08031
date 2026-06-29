@@ -1,0 +1,25 @@
+Directory.Build.props
+  s_85ddc622051aaf::t_d5287cc3b9e908 4
+Qase.ApiClient.V1/Model/TestStepResult.cs
+  s_85ddc622051aaf::t_c9cc99fab69639 39-42,44,46,50-53,89-144,163,166,168,170,188-191,234-237,239,262-273,278,292-294,301,328-330,343-363
+Qase.ApiClient.V1/docs/models/TestStepResult.md
+  s_85ddc622051aaf::t_156d3821e69259 9-12,14
+changelog.md
+  s_85ddc622051aaf::t_a7a39e0e1a1699 3-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "b409712d74591180c899523f9244a4382ac08031",
+  "prompts": {},
+  "sessions": {
+    "s_85ddc622051aaf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91eedfab-7e7a-4a7a-86cd-851199e64a9f",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
