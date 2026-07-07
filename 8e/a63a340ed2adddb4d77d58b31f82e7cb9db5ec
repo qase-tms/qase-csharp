@@ -1,0 +1,37 @@
+Directory.Build.props
+  s_9949356bb8136a::t_c7116e3d6ea8c5 4
+Qase.ApiClient.V1/Model/TestCaseUpdate.cs
+  s_9949356bb8136a::t_c7116e3d6ea8c5 50-51,61,348,351,353,355,362,365,367,369,560-561,626,629,817,820
+Qase.ApiClient.V1/docs/models/TestCase.md
+  s_9949356bb8136a::t_c7116e3d6ea8c5 20-21
+changelog.md
+  s_9949356bb8136a::t_a9179d8adbeaf4 3-6
+Qase.ApiClient.V1/docs/models/TestCasebulkCasesInner.md
+  s_9949356bb8136a::t_c7116e3d6ea8c5 20-21
+Qase.ApiClient.V1/Model/TestCasebulkCasesInner.cs
+  s_9949356bb8136a::t_c7116e3d6ea8c5 50-51,64,347,350,352,354,361,364,366,368,601-602,670,673,884,887
+Qase.ApiClient.V1/docs/models/TestCaseCreate.md
+  s_9949356bb8136a::t_c7116e3d6ea8c5 20-21
+Qase.ApiClient.V1/docs/models/TestCaseUpdate.md
+  s_9949356bb8136a::t_c7116e3d6ea8c5 20-21
+Qase.ApiClient.V1/Model/TestCaseCreate.cs
+  s_9949356bb8136a::t_c7116e3d6ea8c5 50-51,63,345,348,350,352,359,362,364,366,585-586,653,656,864,867
+Qase.ApiClient.V1/Model/TestCase.cs
+  s_9949356bb8136a::t_c7116e3d6ea8c5 50-51,71,369,372,374,376,383,386,388,390,734-735,810,813,1061,1064
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "8ea63a340ed2adddb4d77d58b31f82e7cb9db5ec",
+  "prompts": {},
+  "sessions": {
+    "s_9949356bb8136a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9373579e-1e0e-4b20-a586-4931f56494e8",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
