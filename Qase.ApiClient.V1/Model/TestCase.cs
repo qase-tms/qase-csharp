@@ -47,8 +47,8 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="isFlaky">isFlaky</param>
         /// <param name="behavior">behavior</param>
         /// <param name="automation">Deprecated, use &#x60;isManual&#x60; and &#x60;isToBeAutomated&#x60; instead. Encodes the test case automation state as a single integer: &#x60;0&#x60; &#x3D; manual, &#x60;1&#x60; &#x3D; manual planned to be automated, &#x60;2&#x60; &#x3D; automated.</param>
-        /// <param name="isManual">&#x60;1&#x60; if the case is manual, &#x60;0&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.</param>
-        /// <param name="isToBeAutomated">&#x60;1&#x60; if a manual case is planned to be automated, &#x60;0&#x60; otherwise. Only meaningful when &#x60;isManual &#x3D; 1&#x60;; ignored when &#x60;isManual &#x3D; 0&#x60;.</param>
+        /// <param name="isManual">&#x60;true&#x60; if the case is manual, &#x60;false&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.</param>
+        /// <param name="isToBeAutomated">&#x60;true&#x60; if a manual case is planned to be automated, &#x60;false&#x60; otherwise. Only meaningful when &#x60;isManual&#x60; is &#x60;true&#x60;; ignored when &#x60;isManual&#x60; is &#x60;false&#x60;.</param>
         /// <param name="status">status</param>
         /// <param name="milestoneId">milestoneId</param>
         /// <param name="suiteId">suiteId</param>
@@ -68,7 +68,7 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="updated">Deprecated, use the &#x60;updated_at&#x60; property instead.</param>
         /// <param name="externalIssues">externalIssues</param>
         [JsonConstructor]
-        public TestCase(Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<int?> isManual = default, Option<int?> isToBeAutomated = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<StepsTypeEnum?> stepsType = default, Option<List<TestStep>?> steps = default, Option<TestCaseParams?> @params = default, Option<List<TestCaseParameter>?> parameters = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<string?> deleted = default, Option<string?> created = default, Option<string?> updated = default, Option<List<ExternalIssue>?> externalIssues = default)
+        public TestCase(Option<long?> id = default, Option<int?> position = default, Option<string?> title = default, Option<string?> description = default, Option<string?> preconditions = default, Option<string?> postconditions = default, Option<int?> severity = default, Option<int?> priority = default, Option<int?> type = default, Option<int?> layer = default, Option<int?> isFlaky = default, Option<int?> behavior = default, Option<int?> automation = default, Option<bool?> isManual = default, Option<bool?> isToBeAutomated = default, Option<int?> status = default, Option<long?> milestoneId = default, Option<long?> suiteId = default, Option<List<CustomFieldValue>?> customFields = default, Option<List<Attachment>?> attachments = default, Option<StepsTypeEnum?> stepsType = default, Option<List<TestStep>?> steps = default, Option<TestCaseParams?> @params = default, Option<List<TestCaseParameter>?> parameters = default, Option<List<TagValue>?> tags = default, Option<long?> memberId = default, Option<long?> authorId = default, Option<DateTime?> createdAt = default, Option<DateTime?> updatedAt = default, Option<string?> deleted = default, Option<string?> created = default, Option<string?> updated = default, Option<List<ExternalIssue>?> externalIssues = default)
         {
             IdOption = id;
             PositionOption = position;
@@ -366,28 +366,28 @@ namespace Qase.ApiClient.V1.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<int?> IsManualOption { get; private set; }
+        public Option<bool?> IsManualOption { get; private set; }
 
         /// <summary>
-        /// &#x60;1&#x60; if the case is manual, &#x60;0&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.
+        /// &#x60;true&#x60; if the case is manual, &#x60;false&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.
         /// </summary>
-        /// <value>&#x60;1&#x60; if the case is manual, &#x60;0&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.</value>
+        /// <value>&#x60;true&#x60; if the case is manual, &#x60;false&#x60; if it is automated. Combined with &#x60;isToBeAutomated&#x60;, replaces the deprecated &#x60;automation&#x60; field.</value>
         [JsonPropertyName("isManual")]
-        public int? IsManual { get { return this.IsManualOption; } set { this.IsManualOption = new Option<int?>(value); } }
+        public bool? IsManual { get { return this.IsManualOption; } set { this.IsManualOption = new Option<bool?>(value); } }
 
         /// <summary>
         /// Used to track the state of IsToBeAutomated
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<int?> IsToBeAutomatedOption { get; private set; }
+        public Option<bool?> IsToBeAutomatedOption { get; private set; }
 
         /// <summary>
-        /// &#x60;1&#x60; if a manual case is planned to be automated, &#x60;0&#x60; otherwise. Only meaningful when &#x60;isManual &#x3D; 1&#x60;; ignored when &#x60;isManual &#x3D; 0&#x60;.
+        /// &#x60;true&#x60; if a manual case is planned to be automated, &#x60;false&#x60; otherwise. Only meaningful when &#x60;isManual&#x60; is &#x60;true&#x60;; ignored when &#x60;isManual&#x60; is &#x60;false&#x60;.
         /// </summary>
-        /// <value>&#x60;1&#x60; if a manual case is planned to be automated, &#x60;0&#x60; otherwise. Only meaningful when &#x60;isManual &#x3D; 1&#x60;; ignored when &#x60;isManual &#x3D; 0&#x60;.</value>
+        /// <value>&#x60;true&#x60; if a manual case is planned to be automated, &#x60;false&#x60; otherwise. Only meaningful when &#x60;isManual&#x60; is &#x60;true&#x60;; ignored when &#x60;isManual&#x60; is &#x60;false&#x60;.</value>
         [JsonPropertyName("isToBeAutomated")]
-        public int? IsToBeAutomated { get { return this.IsToBeAutomatedOption; } set { this.IsToBeAutomatedOption = new Option<int?>(value); } }
+        public bool? IsToBeAutomated { get { return this.IsToBeAutomatedOption; } set { this.IsToBeAutomatedOption = new Option<bool?>(value); } }
 
         /// <summary>
         /// Used to track the state of Status
@@ -731,8 +731,8 @@ namespace Qase.ApiClient.V1.Model
             Option<int?> isFlaky = default;
             Option<int?> behavior = default;
             Option<int?> automation = default;
-            Option<int?> isManual = default;
-            Option<int?> isToBeAutomated = default;
+            Option<bool?> isManual = default;
+            Option<bool?> isToBeAutomated = default;
             Option<int?> status = default;
             Option<long?> milestoneId = default;
             Option<long?> suiteId = default;
@@ -807,10 +807,10 @@ namespace Qase.ApiClient.V1.Model
                             automation = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
                             break;
                         case "isManual":
-                            isManual = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
+                            isManual = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
                             break;
                         case "isToBeAutomated":
-                            isToBeAutomated = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
+                            isToBeAutomated = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
                             break;
                         case "status":
                             status = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
@@ -1058,10 +1058,10 @@ namespace Qase.ApiClient.V1.Model
                 writer.WriteNumber("automation", testCase.AutomationOption.Value!.Value);
 
             if (testCase.IsManualOption.IsSet)
-                writer.WriteNumber("isManual", testCase.IsManualOption.Value!.Value);
+                writer.WriteBoolean("isManual", testCase.IsManualOption.Value!.Value);
 
             if (testCase.IsToBeAutomatedOption.IsSet)
-                writer.WriteNumber("isToBeAutomated", testCase.IsToBeAutomatedOption.Value!.Value);
+                writer.WriteBoolean("isToBeAutomated", testCase.IsToBeAutomatedOption.Value!.Value);
 
             if (testCase.StatusOption.IsSet)
                 writer.WriteNumber("status", testCase.StatusOption.Value!.Value);
