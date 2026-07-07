@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-csharp 1.1.22
+
+- Updated API clients to the latest specification
+
 ## qase-csharp 1.1.21
 
 - Updated API clients to the latest specification
