@@ -35,6 +35,7 @@ namespace Qase.ApiClient.V1.Model
         /// Initializes a new instance of the <see cref="TestStepCreate" /> class.
         /// </summary>
         /// <param name="action">Step action text. Used for classic steps. For gherkin steps, use the \&quot;value\&quot; property instead.</param>
+        /// <param name="shared">Hash of an existing shared step to insert at this position.</param>
         /// <param name="expectedResult">expectedResult</param>
         /// <param name="data">data</param>
         /// <param name="value">Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;. Example: \&quot;Given a user exists\\nWhen they log in\\nThen they see the dashboard\&quot;</param>
@@ -42,9 +43,10 @@ namespace Qase.ApiClient.V1.Model
         /// <param name="attachments">A list of Attachment hashes.</param>
         /// <param name="steps">Nested steps may be passed here. Use same structure for them.</param>
         [JsonConstructor]
-        public TestStepCreate(Option<string?> action = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<string?> value = default, Option<int?> position = default, Option<List<string>?> attachments = default, Option<List<Object>?> steps = default)
+        public TestStepCreate(Option<string?> action = default, Option<string?> shared = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<string?> value = default, Option<int?> position = default, Option<List<string>?> attachments = default, Option<List<Object>?> steps = default)
         {
             ActionOption = action;
+            SharedOption = shared;
             ExpectedResultOption = expectedResult;
             DataOption = data;
             ValueOption = value;
@@ -69,6 +71,20 @@ namespace Qase.ApiClient.V1.Model
         /// <value>Step action text. Used for classic steps. For gherkin steps, use the \&quot;value\&quot; property instead.</value>
         [JsonPropertyName("action")]
         public string? Action { get { return this.ActionOption; } set { this.ActionOption = new Option<string?>(value); } }
+
+        /// <summary>
+        /// Used to track the state of Shared
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<string?> SharedOption { get; private set; }
+
+        /// <summary>
+        /// Hash of an existing shared step to insert at this position.
+        /// </summary>
+        /// <value>Hash of an existing shared step to insert at this position.</value>
+        [JsonPropertyName("shared")]
+        public string? Shared { get { return this.SharedOption; } set { this.SharedOption = new Option<string?>(value); } }
 
         /// <summary>
         /// Used to track the state of ExpectedResult
@@ -167,6 +183,7 @@ namespace Qase.ApiClient.V1.Model
             StringBuilder sb = new StringBuilder();
             sb.Append("class TestStepCreate {\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
+            sb.Append("  Shared: ").Append(Shared).Append("\n");
             sb.Append("  ExpectedResult: ").Append(ExpectedResult).Append("\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
@@ -212,6 +229,7 @@ namespace Qase.ApiClient.V1.Model
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
             Option<string?> action = default;
+            Option<string?> shared = default;
             Option<string?> expectedResult = default;
             Option<string?> data = default;
             Option<string?> value = default;
@@ -236,6 +254,9 @@ namespace Qase.ApiClient.V1.Model
                     {
                         case "action":
                             action = new Option<string?>(utf8JsonReader.GetString()!);
+                            break;
+                        case "shared":
+                            shared = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
                         case "expected_result":
                             expectedResult = new Option<string?>(utf8JsonReader.GetString()!);
@@ -264,6 +285,9 @@ namespace Qase.ApiClient.V1.Model
             if (action.IsSet && action.Value == null)
                 throw new ArgumentNullException(nameof(action), "Property is not nullable for class TestStepCreate.");
 
+            if (shared.IsSet && shared.Value == null)
+                throw new ArgumentNullException(nameof(shared), "Property is not nullable for class TestStepCreate.");
+
             if (expectedResult.IsSet && expectedResult.Value == null)
                 throw new ArgumentNullException(nameof(expectedResult), "Property is not nullable for class TestStepCreate.");
 
@@ -282,7 +306,7 @@ namespace Qase.ApiClient.V1.Model
             if (steps.IsSet && steps.Value == null)
                 throw new ArgumentNullException(nameof(steps), "Property is not nullable for class TestStepCreate.");
 
-            return new TestStepCreate(action, expectedResult, data, value, position, attachments, steps);
+            return new TestStepCreate(action, shared, expectedResult, data, value, position, attachments, steps);
         }
 
         /// <summary>
@@ -312,6 +336,9 @@ namespace Qase.ApiClient.V1.Model
             if (testStepCreate.ActionOption.IsSet && testStepCreate.Action == null)
                 throw new ArgumentNullException(nameof(testStepCreate.Action), "Property is required for class TestStepCreate.");
 
+            if (testStepCreate.SharedOption.IsSet && testStepCreate.Shared == null)
+                throw new ArgumentNullException(nameof(testStepCreate.Shared), "Property is required for class TestStepCreate.");
+
             if (testStepCreate.ExpectedResultOption.IsSet && testStepCreate.ExpectedResult == null)
                 throw new ArgumentNullException(nameof(testStepCreate.ExpectedResult), "Property is required for class TestStepCreate.");
 
@@ -329,6 +356,9 @@ namespace Qase.ApiClient.V1.Model
 
             if (testStepCreate.ActionOption.IsSet)
                 writer.WriteString("action", testStepCreate.Action);
+
+            if (testStepCreate.SharedOption.IsSet)
+                writer.WriteString("shared", testStepCreate.Shared);
 
             if (testStepCreate.ExpectedResultOption.IsSet)
                 writer.WriteString("expected_result", testStepCreate.ExpectedResult);

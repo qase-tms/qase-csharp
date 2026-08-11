@@ -289,10 +289,10 @@ This method allows to retrieve all test cases stored in selected project.
 | **suiteId** | **int** | ID of test suite. | [optional]  |
 | **severity** | **string** | A list of severity values separated by comma. Possible values: undefined, blocker, critical, major, normal, minor, trivial  | [optional]  |
 | **priority** | **string** | A list of priority values separated by comma. Possible values: undefined, high, medium, low  | [optional]  |
-| **type** | **string** | A list of type values separated by comma. Possible values: other, functional smoke, regression, security, usability, performance, acceptance  | [optional]  |
-| **behavior** | **string** | A list of behavior values separated by comma. Possible values: undefined, positive negative, destructive  | [optional]  |
-| **automation** | **string** | A list of values separated by comma. Possible values: is-not-automated, automated to-be-automated  | [optional]  |
-| **status** | **string** | A list of values separated by comma. Possible values: actual, draft deprecated  | [optional]  |
+| **type** | **string** | A list of type values separated by comma. Possible values: other, functional, smoke, regression, security, usability, performance, acceptance  | [optional]  |
+| **behavior** | **string** | A list of behavior values separated by comma. Possible values: undefined, positive, negative, destructive  | [optional]  |
+| **automation** | **string** | A list of values separated by comma. Possible values: is-not-automated, automated, to-be-automated  | [optional]  |
+| **status** | **string** | A list of values separated by comma. Possible values: actual, draft, deprecated  | [optional]  |
 | **externalIssuesType** | **string** | An integration type.  | [optional]  |
 | **externalIssuesIds** | [**List&lt;string&gt;**](string.md) | A list of issue IDs. | [optional]  |
 | **include** | **string** | A list of entities to include in response separated by comma. Possible values: external_issues.  | [optional]  |
