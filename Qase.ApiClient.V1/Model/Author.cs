@@ -35,16 +35,18 @@ namespace Qase.ApiClient.V1.Model
         /// Initializes a new instance of the <see cref="Author" /> class.
         /// </summary>
         /// <param name="id">id</param>
-        /// <param name="authorId">authorId</param>
+        /// <param name="uuid">Author UUID. Use it to reference the author in other API methods.</param>
+        /// <param name="authorId">Deprecated, use &#x60;uuid&#x60; instead.</param>
         /// <param name="entityType">entityType</param>
         /// <param name="entityId">entityId</param>
         /// <param name="email">email</param>
         /// <param name="name">name</param>
         /// <param name="isActive">isActive</param>
         [JsonConstructor]
-        public Author(Option<long?> id = default, Option<long?> authorId = default, Option<string?> entityType = default, Option<long?> entityId = default, Option<string?> email = default, Option<string?> name = default, Option<bool?> isActive = default)
+        public Author(Option<long?> id = default, Option<Guid?> uuid = default, Option<long?> authorId = default, Option<string?> entityType = default, Option<long?> entityId = default, Option<string?> email = default, Option<string?> name = default, Option<bool?> isActive = default)
         {
             IdOption = id;
+            UuidOption = uuid;
             AuthorIdOption = authorId;
             EntityTypeOption = entityType;
             EntityIdOption = entityId;
@@ -70,6 +72,20 @@ namespace Qase.ApiClient.V1.Model
         public long? Id { get { return this.IdOption; } set { this.IdOption = new Option<long?>(value); } }
 
         /// <summary>
+        /// Used to track the state of Uuid
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<Guid?> UuidOption { get; private set; }
+
+        /// <summary>
+        /// Author UUID. Use it to reference the author in other API methods.
+        /// </summary>
+        /// <value>Author UUID. Use it to reference the author in other API methods.</value>
+        [JsonPropertyName("uuid")]
+        public Guid? Uuid { get { return this.UuidOption; } set { this.UuidOption = new Option<Guid?>(value); } }
+
+        /// <summary>
         /// Used to track the state of AuthorId
         /// </summary>
         [JsonIgnore]
@@ -77,9 +93,11 @@ namespace Qase.ApiClient.V1.Model
         public Option<long?> AuthorIdOption { get; private set; }
 
         /// <summary>
-        /// Gets or Sets AuthorId
+        /// Deprecated, use &#x60;uuid&#x60; instead.
         /// </summary>
+        /// <value>Deprecated, use &#x60;uuid&#x60; instead.</value>
         [JsonPropertyName("author_id")]
+        [Obsolete]
         public long? AuthorId { get { return this.AuthorIdOption; } set { this.AuthorIdOption = new Option<long?>(value); } }
 
         /// <summary>
@@ -162,6 +180,7 @@ namespace Qase.ApiClient.V1.Model
             StringBuilder sb = new StringBuilder();
             sb.Append("class Author {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Uuid: ").Append(Uuid).Append("\n");
             sb.Append("  AuthorId: ").Append(AuthorId).Append("\n");
             sb.Append("  EntityType: ").Append(EntityType).Append("\n");
             sb.Append("  EntityId: ").Append(EntityId).Append("\n");
@@ -207,6 +226,7 @@ namespace Qase.ApiClient.V1.Model
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
             Option<long?> id = default;
+            Option<Guid?> uuid = default;
             Option<long?> authorId = default;
             Option<string?> entityType = default;
             Option<long?> entityId = default;
@@ -231,6 +251,9 @@ namespace Qase.ApiClient.V1.Model
                     {
                         case "id":
                             id = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
+                            break;
+                        case "uuid":
+                            uuid = new Option<Guid?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (Guid?)null : utf8JsonReader.GetGuid());
                             break;
                         case "author_id":
                             authorId = new Option<long?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (long?)null : utf8JsonReader.GetInt64());
@@ -259,6 +282,9 @@ namespace Qase.ApiClient.V1.Model
             if (id.IsSet && id.Value == null)
                 throw new ArgumentNullException(nameof(id), "Property is not nullable for class Author.");
 
+            if (uuid.IsSet && uuid.Value == null)
+                throw new ArgumentNullException(nameof(uuid), "Property is not nullable for class Author.");
+
             if (authorId.IsSet && authorId.Value == null)
                 throw new ArgumentNullException(nameof(authorId), "Property is not nullable for class Author.");
 
@@ -277,7 +303,7 @@ namespace Qase.ApiClient.V1.Model
             if (isActive.IsSet && isActive.Value == null)
                 throw new ArgumentNullException(nameof(isActive), "Property is not nullable for class Author.");
 
-            return new Author(id, authorId, entityType, entityId, email, name, isActive);
+            return new Author(id, uuid, authorId, entityType, entityId, email, name, isActive);
         }
 
         /// <summary>
@@ -315,6 +341,9 @@ namespace Qase.ApiClient.V1.Model
 
             if (author.IdOption.IsSet)
                 writer.WriteNumber("id", author.IdOption.Value!.Value);
+
+            if (author.UuidOption.IsSet)
+                writer.WriteString("uuid", author.UuidOption.Value!.Value);
 
             if (author.AuthorIdOption.IsSet)
                 writer.WriteNumber("author_id", author.AuthorIdOption.Value!.Value);

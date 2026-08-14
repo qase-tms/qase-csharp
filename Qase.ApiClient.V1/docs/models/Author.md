@@ -5,7 +5,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **long** |  | [optional] 
-**AuthorId** | **long** |  | [optional] 
+**Uuid** | **Guid** | Author UUID. Use it to reference the author in other API methods. | [optional] 
+**AuthorId** | **long** | Deprecated, use &#x60;uuid&#x60; instead. | [optional] 
 **EntityType** | **string** |  | [optional] 
 **EntityId** | **long** |  | [optional] 
 **Email** | **string** |  | [optional] 

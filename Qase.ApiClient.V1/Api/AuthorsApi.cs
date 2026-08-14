@@ -44,10 +44,10 @@ namespace Qase.ApiClient.V1.Api
         /// This method allows to retrieve a specific author. 
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Author UUID, or the deprecated integer author ID.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>&gt;</returns>
-        Task<IGetAuthorApiResponse> GetAuthorAsync(int id, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetAuthorApiResponse> GetAuthorAsync(string id, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get a specific author
@@ -55,10 +55,10 @@ namespace Qase.ApiClient.V1.Api
         /// <remarks>
         /// This method allows to retrieve a specific author. 
         /// </remarks>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Author UUID, or the deprecated integer author ID.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>?&gt;</returns>
-        Task<IGetAuthorApiResponse?> GetAuthorOrDefaultAsync(int id, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetAuthorApiResponse?> GetAuthorOrDefaultAsync(string id, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get all authors
@@ -267,14 +267,25 @@ namespace Qase.ApiClient.V1.Api
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatGetAuthor(ref int id);
+        partial void FormatGetAuthor(ref string id);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private void ValidateGetAuthor(string id)
+        {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="id"></param>
-        private void AfterGetAuthorDefaultImplementation(IGetAuthorApiResponse apiResponseLocalVar, int id)
+        private void AfterGetAuthorDefaultImplementation(IGetAuthorApiResponse apiResponseLocalVar, string id)
         {
             bool suppressDefaultLog = false;
             AfterGetAuthor(ref suppressDefaultLog, apiResponseLocalVar, id);
@@ -288,7 +299,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="id"></param>
-        partial void AfterGetAuthor(ref bool suppressDefaultLog, IGetAuthorApiResponse apiResponseLocalVar, int id);
+        partial void AfterGetAuthor(ref bool suppressDefaultLog, IGetAuthorApiResponse apiResponseLocalVar, string id);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -297,7 +308,7 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="id"></param>
-        private void OnErrorGetAuthorDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id)
+        private void OnErrorGetAuthorDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string id)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorGetAuthor(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, id);
@@ -313,15 +324,15 @@ namespace Qase.ApiClient.V1.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="id"></param>
-        partial void OnErrorGetAuthor(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, int id);
+        partial void OnErrorGetAuthor(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string id);
 
         /// <summary>
         /// Get a specific author This method allows to retrieve a specific author. 
         /// </summary>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Author UUID, or the deprecated integer author ID.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>&gt;</returns>
-        public async Task<IGetAuthorApiResponse?> GetAuthorOrDefaultAsync(int id, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetAuthorApiResponse?> GetAuthorOrDefaultAsync(string id, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -337,15 +348,17 @@ namespace Qase.ApiClient.V1.Api
         /// Get a specific author This method allows to retrieve a specific author. 
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Author UUID, or the deprecated integer author ID.</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetAuthorApiResponse"/>&gt;</returns>
-        public async Task<IGetAuthorApiResponse> GetAuthorAsync(int id, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetAuthorApiResponse> GetAuthorAsync(string id, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateGetAuthor(id);
+
                 FormatGetAuthor(ref id);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())

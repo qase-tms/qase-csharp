@@ -9,7 +9,7 @@ All URIs are relative to *https://api.qase.io/v1*
 
 <a id="getauthor"></a>
 # **GetAuthor**
-> AuthorResponse GetAuthor (int id)
+> AuthorResponse GetAuthor (string id)
 
 Get a specific author
 
@@ -20,7 +20,7 @@ This method allows to retrieve a specific author.
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
-| **id** | **int** | Identifier. |  |
+| **id** | **string** | Author UUID, or the deprecated integer author ID. |  |
 
 ### Return type
 
