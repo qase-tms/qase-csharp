@@ -161,6 +161,20 @@ namespace Qase.ApiClient.V1.Client
                 return RequirementQuery.TypeEnumToJsonValue(requirementQueryTypeEnum);
             if (obj is ResultUpdate.StatusEnum resultUpdateStatusEnum)
                 return ResultUpdate.StatusEnumToJsonValue(resultUpdateStatusEnum);
+            if (obj is Review.TypeEnum reviewTypeEnum)
+                return Review.TypeEnumToJsonValue(reviewTypeEnum);
+            if (obj is Review.StatusEnum reviewStatusEnum)
+                return Review.StatusEnumToJsonValue(reviewStatusEnum);
+            if (obj is ReviewCaseData.StepsTypeEnum reviewCaseDataStepsTypeEnum)
+                return ReviewCaseData.StepsTypeEnumToJsonValue(reviewCaseDataStepsTypeEnum);
+            if (obj is ReviewDetailed.TypeEnum reviewDetailedTypeEnum)
+                return ReviewDetailed.TypeEnumToJsonValue(reviewDetailedTypeEnum);
+            if (obj is ReviewDetailed.StatusEnum reviewDetailedStatusEnum)
+                return ReviewDetailed.StatusEnumToJsonValue(reviewDetailedStatusEnum);
+            if (obj is ReviewProposedCase.StepsTypeEnum reviewProposedCaseStepsTypeEnum)
+                return ReviewProposedCase.StepsTypeEnumToJsonValue(reviewProposedCaseStepsTypeEnum);
+            if (obj is ReviewReviewersInner.StatusEnum reviewReviewersInnerStatusEnum)
+                return ReviewReviewersInner.StatusEnumToJsonValue(reviewReviewersInnerStatusEnum);
             if (obj is RunCreateCloudRunConfig.BrowserEnum runCreateCloudRunConfigBrowserEnum)
                 return RunCreateCloudRunConfig.BrowserEnumToJsonValue(runCreateCloudRunConfigBrowserEnum);
             if (obj is RunExternalIssues.TypeEnum runExternalIssuesTypeEnum)

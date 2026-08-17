@@ -27,30 +27,28 @@ using Qase.ApiClient.V1.Client;
 namespace Qase.ApiClient.V1.Model
 {
     /// <summary>
-    /// When &#x60;steps_type&#x60; is &#x60;gherkin&#x60; only the scenario text is read from a step. A non-empty &#x60;expected_result&#x60;, &#x60;data&#x60;, &#x60;attachments&#x60;, &#x60;shared&#x60; or nested &#x60;steps&#x60; is rejected, and so is sending the scenario in &#x60;value&#x60; and &#x60;action&#x60; at once.
+    /// ReviewProposedStep
     /// </summary>
-    public partial class TestStepCreate : IValidatableObject
+    public partial class ReviewProposedStep : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestStepCreate" /> class.
+        /// Initializes a new instance of the <see cref="ReviewProposedStep" /> class.
         /// </summary>
         /// <param name="action">Step action text. Used for classic steps. For gherkin steps, use the \&quot;value\&quot; property instead.</param>
-        /// <param name="shared">Hash of an existing shared step to insert at this position.</param>
         /// <param name="expectedResult">expectedResult</param>
         /// <param name="data">data</param>
-        /// <param name="value">Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;. Example: \&quot;Given a user exists\\nWhen they log in\\nThen they see the dashboard\&quot;</param>
-        /// <param name="position">position</param>
+        /// <param name="value">Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;.</param>
+        /// <param name="shared">Hash of the referenced shared step.</param>
         /// <param name="attachments">A list of Attachment hashes.</param>
-        /// <param name="steps">Nested steps may be passed here. Use same structure for them.</param>
+        /// <param name="steps">Nested steps use the same structure.</param>
         [JsonConstructor]
-        public TestStepCreate(Option<string?> action = default, Option<string?> shared = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<string?> value = default, Option<int?> position = default, Option<List<string>?> attachments = default, Option<List<Object>?> steps = default)
+        public ReviewProposedStep(Option<string?> action = default, Option<string?> expectedResult = default, Option<string?> data = default, Option<string?> value = default, Option<string?> shared = default, Option<List<string>?> attachments = default, Option<List<Object>?> steps = default)
         {
             ActionOption = action;
-            SharedOption = shared;
             ExpectedResultOption = expectedResult;
             DataOption = data;
             ValueOption = value;
-            PositionOption = position;
+            SharedOption = shared;
             AttachmentsOption = attachments;
             StepsOption = steps;
             OnCreated();
@@ -71,20 +69,6 @@ namespace Qase.ApiClient.V1.Model
         /// <value>Step action text. Used for classic steps. For gherkin steps, use the \&quot;value\&quot; property instead.</value>
         [JsonPropertyName("action")]
         public string? Action { get { return this.ActionOption; } set { this.ActionOption = new Option<string?>(value); } }
-
-        /// <summary>
-        /// Used to track the state of Shared
-        /// </summary>
-        [JsonIgnore]
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<string?> SharedOption { get; private set; }
-
-        /// <summary>
-        /// Hash of an existing shared step to insert at this position.
-        /// </summary>
-        /// <value>Hash of an existing shared step to insert at this position.</value>
-        [JsonPropertyName("shared")]
-        public string? Shared { get { return this.SharedOption; } set { this.SharedOption = new Option<string?>(value); } }
 
         /// <summary>
         /// Used to track the state of ExpectedResult
@@ -120,25 +104,25 @@ namespace Qase.ApiClient.V1.Model
         public Option<string?> ValueOption { get; private set; }
 
         /// <summary>
-        /// Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;. Example: \&quot;Given a user exists\\nWhen they log in\\nThen they see the dashboard\&quot;
+        /// Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;.
         /// </summary>
-        /// <value>Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;. Example: \&quot;Given a user exists\\nWhen they log in\\nThen they see the dashboard\&quot;</value>
+        /// <value>Gherkin scenario text. Used when steps_type is \&quot;gherkin\&quot;.</value>
         [JsonPropertyName("value")]
         public string? Value { get { return this.ValueOption; } set { this.ValueOption = new Option<string?>(value); } }
 
         /// <summary>
-        /// Used to track the state of Position
+        /// Used to track the state of Shared
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<int?> PositionOption { get; private set; }
+        public Option<string?> SharedOption { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Position
+        /// Hash of the referenced shared step.
         /// </summary>
-        [JsonPropertyName("position")]
-        [Obsolete]
-        public int? Position { get { return this.PositionOption; } set { this.PositionOption = new Option<int?>(value); } }
+        /// <value>Hash of the referenced shared step.</value>
+        [JsonPropertyName("shared")]
+        public string? Shared { get { return this.SharedOption; } set { this.SharedOption = new Option<string?>(value); } }
 
         /// <summary>
         /// Used to track the state of Attachments
@@ -162,9 +146,9 @@ namespace Qase.ApiClient.V1.Model
         public Option<List<Object>?> StepsOption { get; private set; }
 
         /// <summary>
-        /// Nested steps may be passed here. Use same structure for them.
+        /// Nested steps use the same structure.
         /// </summary>
-        /// <value>Nested steps may be passed here. Use same structure for them.</value>
+        /// <value>Nested steps use the same structure.</value>
         [JsonPropertyName("steps")]
         public List<Object>? Steps { get { return this.StepsOption; } set { this.StepsOption = new Option<List<Object>?>(value); } }
 
@@ -181,13 +165,12 @@ namespace Qase.ApiClient.V1.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class TestStepCreate {\n");
+            sb.Append("class ReviewProposedStep {\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
-            sb.Append("  Shared: ").Append(Shared).Append("\n");
             sb.Append("  ExpectedResult: ").Append(ExpectedResult).Append("\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
-            sb.Append("  Position: ").Append(Position).Append("\n");
+            sb.Append("  Shared: ").Append(Shared).Append("\n");
             sb.Append("  Attachments: ").Append(Attachments).Append("\n");
             sb.Append("  Steps: ").Append(Steps).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
@@ -207,19 +190,19 @@ namespace Qase.ApiClient.V1.Model
     }
 
     /// <summary>
-    /// A Json converter for type <see cref="TestStepCreate" />
+    /// A Json converter for type <see cref="ReviewProposedStep" />
     /// </summary>
-    public class TestStepCreateJsonConverter : JsonConverter<TestStepCreate>
+    public class ReviewProposedStepJsonConverter : JsonConverter<ReviewProposedStep>
     {
         /// <summary>
-        /// Deserializes json to <see cref="TestStepCreate" />
+        /// Deserializes json to <see cref="ReviewProposedStep" />
         /// </summary>
         /// <param name="utf8JsonReader"></param>
         /// <param name="typeToConvert"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="JsonException"></exception>
-        public override TestStepCreate Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
+        public override ReviewProposedStep Read(ref Utf8JsonReader utf8JsonReader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
         {
             int currentDepth = utf8JsonReader.CurrentDepth;
 
@@ -229,11 +212,10 @@ namespace Qase.ApiClient.V1.Model
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
             Option<string?> action = default;
-            Option<string?> shared = default;
             Option<string?> expectedResult = default;
             Option<string?> data = default;
             Option<string?> value = default;
-            Option<int?> position = default;
+            Option<string?> shared = default;
             Option<List<string>?> attachments = default;
             Option<List<Object>?> steps = default;
 
@@ -255,9 +237,6 @@ namespace Qase.ApiClient.V1.Model
                         case "action":
                             action = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
-                        case "shared":
-                            shared = new Option<string?>(utf8JsonReader.GetString()!);
-                            break;
                         case "expected_result":
                             expectedResult = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
@@ -267,8 +246,8 @@ namespace Qase.ApiClient.V1.Model
                         case "value":
                             value = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
-                        case "position":
-                            position = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
+                        case "shared":
+                            shared = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
                         case "attachments":
                             attachments = new Option<List<string>?>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions)!);
@@ -283,104 +262,98 @@ namespace Qase.ApiClient.V1.Model
             }
 
             if (action.IsSet && action.Value == null)
-                throw new ArgumentNullException(nameof(action), "Property is not nullable for class TestStepCreate.");
-
-            if (shared.IsSet && shared.Value == null)
-                throw new ArgumentNullException(nameof(shared), "Property is not nullable for class TestStepCreate.");
+                throw new ArgumentNullException(nameof(action), "Property is not nullable for class ReviewProposedStep.");
 
             if (expectedResult.IsSet && expectedResult.Value == null)
-                throw new ArgumentNullException(nameof(expectedResult), "Property is not nullable for class TestStepCreate.");
+                throw new ArgumentNullException(nameof(expectedResult), "Property is not nullable for class ReviewProposedStep.");
 
             if (data.IsSet && data.Value == null)
-                throw new ArgumentNullException(nameof(data), "Property is not nullable for class TestStepCreate.");
+                throw new ArgumentNullException(nameof(data), "Property is not nullable for class ReviewProposedStep.");
 
             if (value.IsSet && value.Value == null)
-                throw new ArgumentNullException(nameof(value), "Property is not nullable for class TestStepCreate.");
+                throw new ArgumentNullException(nameof(value), "Property is not nullable for class ReviewProposedStep.");
 
-            if (position.IsSet && position.Value == null)
-                throw new ArgumentNullException(nameof(position), "Property is not nullable for class TestStepCreate.");
+            if (shared.IsSet && shared.Value == null)
+                throw new ArgumentNullException(nameof(shared), "Property is not nullable for class ReviewProposedStep.");
 
             if (attachments.IsSet && attachments.Value == null)
-                throw new ArgumentNullException(nameof(attachments), "Property is not nullable for class TestStepCreate.");
+                throw new ArgumentNullException(nameof(attachments), "Property is not nullable for class ReviewProposedStep.");
 
             if (steps.IsSet && steps.Value == null)
-                throw new ArgumentNullException(nameof(steps), "Property is not nullable for class TestStepCreate.");
+                throw new ArgumentNullException(nameof(steps), "Property is not nullable for class ReviewProposedStep.");
 
-            return new TestStepCreate(action, shared, expectedResult, data, value, position, attachments, steps);
+            return new ReviewProposedStep(action, expectedResult, data, value, shared, attachments, steps);
         }
 
         /// <summary>
-        /// Serializes a <see cref="TestStepCreate" />
+        /// Serializes a <see cref="ReviewProposedStep" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testStepCreate"></param>
+        /// <param name="reviewProposedStep"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Write(Utf8JsonWriter writer, TestStepCreate testStepCreate, JsonSerializerOptions jsonSerializerOptions)
+        public override void Write(Utf8JsonWriter writer, ReviewProposedStep reviewProposedStep, JsonSerializerOptions jsonSerializerOptions)
         {
             writer.WriteStartObject();
 
-            WriteProperties(writer, testStepCreate, jsonSerializerOptions);
+            WriteProperties(writer, reviewProposedStep, jsonSerializerOptions);
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serializes the properties of <see cref="TestStepCreate" />
+        /// Serializes the properties of <see cref="ReviewProposedStep" />
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="testStepCreate"></param>
+        /// <param name="reviewProposedStep"></param>
         /// <param name="jsonSerializerOptions"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void WriteProperties(Utf8JsonWriter writer, TestStepCreate testStepCreate, JsonSerializerOptions jsonSerializerOptions)
+        public void WriteProperties(Utf8JsonWriter writer, ReviewProposedStep reviewProposedStep, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (testStepCreate.ActionOption.IsSet && testStepCreate.Action == null)
-                throw new ArgumentNullException(nameof(testStepCreate.Action), "Property is required for class TestStepCreate.");
+            if (reviewProposedStep.ActionOption.IsSet && reviewProposedStep.Action == null)
+                throw new ArgumentNullException(nameof(reviewProposedStep.Action), "Property is required for class ReviewProposedStep.");
 
-            if (testStepCreate.SharedOption.IsSet && testStepCreate.Shared == null)
-                throw new ArgumentNullException(nameof(testStepCreate.Shared), "Property is required for class TestStepCreate.");
+            if (reviewProposedStep.ExpectedResultOption.IsSet && reviewProposedStep.ExpectedResult == null)
+                throw new ArgumentNullException(nameof(reviewProposedStep.ExpectedResult), "Property is required for class ReviewProposedStep.");
 
-            if (testStepCreate.ExpectedResultOption.IsSet && testStepCreate.ExpectedResult == null)
-                throw new ArgumentNullException(nameof(testStepCreate.ExpectedResult), "Property is required for class TestStepCreate.");
+            if (reviewProposedStep.DataOption.IsSet && reviewProposedStep.Data == null)
+                throw new ArgumentNullException(nameof(reviewProposedStep.Data), "Property is required for class ReviewProposedStep.");
 
-            if (testStepCreate.DataOption.IsSet && testStepCreate.Data == null)
-                throw new ArgumentNullException(nameof(testStepCreate.Data), "Property is required for class TestStepCreate.");
+            if (reviewProposedStep.ValueOption.IsSet && reviewProposedStep.Value == null)
+                throw new ArgumentNullException(nameof(reviewProposedStep.Value), "Property is required for class ReviewProposedStep.");
 
-            if (testStepCreate.ValueOption.IsSet && testStepCreate.Value == null)
-                throw new ArgumentNullException(nameof(testStepCreate.Value), "Property is required for class TestStepCreate.");
+            if (reviewProposedStep.SharedOption.IsSet && reviewProposedStep.Shared == null)
+                throw new ArgumentNullException(nameof(reviewProposedStep.Shared), "Property is required for class ReviewProposedStep.");
 
-            if (testStepCreate.AttachmentsOption.IsSet && testStepCreate.Attachments == null)
-                throw new ArgumentNullException(nameof(testStepCreate.Attachments), "Property is required for class TestStepCreate.");
+            if (reviewProposedStep.AttachmentsOption.IsSet && reviewProposedStep.Attachments == null)
+                throw new ArgumentNullException(nameof(reviewProposedStep.Attachments), "Property is required for class ReviewProposedStep.");
 
-            if (testStepCreate.StepsOption.IsSet && testStepCreate.Steps == null)
-                throw new ArgumentNullException(nameof(testStepCreate.Steps), "Property is required for class TestStepCreate.");
+            if (reviewProposedStep.StepsOption.IsSet && reviewProposedStep.Steps == null)
+                throw new ArgumentNullException(nameof(reviewProposedStep.Steps), "Property is required for class ReviewProposedStep.");
 
-            if (testStepCreate.ActionOption.IsSet)
-                writer.WriteString("action", testStepCreate.Action);
+            if (reviewProposedStep.ActionOption.IsSet)
+                writer.WriteString("action", reviewProposedStep.Action);
 
-            if (testStepCreate.SharedOption.IsSet)
-                writer.WriteString("shared", testStepCreate.Shared);
+            if (reviewProposedStep.ExpectedResultOption.IsSet)
+                writer.WriteString("expected_result", reviewProposedStep.ExpectedResult);
 
-            if (testStepCreate.ExpectedResultOption.IsSet)
-                writer.WriteString("expected_result", testStepCreate.ExpectedResult);
+            if (reviewProposedStep.DataOption.IsSet)
+                writer.WriteString("data", reviewProposedStep.Data);
 
-            if (testStepCreate.DataOption.IsSet)
-                writer.WriteString("data", testStepCreate.Data);
+            if (reviewProposedStep.ValueOption.IsSet)
+                writer.WriteString("value", reviewProposedStep.Value);
 
-            if (testStepCreate.ValueOption.IsSet)
-                writer.WriteString("value", testStepCreate.Value);
+            if (reviewProposedStep.SharedOption.IsSet)
+                writer.WriteString("shared", reviewProposedStep.Shared);
 
-            if (testStepCreate.PositionOption.IsSet)
-                writer.WriteNumber("position", testStepCreate.PositionOption.Value!.Value);
-
-            if (testStepCreate.AttachmentsOption.IsSet)
+            if (reviewProposedStep.AttachmentsOption.IsSet)
             {
                 writer.WritePropertyName("attachments");
-                JsonSerializer.Serialize(writer, testStepCreate.Attachments, jsonSerializerOptions);
+                JsonSerializer.Serialize(writer, reviewProposedStep.Attachments, jsonSerializerOptions);
             }
-            if (testStepCreate.StepsOption.IsSet)
+            if (reviewProposedStep.StepsOption.IsSet)
             {
                 writer.WritePropertyName("steps");
-                JsonSerializer.Serialize(writer, testStepCreate.Steps, jsonSerializerOptions);
+                JsonSerializer.Serialize(writer, reviewProposedStep.Steps, jsonSerializerOptions);
             }
         }
     }

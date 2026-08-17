@@ -139,6 +139,22 @@ namespace Qase.ApiClient.V1.Client
             _jsonOptions.Converters.Add(new ResultQueryJsonConverter());
             _jsonOptions.Converters.Add(new ResultResponseJsonConverter());
             _jsonOptions.Converters.Add(new ResultUpdateJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewBulkJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewBulkResponseJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewBulkResponseAllOfResultJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewBulkResponseAllOfResultItemsJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewCaseDataJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewCreateJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewDetailedJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewListResponseJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewListResponseAllOfResultJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewProposedCaseJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewProposedStepJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewResponseJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewReviewersInnerJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewStepDataJsonConverter());
+            _jsonOptions.Converters.Add(new ReviewUpdateJsonConverter());
             _jsonOptions.Converters.Add(new RunJsonConverter());
             _jsonOptions.Converters.Add(new RunCreateJsonConverter());
             _jsonOptions.Converters.Add(new RunCreateCloudRunConfigJsonConverter());
@@ -227,6 +243,7 @@ namespace Qase.ApiClient.V1.Client
             _services.AddSingleton<PlansApiEvents>();
             _services.AddSingleton<ProjectsApiEvents>();
             _services.AddSingleton<ResultsApiEvents>();
+            _services.AddSingleton<ReviewsApiEvents>();
             _services.AddSingleton<RunsApiEvents>();
             _services.AddSingleton<SearchApiEvents>();
             _services.AddSingleton<SharedParametersApiEvents>();
@@ -262,6 +279,7 @@ namespace Qase.ApiClient.V1.Client
             builders.Add(_services.AddHttpClient<IPlansApi, PlansApi>("Qase.ApiClient.V1.Api.IPlansApi", client));
             builders.Add(_services.AddHttpClient<IProjectsApi, ProjectsApi>("Qase.ApiClient.V1.Api.IProjectsApi", client));
             builders.Add(_services.AddHttpClient<IResultsApi, ResultsApi>("Qase.ApiClient.V1.Api.IResultsApi", client));
+            builders.Add(_services.AddHttpClient<IReviewsApi, ReviewsApi>("Qase.ApiClient.V1.Api.IReviewsApi", client));
             builders.Add(_services.AddHttpClient<IRunsApi, RunsApi>("Qase.ApiClient.V1.Api.IRunsApi", client));
             builders.Add(_services.AddHttpClient<ISearchApi, SearchApi>("Qase.ApiClient.V1.Api.ISearchApi", client));
             builders.Add(_services.AddHttpClient<ISharedParametersApi, SharedParametersApi>("Qase.ApiClient.V1.Api.ISharedParametersApi", client));
