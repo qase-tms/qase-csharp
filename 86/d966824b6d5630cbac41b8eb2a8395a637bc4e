@@ -1,0 +1,33 @@
+Directory.Build.props
+  s_e03abde9710ca8::t_f4fe75702b2d1a 4
+Qase.ApiClient.V1/Api/ResultsApi.cs
+  s_e03abde9710ca8::t_667e40bfd08f12 71,85,1054,1074
+Qase.ApiClient.V1/docs/apis/ResultsApi.md
+  s_e03abde9710ca8::t_83caec059dfcd2 64
+Qase.ApiClient.V2/Api/ResultsApi.cs
+  s_e03abde9710ca8::t_643f33811c3fb7 172-177,881-886
+Qase.ApiClient.V2/Model/ResultExecution.cs
+  s_e03abde9710ca8::t_be7f5bcb6d7e94 42,45,52,121-134,167,212,245-247,263,319-324
+Qase.ApiClient.V2/docs/apis/ResultsApi.md
+  s_e03abde9710ca8::t_b06f58652e5bc8 92
+Qase.ApiClient.V2/docs/models/ResultExecution.md
+  s_e03abde9710ca8::t_047e1ed2167f70 12
+changelog.md
+  s_e03abde9710ca8::t_3cc513a617b749 3-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "86d966824b6d5630cbac41b8eb2a8395a637bc4e",
+  "prompts": {},
+  "sessions": {
+    "s_e03abde9710ca8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f9577e82-6d1c-46be-8523-385d83fc66fe",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
