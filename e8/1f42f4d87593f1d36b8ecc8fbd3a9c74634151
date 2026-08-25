@@ -1,0 +1,19 @@
+Qase.Csharp.Commons/README.md
+  s_ae3dba0d307cfe::t_80926b6fe42df4 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "e81f42f4d87593f1d36b8ecc8fbd3a9c74634151",
+  "prompts": {},
+  "sessions": {
+    "s_ae3dba0d307cfe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c865193d-7019-4aa9-b702-dae72eb24448",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Manju R <cskmnrpt@gmail.com>"
+    }
+  }
+}
