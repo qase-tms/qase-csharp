@@ -39,15 +39,17 @@ namespace Qase.ApiClient.V2.Model
         /// <param name="endTime">Unix epoch time in seconds (whole part) and milliseconds (fractional part).</param>
         /// <param name="duration">Duration of the test execution in milliseconds.</param>
         /// <param name="stacktrace">stacktrace</param>
+        /// <param name="errorContext">Free-form failure context captured by the reporter. For Playwright this is the content of error-context.md (test info, error details, page snapshot), so it may include rendered page content. Stored verbatim so it can be copied as raw text. Values longer than 262144 characters are silently truncated by Qase and the request still succeeds. Write-only — not returned by the result read endpoints.</param>
         /// <param name="thread">thread</param>
         [JsonConstructor]
-        public ResultExecution(string status, Option<double?> startTime = default, Option<double?> endTime = default, Option<long?> duration = default, Option<string?> stacktrace = default, Option<string?> thread = default)
+        public ResultExecution(string status, Option<double?> startTime = default, Option<double?> endTime = default, Option<long?> duration = default, Option<string?> stacktrace = default, Option<string?> errorContext = default, Option<string?> thread = default)
         {
             Status = status;
             StartTimeOption = startTime;
             EndTimeOption = endTime;
             DurationOption = duration;
             StacktraceOption = stacktrace;
+            ErrorContextOption = errorContext;
             ThreadOption = thread;
             OnCreated();
         }
@@ -117,6 +119,20 @@ namespace Qase.ApiClient.V2.Model
         public string? Stacktrace { get { return this.StacktraceOption; } set { this.StacktraceOption = new Option<string?>(value); } }
 
         /// <summary>
+        /// Used to track the state of ErrorContext
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<string?> ErrorContextOption { get; private set; }
+
+        /// <summary>
+        /// Free-form failure context captured by the reporter. For Playwright this is the content of error-context.md (test info, error details, page snapshot), so it may include rendered page content. Stored verbatim so it can be copied as raw text. Values longer than 262144 characters are silently truncated by Qase and the request still succeeds. Write-only — not returned by the result read endpoints.
+        /// </summary>
+        /// <value>Free-form failure context captured by the reporter. For Playwright this is the content of error-context.md (test info, error details, page snapshot), so it may include rendered page content. Stored verbatim so it can be copied as raw text. Values longer than 262144 characters are silently truncated by Qase and the request still succeeds. Write-only — not returned by the result read endpoints.</value>
+        [JsonPropertyName("error_context")]
+        public string? ErrorContext { get { return this.ErrorContextOption; } set { this.ErrorContextOption = new Option<string?>(value); } }
+
+        /// <summary>
         /// Used to track the state of Thread
         /// </summary>
         [JsonIgnore]
@@ -148,6 +164,7 @@ namespace Qase.ApiClient.V2.Model
             sb.Append("  EndTime: ").Append(EndTime).Append("\n");
             sb.Append("  Duration: ").Append(Duration).Append("\n");
             sb.Append("  Stacktrace: ").Append(Stacktrace).Append("\n");
+            sb.Append("  ErrorContext: ").Append(ErrorContext).Append("\n");
             sb.Append("  Thread: ").Append(Thread).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
@@ -192,6 +209,7 @@ namespace Qase.ApiClient.V2.Model
             Option<double?> endTime = default;
             Option<long?> duration = default;
             Option<string?> stacktrace = default;
+            Option<string?> errorContext = default;
             Option<string?> thread = default;
 
             while (utf8JsonReader.Read())
@@ -224,6 +242,9 @@ namespace Qase.ApiClient.V2.Model
                         case "stacktrace":
                             stacktrace = new Option<string?>(utf8JsonReader.GetString());
                             break;
+                        case "error_context":
+                            errorContext = new Option<string?>(utf8JsonReader.GetString());
+                            break;
                         case "thread":
                             thread = new Option<string?>(utf8JsonReader.GetString());
                             break;
@@ -239,7 +260,7 @@ namespace Qase.ApiClient.V2.Model
             if (status.IsSet && status.Value == null)
                 throw new ArgumentNullException(nameof(status), "Property is not nullable for class ResultExecution.");
 
-            return new ResultExecution(status.Value!, startTime, endTime, duration, stacktrace, thread);
+            return new ResultExecution(status.Value!, startTime, endTime, duration, stacktrace, errorContext, thread);
         }
 
         /// <summary>
@@ -294,6 +315,12 @@ namespace Qase.ApiClient.V2.Model
                     writer.WriteString("stacktrace", resultExecution.Stacktrace);
                 else
                     writer.WriteNull("stacktrace");
+
+            if (resultExecution.ErrorContextOption.IsSet)
+                if (resultExecution.ErrorContextOption.Value != null)
+                    writer.WriteString("error_context", resultExecution.ErrorContext);
+                else
+                    writer.WriteNull("error_context");
 
             if (resultExecution.ThreadOption.IsSet)
                 if (resultExecution.ThreadOption.Value != null)

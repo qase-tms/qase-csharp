@@ -68,7 +68,7 @@ namespace Qase.ApiClient.V1.Api
         /// Bulk create test run result
         /// </summary>
         /// <remarks>
-        /// This method allows to create a lot of test run result at once.  If you try to send more than 2,000 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
+        /// This method allows to create a lot of test run result at once.  If you try to send more than 200 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>
@@ -82,7 +82,7 @@ namespace Qase.ApiClient.V1.Api
         /// Bulk create test run result
         /// </summary>
         /// <remarks>
-        /// This method allows to create a lot of test run result at once.  If you try to send more than 2,000 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
+        /// This method allows to create a lot of test run result at once.  If you try to send more than 200 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
         /// </remarks>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
@@ -1051,7 +1051,7 @@ namespace Qase.ApiClient.V1.Api
         partial void OnErrorCreateResultBulk(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string code, int id, ResultCreateBulk resultCreateBulk);
 
         /// <summary>
-        /// Bulk create test run result This method allows to create a lot of test run result at once.  If you try to send more than 2,000 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
+        /// Bulk create test run result This method allows to create a lot of test run result at once.  If you try to send more than 200 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
         /// </summary>
         /// <param name="code">Code of project, where to search entities.</param>
         /// <param name="id">Identifier.</param>
@@ -1071,7 +1071,7 @@ namespace Qase.ApiClient.V1.Api
         }
 
         /// <summary>
-        /// Bulk create test run result This method allows to create a lot of test run result at once.  If you try to send more than 2,000 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
+        /// Bulk create test run result This method allows to create a lot of test run result at once.  If you try to send more than 200 results in a single bulk request, you will receive an error with code 413 - Payload Too Large.  If there is no free space left in your team account, when attempting to upload an attachment, e.g., through reporters, you will receive an error with code 507 - Insufficient Storage. 
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="code">Code of project, where to search entities.</param>

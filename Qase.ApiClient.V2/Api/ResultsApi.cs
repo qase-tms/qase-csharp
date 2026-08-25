@@ -170,6 +170,12 @@ namespace Qase.ApiClient.V2.Api
         bool IsNotFound { get; }
 
         /// <summary>
+        /// Returns true if the response is 413 ContentTooLarge
+        /// </summary>
+        /// <returns></returns>
+        bool IsContentTooLarge { get; }
+
+        /// <summary>
         /// Returns true if the response is 422 UnprocessableContent
         /// </summary>
         /// <returns></returns>
@@ -871,6 +877,12 @@ namespace Qase.ApiClient.V2.Api
             /// </summary>
             /// <returns></returns>
             public bool IsNotFound => 404 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 413 ContentTooLarge
+            /// </summary>
+            /// <returns></returns>
+            public bool IsContentTooLarge => 413 == (int)StatusCode;
 
             /// <summary>
             /// Returns true if the response is 422 UnprocessableContent
