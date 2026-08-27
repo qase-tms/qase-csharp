@@ -26,6 +26,15 @@ namespace Qase.Csharp.Commons.Tests
             config.Logging.File.Should().BeFalse();
         }
 
+        [Fact]
+        public void BatchConfig_ShouldDefaultToTheDocumentedMaximumSize()
+        {
+            // A size of zero makes every result its own request, because the
+            // reporter uploads as soon as the buffer reaches the batch size.
+            new BatchConfig().Size.Should().Be(200);
+            new QaseConfig().TestOps.Batch.Size.Should().Be(200);
+        }
+
         [Theory]
         [InlineData(null, Mode.Off)]
         [InlineData("", Mode.Off)]

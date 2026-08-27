@@ -6,6 +6,7 @@
 - Added a configurable request timeout, defaulting to 30 seconds
 - Added the `testops.api.timeout`, `testops.api.retries` and `testops.api.retryBackoff` options, with `QASE_TESTOPS_API_TIMEOUT`, `QASE_TESTOPS_API_RETRIES` and `QASE_TESTOPS_API_RETRY_BACKOFF` overrides
 - A test run is now left open when a batch of results cannot be uploaded, and the number of lost results is reported
+- Fixed the default batch size, which was `0` instead of the documented `200` and made every result its own request
 
 ## qase-csharp 1.1.25
 
