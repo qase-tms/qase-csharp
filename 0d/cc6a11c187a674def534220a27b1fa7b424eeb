@@ -1,0 +1,66 @@
+Directory.Build.props
+  s_aa9775ec6de1f9::t_e9e0b918d04225 4
+Qase.Csharp.Commons/README.md
+  s_aa9775ec6de1f9::t_af32e92bbd1006 65-85
+  s_aa9775ec6de1f9::t_04bb2b95246226 45-47,110-113
+Qase.Csharp.Commons.Tests/ApiConnectionConfigTests.cs
+  s_aa9775ec6de1f9::t_99c7e4765db552 1-108
+Qase.Csharp.Commons/config/ConfigFactory.cs
+  s_aa9775ec6de1f9::t_7917903cc4c500 3,116-118,255-288,417-434
+Qase.Csharp.Commons/ServiceCollectionExtensions.cs
+  s_aa9775ec6de1f9::t_1f64bfbbb9735e 108-111,159-163
+Qase.Csharp.Commons/config/ApiConfig.cs
+  s_aa9775ec6de1f9::t_b21f7fa53be2e5 17-20,22-25,27-30
+  s_aa9775ec6de1f9::t_7917903cc4c500 21,26,31
+Qase.Csharp.Commons/Qase.Csharp.Commons.csproj
+  s_aa9775ec6de1f9::t_75ee977bd28676 35
+Qase.Csharp.Commons.Tests/QaseHttpPoliciesTests.cs
+  s_aa9775ec6de1f9::t_9054c0026cc6f3 279-306
+  s_aa9775ec6de1f9::t_b5a7ea4bd87ccc 2-3,46-77
+  s_aa9775ec6de1f9::t_d093681ba7e310 4-5,127-233
+  s_aa9775ec6de1f9::t_e682205b80008f 307-320
+  s_aa9775ec6de1f9::t_6b1ddeeee17444 7,234-277
+  s_aa9775ec6de1f9::t_bdd18d8fed26a6 79-126,278
+  s_aa9775ec6de1f9::t_63408b2cf2ee06 1,8-45,78,321
+  s_aa9775ec6de1f9::t_3e431e01ccf5c8 6
+Qase.Csharp.Commons/clients/QaseHttpPolicies.cs
+  s_aa9775ec6de1f9::t_9281f2b8b95a70 117-122,124-126
+  s_aa9775ec6de1f9::t_1a369a2cc9e325 154-159,166-198
+  s_aa9775ec6de1f9::t_8921589bf522f0 9,90-113
+  s_aa9775ec6de1f9::t_36878910146f31 19-20,49-56,58-66,68-76,78-79
+  s_aa9775ec6de1f9::t_21b3096d4386c3 22-25,161-165
+  s_aa9775ec6de1f9::t_97f61593ed7a78 36-47
+  s_aa9775ec6de1f9::t_be77435994f06e 4,6,21,26-35,48
+  s_aa9775ec6de1f9::t_d53d0c55467573 160
+  s_aa9775ec6de1f9::t_bde0082a163752 5,10
+  s_aa9775ec6de1f9::t_651ba1dd9d7ade 123
+  s_aa9775ec6de1f9::t_ac75a6fdb48be1 1-2,11-18,116,127-132,199-201
+  s_aa9775ec6de1f9::t_ca5719e8072021 57,67,77
+  s_aa9775ec6de1f9::t_74364680d13f4b 3,143-153
+  s_aa9775ec6de1f9::t_bb00aca381a172 133-142
+  s_aa9775ec6de1f9::t_3e431e01ccf5c8 7-8,80-89,114-115
+Qase.Csharp.Commons.Tests/TestopsReporterFailedUploadTests.cs
+  s_aa9775ec6de1f9::t_2301be248c2a0f 1-166
+Qase.Csharp.Commons/reporters/TestopsReporter.cs
+  s_aa9775ec6de1f9::t_7dcb2ba8639e63 24,60-69,134,139-149,153,155-156,158-170,172
+changelog.md
+  s_aa9775ec6de1f9::t_e9e0b918d04225 3-9
+Qase.Csharp.Commons.Tests/QaseHttpPipelineTests.cs
+  s_aa9775ec6de1f9::t_6fa473c92ee418 1-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "0dcc6a11c187a674def534220a27b1fa7b424eeb",
+  "prompts": {},
+  "sessions": {
+    "s_aa9775ec6de1f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b301019c-0d93-46cb-a5b8-2af7715a3fa5",
+        "model": "claude-opus-5"
+      },
+      "human_author": null
+    }
+  }
+}
