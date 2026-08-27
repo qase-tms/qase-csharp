@@ -42,6 +42,9 @@ All configuration options are listed in the table below:
 | Token for [API access](https://developers.qase.io/#authentication)                                                         | `testops.api.token`        | `QASE_TESTOPS_API_TOKEN`        | `QASE_TESTOPS_API_TOKEN`        | undefined                               | Yes      | Any string                 |
 | Qase API host. For enterprise users, specify address: `example.qase.io`                                           | `testops.api.host`         | `QASE_TESTOPS_API_HOST`         | `QASE_TESTOPS_API_HOST`         | `qase.io`                               | No       | Any string                 |
 | Qase enterprise environment                                                                                                | `testops.api.enterprise`   | `QASE_TESTOPS_API_ENTERPRISE`   | `QASE_TESTOPS_API_ENTERPRISE`   | `False`                                 | No       | `True`, `False`            |
+| Timeout of a single API request, in seconds                                                                                | `testops.api.timeout`      | `QASE_TESTOPS_API_TIMEOUT`      | `QASE_TESTOPS_API_TIMEOUT`      | `30`                                    | No       | Any positive integer       |
+| Number of retries for a failed results upload                                                                              | `testops.api.retries`      | `QASE_TESTOPS_API_RETRIES`      | `QASE_TESTOPS_API_RETRIES`      | `3`                                     | No       | `0` or any positive integer |
+| Base delay of the exponential retry backoff, in seconds                                                                    | `testops.api.retryBackoff` | `QASE_TESTOPS_API_RETRY_BACKOFF` | `QASE_TESTOPS_API_RETRY_BACKOFF` | `1`                                     | No       | Any positive number        |
 | Code of your project, which you can take from the URL: `https://app.qase.io/project/DEMOTR` - `DEMOTR` is the project code | `testops.project`          | `QASE_TESTOPS_PROJECT`          | `QASE_TESTOPS_PROJECT`          | undefined                               | Yes      | Any string                 |
 | Qase test run ID                                                                                                           | `testops.run.id`           | `QASE_TESTOPS_RUN_ID`           | `QASE_TESTOPS_RUN_ID`           | undefined                               | No       | Any integer                |
 | Qase test run title                                                                                                        | `testops.run.title`        | `QASE_TESTOPS_RUN_TITLE`        | `QASE_TESTOPS_RUN_TITLE`        | `Automated run <Current date and time>` | No       | Any string                 |
@@ -58,6 +61,27 @@ All configuration options are listed in the table below:
 | Filter results by status                      | `testops.statusFilter`                | `QASE_TESTOPS_STATUS_FILTER`     | `QASE_TESTOPS_STATUS_FILTER`     | None, don't filter any results          | No       | Comma-separated list of statuses |
 | Whether to show public report link after test run completion              | `testops.showPublicReportLink`                | `QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK`     | `QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK`     | `False`                                 | No       | `True`, `False`            |
 | Status mapping for test results               | `statusMapping`                       | `QASE_STATUS_MAPPING`            | `QASE_STATUS_MAPPING`            | None, don't map any statuses            | No       | JSON object or comma-separated key=value pairs |
+
+### Retries and timeouts
+
+Uploading test results is the one call worth retrying, and it is safe to retry
+because every result carries an id that Qase uses to deduplicate a batch it has
+already accepted.
+
+A results upload is retried on a transport failure and on HTTP 408, 429 and 5xx,
+with an exponential backoff of `retryBackoff × 2^(attempt-1)`. It is not retried
+on 400, 401, 403, 404, 413, 422 or 507 — those fail identically on a second
+attempt. When a 429 carries a `Retry-After` header, that value is used instead of
+the computed backoff; Qase sends roughly 60 seconds, which a short backoff ladder
+would not survive. `timeout` applies to each attempt, not to the chain as a whole.
+
+Creating and completing a test run is not retried: those calls carry no
+idempotency key, so a replay could create a second run. They still honour
+`timeout`.
+
+If a batch cannot be uploaded even after the retries, the reporter logs an error
+naming how many results were lost and leaves the test run **open**. A completed
+run over partial data looks trustworthy and is not.
 
 ### Example `qase.config.json` config
 
@@ -83,7 +107,10 @@ All configuration options are listed in the table below:
   "testops": {
     "api": {
       "token": "<token>",
-      "host": "qase.io"
+      "host": "qase.io",
+      "timeout": 30,
+      "retries": 3,
+      "retryBackoff": 1
     },
     "run": {
       "title": "Regress run",

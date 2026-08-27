@@ -21,6 +21,7 @@ namespace Qase.Csharp.Commons.Reporters
         private readonly IClient _client;
         private long _testRunId;
         private readonly List<TestResult> _results;
+        private bool _uploadFailed;
 
         /// <summary>
         /// Initializes a new instance of the TestopsReporter class
@@ -56,6 +57,16 @@ namespace Qase.Csharp.Commons.Reporters
         /// <inheritdoc />
         public async Task completeTestRun()
         {
+            if (_uploadFailed)
+            {
+                // A completed run over partial data looks trustworthy and is not.
+                // Leaving it open is the honest signal that something is missing.
+                _logger.LogError(
+                    "Test run {RunId} left incomplete: {Count} test results could not be uploaded to Qase",
+                    _testRunId, _results.Count);
+                return;
+            }
+
             if (!_config.TestOps.Run.Complete)
             {
                 _logger.LogInformation("Test run {RunId} completion skipped (run.complete=false)", _testRunId);
@@ -120,36 +131,46 @@ namespace Qase.Csharp.Commons.Reporters
 
             if (_results.Count >= _config.TestOps.Batch.Size)
             {
-                await _client.UploadResultsAsync(_testRunId, _results);
-                _results.Clear();
+                await UploadBufferedResultsAsync();
             }
         }
 
         /// <inheritdoc />
-        public async Task uploadResults()
+        public Task uploadResults()
+        {
+            return UploadBufferedResultsAsync();
+        }
+
+        /// <summary>
+        /// Sends the buffered results in batches, dropping each batch from the
+        /// buffer only once the server has accepted it. Whatever is left when an
+        /// upload fails is still available to the fallback reporter.
+        /// </summary>
+        private async Task UploadBufferedResultsAsync()
         {
             var batchSize = _config.TestOps.Batch.Size;
-            var totalResults = _results.Count;
 
-            if (totalResults == 0)
+            while (_results.Count > 0)
             {
-                return;
-            }
+                var count = batchSize > 0 ? Math.Min(batchSize, _results.Count) : _results.Count;
+                var batch = _results.GetRange(0, count);
 
-            if (totalResults <= batchSize)
-            {
-                await _client.UploadResultsAsync(_testRunId, _results);
-                _results.Clear();
-                return;
-            }
+                try
+                {
+                    await _client.UploadResultsAsync(_testRunId, batch);
+                }
+                catch (QaseException ex)
+                {
+                    _uploadFailed = true;
+                    _logger.LogError(
+                        ex,
+                        "Failed to upload {Count} test results to Qase after all retries; they are lost from this run",
+                        _results.Count);
+                    throw;
+                }
 
-            for (var index = 0; index < totalResults; index += batchSize)
-            {
-                var end = Math.Min(index + batchSize, totalResults);
-                await _client.UploadResultsAsync(_testRunId, _results.GetRange(index, end - index));
+                _results.RemoveRange(0, count);
             }
-
-            _results.Clear();
         }
 
         /// <inheritdoc />

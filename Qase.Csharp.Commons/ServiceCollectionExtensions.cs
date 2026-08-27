@@ -105,6 +105,10 @@ namespace Qase.Csharp.Commons
                             builder.ConfigureHttpClient(httpClient =>
                             {
                                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+                                // No retry here: POST /run carries no idempotency key, so a
+                                // replay of a request whose response was lost would create a
+                                // second test run.
+                                httpClient.Timeout = QaseHttpPolicies.ResolveTimeout(config.TestOps.Api.Timeout);
                             });
                         });
                 });
@@ -152,6 +156,11 @@ namespace Qase.Csharp.Commons
                         },
                         builder =>
                         {
+                            // Results carry result.Id as an idempotency key, so replaying a
+                            // batch the server already accepted is deduplicated rather than
+                            // duplicated. That is what makes retrying safe here.
+                            builder.AddQaseResultsPolicies(config.TestOps.Api, logger);
+
                             // Add headers to all HTTP requests
                             builder.ConfigureHttpClient(httpClient =>
                             {

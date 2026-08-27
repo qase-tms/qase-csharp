@@ -8,6 +8,6 @@ namespace Qase.Csharp.Commons.Config
         /// <summary>
         /// Gets or sets the batch size
         /// </summary>
-        public int Size { get; set; }
+        public int Size { get; set; } = 200;
     }
 } 
