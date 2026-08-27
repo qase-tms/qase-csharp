@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -112,6 +113,9 @@ namespace Qase.Csharp.Commons.Config
             qaseConfig.TestOps.Defect = GetBooleanEnv("QASE_TESTOPS_DEFECT", qaseConfig.TestOps.Defect);
             qaseConfig.TestOps.Api.Token = GetEnv("QASE_TESTOPS_API_TOKEN", qaseConfig.TestOps.Api.Token);
             qaseConfig.TestOps.Api.Host = GetEnv("QASE_TESTOPS_API_HOST", qaseConfig.TestOps.Api.Host);
+            qaseConfig.TestOps.Api.Timeout = GetIntEnvOrDefault("QASE_TESTOPS_API_TIMEOUT", qaseConfig.TestOps.Api.Timeout);
+            qaseConfig.TestOps.Api.Retries = GetIntEnvOrDefault("QASE_TESTOPS_API_RETRIES", qaseConfig.TestOps.Api.Retries);
+            qaseConfig.TestOps.Api.RetryBackoff = GetDoubleEnvOrDefault("QASE_TESTOPS_API_RETRY_BACKOFF", qaseConfig.TestOps.Api.RetryBackoff);
             qaseConfig.TestOps.Run.Title = GetEnv("QASE_TESTOPS_RUN_TITLE", qaseConfig.TestOps.Run.Title);
             qaseConfig.TestOps.Run.Description = GetEnv("QASE_TESTOPS_RUN_DESCRIPTION", qaseConfig.TestOps.Run.Description);
             qaseConfig.TestOps.Run.Id = GetLongEnv("QASE_TESTOPS_RUN_ID", qaseConfig.TestOps.Run.Id);
@@ -249,6 +253,40 @@ namespace Qase.Csharp.Commons.Config
         }
 
         /// <summary>
+        /// Gets an integer environment variable, keeping the default when the value is not a number
+        /// </summary>
+        /// <param name="key">Environment variable name</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Environment variable value as integer or default</returns>
+        private static int GetIntEnvOrDefault(string key, int defaultValue)
+        {
+            var value = Environment.GetEnvironmentVariable(key);
+            if (value != null && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result))
+            {
+                return result;
+            }
+
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Gets a double environment variable, keeping the default when the value is not a number
+        /// </summary>
+        /// <param name="key">Environment variable name</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Environment variable value as double or default</returns>
+        private static double GetDoubleEnvOrDefault(string key, double defaultValue)
+        {
+            var value = Environment.GetEnvironmentVariable(key);
+            if (value != null && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
+            {
+                return result;
+            }
+
+            return defaultValue;
+        }
+
+        /// <summary>
         /// Gets a long environment variable or returns default value
         /// </summary>
         /// <param name="key">Environment variable name</param>
@@ -375,6 +413,24 @@ namespace Qase.Csharp.Commons.Config
                         hostElement.ValueKind == JsonValueKind.String)
                     {
                         qaseConfig.TestOps.Api.Host = hostElement.GetString();
+                    }
+
+                    if (apiElement.TryGetProperty("timeout", out var timeoutElement) &&
+                        timeoutElement.ValueKind == JsonValueKind.Number)
+                    {
+                        qaseConfig.TestOps.Api.Timeout = timeoutElement.GetInt32();
+                    }
+
+                    if (apiElement.TryGetProperty("retries", out var retriesElement) &&
+                        retriesElement.ValueKind == JsonValueKind.Number)
+                    {
+                        qaseConfig.TestOps.Api.Retries = retriesElement.GetInt32();
+                    }
+
+                    if (apiElement.TryGetProperty("retryBackoff", out var retryBackoffElement) &&
+                        retryBackoffElement.ValueKind == JsonValueKind.Number)
+                    {
+                        qaseConfig.TestOps.Api.RetryBackoff = retryBackoffElement.GetDouble();
                     }
                 }
 

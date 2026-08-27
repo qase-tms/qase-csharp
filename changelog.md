@@ -1,5 +1,12 @@
 # Changelog
 
+## qase-csharp 1.1.26
+
+- Added retries for the test results upload, covering transport failures and HTTP 408, 429 and 5xx, with an exponential backoff that honours the `Retry-After` header
+- Added a configurable request timeout, defaulting to 30 seconds
+- Added the `testops.api.timeout`, `testops.api.retries` and `testops.api.retryBackoff` options, with `QASE_TESTOPS_API_TIMEOUT`, `QASE_TESTOPS_API_RETRIES` and `QASE_TESTOPS_API_RETRY_BACKOFF` overrides
+- A test run is now left open when a batch of results cannot be uploaded, and the number of lost results is reported
+
 ## qase-csharp 1.1.25
 
 - Updated API clients to the latest specification
