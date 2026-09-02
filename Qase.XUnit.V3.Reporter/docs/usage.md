@@ -74,6 +74,9 @@ Create a `qase.config.json` file with the following structure:
       "description": "Description of the regression run",
       "complete": true
     },
+    "plan": {
+      "id": 123
+    },
     "defect": false,
     "project": "<project_code>",
     "batch": {
@@ -90,6 +93,7 @@ You can override configuration values using environment variables:
 - `QASE_MODE` - Reporter mode (testops, report, off)
 - `QASE_TESTOPS_API_TOKEN` - Your Qase API token
 - `QASE_TESTOPS_PROJECT` - Your Qase project code
+- `QASE_TESTOPS_PLAN_ID` - ID of an existing test plan to create the run from
 
 For the complete list of configuration options, see [Configuration Reference](../../Qase.Csharp.Commons/README.md#configuration).
 
