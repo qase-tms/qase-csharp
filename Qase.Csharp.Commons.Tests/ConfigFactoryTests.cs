@@ -1134,5 +1134,85 @@ namespace Qase.Csharp.Commons.Tests
             // Assert
             config.TestOps.Run.Complete.Should().BeTrue(); // Default is true
         }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadPlanIdFromFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""plan"": {
+      ""id"": 42
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Plan.Id.Should().Be(42);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLoadPlanIdFromEnvironmentVariable()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_PLAN_ID", "42");
+
+            try
+            {
+                // Act
+                var config = ConfigFactory.LoadConfig();
+
+                // Assert
+                config.TestOps.Plan.Id.Should().Be(42);
+            }
+            finally
+            {
+                // Cleanup
+                Environment.SetEnvironmentVariable("QASE_TESTOPS_PLAN_ID", null);
+            }
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldPreferPlanIdFromEnvironmentVariableOverFile()
+        {
+            // Arrange
+            var jsonConfig = @"{
+  ""testops"": {
+    ""plan"": {
+      ""id"": 42
+    }
+  }
+}";
+            File.WriteAllText(ConfigFileName, jsonConfig);
+            Environment.SetEnvironmentVariable("QASE_TESTOPS_PLAN_ID", "99");
+
+            try
+            {
+                // Act
+                var config = ConfigFactory.LoadConfig();
+
+                // Assert
+                config.TestOps.Plan.Id.Should().Be(99);
+            }
+            finally
+            {
+                // Cleanup
+                Environment.SetEnvironmentVariable("QASE_TESTOPS_PLAN_ID", null);
+            }
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldLeavePlanIdUnset_WhenNotConfigured()
+        {
+            // Act
+            var config = ConfigFactory.LoadConfig();
+
+            // Assert
+            config.TestOps.Plan.Id.Should().BeNull();
+        }
     }
 } 

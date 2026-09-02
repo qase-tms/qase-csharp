@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-csharp 1.1.27
+
+- Fixed `testops.plan.id` being read from the configuration but never sent when creating a test run — the run is now created from the given test plan across all five reporters (NUnit, MSTest, xUnit v2, xUnit v3, Reqnroll)
+
 ## qase-csharp 1.1.26
 
 - Added retries for the test results upload, covering transport failures and HTTP 408, 429 and 5xx, with an exponential backoff that honours the `Retry-After` header

@@ -67,6 +67,12 @@ namespace Qase.Csharp.Commons.Clients
                 runData.Tags = _config.TestOps.Run.Tags;
             }
 
+            // The API rejects a plan_id below 1, and an unset QASE_TESTOPS_PLAN_ID parses to 0.
+            if (_config.TestOps.Plan.Id.HasValue && _config.TestOps.Plan.Id.Value > 0)
+            {
+                runData.PlanId = _config.TestOps.Plan.Id.Value;
+            }
+
             if (_config.TestOps.Configurations.Values.Count() > 0)
             {
                 var configurationIds = await GetConfigurationIdsAsync();

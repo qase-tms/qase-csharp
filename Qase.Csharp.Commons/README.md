@@ -62,6 +62,16 @@ All configuration options are listed in the table below:
 | Whether to show public report link after test run completion              | `testops.showPublicReportLink`                | `QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK`     | `QASE_TESTOPS_SHOW_PUBLIC_REPORT_LINK`     | `False`                                 | No       | `True`, `False`            |
 | Status mapping for test results               | `statusMapping`                       | `QASE_STATUS_MAPPING`            | `QASE_STATUS_MAPPING`            | None, don't map any statuses            | No       | JSON object or comma-separated key=value pairs |
 
+### Running from a test plan
+
+Setting `testops.plan.id` creates the test run from an existing test plan, so the
+run is scoped to that plan's cases instead of being a standalone run. The plan is
+resolved by Qase when the run is created — the reporter still submits results for
+whichever tests the framework actually executes.
+
+The option is ignored when `testops.run.id` is set: an existing run is reused as
+is, and no new run is created for the plan to apply to.
+
 ### Retries and timeouts
 
 Uploading test results is the one call worth retrying, and it is safe to retry
@@ -121,6 +131,9 @@ run over partial data looks trustworthy and is not.
         "type": "JiraCloud",
         "link": "PROJ-1234"
       }
+    },
+    "plan": {
+      "id": 123
     },
     "defect": false,
     "showPublicReportLink": false,

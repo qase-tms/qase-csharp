@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -690,5 +692,98 @@ namespace Qase.Csharp.Commons.Tests
                 It.Is<RunPublic>(rp => rp.Status == true),
                 It.IsAny<System.Threading.CancellationToken>()), Times.Once);
         }
+
+        [Fact]
+        public async Task CreateTestRunAsync_ShouldSendPlanId_WhenPlanIdIsConfigured()
+        {
+            // Arrange
+            var mockRunApi = new Mock<IRunsApi>();
+            var client = CreateClientWithPlanId(42, mockRunApi, out var captured);
+
+            // Act
+            var result = await client.CreateTestRunAsync();
+
+            // Assert
+            result.Should().Be(12345);
+            SerializeRunCreate(captured.Value!).Should().Contain("\"plan_id\":42");
+        }
+
+        [Fact]
+        public async Task CreateTestRunAsync_ShouldNotSendPlanId_WhenPlanIdIsNotConfigured()
+        {
+            // Arrange
+            var mockRunApi = new Mock<IRunsApi>();
+            var client = CreateClientWithPlanId(null, mockRunApi, out var captured);
+
+            // Act
+            await client.CreateTestRunAsync();
+
+            // Assert
+            SerializeRunCreate(captured.Value!).Should().NotContain("plan_id");
+        }
+
+        [Fact]
+        public async Task CreateTestRunAsync_ShouldNotSendPlanId_WhenPlanIdIsZero()
+        {
+            // Arrange
+            // The API rejects a plan_id below 1, and an empty QASE_TESTOPS_PLAN_ID parses to 0.
+            var mockRunApi = new Mock<IRunsApi>();
+            var client = CreateClientWithPlanId(0, mockRunApi, out var captured);
+
+            // Act
+            await client.CreateTestRunAsync();
+
+            // Assert
+            SerializeRunCreate(captured.Value!).Should().NotContain("plan_id");
+        }
+
+        private static string SerializeRunCreate(RunCreate runCreate)
+        {
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new RunCreateJsonConverter());
+            return JsonSerializer.Serialize(runCreate, options);
+        }
+
+        private static ClientV1 CreateClientWithPlanId(long? planId, Mock<IRunsApi> mockRunApi, out StrongBox<RunCreate?> captured)
+        {
+            var config = new QaseConfig
+            {
+                TestOps = new TestOpsConfig
+                {
+                    Project = "TEST",
+                    Api = new ApiConfig
+                    {
+                        Token = "test-token",
+                        Host = "qase.io"
+                    },
+                    Plan = new PlanConfig { Id = planId }
+                }
+            };
+
+            var mockResponse = new Mock<ICreateRunApiResponse>();
+            mockResponse.Setup(x => x.IsSuccessStatusCode).Returns(true);
+            mockResponse.Setup(x => x.Ok()).Returns(new IdResponse
+            {
+                Result = new IdResponseAllOfResult
+                {
+                    Id = 12345
+                }
+            });
+
+            var box = new StrongBox<RunCreate?>(null);
+            captured = box;
+
+            mockRunApi.Setup(x => x.CreateRunAsync(It.IsAny<string>(), It.IsAny<RunCreate>(), It.IsAny<System.Threading.CancellationToken>()))
+                .Callback<string, RunCreate, System.Threading.CancellationToken>((_, runCreate, _) => box.Value = runCreate)
+                .ReturnsAsync(mockResponse.Object);
+
+            return new ClientV1(
+                new Mock<ILogger<ClientV1>>().Object,
+                config,
+                mockRunApi.Object,
+                new Mock<IAttachmentsApi>().Object,
+                new Mock<IConfigurationsApi>().Object);
+        }
+
     }
 } 
