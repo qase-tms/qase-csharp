@@ -1,0 +1,42 @@
+Qase.Csharp.Commons.Tests/ConfigFactoryTests.cs
+  s_98b8d39986980e::t_225fda09c199ed 1137-1216
+Qase.Reqnroll.Reporter/docs/usage.md
+  s_98b8d39986980e::t_047cff02e8d427 78-80,107
+changelog.md
+  s_98b8d39986980e::t_aae19a6877991f 3-6
+Qase.XUnit.Reporter/docs/usage.md
+  s_98b8d39986980e::t_047cff02e8d427 76-78,95
+Directory.Build.props
+  s_98b8d39986980e::t_aae19a6877991f 4
+Qase.NUnit.Reporter/docs/usage.md
+  s_98b8d39986980e::t_047cff02e8d427 76-78,95
+Qase.Csharp.Commons/clients/ClientV1.cs
+  s_98b8d39986980e::t_12e278cb80a4a5 72-75
+  s_98b8d39986980e::t_5189be4074e58e 70-71
+Qase.Csharp.Commons.Tests/ClientV1Tests.cs
+  s_98b8d39986980e::t_ec402744b99b65 695-696,698-700,702-707,709-711,713-715,717-721,723-725,727-728,730,732-736,745-746,748-772,776,778-786
+  s_98b8d39986980e::t_b761da89f42998 3-4,697,701,708,712,716,722,726,729,731,737-744,747,773-775,777,787
+Qase.MSTest.Reporter/docs/usage.md
+  s_98b8d39986980e::t_047cff02e8d427 76-78,95
+Qase.XUnit.V3.Reporter/docs/usage.md
+  s_98b8d39986980e::t_047cff02e8d427 77-79,96
+Qase.Csharp.Commons/README.md
+  s_98b8d39986980e::t_d1860a88c0da3d 65-74,135-136
+  s_98b8d39986980e::t_136ffbdb8cda56 137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "ee2dd592c0a7e084397eef0f1a84253c25b30a97",
+  "prompts": {},
+  "sessions": {
+    "s_98b8d39986980e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3fa1b8fd-5dba-499a-a431-023d0dce3f49",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
