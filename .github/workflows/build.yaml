@@ -68,9 +68,13 @@ jobs:
             --expected expected/nunit-examples.yaml \
             --schema-dir /tmp/specs/report/schemas
 
-      # xUnit v2: IRunnerReporter not invoked by xunit.runner.visualstudio on Linux.
-      # Works on macOS but not on ubuntu-latest CI runner.
-      # xUnit v3 (MTP v2) works correctly and is validated below.
+      - name: Validate xUnit
+        run: |
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/xunit-report dotnet test examples/xUnitExamples/xUnitExamples.csproj || true
+          reporters-validator validate \
+            --report-dir ${{ github.workspace }}/build/xunit-report \
+            --expected expected/xunit-examples.yaml \
+            --schema-dir /tmp/specs/report/schemas
 
       - name: Validate MSTest
         run: |
