@@ -1,0 +1,28 @@
+Qase.XUnit.Reporter.Tests/ReporterDiscoveryTests.cs
+  s_eab03c0e6afcab::t_90f769f02f4660 1-16,21-44
+  s_eab03c0e6afcab::t_8164b804cd6416 17-20
+.github/workflows/build.yaml
+  s_eab03c0e6afcab::t_019aae5098eade 71-77
+changelog.md
+  s_eab03c0e6afcab::t_0dc8991f8077b8 3-6
+Qase.XUnit.Reporter/Qase.XUnit.Reporter.csproj
+  s_eab03c0e6afcab::t_ae0a571f3f1bed 5
+Directory.Build.props
+  s_eab03c0e6afcab::t_ae0a571f3f1bed 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "dac44f851adbb92d1aaaf890311ad27fb237e747",
+  "prompts": {},
+  "sessions": {
+    "s_eab03c0e6afcab": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7c116191-2275-44b1-aadc-5ecff1cc1fd0",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
