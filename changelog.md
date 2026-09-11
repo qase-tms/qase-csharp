@@ -1,5 +1,9 @@
 # Changelog
 
+## qase-csharp 1.1.28
+
+- Fixed the xUnit v2 reporter never reporting results on Linux: xUnit v2 discovers runner reporters by scanning the test output folder for `*reporters*.dll`, and that glob is case-sensitive on Linux, so `Qase.XUnit.Reporters.dll` was silently skipped and the run fell back to the default reporter. The assembly is now named `qase.xunit.reporters.dll` and is discovered on every platform. Public types, namespaces and configuration are unchanged, but run a clean build after upgrading so the previous assembly is removed from the output folder
+
 ## qase-csharp 1.1.27
 
 - Fixed `testops.plan.id` being read from the configuration but never sent when creating a test run — the run is now created from the given test plan across all five reporters (NUnit, MSTest, xUnit v2, xUnit v3, Reqnroll)

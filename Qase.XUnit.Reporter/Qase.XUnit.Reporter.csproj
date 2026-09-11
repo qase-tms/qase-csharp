@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Qase.XUnit.Reporter</PackageId>
-    <AssemblyName>Qase.XUnit.Reporters</AssemblyName>
+    <AssemblyName>qase.xunit.reporters</AssemblyName>
     <RootNamespace>Qase.XUnit.Reporter</RootNamespace>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
