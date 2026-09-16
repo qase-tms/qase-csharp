@@ -30,6 +30,13 @@ namespace Qase.Reqnroll.Reporter
 
             runtimePluginEvents.ConfigurationDefaults += (sender, args) =>
             {
+                // Off mode: leave this assembly out of the binding sources so none
+                // of the Qase hooks run at all.
+                if (!CoreReporterFactory.IsReportingEnabled())
+                {
+                    return;
+                }
+
                 args.ReqnrollConfiguration.AdditionalStepAssemblies.Add(
                     Assembly.GetExecutingAssembly().FullName);
             };

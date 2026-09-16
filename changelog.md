@@ -1,5 +1,10 @@
 # Changelog
 
+## qase-csharp 1.1.29
+
+- Fixed every reporter crashing when `mode` is `off`: the core reporter was resolved with a required internal reporter, which is only registered for `testops` and `report`, so the run failed with `No service for type 'IInternalReporter' has been registered`. This surfaced as a catastrophic failure in xUnit v2, NUnit and Reqnroll, which build the reporter unconditionally
+- `mode: off` now keeps the reporters fully silent: no service container, no log file and no Qase output in the test run
+
 ## qase-csharp 1.1.28
 
 - Fixed the xUnit v2 reporter never reporting results on Linux: xUnit v2 discovers runner reporters by scanning the test output folder for `*reporters*.dll`, and that glob is case-sensitive on Linux, so `Qase.XUnit.Reporters.dll` was silently skipped and the run fell back to the default reporter. The assembly is now named `qase.xunit.reporters.dll` and is discovered on every platform. Public types, namespaces and configuration are unchanged, but run a clean build after upgrading so the previous assembly is removed from the output folder

@@ -88,6 +88,12 @@ namespace Qase.NUnit.Reporter
         /// <param name="report">XML-formatted test event report</param>
         public void OnTestEvent(string report)
         {
+            // Off mode: no reporter, no log file, no work per event.
+            if (!CoreReporterFactory.IsReportingEnabled())
+            {
+                return;
+            }
+
             try
             {
                 // Log the full XML for debugging (formatted for readability)

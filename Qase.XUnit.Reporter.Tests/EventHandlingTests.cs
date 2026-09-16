@@ -15,6 +15,7 @@ using Xunit.Abstractions;
 
 namespace Qase.XUnit.Reporter.Tests
 {
+    [Collection("Sink")]
     public class EventHandlingTests : IDisposable
     {
         private object _sink;

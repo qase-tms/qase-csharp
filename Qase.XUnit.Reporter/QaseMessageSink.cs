@@ -13,13 +13,22 @@ namespace Qase.Xunit.Reporter
     internal class QaseMessageSink : DefaultRunnerReporterWithTypesMessageHandler
     {
         internal static QaseMessageSink? CurrentSink { get; private set; }
-        private readonly ICoreReporter _reporter;
+        private readonly ICoreReporter? _reporter;
         private ITestResultBuilder _builder = new TestResultBuilder();
 
         private readonly ConcurrentDictionary<ITest, RawTestData> qaseTestData = new();
 
         public QaseMessageSink(IRunnerLogger logger) : base(logger)
         {
+            CurrentSink ??= this;
+
+            // Off mode: stay unsubscribed so no reporter is built and no Qase
+            // output reaches the test run.
+            if (!CoreReporterFactory.IsReportingEnabled())
+            {
+                return;
+            }
+
             this.Runner.TestAssemblyExecutionStartingEvent +=
                 this.OnTestAssemblyExecutionStarting;
             this.Runner.TestAssemblyExecutionFinishedEvent +=
@@ -31,7 +40,6 @@ namespace Qase.Xunit.Reporter
             this.Execution.TestSkippedEvent += this.OnTestSkipped;
             this.Execution.TestFinishedEvent += this.OnTestFinished;
 
-            CurrentSink ??= this;
             _reporter = CoreReporterFactory.GetInstance();
         }
 
@@ -39,7 +47,7 @@ namespace Qase.Xunit.Reporter
         {
             try
             {
-                _reporter.startTestRun().GetAwaiter().GetResult();
+                _reporter!.startTestRun().GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -112,7 +120,7 @@ namespace Qase.Xunit.Reporter
 
             if (!testResult.Ignore)
             {
-                _reporter.addResult(testResult).GetAwaiter().GetResult();
+                _reporter!.addResult(testResult).GetAwaiter().GetResult();
             }
 
             qaseTestData.TryRemove(args.Message.Test, out _);
@@ -122,8 +130,8 @@ namespace Qase.Xunit.Reporter
         {
             try
             {
-                _reporter.uploadResults().GetAwaiter().GetResult();
-                _reporter.completeTestRun().GetAwaiter().GetResult();
+                _reporter!.uploadResults().GetAwaiter().GetResult();
+                _reporter!.completeTestRun().GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

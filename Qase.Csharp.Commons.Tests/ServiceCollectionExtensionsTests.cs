@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Qase.Csharp.Commons;
@@ -279,6 +280,49 @@ namespace Qase.Csharp.Commons.Tests
             var coreReporter = serviceProvider.GetService<ICoreReporter>();
             coreReporter.Should().NotBeNull();
             coreReporter.Should().BeOfType<CoreReporter>();
+        }
+
+        [Fact]
+        public void AddQaseServices_WithOffMode_ShouldResolveCoreReporterWithoutInternalReporter()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var config = new QaseConfig
+            {
+                Mode = Mode.Off,
+                Fallback = Mode.Off
+            };
+
+            // Act
+            services.AddQaseServices(config);
+
+            // Assert
+            var serviceProvider = services.BuildServiceProvider();
+            serviceProvider.GetService<IInternalReporter>().Should().BeNull();
+
+            var coreReporter = serviceProvider.GetService<ICoreReporter>();
+            coreReporter.Should().NotBeNull();
+            coreReporter.Should().BeOfType<CoreReporter>();
+        }
+
+        [Fact]
+        public async Task AddQaseServices_WithOffMode_CoreReporterOperationsShouldBeNoOp()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var config = new QaseConfig
+            {
+                Mode = Mode.Off,
+                Fallback = Mode.Off
+            };
+            services.AddQaseServices(config);
+            var coreReporter = services.BuildServiceProvider().GetRequiredService<ICoreReporter>();
+
+            // Act & Assert
+            await coreReporter.startTestRun();
+            await coreReporter.addResult(new Models.Domain.TestResult());
+            await coreReporter.uploadResults();
+            await coreReporter.completeTestRun();
         }
 
         [Fact]

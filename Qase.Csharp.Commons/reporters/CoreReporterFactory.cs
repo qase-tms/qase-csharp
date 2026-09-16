@@ -15,9 +15,52 @@ namespace Qase.Csharp.Commons.Reporters
         private static ICoreReporter? _instance;
         private static readonly object _lock = new object();
         private static IServiceProvider? _serviceProvider;
+        private static QaseConfig? _config;
 
         private CoreReporterFactory()
         {
+        }
+
+        /// <summary>
+        /// Gets the Qase configuration, loading it once per process.
+        /// </summary>
+        /// <returns>The loaded configuration</returns>
+        public static QaseConfig GetConfig()
+        {
+            if (_config == null)
+            {
+                lock (_lock)
+                {
+                    _config ??= ConfigFactory.LoadConfig();
+                }
+            }
+
+            return _config;
+        }
+
+        /// <summary>
+        /// Indicates whether reporting is enabled, i.e. the mode is not off.
+        /// Reporters use this to skip wiring themselves up entirely instead of
+        /// building a reporter that would discard every result.
+        /// </summary>
+        /// <returns>True when results should be reported</returns>
+        public static bool IsReportingEnabled()
+        {
+            return GetConfig().Mode != Mode.Off;
+        }
+
+        /// <summary>
+        /// Clears the cached configuration and reporter so the next call reloads
+        /// them. Test-only: production code loads both once per process.
+        /// </summary>
+        internal static void Reset()
+        {
+            lock (_lock)
+            {
+                _instance = null;
+                _serviceProvider = null;
+                _config = null;
+            }
         }
 
         /// <summary>
@@ -32,8 +75,16 @@ namespace Qase.Csharp.Commons.Reporters
                 {
                     if (_instance == null)
                     {
-                        var config = ConfigFactory.LoadConfig();
-                        
+                        var config = GetConfig();
+
+                        if (config.Mode == Mode.Off)
+                        {
+                            // Nothing to report to: hand back a silent no-op reporter
+                            // rather than building a container, a Serilog sink and a
+                            // log directory whose output no one asked for.
+                            return _instance = new CoreReporter(NullLogger<CoreReporter>.Instance, config);
+                        }
+
                         var services = new ServiceCollection();
                         services.AddQaseServices(config);
                         _serviceProvider = services.BuildServiceProvider();
