@@ -220,7 +220,9 @@ namespace Qase.Csharp.Commons
             services.AddSingleton<ICoreReporter>(sp => 
             {
                 var logger = sp.GetRequiredService<ILogger<CoreReporter>>();
-                var reporter = sp.GetRequiredService<IInternalReporter>();
+                // Off mode registers no IInternalReporter: CoreReporter accepts a null
+                // reporter and turns every operation into a no-op.
+                var reporter = sp.GetService<IInternalReporter>();
                 var fallbackFactory = sp.GetService<Func<IInternalReporter>>();
                 var fallback = fallbackFactory?.Invoke();
                 return new CoreReporter(logger, config, reporter, fallback);

@@ -6,6 +6,7 @@ using Qase.NUnit.Reporter;
 
 namespace Qase.NUnit.Reporter.Tests
 {
+    [Collection("Listener")]
     public class QaseNUnitEventListenerTests
     {
         private QaseNUnitEventListener _listener;
