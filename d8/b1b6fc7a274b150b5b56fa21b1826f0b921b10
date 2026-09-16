@@ -1,0 +1,57 @@
+Qase.Csharp.Commons/reporters/CoreReporterFactory.cs
+  s_2744a77a428989::t_73e840206431f0 79-87
+  s_2744a77a428989::t_eb955f282f1c57 18,24-52,78
+  s_2744a77a428989::t_70725f55420180 53-65
+Qase.XUnit.Reporter.Tests/EventHandlingTests.cs
+  s_2744a77a428989::t_f1a121617ccafa 18
+Qase.NUnit.Reporter.Tests/QaseNUnitEventListenerTests.cs
+  s_2744a77a428989::t_1d542d90369b11 9
+Qase.Csharp.Commons.Tests/ServiceCollectionExtensionsTests.cs
+  s_2744a77a428989::t_e339645679c879 2,285-326
+  s_2744a77a428989::t_2b949ed520a2a4 327
+Qase.XUnit.Reporter.Tests/OffModeTests.cs
+  s_2744a77a428989::t_4c17de41df8983 64-65,69-74,77-78,89-91,95,97-100
+  s_2744a77a428989::t_f1a121617ccafa 1-2,4-63,83-86,111-113
+  s_2744a77a428989::t_9123afdc48fe99 3,66-68,75-76,79-82,87-88,92-94,96,101-110
+Qase.NUnit.Reporter.Tests/qase.config.json
+  s_2744a77a428989::t_049f5eadc0f2a2 1-12
+Qase.Reqnroll.Reporter/QaseReqnrollPlugin.cs
+  s_2744a77a428989::t_91b04fae46b7e2 33-39
+Qase.NUnit.Reporter.Tests/OffModeTests.cs
+  s_2744a77a428989::t_1d542d90369b11 1-95
+Qase.Csharp.Commons.Tests/CoreReporterFactoryTests.cs
+  s_2744a77a428989::t_cc4d3262cf4be3 3,90-123
+  s_2744a77a428989::t_70725f55420180 1-2,4-89,124-126
+Directory.Build.props
+  s_2744a77a428989::t_f516bf20344a62 4
+Qase.Reqnroll.Reporter.Tests/PluginRegistrationTests.cs
+  s_2744a77a428989::t_821d7526e60b41 1-88
+Qase.NUnit.Reporter/QaseNUnitEventListener.cs
+  s_2744a77a428989::t_6a64a05532998c 91-96
+Qase.NUnit.Reporter.Tests/XmlEventHandlingTests.cs
+  s_2744a77a428989::t_1d542d90369b11 15
+Qase.NUnit.Reporter.Tests/Qase.NUnit.Reporter.Tests.csproj
+  s_2744a77a428989::t_049f5eadc0f2a2 33-38
+changelog.md
+  s_2744a77a428989::t_f516bf20344a62 3-7
+Qase.Csharp.Commons/ServiceCollectionExtensions.cs
+  s_2744a77a428989::t_7733519f7838da 223-225
+Qase.XUnit.Reporter/QaseMessageSink.cs
+  s_2744a77a428989::t_dda8e2f61aac39 16,23-31,50,123,133-134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d8b1b6fc7a274b150b5b56fa21b1826f0b921b10",
+  "prompts": {},
+  "sessions": {
+    "s_2744a77a428989": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c6b872-fb1c-4e8f-a0cb-d384657d0fa8",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
