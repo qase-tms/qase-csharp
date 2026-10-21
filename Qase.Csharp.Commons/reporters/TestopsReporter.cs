@@ -8,6 +8,7 @@ using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Clients;
+using Qase.Csharp.Commons.Utils;
 
 namespace Qase.Csharp.Commons.Reporters
 {
@@ -202,7 +203,7 @@ namespace Qase.Csharp.Commons.Reporters
 
         private string PrepareLink(long? id, string title)
         {
-            var baseLink = GetBaseUrl(_config.TestOps.Api.Host!) + "/run/" +
+            var baseLink = AppUrlResolver.Resolve(_config.TestOps.Api.Host) + "run/" +
                           _config.TestOps.Project + "/dashboard/" + _testRunId +
                           "?source=logs&search=";
 
@@ -221,16 +222,6 @@ namespace Qase.Csharp.Commons.Reporters
                 _logger.LogError(ex, "Error while encoding title");
                 return baseLink;
             }
-        }
-
-        private string GetBaseUrl(string host)
-        {
-            if (host == "qase.io")
-            {
-                return "https://app.qase.io";
-            }
-
-            return "https://" + host;
         }
     }
 }
