@@ -9,6 +9,7 @@ using Qase.ApiClient.V1.Model;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Core;
 using Qase.Csharp.Commons.Models.Domain;
+using Qase.Csharp.Commons.Utils;
 
 namespace Qase.Csharp.Commons.Clients
 {
@@ -43,7 +44,7 @@ namespace Qase.Csharp.Commons.Clients
             _runApi = runApi;
             _attachmentsApi = attachmentsApi;
             _configurationsApi = configurationsApi;
-            _url = config.TestOps.Api.Host == "qase.io" ? "https://app.qase.io/" : $"https://app-{config.TestOps.Api.Host}/";
+            _url = AppUrlResolver.Resolve(config.TestOps.Api.Host);
         }
 
         /// <inheritdoc />

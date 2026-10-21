@@ -343,6 +343,7 @@ namespace Qase.Csharp.Commons.Tests
 
         [Theory]
         [InlineData("qase.io", "https://app.qase.io")]
+        [InlineData("eu.qase.io", "https://app-eu.qase.io")]
         [InlineData("custom.qase.io", "https://custom.qase.io")]
         [InlineData("test.example.com", "https://test.example.com")]
         public void PrepareLink_ShouldGenerateCorrectBaseUrl(string host, string expectedBaseUrl)

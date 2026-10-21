@@ -1,5 +1,10 @@
 # Changelog
 
+## qase-csharp 1.1.30
+
+- Fixed run and result links for enterprise hosts: with `testops.api.host` set to `example.qase.io` the completed run link pointed at `https://app-example.qase.io/`, which does not exist. Enterprise links now point at `https://example.qase.io/`, while the EU cluster (`eu.qase.io`) keeps linking to `https://app-eu.qase.io/`
+- Fixed failed-result links in the log pointing at `https://eu.qase.io` instead of `https://app-eu.qase.io` for the EU cluster
+
 ## qase-csharp 1.1.29
 
 - Fixed every reporter crashing when `mode` is `off`: the core reporter was resolved with a required internal reporter, which is only registered for `testops` and `report`, so the run failed with `No service for type 'IInternalReporter' has been registered`. This surfaced as a catastrophic failure in xUnit v2, NUnit and Reqnroll, which build the reporter unconditionally
