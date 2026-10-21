@@ -1,0 +1,31 @@
+Qase.Csharp.Commons/Utils/AppUrlResolver.cs
+  s_531e0b712b9182::t_98b3e8daf75446 1-41
+Directory.Build.props
+  s_531e0b712b9182::t_108b9a97f9c24e 4
+Qase.Csharp.Commons.Tests/AppUrlResolverTests.cs
+  s_531e0b712b9182::t_b419887a095bbd 1-22
+Qase.Csharp.Commons.Tests/TestopsReporterTests.cs
+  s_531e0b712b9182::t_d1641a27a874a6 346
+Qase.Csharp.Commons/clients/ClientV1.cs
+  s_531e0b712b9182::t_8ae23decb4d255 12,47
+Qase.Csharp.Commons/reporters/TestopsReporter.cs
+  s_531e0b712b9182::t_dbba61d3439475 11,206
+changelog.md
+  s_531e0b712b9182::t_a3943d7dd291ee 3-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "87d1f4ecfba1aeaa5ba231ccb14f8d7e73ad91ab",
+  "prompts": {},
+  "sessions": {
+    "s_531e0b712b9182": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c0502f13-b6be-4d22-84cf-e9e77bf5f3e6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
