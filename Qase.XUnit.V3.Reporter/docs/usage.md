@@ -92,6 +92,7 @@ You can override configuration values using environment variables:
 
 - `QASE_MODE` - Reporter mode (testops, report, off)
 - `QASE_TESTOPS_API_TOKEN` - Your Qase API token
+- `QASE_TESTOPS_API_HOST` - Qase API host: `qase.io` (US cluster, the default) or `eu.qase.io` (EU cluster)
 - `QASE_TESTOPS_PROJECT` - Your Qase project code
 - `QASE_TESTOPS_PLAN_ID` - ID of an existing test plan to create the run from
 

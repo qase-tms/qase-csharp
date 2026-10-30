@@ -52,6 +52,8 @@ Create a `qase.config.json` file in your project root:
 }
 ```
 
+If your workspace is on the EU cluster (you open Qase at `app-eu.qase.io`), set `host` to `eu.qase.io`. The default, `qase.io`, is the US cluster.
+
 ### 2. Add Qase Tags to Your Scenarios
 
 ```gherkin
