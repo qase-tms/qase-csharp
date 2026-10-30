@@ -77,12 +77,15 @@ Create a `qase.config.json` file in your project root:
   "mode": "testops",
   "testops": {
     "api": {
-      "token": "<your-api-token>"
+      "token": "<your-api-token>",
+      "host": "qase.io"
     },
     "project": "<your-project-code>"
   }
 }
 ```
+
+If your workspace is on the EU cluster (you open Qase at `app-eu.qase.io`), set `host` to `eu.qase.io`. The default, `qase.io`, is the US cluster.
 
 Make sure the config file is copied to the output directory (see the `<Content>` item in the `.csproj` example above).
 
