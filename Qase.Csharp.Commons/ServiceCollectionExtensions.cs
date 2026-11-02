@@ -33,10 +33,11 @@ namespace Qase.Csharp.Commons
             services.AddSingleton(config);
 
             // Configure Serilog
+            // Serilog's daily rolling inserts the date itself: logs/qase-20250101.log
             var logPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "logs",
-                $"{DateTime.Now:yyyyMMdd}.log"
+                "qase-.log"
             );
 
             if (config.Logging.File)
@@ -44,7 +45,15 @@ namespace Qase.Csharp.Commons
                 Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
             }
 
-            var loggerConfiguration = new LoggerConfiguration();
+            var loggerConfiguration = new LoggerConfiguration()
+                .Destructure.ByTransforming<ApiConfig>(api => new
+                {
+                    Token = MaskSecret(api.Token),
+                    api.Host,
+                    api.Timeout,
+                    api.Retries,
+                    api.RetryBackoff
+                });
 
             // Configure console output
             if (config.Logging.Console)
@@ -229,6 +238,14 @@ namespace Qase.Csharp.Commons
             });
 
             return services;
+        }
+
+        internal static string? MaskSecret(string? secret)
+        {
+            if (string.IsNullOrEmpty(secret))
+                return secret;
+
+            return secret!.Length <= 8 ? "****" : $"{secret.Substring(0, 4)}****{secret.Substring(secret.Length - 4)}";
         }
     }
 } 

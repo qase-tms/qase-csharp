@@ -13,10 +13,11 @@ namespace Qase.Csharp.Commons
     public static class ContextManager
     {
         private static readonly AsyncLocal<string> _testCaseName = new();
-        private static readonly ConcurrentDictionary<string, Stack<StepResult>> _stepStacks = new();
-        private static readonly ConcurrentDictionary<string, List<string>> _messages = new();
-        private static readonly ConcurrentDictionary<string, List<Attachment>> _attachments = new();
-        private static readonly ConcurrentDictionary<string, List<StepResult>> _completedSteps = new();
+        // Keys are built from framework display names whose casing differs ("True" vs "true").
+        private static readonly ConcurrentDictionary<string, Stack<StepResult>> _stepStacks = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, List<string>> _messages = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, List<Attachment>> _attachments = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, List<StepResult>> _completedSteps = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Set the test case name.
@@ -26,6 +27,21 @@ namespace Qase.Csharp.Commons
         {
             _testCaseName.Value = name;
             _stepStacks.GetOrAdd(name, _ => new Stack<StepResult>());
+        }
+
+        /// <summary>
+        /// Starts a fresh execution of a test case: whatever an earlier attempt with the
+        /// same name collected (a retry, a repeat) is dropped before the new one begins.
+        /// Call it from the thread that runs the test body.
+        /// </summary>
+        /// <param name="name">The name of the test case.</param>
+        public static void BeginTestCase(string name)
+        {
+            _stepStacks.TryRemove(name, out _);
+            _completedSteps.TryRemove(name, out _);
+            _messages.TryRemove(name, out _);
+            _attachments.TryRemove(name, out _);
+            SetTestCaseName(name);
         }
 
         /// <summary>
@@ -126,6 +142,8 @@ namespace Qase.Csharp.Commons
         /// <returns>The completed steps.</returns>
         public static List<StepResult> GetCompletedSteps(string testCaseName)
         {
+            _stepStacks.TryRemove(testCaseName, out _);
+
             if (_completedSteps.TryRemove(testCaseName, out var steps))
             {
                 return steps;
@@ -176,7 +194,7 @@ namespace Qase.Csharp.Commons
         /// <returns>The comments for the test case.</returns>
         public static string GetComments(string testCaseName)
         {
-            if (_messages.TryGetValue(testCaseName, out var messages))
+            if (_messages.TryRemove(testCaseName, out var messages))
             {
                 return string.Join("\n", messages);
             }
@@ -238,7 +256,7 @@ namespace Qase.Csharp.Commons
         /// <returns>The attachments for the test case.</returns>
         public static List<Attachment> GetAttachments(string testCaseName)
         {
-            if (_attachments.TryGetValue(testCaseName, out var attachments))
+            if (_attachments.TryRemove(testCaseName, out var attachments))
             {
                 return attachments;
             }

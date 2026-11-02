@@ -89,9 +89,10 @@ namespace Qase.Csharp.Commons.Clients
                 
                 _logger.LogDebug("Test results uploaded successfully");
             }
-            catch (ApiException ex)
+            catch (Exception ex) when (!(ex is QaseException))
             {
-                _logger.LogError(ex, "API error while uploading test results");
+                // Network failures and Polly timeouts arrive unwrapped; the fallback only reacts to QaseException.
+                _logger.LogError(ex, "Error while uploading test results");
                 throw new QaseException($"Failed to upload test results: {ex.Message}", ex);
             }
         }
@@ -108,6 +109,23 @@ namespace Qase.Csharp.Commons.Clients
             return _apiClientV1.EnablePublicReportAsync(runId);
         }
         
+        /// <summary>
+        /// A result without its attachments is still worth reporting; losing the whole batch is not.
+        /// </summary>
+        private async Task<List<string>> UploadAttachmentsSafelyAsync(List<Models.Domain.Attachment> attachments, string? owner)
+        {
+            try
+            {
+                var hashes = await _apiClientV1.UploadAttachmentsAsync(attachments);
+                return hashes.Where(h => !string.IsNullOrEmpty(h)).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to upload attachments of '{Owner}', reporting it without them", owner);
+                return new List<string>();
+            }
+        }
+
         internal async Task<ResultCreate> ConvertResult(TestResult result)
         {
             _logger.LogDebug("Converting test result: {@TestResult}", result);
@@ -115,8 +133,7 @@ namespace Qase.Csharp.Commons.Clients
             var attachments = new List<string>();
             if (result.Attachments != null && result.Attachments.Count > 0)
             {
-                var hashes = await _apiClientV1.UploadAttachmentsAsync(result.Attachments);
-                attachments = hashes.Where(h => !string.IsNullOrEmpty(h)).ToList();
+                attachments = await UploadAttachmentsSafelyAsync(result.Attachments, result.Title);
             }
             
             var steps = new List<ResultStep>();
@@ -252,8 +269,7 @@ namespace Qase.Csharp.Commons.Clients
             var attachments = new List<string>();
             if (step.Execution?.Attachments != null && step.Execution.Attachments.Count > 0)
             {
-                var hashes = await _apiClientV1.UploadAttachmentsAsync(step.Execution.Attachments);
-                attachments = hashes.Where(h => !string.IsNullOrEmpty(h)).ToList();
+                attachments = await UploadAttachmentsSafelyAsync(step.Execution.Attachments, step.Data?.Action);
             }
             
             var execution = new ResultStepExecution(

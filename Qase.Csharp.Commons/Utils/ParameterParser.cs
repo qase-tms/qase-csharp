@@ -97,13 +97,32 @@ namespace Qase.Csharp.Commons.Utils
                 return result;
 
             var methodParams = methodInfo.GetParameters();
-            for (int i = 0; i < Math.Min(values.Count, methodParams.Length); i++)
+            var count = Math.Min(values.Count, methodParams.Length);
+            var named = IsNamedFormat(values, methodParams, count);
+            for (int i = 0; i < count; i++)
             {
                 var paramName = methodParams[i].Name ?? $"param{i}";
-                result[paramName] = string.IsNullOrEmpty(values[i]) ? "empty" : values[i];
+                var value = named ? values[i].Substring(paramName.Length + 1).Trim() : values[i];
+                result[paramName] = string.IsNullOrEmpty(value) ? "empty" : value;
             }
 
             return result;
+        }
+
+        // xUnit v3 renders "Method(query: \"usb hub\", page: 2)" instead of positional values.
+        private static bool IsNamedFormat(List<string> values, ParameterInfo[] methodParams, int count)
+        {
+            if (count == 0)
+                return false;
+
+            for (int i = 0; i < count; i++)
+            {
+                var name = methodParams[i].Name;
+                if (name == null || !values[i].StartsWith(name + ":", StringComparison.Ordinal))
+                    return false;
+            }
+
+            return true;
         }
     }
 }

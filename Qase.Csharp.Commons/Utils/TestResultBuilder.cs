@@ -82,7 +82,7 @@ namespace Qase.Csharp.Commons.Utils
             // Extract Qase attributes
             if (type != null)
             {
-                var classAttributes = type.GetCustomAttributes(typeof(IQaseAttribute), false).Cast<Attribute>();
+                var classAttributes = type.GetCustomAttributes(typeof(IQaseAttribute), true).Cast<Attribute>();
                 var methodAttributes = method != null
                     ? method.GetCustomAttributes(typeof(IQaseAttribute), false).Cast<Attribute>()
                     : Enumerable.Empty<Attribute>();
@@ -94,7 +94,7 @@ namespace Qase.Csharp.Commons.Utils
             {
                 foreach (var kvp in raw.PreParsedParams)
                 {
-                    result.Params[kvp.Key] = string.IsNullOrEmpty(kvp.Value) ? "empty" : kvp.Value;
+                    result.Params[kvp.Key] = DisplayNameGenerator.NormalizeValue(kvp.Value);
                 }
             }
             else if (raw.FullTestName != null && method != null)
@@ -106,13 +106,7 @@ namespace Qase.Csharp.Commons.Utils
                     for (int i = 0; i < Math.Min(values.Count, methodParams.Length); i++)
                     {
                         var paramName = methodParams[i].Name ?? $"param{i}";
-                        var paramValue = values[i];
-                        if (paramValue == "null")
-                            result.Params[paramName] = "null";
-                        else if (string.IsNullOrEmpty(paramValue))
-                            result.Params[paramName] = "empty";
-                        else
-                            result.Params[paramName] = paramValue;
+                        result.Params[paramName] = DisplayNameGenerator.NormalizeValue(values[i]);
                     }
                 }
             }
@@ -121,12 +115,18 @@ namespace Qase.Csharp.Commons.Utils
                 var parsedParams = ParameterParser.ParseAndMap(raw.DisplayName, method);
                 foreach (var kvp in parsedParams)
                 {
-                    result.Params[kvp.Key] = kvp.Value;
+                    result.Params[kvp.Key] = DisplayNameGenerator.NormalizeValue(kvp.Value);
                 }
             }
 
             // If Title was not overridden by attribute and params exist, strip params from title
-            if (result.Title == raw.DisplayName && result.Params.Count > 0 && raw.MethodName != null)
+            if (result.Title == raw.DisplayName && raw.MethodName != null && raw.FullTypeName != null &&
+                raw.DisplayName == $"{raw.FullTypeName}.{raw.MethodName}")
+            {
+                // xUnit v3 names a plain test by its fully qualified method; the others use the method name.
+                result.Title = raw.MethodName;
+            }
+            else if (result.Title == raw.DisplayName && result.Params.Count > 0 && raw.MethodName != null)
             {
                 result.Title = raw.MethodName;
             }
@@ -183,9 +183,12 @@ namespace Qase.Csharp.Commons.Utils
             }
 
             // Generate signature
+            var testName = raw.MethodName
+                ?? (raw.FullTestName != null ? ExtractMethodNameFromFullTestName(raw.FullTestName) : raw.DisplayName);
             result.Signature = Signature.Generate(
                 result.TestopsIds,
                 result.Relations?.Suite?.Data?.Select(s => s.Title),
+                testName,
                 result.Params);
 
             if (string.IsNullOrEmpty(result.Signature))

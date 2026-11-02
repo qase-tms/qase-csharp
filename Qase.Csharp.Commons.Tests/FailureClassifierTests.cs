@@ -89,5 +89,29 @@ namespace Qase.Csharp.Commons.Tests
             var status = FailureClassifier.Classify(null, null, null, stackTrace);
             status.Should().Be(TestResultStatus.Failed);
         }
-    }
+    
+        [Theory]
+        [InlineData("   at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)")]
+        [InlineData("   at Shouldly.ShouldlyCoreExtensions.AssertAwesomely[T](T actual)")]
+        public void Classify_ThirdPartyAssertionUnderNUnit_ReturnsFailed(string stackTrace)
+        {
+            // NUnit labels foreign exceptions "Error" and counts no asserts for them.
+            var status = FailureClassifier.Classify("Error", 0, null, stackTrace);
+            status.Should().Be(TestResultStatus.Failed);
+        }
+
+        [Fact]
+        public void Classify_AssertionExceptionType_ReturnsFailed()
+        {
+            var status = FailureClassifier.Classify(null, null, new[] { "Xunit.Sdk.EqualException" }, null);
+            status.Should().Be(TestResultStatus.Failed);
+        }
+
+        [Fact]
+        public void Classify_RuntimeErrorUnderNUnit_StaysInvalid()
+        {
+            var status = FailureClassifier.Classify("Error", 0, null, "   at MyApp.Service.Load() in Service.cs:line 10");
+            status.Should().Be(TestResultStatus.Invalid);
+        }
+}
 }

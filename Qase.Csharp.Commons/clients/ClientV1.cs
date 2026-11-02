@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,15 +51,22 @@ namespace Qase.Csharp.Commons.Clients
         /// <inheritdoc />
         public async Task<long> CreateTestRunAsync()
         {
-            var utcTime = DateTime.UtcNow.AddSeconds(-10).ToString("yyyy-MM-dd HH:mm:ss");
+            return await CreateTestRunAsync(includeEnvironment: true);
+        }
 
-            var runData = new RunCreate(title: _config.TestOps.Run.Title ?? "Automated Test Run " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-                description: _config.TestOps.Run.Description ?? "Automated Test Run " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+        private async Task<long> CreateTestRunAsync(bool includeEnvironment)
+        {
+            // Invariant culture: a Buddhist or Persian calendar would otherwise shift the year.
+            var utcTime = DateTime.UtcNow.AddSeconds(-10).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            var now = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+            var runData = new RunCreate(title: _config.TestOps.Run.Title ?? "Automated run " + now,
+                description: _config.TestOps.Run.Description ?? "Automated run " + now,
                 isAutotest: true,
                 startTime: utcTime
             );
 
-            if (!string.IsNullOrEmpty(_config.Environment))
+            if (includeEnvironment && !string.IsNullOrEmpty(_config.Environment))
             {
                 runData.EnvironmentSlug = _config.Environment;
             }
@@ -99,6 +107,14 @@ namespace Qase.Csharp.Commons.Clients
                     }
 
                     return runId;
+                }
+                else if (includeEnvironment && runData.EnvironmentSlug != null &&
+                         resp.RawContent?.Contains("environment_slug") == true)
+                {
+                    // A typo in the environment should not cost the whole run its results.
+                    _logger.LogWarning("Environment '{Environment}' does not exist in project {Project}, creating the run without it",
+                        _config.Environment, _config.TestOps.Project);
+                    return await CreateTestRunAsync(includeEnvironment: false);
                 }
                 else
                 {
@@ -199,7 +215,6 @@ namespace Qase.Csharp.Commons.Clients
             _logger.LogDebug("Uploading {Count} attachments", attachments.Count);
 
             var allHashes = new List<string>();
-            var tempFiles = new List<string>();
             var fileInfos = new List<(Stream Stream, string FileName, long Size)>();
 
             try
@@ -207,15 +222,15 @@ namespace Qase.Csharp.Commons.Clients
                 // Prepare file streams
                 foreach (var attachment in attachments)
                 {
-                    var fileInfo = PrepareAttachmentFileAsync(attachment, tempFiles);
+                    var fileInfo = PrepareAttachmentFileAsync(attachment);
                     if (fileInfo.HasValue)
                     {
                         fileInfos.Add(fileInfo.Value);
                     }
                 }
 
-                // Validate attachments after preparing files
-                ValidateAttachments(fileInfos);
+                // An oversized file is dropped on its own instead of failing every result in the batch.
+                fileInfos = SkipOversizedFiles(fileInfos);
 
                 // Group files into batches respecting limits
                 var batches = CreateBatches(fileInfos);
@@ -267,23 +282,6 @@ namespace Qase.Csharp.Commons.Clients
                         _logger.LogError(ex, "Failed to dispose stream");
                     }
                 }
-
-                // Delete temporary files
-                foreach (var tempFile in tempFiles)
-                {
-                    try
-                    {
-                        if (File.Exists(tempFile))
-                        {
-                            File.Delete(tempFile);
-                            _logger.LogDebug("Deleted temporary file: {FilePath}", tempFile);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Failed to delete temporary file: {FilePath}", tempFile);
-                    }
-                }
             }
         }
 
@@ -298,23 +296,26 @@ namespace Qase.Csharp.Commons.Clients
             return hashes.FirstOrDefault() ?? "";
         }
 
-        private void ValidateAttachments(List<(Stream Stream, string FileName, long Size)> fileInfos)
+        private List<(Stream Stream, string FileName, long Size)> SkipOversizedFiles(List<(Stream Stream, string FileName, long Size)> fileInfos)
         {
-            if (fileInfos.Count > MaxFilesPerRequest)
-            {
-                throw new QaseException($"Maximum {MaxFilesPerRequest} files per request allowed, but {fileInfos.Count} files provided");
-            }
-
+            var accepted = new List<(Stream Stream, string FileName, long Size)>();
             foreach (var fileInfo in fileInfos)
             {
                 if (fileInfo.Size > MaxFileSize)
                 {
-                    throw new QaseException($"File '{fileInfo.FileName}' size {fileInfo.Size} bytes exceeds maximum allowed size of {MaxFileSize} bytes (32 MB)");
+                    _logger.LogWarning("Skipping attachment '{FileName}': {Size} bytes exceeds the {MaxSize} bytes limit",
+                        fileInfo.FileName, fileInfo.Size, MaxFileSize);
+                    fileInfo.Stream.Dispose();
+                    continue;
                 }
+
+                accepted.Add(fileInfo);
             }
+
+            return accepted;
         }
 
-        private (Stream Stream, string FileName, long Size)? PrepareAttachmentFileAsync(Models.Domain.Attachment attachment, List<string> tempFiles)
+        private (Stream Stream, string FileName, long Size)? PrepareAttachmentFileAsync(Models.Domain.Attachment attachment)
         {
             var fileName = attachment.FileName;
             if (string.IsNullOrEmpty(fileName))
@@ -338,22 +339,18 @@ namespace Qase.Csharp.Commons.Clients
                 size = fileInfo.Length;
                 stream = File.OpenRead(attachment.FilePath);
             }
+            // In-memory content goes straight from memory: a temp file named after the
+            // attachment collides between attachments and can overwrite a user's file.
             else if (!string.IsNullOrEmpty(attachment.Content))
             {
-                var filePath = Path.Combine(Path.GetTempPath(), fileName);
-                File.WriteAllText(filePath, attachment.Content);
-                tempFiles.Add(filePath);
-                var fileInfo = new FileInfo(filePath);
-                size = fileInfo.Length;
-                stream = File.OpenRead(filePath);
+                var bytes = System.Text.Encoding.UTF8.GetBytes(attachment.Content);
+                size = bytes.Length;
+                stream = new MemoryStream(bytes, writable: false);
             }
             else if (attachment.ContentBytes != null && attachment.ContentBytes.Length > 0)
             {
-                var filePath = Path.Combine(Path.GetTempPath(), fileName);
-                File.WriteAllBytes(filePath, attachment.ContentBytes);
-                tempFiles.Add(filePath);
                 size = attachment.ContentBytes.Length;
-                stream = File.OpenRead(filePath);
+                stream = new MemoryStream(attachment.ContentBytes, writable: false);
             }
             else
             {
@@ -361,7 +358,7 @@ namespace Qase.Csharp.Commons.Clients
                 return null;
             }
 
-            return (stream, fileName!, size);
+            return (stream, Path.GetFileName(fileName!), size);
         }
 
         private List<List<(Stream Stream, string FileName, long Size)>> CreateBatches(List<(Stream Stream, string FileName, long Size)> fileInfos)

@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Qase.Csharp.Commons.Tests
 {
+    [Collection("ContextManager")]
     public class ContextManagerTests : IDisposable
     {
         public ContextManagerTests()

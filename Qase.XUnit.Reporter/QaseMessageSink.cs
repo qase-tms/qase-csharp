@@ -57,18 +57,24 @@ namespace Qase.Xunit.Reporter
 
         private void OnTestStarting(MessageHandlerArgs<ITestStarting> args)
         {
-            var testCase = args.Message.Test.TestCase;
+            try
+            {
+                HandleTestStarting(args.Message);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogWarning($"[Qase] Failed to handle test start: {ex.Message}");
+            }
+        }
 
-            // Parse parameters eagerly while we have full ITestCase context
+        private void HandleTestStarting(ITestStarting message)
+        {
+            var testCase = message.Test.TestCase;
+
+            // Same formatting as QaseAspect, so the context key built from these values matches.
             var parameters = testCase.TestMethod.Method.GetParameters()
                 .Zip(testCase.TestMethodArguments ?? Array.Empty<object>(), (parameter, value) => new { parameter, value })
-                .ToDictionary(x => x.parameter.Name, x =>
-                {
-                    if (x.value is null) return "null";
-                    if (!string.IsNullOrWhiteSpace(x.value?.ToString())) return x.value.ToString();
-                    var size = x.value?.ToString().Length ?? 0;
-                    return size == 0 ? "empty" : $"empty ({size})";
-                });
+                .ToDictionary(x => x.parameter.Name, x => DisplayNameGenerator.FormatArgument(x.value));
 
             var raw = new RawTestData
             {
@@ -82,12 +88,13 @@ namespace Qase.Xunit.Reporter
                 StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             };
 
-            qaseTestData[args.Message.Test] = raw;
+            qaseTestData[message.Test] = raw;
         }
 
         private void OnTestPassed(MessageHandlerArgs<ITestPassed> args)
         {
-            var raw = qaseTestData[args.Message.Test];
+            if (!qaseTestData.TryGetValue(args.Message.Test, out var raw))
+                return;
             raw.Status = TestResultStatus.Passed;
             raw.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             raw.Duration = (int)(args.Message.ExecutionTime * 1000);
@@ -95,7 +102,8 @@ namespace Qase.Xunit.Reporter
 
         private void OnTestFailed(MessageHandlerArgs<ITestFailed> args)
         {
-            var raw = qaseTestData[args.Message.Test];
+            if (!qaseTestData.TryGetValue(args.Message.Test, out var raw))
+                return;
             raw.Status = TestResultStatus.Failed;
             raw.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             raw.Duration = (int)(args.Message.ExecutionTime * 1000);
@@ -106,7 +114,8 @@ namespace Qase.Xunit.Reporter
 
         private void OnTestSkipped(MessageHandlerArgs<ITestSkipped> args)
         {
-            var raw = qaseTestData[args.Message.Test];
+            if (!qaseTestData.TryGetValue(args.Message.Test, out var raw))
+                return;
             raw.Status = TestResultStatus.Skipped;
             raw.EndTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             raw.Duration = (int)(args.Message.ExecutionTime * 1000);
@@ -115,15 +124,23 @@ namespace Qase.Xunit.Reporter
 
         private void OnTestFinished(MessageHandlerArgs<ITestFinished> args)
         {
-            var raw = qaseTestData[args.Message.Test];
-            var testResult = _builder.Build(raw);
+            if (!qaseTestData.TryRemove(args.Message.Test, out var raw))
+                return;
 
-            if (!testResult.Ignore)
+            try
             {
-                _reporter!.addResult(testResult).GetAwaiter().GetResult();
-            }
+                var testResult = _builder.Build(raw);
 
-            qaseTestData.TryRemove(args.Message.Test, out _);
+                if (!testResult.Ignore)
+                {
+                    _reporter!.addResult(testResult).GetAwaiter().GetResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                // An exception here would reach xUnit's message bus and abort the run.
+                this.Logger.LogWarning($"[Qase] Failed to report test result: {ex.Message}");
+            }
         }
 
         private void OnTestAssemblyExecutionFinished(MessageHandlerArgs<ITestAssemblyExecutionFinished> args)

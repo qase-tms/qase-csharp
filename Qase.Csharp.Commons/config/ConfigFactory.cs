@@ -15,6 +15,8 @@ namespace Qase.Csharp.Commons.Config
     public static class ConfigFactory
     {
         private const string CONFIG_FILE_NAME = "qase.config.json";
+        private const int MinBatchSize = 1;
+        private const int MaxBatchSize = 200;
 
         /// <summary>
         /// Loads configuration from all available sources
@@ -43,7 +45,9 @@ namespace Qase.Csharp.Commons.Config
             }
             catch (Exception e)
             {
-                throw new QaseException("Failed to load configuration", e);
+                // A broken config must never abort the user's test run.
+                Console.Error.WriteLine($"qase: Failed to load configuration, reporting is disabled: {e.Message}");
+                return new QaseConfig { Mode = Mode.Off, Fallback = Mode.Off };
             }
         }
 
@@ -95,13 +99,13 @@ namespace Qase.Csharp.Commons.Config
             string? envMode = GetEnv("QASE_MODE", null);
             if (envMode != null)
             {
-                qaseConfig.SetMode(envMode);
+                TryApply("QASE_MODE", envMode, qaseConfig.SetMode);
             }
 
             string? envFallback = GetEnv("QASE_FALLBACK", null);
             if (envFallback != null)
             {
-                qaseConfig.SetFallback(envFallback);
+                TryApply("QASE_FALLBACK", envFallback, qaseConfig.SetFallback);
             }
 
             qaseConfig.Environment = GetEnv("QASE_ENVIRONMENT", qaseConfig.Environment);
@@ -146,13 +150,13 @@ namespace Qase.Csharp.Commons.Config
             string? driverStr = GetEnv("QASE_REPORT_DRIVER", null);
             if (driverStr != null)
             {
-                qaseConfig.Report.SetDriver(driverStr);
+                TryApply("QASE_REPORT_DRIVER", driverStr, qaseConfig.Report.SetDriver);
             }
 
             string? formatStr = GetEnv("QASE_REPORT_CONNECTION_FORMAT", null);
             if (formatStr != null)
             {
-                qaseConfig.Report.Connection.Local.SetFormat(formatStr);
+                TryApply("QASE_REPORT_CONNECTION_FORMAT", formatStr, qaseConfig.Report.Connection.Local.SetFormat);
             }
 
             qaseConfig.Report.Connection.Local.Path = GetEnv("QASE_REPORT_CONNECTION_PATH", qaseConfig.Report.Connection.Local.Path);
@@ -187,14 +191,46 @@ namespace Qase.Csharp.Commons.Config
         /// <param name="qaseConfig">Configuration to validate</param>
         private static void ValidateConfig(QaseConfig qaseConfig)
         {
-            if ((qaseConfig.Mode == Mode.TestOps || qaseConfig.Fallback == Mode.TestOps) &&
-                (string.IsNullOrEmpty(qaseConfig.TestOps?.Project) || string.IsNullOrEmpty(qaseConfig.TestOps?.Api?.Token)))
+            var hasCredentials = !string.IsNullOrEmpty(qaseConfig.TestOps?.Project) &&
+                                 !string.IsNullOrEmpty(qaseConfig.TestOps?.Api?.Token);
+
+            if (!hasCredentials && (qaseConfig.Mode == Mode.TestOps || qaseConfig.Fallback == Mode.TestOps))
             {
-                // Use direct console output for critical validation errors
-                // This ensures the error is always visible to the user
                 Console.Error.WriteLine("qase: Project code and API token are required for TestOps mode");
-                qaseConfig.Mode = Mode.Off;
+
+                // Only the TestOps side is unusable; a local report can still be written.
+                if (qaseConfig.Mode == Mode.TestOps)
+                {
+                    qaseConfig.Mode = qaseConfig.Fallback == Mode.Report ? Mode.Report : Mode.Off;
+                }
+
                 qaseConfig.Fallback = Mode.Off;
+            }
+
+            if (qaseConfig.Fallback == qaseConfig.Mode)
+            {
+                qaseConfig.Fallback = Mode.Off;
+            }
+
+            var batchSize = qaseConfig.TestOps!.Batch.Size;
+            if (batchSize < MinBatchSize || batchSize > MaxBatchSize)
+            {
+                var clamped = Math.Max(MinBatchSize, Math.Min(MaxBatchSize, batchSize));
+                Console.Error.WriteLine(
+                    $"qase: Batch size {batchSize} is outside {MinBatchSize}..{MaxBatchSize}, using {clamped}");
+                qaseConfig.TestOps.Batch.Size = clamped;
+            }
+        }
+
+        private static void TryApply(string key, string value, Action<string> apply)
+        {
+            try
+            {
+                apply(value);
+            }
+            catch (ArgumentException)
+            {
+                Console.Error.WriteLine($"qase: Ignoring invalid value '{value}' for {key}");
             }
         }
 
@@ -206,8 +242,9 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value or default</returns>
         private static string? GetEnv(string key, string? defaultValue)
         {
+            // CI systems commonly export unset inputs as empty strings.
             var value = Environment.GetEnvironmentVariable(key);
-            return value ?? defaultValue;
+            return string.IsNullOrWhiteSpace(value) ? defaultValue : value;
         }
 
         /// <summary>
@@ -218,8 +255,10 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value as list or default</returns>
         private static List<string> GetListEnv(string key, List<string> defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
-            return value != null ? value.Split(',').Select(v => v.Trim()).ToList() : defaultValue;
+            var value = GetEnv(key, null);
+            return value != null
+                ? value.Split(',').Select(v => v.Trim()).Where(v => v.Length > 0).ToList()
+                : defaultValue;
         }
 
         /// <summary>
@@ -230,14 +269,26 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value as boolean or default</returns>
         private static bool GetBooleanEnv(string key, bool defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
+            var value = GetEnv(key, null);
             if (value == null)
                 return defaultValue;
-            
-            if (bool.TryParse(value, out bool result))
-                return result;
-            
-            return defaultValue;
+
+            switch (value.Trim().ToLowerInvariant())
+            {
+                case "true":
+                case "1":
+                case "yes":
+                case "on":
+                    return true;
+                case "false":
+                case "0":
+                case "no":
+                case "off":
+                    return false;
+                default:
+                    Console.Error.WriteLine($"qase: Ignoring invalid boolean '{value}' for {key}");
+                    return defaultValue;
+            }
         }
 
         /// <summary>
@@ -248,8 +299,15 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value as integer or default</returns>
         private static int GetIntEnv(string key, int defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
-            return value != null ? int.Parse(value) : defaultValue;
+            var value = GetEnv(key, null);
+            if (value == null)
+                return defaultValue;
+
+            if (int.TryParse(value.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var result))
+                return result;
+
+            Console.Error.WriteLine($"qase: Ignoring invalid integer '{value}' for {key}");
+            return defaultValue;
         }
 
         /// <summary>
@@ -260,7 +318,7 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value as integer or default</returns>
         private static int GetIntEnvOrDefault(string key, int defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
+            var value = GetEnv(key, null);
             if (value != null && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result))
             {
                 return result;
@@ -277,7 +335,7 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value as double or default</returns>
         private static double GetDoubleEnvOrDefault(string key, double defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
+            var value = GetEnv(key, null);
             if (value != null && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
             {
                 return result;
@@ -294,8 +352,15 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value as long or default</returns>
         private static long? GetLongEnv(string key, long? defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
-            return value != null ? long.Parse(value) : defaultValue;
+            var value = GetEnv(key, null);
+            if (value == null)
+                return defaultValue;
+
+            if (long.TryParse(value.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var result))
+                return result;
+
+            Console.Error.WriteLine($"qase: Ignoring invalid integer '{value}' for {key}");
+            return defaultValue;
         }
 
         /// <summary>
@@ -306,7 +371,7 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>Environment variable value as list of long or default</returns>
         private static List<ConfigurationItem> GetConfigurationListEnv(string key, List<ConfigurationItem> defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
+            var value = GetEnv(key, null);
             if (value == null) return defaultValue;
             
             try
@@ -350,7 +415,7 @@ namespace Qase.Csharp.Commons.Config
                 string? mode = modeElement.GetString();
                 if (mode != null)
                 {
-                    qaseConfig.SetMode(mode);
+                    TryApply("mode", mode, qaseConfig.SetMode);
                 }
             }
 
@@ -359,7 +424,7 @@ namespace Qase.Csharp.Commons.Config
                 string? fallback = fallbackElement.GetString();
                 if (fallback != null)
                 {
-                    qaseConfig.SetFallback(fallback);
+                    TryApply("fallback", fallback, qaseConfig.SetFallback);
                 }
             }
 
@@ -393,6 +458,13 @@ namespace Qase.Csharp.Commons.Config
                     projectElement.ValueKind == JsonValueKind.String)
                 {
                     qaseConfig.TestOps.Project = projectElement.GetString();
+                }
+
+                // Documented at the testops level; the run level is kept for existing configs.
+                if (testopsElement.TryGetProperty("showPublicReportLink", out var testopsShowLinkElement) &&
+                    testopsShowLinkElement.ValueKind == JsonValueKind.True)
+                {
+                    qaseConfig.TestOps.ShowPublicReportLink = true;
                 }
 
                 if (testopsElement.TryGetProperty("defect", out var defectElement) &&
@@ -552,7 +624,7 @@ namespace Qase.Csharp.Commons.Config
                     string? driver = driverElement.GetString();
                     if (driver != null)
                     {
-                        qaseConfig.Report.SetDriver(driver);
+                        TryApply("report.driver", driver, qaseConfig.Report.SetDriver);
                     }
                 }
 
@@ -566,7 +638,7 @@ namespace Qase.Csharp.Commons.Config
                             string? format = formatElement.GetString();
                             if (format != null)
                             {
-                                qaseConfig.Report.Connection.Local.SetFormat(format);
+                                TryApply("report.connection.local.format", format, qaseConfig.Report.Connection.Local.SetFormat);
                             }
                         }
 
@@ -637,7 +709,7 @@ namespace Qase.Csharp.Commons.Config
         /// <returns>External link configuration or default</returns>
         private static TestOpsExternalLinkType? GetExternalLinkEnv(string key, TestOpsExternalLinkType? defaultValue)
         {
-            var value = Environment.GetEnvironmentVariable(key);
+            var value = GetEnv(key, null);
             if (value == null) return defaultValue;
             
             try

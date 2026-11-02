@@ -120,6 +120,12 @@ namespace Qase.XUnit.V3.Reporter
                 case SkippedTestNodeStateProperty:
                     status = TestResultStatus.Skipped;
                     break;
+                case TimeoutTestNodeStateProperty:
+                    status = TestResultStatus.Failed;
+                    break;
+                case CancelledTestNodeStateProperty:
+                    status = TestResultStatus.Skipped;
+                    break;
                 default:
                     return null;
             }
@@ -171,6 +177,13 @@ namespace Qase.XUnit.V3.Reporter
                         raw.ErrorMessage = skippedState.Explanation;
                     }
                     break;
+                case TimeoutTestNodeStateProperty timeoutState:
+                    raw.ErrorMessage = timeoutState.Explanation ?? timeoutState.Exception?.Message ?? "Test timed out";
+                    raw.StackTrace = timeoutState.Exception?.StackTrace;
+                    break;
+                case CancelledTestNodeStateProperty cancelledState:
+                    raw.ErrorMessage = cancelledState.Explanation ?? "Test was cancelled";
+                    break;
             }
 
             // Extract method identification from TestMethodIdentifierProperty (native MTP v2).
@@ -196,17 +209,32 @@ namespace Qase.XUnit.V3.Reporter
         /// <inheritdoc />
         public async Task OnTestSessionStartingAsync(ITestSessionContext testSessionContext)
         {
-            _reporter = CoreReporterFactory.GetInstance();
-            await _reporter.startTestRun();
+            // Qase failures must not fail the user's test session.
+            try
+            {
+                _reporter = CoreReporterFactory.GetInstance();
+                await _reporter.startTestRun();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[Qase] Failed to start test run: {ex.GetType().Name}: {ex.Message}");
+            }
         }
 
         /// <inheritdoc />
         public async Task OnTestSessionFinishingAsync(ITestSessionContext testSessionContext)
         {
-            if (_reporter != null)
+            if (_reporter == null)
+                return;
+
+            try
             {
                 await _reporter.uploadResults();
                 await _reporter.completeTestRun();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[Qase] Failed to complete test run: {ex.GetType().Name}: {ex.Message}");
             }
         }
     }

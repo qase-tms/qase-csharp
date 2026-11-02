@@ -17,6 +17,19 @@ namespace Qase.Csharp.Commons.Utils
         /// <returns>Signature</returns>
         public static string Generate(IEnumerable<long>? ids, IEnumerable<string?>? suites, IDictionary<string, string>? parameters)
         {
+            return Generate(ids, suites, null, parameters);
+        }
+
+        /// <summary>
+        /// Generates a signature that also names the test, so tests sharing a suite stay distinct
+        /// </summary>
+        /// <param name="ids">Test case IDs</param>
+        /// <param name="suites">Test case suites</param>
+        /// <param name="testName">Method or scenario name</param>
+        /// <param name="parameters">Test case parameters</param>
+        /// <returns>Signature</returns>
+        public static string Generate(IEnumerable<long>? ids, IEnumerable<string?>? suites, string? testName, IDictionary<string, string>? parameters)
+        {
             var parts = new List<string>();
 
             if (ids != null && ids.Count() > 0)
@@ -33,6 +46,11 @@ namespace Qase.Csharp.Commons.Utils
                         parts.Add(suite.ToLower().Trim().Replace(" ", "-"));
                     }
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(testName))
+            {
+                parts.Add(testName!.ToLower().Trim().Replace(" ", "-"));
             }
 
             if (parameters != null && parameters.Count() > 0)

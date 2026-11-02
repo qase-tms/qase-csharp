@@ -1424,7 +1424,11 @@ namespace Qase.ApiClient.V1.Api
                                 fileStream.Position = 0;
                             }
                                                         
-                            multipartContentLocalVar.Add(new StreamContent(fileStream), "file[]", fileName);
+                            // Without a part content type Qase stores every file as application/octet-stream.
+                            var fileContent = new StreamContent(fileStream);
+                            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(
+                                FileContentTypes.GuessFromFileName(fileName));
+                            multipartContentLocalVar.Add(fileContent, "file[]", fileName);
                         }
                     }
 

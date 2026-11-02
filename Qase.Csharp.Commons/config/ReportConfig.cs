@@ -19,6 +19,7 @@ namespace Qase.Csharp.Commons.Config
 
         public void SetDriver(string? driver)
         {
+            driver = driver?.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(driver) || driver == "local")
             {
                 Driver = Driver.Local;

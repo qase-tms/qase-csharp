@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -357,5 +358,40 @@ namespace Qase.Csharp.Commons.Tests
             var logger = serviceProvider.GetService<ILogger<ServiceCollectionExtensionsTests>>();
             logger.Should().NotBeNull();
         }
-    }
+    
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("short", "****")]
+        [InlineData("90ea6c06bbfb606d49aea16f1b5567e9", "90ea****67e9")]
+        public void MaskSecret_ShouldHideTheMiddleOfTheToken(string? token, string? expected)
+        {
+            ServiceCollectionExtensions.MaskSecret(token).Should().Be(expected);
+        }
+
+        [Fact]
+        public void AddQaseServices_ShouldNotWriteApiTokenToLogFile()
+        {
+            const string token = "secret-token-value-0123456789";
+            var config = new QaseConfig { Debug = true };
+            config.Logging.Console = false;
+            config.Logging.File = true;
+            config.TestOps.Api.Token = token;
+
+            var services = new ServiceCollection();
+            services.AddQaseServices(config);
+            using (var provider = services.BuildServiceProvider())
+            {
+                provider.GetRequiredService<ILogger<ServiceCollectionExtensionsTests>>()
+                    .LogDebug("Config: {@Config}", config);
+            }
+
+            var logDir = System.IO.Path.Combine(AppContext.BaseDirectory, "logs");
+            var latest = new System.IO.DirectoryInfo(logDir).GetFiles("qase-*.log")
+                .OrderByDescending(f => f.LastWriteTimeUtc).First();
+            var content = System.IO.File.ReadAllText(latest.FullName);
+
+            content.Should().Contain("secr****6789");
+            content.Should().NotContain(token);
+        }
+}
 } 

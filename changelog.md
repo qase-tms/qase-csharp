@@ -1,5 +1,33 @@
 # Changelog
 
+## qase-csharp 1.2.0
+
+**Breaking:** the result signature now includes the test method (or Reqnroll scenario) name: `ids::suites::method::params`. Two tests without Qase IDs in the same class used to share one signature and were merged into one test case. Tests without `[QaseIds]` will be linked to newly created cases on the first run after the upgrade.
+
+- A broken configuration no longer aborts the test run. An empty variable (`QASE_TESTOPS_RUN_ID=`, typical for unset CI inputs) is treated as unset, an invalid number, boolean or enum value is ignored with a warning, and `mode`/`fallback`/`report.driver`/`report.connection.local.format` are case-insensitive (`QASE_MODE=TestOps`). Previously xUnit v3 and MSTest ran zero tests, xUnit v2 hit a catastrophic failure and NUnit/Reqnroll failed every test
+- Boolean variables also accept `1`/`0`, `yes`/`no` and `on`/`off`
+- The batch size is clamped to the documented `1`–`200`
+- With `mode: testops` and no token or project, the reporter now falls back to the local report when `fallback: report` is set, instead of reporting nothing; `fallback: testops` without credentials no longer disables `mode: report`
+- `testops.showPublicReportLink` is read at the documented level; `testops.run.showPublicReportLink` keeps working
+- The API token is masked in debug logs; it used to be written in full to the console and to the log file
+- Fixed xUnit v3 Theory results: parameter values carried their names (`query: "query: usb hub"`), which corrupted the parameters and the signature and dropped the steps, comments and attachments of every Theory row
+- xUnit v3 plain tests are titled by the method name, like in the other reporters, instead of the fully qualified name
+- Steps, comments and attachments are no longer lost for parameterized tests with `decimal`, `double`, enum or empty-string arguments, or for tests inherited from a base class; class-level Qase attributes are inherited too
+- Comments and attachments no longer leak into a later result with the same name (retries, repeats, Reqnroll scenarios with the same title in different features)
+- NUnit identifies tests by the `classname`/`methodname` NUnit reports, so parameterized fixtures (`[TestFixture(1)]`) and `TestName` overrides keep their Qase attributes; NUnit numeric literals are reported without the type suffix (`29.99`, not `29.99d`)
+- NUnit `Warning` results (`Assert.Warn`) are reported as passed instead of skipped; the raw NUnit event log is written only with `debug: true`
+- Failures from FluentAssertions, Shouldly and other assertion libraries are reported as failed instead of invalid under NUnit
+- MSTest and xUnit v3 report timed-out tests as failed and cancelled tests as skipped; they used to be dropped
+- A network error or timeout when uploading results now switches to the fallback report instead of losing the results; Qase errors never fail the test session in MSTest, xUnit v2 and xUnit v3
+- Results reported from parallel tests are no longer lost or uploaded twice, and a result is no longer duplicated in the fallback report after a failed batch upload
+- A failed attachment upload no longer fails the whole batch: the result is reported without it. More than 20 attachments per result are split into several requests, and an oversized file is skipped with a warning
+- Attachments are uploaded with their MIME type, so images and text files are previewed in Qase instead of being stored as `application/octet-stream`
+- In-memory attachments are no longer written to the temp directory, which could overwrite and then delete a user's file when the attachment name was a path
+- A non-existent `environment` no longer prevents the test run from being created: the run is created without it and a warning is logged
+- `[Step]` methods rethrow the step's own exception with its original stack trace
+- The `Retry-After` delay is capped at 10 minutes, the run start time no longer depends on the machine's calendar, and the default run title is `Automated run <date>` as documented
+- The local JSON report is written without a UTF-8 BOM, and the log file is named `logs/qase-<date>.log` instead of `logs/<date><date>.log`
+
 ## qase-csharp 1.1.30
 
 - Fixed run and result links for enterprise hosts: with `testops.api.host` set to `example.qase.io` the completed run link pointed at `https://app-example.qase.io/`, which does not exist. Enterprise links now point at `https://example.qase.io/`, while the EU cluster (`eu.qase.io`) keeps linking to `https://app-eu.qase.io/`
