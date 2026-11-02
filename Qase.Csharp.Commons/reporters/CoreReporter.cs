@@ -55,13 +55,17 @@ namespace Qase.Csharp.Commons.Reporters
         public Task completeTestRun()
         {
             _logger.LogInformation("Completing test run");
-            return ExecuteWithFallbackAsync(() => _reporter!.completeTestRun(), "complete test run");
+            // Results already uploaded live in Qase; a local report of an empty buffer would only mislead.
+            return ExecuteWithFallbackAsync(() => _reporter!.completeTestRun(), "complete test run",
+                fallbackOnlyWithPendingResults: true);
         }
 
         /// <inheritdoc />
         public Task addResult(TestResult result)
         {
             _logger.LogDebug("Adding result: {Result}", result);
+
+            ApplyRootSuite(result);
 
             // Apply status mapping if configured
             if (_config?.StatusMapping?.Count > 0)
@@ -90,7 +94,23 @@ namespace Qase.Csharp.Commons.Reporters
             return ExecuteWithFallbackAsync(() => _reporter!.uploadResults(), "upload results");
         }
 
-        private async Task ExecuteWithFallbackAsync(Func<Task> action, string actionName, Func<Task>? retryAction = null)
+        // Added after the signature is built, so changing rootSuite does not relink existing cases.
+        private void ApplyRootSuite(TestResult result)
+        {
+            var rootSuite = _config?.RootSuite?.Trim();
+            if (string.IsNullOrEmpty(rootSuite))
+                return;
+
+            result.Relations ??= new Relations();
+            var suites = result.Relations.Suite.Data;
+            if (suites.Count > 0 && suites[0].Title == rootSuite)
+                return;
+
+            suites.Insert(0, new SuiteData { Title = rootSuite });
+        }
+
+        private async Task ExecuteWithFallbackAsync(Func<Task> action, string actionName, Func<Task>? retryAction = null,
+            bool fallbackOnlyWithPendingResults = false)
         {
             // Framework hooks run concurrently (parallel scenarios) and block on these tasks
             // from test threads; one gate keeps the buffers consistent, and running off the
@@ -110,6 +130,10 @@ namespace Qase.Csharp.Commons.Reporters
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Failed to {ActionName} with reporter: {Message}", actionName, ex.Message);
+
+                        if (fallbackOnlyWithPendingResults && !await HasPendingResultsAsync().ConfigureAwait(false))
+                            return;
+
                         await UseFallbackAsync().ConfigureAwait(false);
                         await RetryActionAsync(retryAction ?? action, actionName).ConfigureAwait(false);
                     }
@@ -118,6 +142,19 @@ namespace Qase.Csharp.Commons.Reporters
             finally
             {
                 _gate.Release();
+            }
+        }
+
+        private async Task<bool> HasPendingResultsAsync()
+        {
+            try
+            {
+                var pending = await _reporter!.getResults().ConfigureAwait(false);
+                return pending != null && pending.Count > 0;
+            }
+            catch (Exception)
+            {
+                return true;
             }
         }
 

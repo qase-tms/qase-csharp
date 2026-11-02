@@ -304,6 +304,28 @@ namespace Qase.XUnit.Reporter.Tests
             _mockReporter.Verify(x => x.addResult(It.IsAny<TestResult>()), Times.Never);
         }
 
+        [Theory]
+        [InlineData("Ns.Tests.Login", "Login")]
+        [InlineData("Login", "Login")]
+        [InlineData("User can sign in", "User can sign in")]
+        public void ResolveDisplayName_ShouldPreferCustomDisplayName(string displayName, string expected)
+        {
+            var testCase = CreateMockTestCase("Login", "Ns.Tests");
+            testCase.Setup(x => x.DisplayName).Returns(displayName);
+
+            QaseMessageSink.ResolveDisplayName(testCase.Object).Should().Be(expected);
+        }
+
+        [Fact]
+        public void ResolveDisplayName_ShouldStripArguments_FromCustomTheoryName()
+        {
+            var testCase = CreateMockTestCase("Login", "Ns.Tests");
+            testCase.Setup(x => x.DisplayName).Returns("User can sign in(user: \"admin\")");
+            testCase.Setup(x => x.TestMethodArguments).Returns(new object[] { "admin" });
+
+            QaseMessageSink.ResolveDisplayName(testCase.Object).Should().Be("User can sign in");
+        }
+
         private Mock<ITestCase> CreateMockTestCase(string methodName, string className, params Attribute[] methodAttributes)
         {
             var mockTestCase = new Mock<ITestCase>();

@@ -18,6 +18,9 @@ namespace Qase.Csharp.Commons.Config
         private const int MinBatchSize = 1;
         private const int MaxBatchSize = 200;
 
+        [ThreadStatic]
+        private static bool _fileLoggingConfigured;
+
         /// <summary>
         /// Loads configuration from all available sources
         /// </summary>
@@ -26,6 +29,8 @@ namespace Qase.Csharp.Commons.Config
         {
             try
             {
+                _fileLoggingConfigured = false;
+
                 // Create a default config instance
                 var qaseConfig = new QaseConfig();
 
@@ -37,6 +42,12 @@ namespace Qase.Csharp.Commons.Config
 
                 // Load from system properties
                 qaseConfig = LoadFromSystemProperties(qaseConfig);
+
+                // Documented default: file logging follows debug unless it was set explicitly.
+                if (qaseConfig.Debug && !_fileLoggingConfigured && GetEnv("QASE_LOGGING_FILE", null) == null)
+                {
+                    qaseConfig.Logging.File = true;
+                }
 
                 // Validate configuration
                 ValidateConfig(qaseConfig);
@@ -660,9 +671,10 @@ namespace Qase.Csharp.Commons.Config
                 }
 
                 if (loggingElement.TryGetProperty("file", out var fileElement) &&
-                    fileElement.ValueKind == JsonValueKind.True)
+                    (fileElement.ValueKind == JsonValueKind.True || fileElement.ValueKind == JsonValueKind.False))
                 {
-                    qaseConfig.Logging.File = true;
+                    qaseConfig.Logging.File = fileElement.ValueKind == JsonValueKind.True;
+                    _fileLoggingConfigured = true;
                 }
             }
         }

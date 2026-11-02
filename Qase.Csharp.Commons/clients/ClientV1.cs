@@ -24,6 +24,7 @@ namespace Qase.Csharp.Commons.Clients
         private readonly IRunsApi _runApi;
         private readonly IAttachmentsApi _attachmentsApi;
         private readonly IConfigurationsApi _configurationsApi;
+        private readonly IPlansApi? _plansApi;
         private readonly ILogger<ClientV1> _logger;
 
         /// <summary>
@@ -39,12 +40,27 @@ namespace Qase.Csharp.Commons.Clients
             IRunsApi runApi,
             IAttachmentsApi attachmentsApi,
             IConfigurationsApi configurationsApi)
+            : this(logger, config, runApi, attachmentsApi, configurationsApi, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ApiClientV1 class with access to test plans
+        /// </summary>
+        public ClientV1(
+            ILogger<ClientV1> logger,
+            QaseConfig config,
+            IRunsApi runApi,
+            IAttachmentsApi attachmentsApi,
+            IConfigurationsApi configurationsApi,
+            IPlansApi? plansApi)
         {
             _logger = logger;
             _config = config;
             _runApi = runApi;
             _attachmentsApi = attachmentsApi;
             _configurationsApi = configurationsApi;
+            _plansApi = plansApi;
             _url = AppUrlResolver.Resolve(config.TestOps.Api.Host);
         }
 
@@ -176,10 +192,19 @@ namespace Qase.Csharp.Commons.Clients
 
             try
             {
-                var resp = await _runApi.GetRunAsync(_config.TestOps.Project!, (int)planId);
+                if (_plansApi == null)
+                {
+                    _logger.LogWarning("Plans API is not available, cannot read the cases of plan {PlanId}", planId);
+                    return new List<long>();
+                }
+
+                var resp = await _plansApi.GetPlanAsync(_config.TestOps.Project!, (int)planId);
                 if (resp.IsSuccessStatusCode)
                 {
-                    return resp.Ok()?.Result?.Cases?.ToList() ?? new List<long>();
+                    return resp.Ok()?.Result?.Cases?
+                        .Where(c => c.CaseId.HasValue)
+                        .Select(c => c.CaseId!.Value)
+                        .ToList() ?? new List<long>();
                 }
                 else
                 {

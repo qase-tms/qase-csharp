@@ -46,7 +46,7 @@ namespace Qase.XUnit.V3.Reporter
         public string Uid => "qase-xunit-v3-reporter";
 
         /// <inheritdoc />
-        public string Version => "1.0.0";
+        public string Version { get; } = typeof(QaseXUnitV3Extension).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
 
         /// <inheritdoc />
         public string DisplayName => "Qase xUnit v3 Reporter";

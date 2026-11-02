@@ -45,7 +45,7 @@ namespace Qase.MSTest.Reporter
         public string Uid => "qase-mstest-reporter";
 
         /// <inheritdoc />
-        public string Version => "1.0.0";
+        public string Version { get; } = typeof(QaseMSTestExtension).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
 
         /// <inheritdoc />
         public string DisplayName => "Qase MSTest Reporter";
@@ -270,7 +270,7 @@ namespace Qase.MSTest.Reporter
                 var paramStr = managedMethod.Substring(parenIdx + 1, managedMethod.Length - parenIdx - 2);
                 parameterTypeFullNames = string.IsNullOrEmpty(paramStr)
                     ? null
-                    : paramStr.Split(',').Select(s => s.Trim()).ToArray();
+                    : SplitParameterTypes(paramStr);
             }
             else
             {
@@ -279,6 +279,38 @@ namespace Qase.MSTest.Reporter
             }
 
             return (managedType, methodName, parameterTypeFullNames);
+        }
+
+        /// <summary>
+        /// Splits "System.Int32,System.Collections.Generic.List`1[System.String]" on top-level
+        /// commas only: a generic argument list has commas of its own.
+        /// </summary>
+        internal static string[] SplitParameterTypes(string parameterList)
+        {
+            var result = new System.Collections.Generic.List<string>();
+            var depth = 0;
+            var start = 0;
+            for (var i = 0; i < parameterList.Length; i++)
+            {
+                switch (parameterList[i])
+                {
+                    case '[':
+                    case '<':
+                        depth++;
+                        break;
+                    case ']':
+                    case '>':
+                        depth--;
+                        break;
+                    case ',' when depth == 0:
+                        result.Add(parameterList.Substring(start, i - start).Trim());
+                        start = i + 1;
+                        break;
+                }
+            }
+
+            result.Add(parameterList.Substring(start).Trim());
+            return result.ToArray();
         }
 
         /// <inheritdoc />

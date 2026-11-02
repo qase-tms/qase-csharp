@@ -1333,5 +1333,31 @@ namespace Qase.Csharp.Commons.Tests
 
             config.Environment.Should().Be("stage");
         }
+
+        [Fact]
+        public void LoadConfig_ShouldEnableFileLogging_WhenDebugIsOnAndFileIsNotSet()
+        {
+            var config = LoadWithEnv(("QASE_DEBUG", "true"));
+
+            config.Logging.File.Should().BeTrue();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldKeepExplicitFileLoggingOff_WhenDebugIsOn()
+        {
+            File.WriteAllText(ConfigFileName, @"{ ""debug"": true, ""logging"": { ""file"": false } }");
+
+            var config = ConfigFactory.LoadConfig();
+
+            config.Logging.File.Should().BeFalse();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldKeepExplicitFileLoggingEnvOff_WhenDebugIsOn()
+        {
+            var config = LoadWithEnv(("QASE_DEBUG", "true"), ("QASE_LOGGING_FILE", "false"));
+
+            config.Logging.File.Should().BeFalse();
+        }
 }
 } 

@@ -8,8 +8,11 @@
     <IsPackable>true</IsPackable>
     <Description>NUnit Integration with Qase TMS</Description>
     <Nullable>enable</Nullable>
-    <InternalsVisibleTo>Qase.NUnit.Reporter.Tests</InternalsVisibleTo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Qase.NUnit.Reporter.Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />

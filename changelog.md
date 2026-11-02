@@ -1,5 +1,19 @@
 # Changelog
 
+## qase-csharp 1.2.1
+
+- `rootSuite` / `QASE_ROOT_SUITE` now adds a top-level suite to every result; it was read but never applied. The signature does not include it, so changing it does not relink existing cases
+- `logging.file` follows `debug` when it is not set explicitly, as documented
+- Reqnroll reports the steps skipped after a failed step as `Skipped`; they were missing from the result, because Reqnroll runs no step hooks for them
+- `[Step]` methods returning `ValueTask` or `ValueTask<T>` are completed when the step finishes, not when it starts
+- xUnit v2 honours `[Fact(DisplayName = ...)]` and `[Theory(DisplayName = ...)]`
+- A custom MSTest/xUnit v3 display name with parentheses, such as `Login (admin)`, is no longer parsed as parameter values
+- MSTest resolves overloads with generic parameter types correctly
+- A failed test run completion no longer writes an empty local report when every result was already uploaded
+- `testops.plan.id` case lookup uses the test plan API instead of fetching a run with the plan's id
+- MSTest and xUnit v3 extensions report the package version instead of `1.0.0`
+- Removed the non-existent `testops.api.enterprise` option from the documentation and corrected the xUnit v2 status table
+
 ## qase-csharp 1.2.0
 
 **Breaking:** the result signature now includes the test method (or Reqnroll scenario) name: `ids::suites::method::params`. Two tests without Qase IDs in the same class used to share one signature and were merged into one test case. Tests without `[QaseIds]` will be linked to newly created cases on the first run after the upgrade.
