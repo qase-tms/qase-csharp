@@ -1214,5 +1214,124 @@ namespace Qase.Csharp.Commons.Tests
             // Assert
             config.TestOps.Plan.Id.Should().BeNull();
         }
-    }
+    
+        private static QaseConfig LoadWithEnv(params (string Key, string? Value)[] env)
+        {
+            foreach (var (key, value) in env)
+                Environment.SetEnvironmentVariable(key, value);
+
+            try
+            {
+                return ConfigFactory.LoadConfig();
+            }
+            finally
+            {
+                foreach (var (key, _) in env)
+                    Environment.SetEnvironmentVariable(key, null);
+            }
+        }
+
+        [Theory]
+        [InlineData("QASE_TESTOPS_RUN_ID", "")]
+        [InlineData("QASE_TESTOPS_RUN_ID", "abc")]
+        [InlineData("QASE_TESTOPS_PLAN_ID", " ")]
+        [InlineData("QASE_TESTOPS_BATCH_SIZE", "ten")]
+        [InlineData("QASE_MODE", "bogus")]
+        [InlineData("QASE_REPORT_DRIVER", "s3")]
+        [InlineData("QASE_REPORT_CONNECTION_FORMAT", "xml")]
+        public void LoadConfig_ShouldNotThrow_WhenEnvValueIsInvalid(string key, string value)
+        {
+            var act = () => LoadWithEnv((key, value));
+
+            act.Should().NotThrow();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldTreatEmptyEnvAsUnset()
+        {
+            var config = LoadWithEnv(("QASE_TESTOPS_RUN_ID", ""), ("QASE_ENVIRONMENT", ""));
+
+            config.TestOps.Run.Id.Should().BeNull();
+            config.Environment.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData("TestOps")]
+        [InlineData(" TESTOPS ")]
+        public void LoadConfig_ShouldParseModeCaseInsensitively(string mode)
+        {
+            var config = LoadWithEnv(("QASE_MODE", mode), ("QASE_TESTOPS_PROJECT", "PRJ"), ("QASE_TESTOPS_API_TOKEN", "t"));
+
+            config.Mode.Should().Be(Mode.TestOps);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldKeepPreviousMode_WhenEnvModeIsInvalid()
+        {
+            var config = LoadWithEnv(("QASE_MODE", "report"), ("QASE_FALLBACK", "nonsense"));
+
+            config.Mode.Should().Be(Mode.Report);
+        }
+
+        [Theory]
+        [InlineData("1", true)]
+        [InlineData("yes", true)]
+        [InlineData("ON", true)]
+        [InlineData("0", false)]
+        [InlineData("no", false)]
+        public void LoadConfig_ShouldAcceptCommonBooleanSpellings(string value, bool expected)
+        {
+            var config = LoadWithEnv(("QASE_DEBUG", value));
+
+            config.Debug.Should().Be(expected);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldFallBackToReport_WhenTestopsCredentialsAreMissing()
+        {
+            var config = LoadWithEnv(("QASE_MODE", "testops"), ("QASE_FALLBACK", "report"));
+
+            config.Mode.Should().Be(Mode.Report);
+            config.Fallback.Should().Be(Mode.Off);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldKeepReportMode_WhenOnlyFallbackLacksCredentials()
+        {
+            var config = LoadWithEnv(("QASE_MODE", "report"), ("QASE_FALLBACK", "testops"));
+
+            config.Mode.Should().Be(Mode.Report);
+            config.Fallback.Should().Be(Mode.Off);
+        }
+
+        [Theory]
+        [InlineData("0", 1)]
+        [InlineData("5000", 200)]
+        public void LoadConfig_ShouldClampBatchSize(string value, int expected)
+        {
+            var config = LoadWithEnv(("QASE_TESTOPS_BATCH_SIZE", value));
+
+            config.TestOps.Batch.Size.Should().Be(expected);
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldReadShowPublicReportLink_AtTestopsLevel()
+        {
+            File.WriteAllText(ConfigFileName, @"{ ""testops"": { ""showPublicReportLink"": true } }");
+
+            var config = ConfigFactory.LoadConfig();
+
+            config.TestOps.ShowPublicReportLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void LoadConfig_ShouldKeepParsingFile_WhenModeIsInvalid()
+        {
+            File.WriteAllText(ConfigFileName, @"{ ""mode"": ""bogus"", ""environment"": ""stage"" }");
+
+            var config = ConfigFactory.LoadConfig();
+
+            config.Environment.Should().Be("stage");
+        }
+}
 } 

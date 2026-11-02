@@ -12,6 +12,8 @@ namespace Qase.Csharp.Commons.Writers
     /// </summary>
     public class FileWriter
     {
+        // A BOM breaks strict JSON readers such as Python's json.load.
+        private static readonly Encoding Utf8WithoutBom = new UTF8Encoding(false);
         private readonly ILogger? _logger;
         private readonly string _rootPath;
         private readonly string _resultsPath;
@@ -92,7 +94,7 @@ namespace Qase.Csharp.Commons.Writers
             }
             else if (attachment.Content != null)
             {
-                File.WriteAllText(destPath, attachment.Content, Encoding.UTF8);
+                File.WriteAllText(destPath, attachment.Content, Utf8WithoutBom);
                 attachment.FilePath = Path.GetFullPath(destPath);
                 attachment.Content = null;
                 attachment.ContentBytes = null;
@@ -120,7 +122,7 @@ namespace Qase.Csharp.Commons.Writers
         public async Task WriteRunAsync(string json)
         {
             var path = Path.Combine(_rootPath, "run.json");
-            using (var writer = new StreamWriter(path, false, Encoding.UTF8))
+            using (var writer = new StreamWriter(path, false, Utf8WithoutBom))
             {
                 await writer.WriteAsync(json);
             }
@@ -134,7 +136,7 @@ namespace Qase.Csharp.Commons.Writers
         public async Task WriteResultAsync(string id, string json)
         {
             var path = Path.Combine(_resultsPath, $"{id}.json");
-            using (var writer = new StreamWriter(path, false, Encoding.UTF8))
+            using (var writer = new StreamWriter(path, false, Utf8WithoutBom))
             {
                 await writer.WriteAsync(json);
             }

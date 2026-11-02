@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Qase.Csharp.Commons.Config;
@@ -18,6 +19,7 @@ namespace Qase.Csharp.Commons.Reporters
         private readonly QaseConfig _config;
         private IInternalReporter? _reporter;
         private IInternalReporter? _fallback;
+        private readonly SemaphoreSlim _gate = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Initializes a new instance of the CoreReporter class
@@ -43,54 +45,79 @@ namespace Qase.Csharp.Commons.Reporters
         }
 
         /// <inheritdoc />
-        public async Task startTestRun()
+        public Task startTestRun()
         {
             _logger.LogInformation("Starting test run");
-            await ExecuteWithFallbackAsync(async () => await _reporter!.startTestRun(), "start test run");
+            return ExecuteWithFallbackAsync(() => _reporter!.startTestRun(), "start test run");
         }
 
         /// <inheritdoc />
-        public async Task completeTestRun()
+        public Task completeTestRun()
         {
             _logger.LogInformation("Completing test run");
-            await ExecuteWithFallbackAsync(async () => await _reporter!.completeTestRun(), "complete test run");
+            return ExecuteWithFallbackAsync(() => _reporter!.completeTestRun(), "complete test run");
         }
 
         /// <inheritdoc />
-        public async Task addResult(TestResult result)
+        public Task addResult(TestResult result)
         {
             _logger.LogDebug("Adding result: {Result}", result);
-            
+
             // Apply status mapping if configured
             if (_config?.StatusMapping?.Count > 0)
             {
                 StatusMappingUtils.ApplyStatusMapping(result, _config.StatusMapping, _logger);
             }
-            
-            await ExecuteWithFallbackAsync(async () => await _reporter!.addResult(result), "add result");
+
+            return ExecuteWithFallbackAsync(
+                () => _reporter!.addResult(result),
+                "add result",
+                // A failed batch upload has already buffered this result, and the fallback took the buffer over.
+                async () =>
+                {
+                    var buffered = await _reporter!.getResults().ConfigureAwait(false);
+                    if (buffered == null || !buffered.Contains(result))
+                    {
+                        await _reporter.addResult(result).ConfigureAwait(false);
+                    }
+                });
         }
 
         /// <inheritdoc />
-        public async Task uploadResults()
+        public Task uploadResults()
         {
             _logger.LogInformation("Uploading results");
-            await ExecuteWithFallbackAsync(async () => await _reporter!.uploadResults(), "upload results");
+            return ExecuteWithFallbackAsync(() => _reporter!.uploadResults(), "upload results");
         }
 
-        private async Task ExecuteWithFallbackAsync(Func<Task> action, string actionName)
+        private async Task ExecuteWithFallbackAsync(Func<Task> action, string actionName, Func<Task>? retryAction = null)
         {
-            if (_reporter != null)
+            // Framework hooks run concurrently (parallel scenarios) and block on these tasks
+            // from test threads; one gate keeps the buffers consistent, and running off the
+            // caller's SynchronizationContext keeps a blocking caller from deadlocking.
+            await _gate.WaitAsync().ConfigureAwait(false);
+            try
             {
-                try
+                await Task.Run(async () =>
                 {
-                    await action();
-                }
-                catch (QaseException ex)
-                {
-                    _logger.LogError(ex, "Failed to {ActionName} with reporter: {Message}", actionName, ex.Message);
-                    await UseFallbackAsync();
-                    await RetryActionAsync(action, actionName);
-                }
+                    if (_reporter == null)
+                        return;
+
+                    try
+                    {
+                        await action().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to {ActionName} with reporter: {Message}", actionName, ex.Message);
+                        await UseFallbackAsync().ConfigureAwait(false);
+                        await RetryActionAsync(retryAction ?? action, actionName).ConfigureAwait(false);
+                    }
+                }).ConfigureAwait(false);
+            }
+            finally
+            {
+                _gate.Release();
             }
         }
 
@@ -100,9 +127,9 @@ namespace Qase.Csharp.Commons.Reporters
             {
                 try
                 {
-                    await action();
+                    await action().ConfigureAwait(false);
                 }
-                catch (QaseException ex)
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to {ActionName} with reporter after fallback: {Message}", actionName, ex.Message);
                     _reporter = null;
@@ -120,12 +147,12 @@ namespace Qase.Csharp.Commons.Reporters
 
             try
             {
-                await _fallback.startTestRun();
-                await _fallback.setResults(await _reporter!.getResults());
+                await _fallback.startTestRun().ConfigureAwait(false);
+                await _fallback.setResults(await _reporter!.getResults().ConfigureAwait(false)).ConfigureAwait(false);
                 _reporter = _fallback;
                 _fallback = null;
             }
-            catch (QaseException ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to start test run with fallback reporter");
                 _reporter = null;

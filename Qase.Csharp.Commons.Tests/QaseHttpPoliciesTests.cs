@@ -90,6 +90,17 @@ public class QaseHttpPoliciesTests
     }
 
     [Fact]
+    public void ComputeDelay_ShouldCapAnExcessiveRetryAfter()
+    {
+        using var response = new HttpResponseMessage((HttpStatusCode)429);
+        response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromHours(2));
+
+        var delay = QaseHttpPolicies.ComputeDelay(1, TimeSpan.FromSeconds(1), response);
+
+        delay.Should().Be(TimeSpan.FromMinutes(10));
+    }
+
+    [Fact]
     public void ComputeDelay_ShouldHonourRetryAfterAsHttpDate()
     {
         using var response = new HttpResponseMessage((HttpStatusCode)429);

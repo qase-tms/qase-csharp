@@ -9,7 +9,7 @@ run:
     muted: 0
 results:
 - title: Generate HTML report and attach from memory
-  signature: 403::xunitv3examples::attachmenttests
+  signature: 403::xunitv3examples::attachmenttests::generatereport_attachfrommemory
   testops_ids:
   - 403
   status: passed
@@ -21,259 +21,22 @@ results:
   attachments:
   - file_name: test-summary.html
     mime_type: text/html
-- title: Shopping cart calculates total correctly
-  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 2"::"unitprice":"unitprice:
-    50"::"discountpercent":"discountpercent: 10"::"expectedtotal":"expectedtotal:
-    90"'
-  testops_ids:
-  - 503
-  status: passed
-  params:
-    quantity: 'quantity: 2'
-    unitPrice: 'unitPrice: 50'
-    discountPercent: 'discountPercent: 10'
-    expectedTotal: 'expectedTotal: 90'
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: ParameterizedTests
-- title: Product search returns relevant results
-  signature: '602::e2e-tests::user-workflows::"query":"query: usb hub"::"expectedminresults":"expectedminresults:
-    8"'
-  testops_ids:
-  - 602
-  status: passed
-  fields:
-    layer: e2e
-    severity: normal
-  params:
-    query: 'query: usb hub'
-    expectedMinResults: 'expectedMinResults: 8'
-  relations:
-    suite:
-      data:
-      - title: E2E Tests
-      - title: User Workflows
-- title: Product search returns relevant results
-  signature: '602::e2e-tests::user-workflows::"query":"query: mechanical keyboard"::"expectedminresults":"expectedminresults:
-    15"'
-  testops_ids:
-  - 602
-  status: passed
-  fields:
-    layer: e2e
-    severity: normal
-  params:
-    query: 'query: mechanical keyboard'
-    expectedMinResults: 'expectedMinResults: 15'
-  relations:
-    suite:
-      data:
-      - title: E2E Tests
-      - title: User Workflows
-- title: Login accepts valid credential combinations
-  signature: '501::xunitv3examples::parameterizedtests::"username":"username: user@example.com"::"password":"password:
-    userpass1!"::"expectedsuccess":"expectedsuccess: true"'
-  testops_ids:
-  - 501
-  status: passed
-  params:
-    username: 'username: user@example.com'
-    password: 'password: UserPass1!'
-    expectedSuccess: 'expectedSuccess: True'
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: ParameterizedTests
-- title: xUnitV3Examples.AttributeTests.LoginPage_AcceptsBothEmailAndUsername
-  signature: 102-103::authentication::smoke-tests
-  testops_ids:
-  - 102
-  - 103
-  status: passed
-  fields:
-    layer: e2e
-  tags:
-  - smoke
-  relations:
-    suite:
-      data:
-      - title: Authentication
-      - title: Smoke Tests
-- title: Product search returns relevant results
-  signature: '602::e2e-tests::user-workflows::"query":"query: wireless mouse"::"expectedminresults":"expectedminresults:
-    23"'
-  testops_ids:
-  - 602
-  status: passed
-  fields:
-    layer: e2e
-    severity: normal
-  params:
-    query: 'query: wireless mouse'
-    expectedMinResults: 'expectedMinResults: 23'
-  relations:
-    suite:
-      data:
-      - title: E2E Tests
-      - title: User Workflows
-- title: API test captures both request log and response screenshot
-  signature: 402::xunitv3examples::attachmenttests
-  testops_ids:
-  - 402
-  status: passed
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: AttachmentTests
-  attachments:
-  - file_name: screenshot.png
-    mime_type: image/png
-  - file_name: test-log.txt
-    mime_type: text/plain
-- title: Verify that the login page displays the correct title and branding
-  signature: 104::authentication::smoke-tests
-  testops_ids:
-  - 104
-  status: passed
-  fields:
-    layer: e2e
-  tags:
-  - smoke
-  relations:
-    suite:
-      data:
-      - title: Authentication
-      - title: Smoke Tests
-- title: xUnitV3Examples.AttributeTests.UserRegistration_CreatesNewAccount
-  signature: 101::authentication::smoke-tests
-  testops_ids:
-  - 101
-  status: passed
-  fields:
-    layer: e2e
-  tags:
-  - smoke
-  relations:
-    suite:
-      data:
-      - title: Authentication
-      - title: Smoke Tests
-- title: Checkout step captures state screenshot at each stage
-  signature: 404::xunitv3examples::attachmenttests
-  testops_ids:
-  - 404
-  status: passed
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: AttachmentTests
-  steps:
-  - data:
-      action: Fill shopping cart
-    execution:
-      status: passed
-  - data:
-      action: Enter shipping details
-    execution:
-      status: passed
-  - data:
-      action: Confirm order
-    execution:
-      status: passed
 - title: Email validation rejects invalid formats
-  signature: '502::xunitv3examples::parameterizedtests::"email":"email: plaintext"::"reason":"reason:
-    missing @ symbol"'
+  signature: 502::xunitv3examples::parameterizedtests::emailvalidation_rejectsinvalidformats::"email":"@example.com"::"reason":"missing
+    local part"
   testops_ids:
   - 502
   status: passed
   params:
-    email: 'email: plaintext'
-    reason: 'reason: missing @ symbol'
+    email: '@example.com'
+    reason: missing local part
   relations:
     suite:
       data:
       - title: xUnitV3Examples
       - title: ParameterizedTests
-- title: Shopping cart calculates total correctly
-  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 1"::"unitprice":"unitprice:
-    100"::"discountpercent":"discountpercent: 25"::"expectedtotal":"expectedtotal:
-    75"'
-  testops_ids:
-  - 503
-  status: passed
-  params:
-    quantity: 'quantity: 1'
-    unitPrice: 'unitPrice: 100'
-    discountPercent: 'discountPercent: 25'
-    expectedTotal: 'expectedTotal: 75'
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: ParameterizedTests
-- title: Login accepts valid credential combinations
-  signature: '501::xunitv3examples::parameterizedtests::"username":"username:"::"password":"password:
-    nouser"::"expectedsuccess":"expectedsuccess: false"'
-  testops_ids:
-  - 501
-  status: passed
-  params:
-    username: 'username:'
-    password: 'password: nouser'
-    expectedSuccess: 'expectedSuccess: False'
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: ParameterizedTests
-- title: Email validation rejects invalid formats
-  signature: '502::xunitv3examples::parameterizedtests::"email":"email:"::"reason":"reason:
-    empty string"'
-  testops_ids:
-  - 502
-  status: passed
-  params:
-    email: 'email:'
-    reason: 'reason: empty string'
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: ParameterizedTests
-- title: Data migration partially succeeds with expected failures
-  signature: 304::xunitv3examples::steptests
-  testops_ids:
-  - 304
-  status: passed
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: StepTests
-  steps:
-  - data:
-      action: MigrateUserRecords
-    execution:
-      status: passed
-  - data:
-      action: MigrateOrderRecords
-    execution:
-      status: passed
-  - data:
-      action: MigrateCorruptedRecords
-    execution:
-      status: failed
-  - data:
-      action: VerifyMigrationSummary
-    execution:
-      status: passed
 - title: Checkout process with nested address and payment steps
-  signature: 302::xunitv3examples::steptests
+  signature: 302::xunitv3examples::steptests::checkoutprocess_withnestedsteps
   testops_ids:
   - 302
   status: passed
@@ -308,8 +71,127 @@ results:
       action: ConfirmOrder
     execution:
       status: passed
-- title: xUnitV3Examples.AttributeTests.PasswordReset_SendsEmailToRegisteredUser
-  signature: 105::authentication::smoke-tests
+- title: Login accepts valid credential combinations
+  signature: 501::xunitv3examples::parameterizedtests::login_withvariouscredentials::"username":"admin@example.com"::"password":"admin123!"::"expectedsuccess":"true"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: admin@example.com
+    password: Admin123!
+    expectedSuccess: 'True'
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::searchproducts_returnsresults::"query":"wireless
+    mouse"::"expectedminresults":"23"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  params:
+    query: wireless mouse
+    expectedMinResults: '23'
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  steps:
+  - data:
+      action: Execute product search query
+    execution:
+      status: passed
+  - data:
+      action: Verify search returns minimum expected results
+    execution:
+      status: passed
+  - data:
+      action: Capture search results page
+    execution:
+      status: passed
+- title: UserProfile_UpdatesDisplayName
+  signature: user-profile::settings::userprofile_updatesdisplayname
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: User Profile
+      - title: Settings
+- title: Shopping cart calculates total correctly
+  signature: 503::xunitv3examples::parameterizedtests::shoppingcart_calculatestotal::"quantity":"1"::"unitprice":"29.99"::"discountpercent":"0"::"expectedtotal":"29.99"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    quantity: '1'
+    unitPrice: '29.99'
+    discountPercent: '0'
+    expectedTotal: '29.99'
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: Failed login records attempt details in report
+  signature: 201::xunitv3examples::metadatatests::failedlogin_logsattemptdetails
+  testops_ids:
+  - 201
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: MetadataTests
+- title: API response details are recorded for debugging
+  signature: 202::xunitv3examples::metadatatests::apiresponse_recordspayloaddetails
+  testops_ids:
+  - 202
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: MetadataTests
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::searchproducts_returnsresults::"query":"usb
+    hub"::"expectedminresults":"8"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  params:
+    query: usb hub
+    expectedMinResults: '8'
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  steps:
+  - data:
+      action: Execute product search query
+    execution:
+      status: passed
+  - data:
+      action: Verify search returns minimum expected results
+    execution:
+      status: passed
+  - data:
+      action: Capture search results page
+    execution:
+      status: passed
+- title: PasswordReset_SendsEmailToRegisteredUser
+  signature: 105::authentication::smoke-tests::passwordreset_sendsemailtoregistereduser
   testops_ids:
   - 105
   status: passed
@@ -317,33 +199,142 @@ results:
     layer: api
     severity: critical
     priority: high
-  tags:
-  - smoke
-  - regression
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+- title: UserRegistration_CreatesNewAccount
+  signature: 101::authentication::smoke-tests::userregistration_createsnewaccount
+  testops_ids:
+  - 101
+  status: passed
+  fields:
+    layer: e2e
   relations:
     suite:
       data:
       - title: Authentication
       - title: Smoke Tests
 - title: Shopping cart calculates total correctly
-  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 3"::"unitprice":"unitprice:
-    9.9900000000000002"::"discountpercent":"discountpercent: 0"::"expectedtotal":"expectedtotal:
-    29.969999999999999"'
+  signature: 503::xunitv3examples::parameterizedtests::shoppingcart_calculatestotal::"quantity":"3"::"unitprice":"9.99"::"discountpercent":"0"::"expectedtotal":"29.97"
   testops_ids:
   - 503
   status: passed
   params:
-    quantity: 'quantity: 3'
-    unitPrice: 'unitPrice: 9.9900000000000002'
-    discountPercent: 'discountPercent: 0'
-    expectedTotal: 'expectedTotal: 29.969999999999999'
+    quantity: '3'
+    unitPrice: '9.99'
+    discountPercent: '0'
+    expectedTotal: '29.97'
   relations:
     suite:
       data:
       - title: xUnitV3Examples
       - title: ParameterizedTests
+- title: Data migration partially succeeds with expected failures
+  signature: 304::xunitv3examples::steptests::datamigration_partialsuccess
+  testops_ids:
+  - 304
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: StepTests
+  steps:
+  - data:
+      action: MigrateUserRecords
+    execution:
+      status: passed
+  - data:
+      action: MigrateOrderRecords
+    execution:
+      status: passed
+  - data:
+      action: MigrateCorruptedRecords
+    execution:
+      status: failed
+  - data:
+      action: VerifyMigrationSummary
+    execution:
+      status: passed
+- title: Shopping cart calculates total correctly
+  signature: 503::xunitv3examples::parameterizedtests::shoppingcart_calculatestotal::"quantity":"1"::"unitprice":"100"::"discountpercent":"25"::"expectedtotal":"75"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    quantity: '1'
+    unitPrice: '100'
+    discountPercent: '25'
+    expectedTotal: '75'
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: Checkout step captures state screenshot at each stage
+  signature: 404::xunitv3examples::attachmenttests::checkoutstep_capturesscreenshotperstage
+  testops_ids:
+  - 404
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: AttachmentTests
+  steps:
+  - data:
+      action: Fill shopping cart
+    execution:
+      status: passed
+  - data:
+      action: Enter shipping details
+    execution:
+      status: passed
+  - data:
+      action: Confirm order
+    execution:
+      status: passed
+- title: Email validation rejects invalid formats
+  signature: 502::xunitv3examples::parameterizedtests::emailvalidation_rejectsinvalidformats::"email":"user@example."::"reason":"trailing
+    dot in domain"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    email: user@example.
+    reason: trailing dot in domain
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: Order creation with custom step names for clarity
+  signature: 303::xunitv3examples::steptests::ordercreation_withcustomstepnames
+  testops_ids:
+  - 303
+  status: passed
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: StepTests
+  steps:
+  - data:
+      action: Select product and set quantity
+    execution:
+      status: passed
+  - data:
+      action: Apply promotional discount code
+    execution:
+      status: passed
+  - data:
+      action: Calculate total with discount applied
+    execution:
+      status: passed
 - title: User registration completes all required steps
-  signature: 301::xunitv3examples::steptests
+  signature: 301::xunitv3examples::steptests::userregistration_completesallsteps
   testops_ids:
   - 301
   status: passed
@@ -370,17 +361,7 @@ results:
     execution:
       status: passed
 - title: Order processing adds tracking comment
-  signature: xunitv3examples::metadatatests
-  status: passed
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: MetadataTests
-- title: API response details are recorded for debugging
-  signature: 202::xunitv3examples::metadatatests
-  testops_ids:
-  - 202
+  signature: xunitv3examples::metadatatests::orderprocessing_addstrackingcomment
   status: passed
   relations:
     suite:
@@ -388,21 +369,21 @@ results:
       - title: xUnitV3Examples
       - title: MetadataTests
 - title: Email validation rejects invalid formats
-  signature: '502::xunitv3examples::parameterizedtests::"email":"email: user@"::"reason":"reason:
-    missing domain"'
+  signature: 502::xunitv3examples::parameterizedtests::emailvalidation_rejectsinvalidformats::"email":"empty"::"reason":"empty
+    string"
   testops_ids:
   - 502
   status: passed
   params:
-    email: 'email: user@'
-    reason: 'reason: missing domain'
+    email: empty
+    reason: empty string
   relations:
     suite:
       data:
       - title: xUnitV3Examples
       - title: ParameterizedTests
 - title: Login page captures screenshot on successful load
-  signature: 401::xunitv3examples::attachmenttests
+  signature: 401::xunitv3examples::attachmenttests::loginpage_capturesscreenshot
   testops_ids:
   - 401
   status: passed
@@ -414,40 +395,23 @@ results:
   attachments:
   - file_name: screenshot.png
     mime_type: image/png
-- title: Shopping cart calculates total correctly
-  signature: '503::xunitv3examples::parameterizedtests::"quantity":"quantity: 1"::"unitprice":"unitprice:
-    29.989999999999998"::"discountpercent":"discountpercent: 0"::"expectedtotal":"expectedtotal:
-    29.989999999999998"'
+- title: API test captures both request log and response screenshot
+  signature: 402::xunitv3examples::attachmenttests::apitest_capturesrequestandresponse
   testops_ids:
-  - 503
+  - 402
   status: passed
-  params:
-    quantity: 'quantity: 1'
-    unitPrice: 'unitPrice: 29.989999999999998'
-    discountPercent: 'discountPercent: 0'
-    expectedTotal: 'expectedTotal: 29.989999999999998'
   relations:
     suite:
       data:
       - title: xUnitV3Examples
-      - title: ParameterizedTests
-- title: Login accepts valid credential combinations
-  signature: '501::xunitv3examples::parameterizedtests::"username":"username: guest"::"password":"password:
-    guest"::"expectedsuccess":"expectedsuccess: false"'
-  testops_ids:
-  - 501
-  status: passed
-  params:
-    username: 'username: guest'
-    password: 'password: guest'
-    expectedSuccess: 'expectedSuccess: False'
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: ParameterizedTests
+      - title: AttachmentTests
+  attachments:
+  - file_name: screenshot.png
+    mime_type: image/png
+  - file_name: test-log.txt
+    mime_type: text/plain
 - title: 'New user onboarding: register, verify, complete profile'
-  signature: 601::e2e-tests::user-workflows
+  signature: 601::e2e-tests::user-workflows::useronboarding_endtoendflow
   testops_ids:
   - 601
   status: passed
@@ -477,91 +441,143 @@ results:
       action: Generate and attach onboarding summary
     execution:
       status: passed
-- title: Order creation with custom step names for clarity
-  signature: 303::xunitv3examples::steptests
-  testops_ids:
-  - 303
-  status: passed
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: StepTests
-  steps:
-  - data:
-      action: Select product and set quantity
-    execution:
-      status: passed
-  - data:
-      action: Apply promotional discount code
-    execution:
-      status: passed
-  - data:
-      action: Calculate total with discount applied
-    execution:
-      status: passed
-- title: Failed login records attempt details in report
-  signature: 201::xunitv3examples::metadatatests
-  testops_ids:
-  - 201
-  status: passed
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: MetadataTests
 - title: Email validation rejects invalid formats
-  signature: '502::xunitv3examples::parameterizedtests::"email":"email: user@example."::"reason":"reason:
-    trailing dot in domain"'
+  signature: 502::xunitv3examples::parameterizedtests::emailvalidation_rejectsinvalidformats::"email":"plaintext"::"reason":"missing
+    @ symbol"
   testops_ids:
   - 502
   status: passed
   params:
-    email: 'email: user@example.'
-    reason: 'reason: trailing dot in domain'
-  relations:
-    suite:
-      data:
-      - title: xUnitV3Examples
-      - title: ParameterizedTests
-- title: xUnitV3Examples.AttributeTests.UserProfile_UpdatesDisplayName
-  signature: user-profile::settings
-  status: passed
-  fields:
-    layer: e2e
-  tags:
-  - smoke
-  relations:
-    suite:
-      data:
-      - title: User Profile
-      - title: Settings
-- title: Email validation rejects invalid formats
-  signature: '502::xunitv3examples::parameterizedtests::"email":"email: @example.com"::"reason":"reason:
-    missing local part"'
-  testops_ids:
-  - 502
-  status: passed
-  params:
-    email: 'email: @example.com'
-    reason: 'reason: missing local part'
+    email: plaintext
+    reason: missing @ symbol
   relations:
     suite:
       data:
       - title: xUnitV3Examples
       - title: ParameterizedTests
 - title: Login accepts valid credential combinations
-  signature: '501::xunitv3examples::parameterizedtests::"username":"username: admin@example.com"::"password":"password:
-    admin123!"::"expectedsuccess":"expectedsuccess: true"'
+  signature: 501::xunitv3examples::parameterizedtests::login_withvariouscredentials::"username":"empty"::"password":"nouser"::"expectedsuccess":"false"
   testops_ids:
   - 501
   status: passed
   params:
-    username: 'username: admin@example.com'
-    password: 'password: Admin123!'
-    expectedSuccess: 'expectedSuccess: True'
+    username: empty
+    password: nouser
+    expectedSuccess: 'False'
   relations:
     suite:
       data:
       - title: xUnitV3Examples
       - title: ParameterizedTests
+- title: Email validation rejects invalid formats
+  signature: 502::xunitv3examples::parameterizedtests::emailvalidation_rejectsinvalidformats::"email":"user@"::"reason":"missing
+    domain"
+  testops_ids:
+  - 502
+  status: passed
+  params:
+    email: user@
+    reason: missing domain
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: Verify that the login page displays the correct title and branding
+  signature: 104::authentication::smoke-tests::loginpage_displayscorrectbranding
+  testops_ids:
+  - 104
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+- title: Login accepts valid credential combinations
+  signature: 501::xunitv3examples::parameterizedtests::login_withvariouscredentials::"username":"guest"::"password":"guest"::"expectedsuccess":"false"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: guest
+    password: guest
+    expectedSuccess: 'False'
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: LoginPage_AcceptsBothEmailAndUsername
+  signature: 102-103::authentication::smoke-tests::loginpage_acceptsbothemailandusername
+  testops_ids:
+  - 102
+  - 103
+  status: passed
+  fields:
+    layer: e2e
+  relations:
+    suite:
+      data:
+      - title: Authentication
+      - title: Smoke Tests
+- title: Login accepts valid credential combinations
+  signature: 501::xunitv3examples::parameterizedtests::login_withvariouscredentials::"username":"user@example.com"::"password":"userpass1!"::"expectedsuccess":"true"
+  testops_ids:
+  - 501
+  status: passed
+  params:
+    username: user@example.com
+    password: UserPass1!
+    expectedSuccess: 'True'
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: Shopping cart calculates total correctly
+  signature: 503::xunitv3examples::parameterizedtests::shoppingcart_calculatestotal::"quantity":"2"::"unitprice":"50"::"discountpercent":"10"::"expectedtotal":"90"
+  testops_ids:
+  - 503
+  status: passed
+  params:
+    quantity: '2'
+    unitPrice: '50'
+    discountPercent: '10'
+    expectedTotal: '90'
+  relations:
+    suite:
+      data:
+      - title: xUnitV3Examples
+      - title: ParameterizedTests
+- title: Product search returns relevant results
+  signature: 602::e2e-tests::user-workflows::searchproducts_returnsresults::"query":"mechanical
+    keyboard"::"expectedminresults":"15"
+  testops_ids:
+  - 602
+  status: passed
+  fields:
+    layer: e2e
+    severity: normal
+  params:
+    query: mechanical keyboard
+    expectedMinResults: '15'
+  relations:
+    suite:
+      data:
+      - title: E2E Tests
+      - title: User Workflows
+  steps:
+  - data:
+      action: Execute product search query
+    execution:
+      status: passed
+  - data:
+      action: Verify search returns minimum expected results
+    execution:
+      status: passed
+  - data:
+      action: Capture search results page
+    execution:
+      status: passed

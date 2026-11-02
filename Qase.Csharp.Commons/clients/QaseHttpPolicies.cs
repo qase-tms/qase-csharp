@@ -154,7 +154,8 @@ namespace Qase.Csharp.Commons.Clients
             var retryAfter = ReadRetryAfter(response);
             if (retryAfter.HasValue)
             {
-                return retryAfter.Value;
+                // The server's hint gets the same ceiling as our own backoff.
+                return retryAfter.Value > MaxComputedBackoff ? MaxComputedBackoff : retryAfter.Value;
             }
 
             var multiplier = Math.Pow(2, attempt - 1);

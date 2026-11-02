@@ -19,6 +19,7 @@ namespace Qase.Csharp.Commons.Config
 
         public void SetFormat(string? format)
         {
+            format = format?.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(format) || format == "json")
             {
                 Format = Format.Json;

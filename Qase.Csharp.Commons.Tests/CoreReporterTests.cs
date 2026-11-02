@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -331,61 +332,75 @@ namespace Qase.Csharp.Commons.Tests
             _fallbackReporterMock.Verify(r => r.setResults(testResults), Times.Once);
         }
 
+        // A network error surfaces as HttpRequestException/TimeoutRejectedException rather than
+        // QaseException; it must still switch to the fallback and never reach the test run.
         [Fact]
-        public async Task StartTestRun_ShouldNotRetry_WhenNonQaseExceptionIsThrown()
+        public async Task StartTestRun_ShouldUseFallback_WhenNonQaseExceptionIsThrown()
         {
-            // Arrange
             _primaryReporterMock.Setup(r => r.startTestRun())
                 .ThrowsAsync(new InvalidOperationException("Non-Qase exception"));
 
-            // Act & Assert
-            await _coreReporter.Invoking(x => x.startTestRun()).Should().ThrowAsync<InvalidOperationException>();
+            await _coreReporter.Invoking(x => x.startTestRun()).Should().NotThrowAsync();
 
-            // Assert
-            _primaryReporterMock.Verify(r => r.startTestRun(), Times.Once);
+            _fallbackReporterMock.Verify(r => r.startTestRun(), Times.AtLeastOnce);
         }
 
         [Fact]
-        public async Task CompleteTestRun_ShouldNotRetry_WhenNonQaseExceptionIsThrown()
+        public async Task CompleteTestRun_ShouldUseFallback_WhenNonQaseExceptionIsThrown()
         {
-            // Arrange
             _primaryReporterMock.Setup(r => r.completeTestRun())
-                .ThrowsAsync(new InvalidOperationException("Non-Qase exception"));
+                .ThrowsAsync(new System.Net.Http.HttpRequestException("connection refused"));
 
-            // Act & Assert
-            await _coreReporter.Invoking(x => x.completeTestRun()).Should().ThrowAsync<InvalidOperationException>();
+            await _coreReporter.Invoking(x => x.completeTestRun()).Should().NotThrowAsync();
 
-            // Assert
-            _primaryReporterMock.Verify(r => r.completeTestRun(), Times.Once);
+            _fallbackReporterMock.Verify(r => r.completeTestRun(), Times.Once);
         }
 
         [Fact]
-        public async Task AddResult_ShouldNotRetry_WhenNonQaseExceptionIsThrown()
+        public async Task AddResult_ShouldNotAddTwice_WhenFallbackAlreadyHoldsTheResult()
         {
-            // Arrange
             var testResult = new TestResult { Id = "test1", Title = "Test 1" };
+            var buffered = new List<TestResult> { testResult };
             _primaryReporterMock.Setup(r => r.addResult(testResult))
-                .ThrowsAsync(new InvalidOperationException("Non-Qase exception"));
+                .ThrowsAsync(new InvalidOperationException("batch upload failed"));
+            _primaryReporterMock.Setup(r => r.getResults()).ReturnsAsync(buffered);
+            _fallbackReporterMock.Setup(r => r.getResults()).ReturnsAsync(buffered);
 
-            // Act & Assert
-            await _coreReporter.Invoking(x => x.addResult(testResult)).Should().ThrowAsync<InvalidOperationException>();
+            await _coreReporter.Invoking(x => x.addResult(testResult)).Should().NotThrowAsync();
 
-            // Assert
-            _primaryReporterMock.Verify(r => r.addResult(testResult), Times.Once);
+            _fallbackReporterMock.Verify(r => r.setResults(buffered), Times.Once);
+            _fallbackReporterMock.Verify(r => r.addResult(It.IsAny<TestResult>()), Times.Never);
         }
 
         [Fact]
-        public async Task UploadResults_ShouldNotRetry_WhenNonQaseExceptionIsThrown()
+        public async Task UploadResults_ShouldNotThrow_WhenNonQaseExceptionIsThrown()
         {
-            // Arrange
             _primaryReporterMock.Setup(r => r.uploadResults())
-                .ThrowsAsync(new InvalidOperationException("Non-Qase exception"));
+                .ThrowsAsync(new TimeoutException("timed out"));
 
-            // Act & Assert
-            await _coreReporter.Invoking(x => x.uploadResults()).Should().ThrowAsync<InvalidOperationException>();
+            await _coreReporter.Invoking(x => x.uploadResults()).Should().NotThrowAsync();
+        }
 
-            // Assert
-            _primaryReporterMock.Verify(r => r.uploadResults(), Times.Once);
+        [Fact]
+        public async Task AddResult_ShouldNotLoseResults_WhenCalledConcurrently()
+        {
+            var config = new QaseConfig();
+            config.TestOps.Batch.Size = 3;
+            var stored = new List<TestResult>();
+            var primary = new Mock<IInternalReporter>();
+            primary.Setup(r => r.addResult(It.IsAny<TestResult>()))
+                .Returns<TestResult>(async r =>
+                {
+                    var count = stored.Count;
+                    await Task.Yield();
+                    stored.Insert(count, r);
+                });
+            var reporter = new CoreReporter(_loggerMock.Object, config, primary.Object);
+
+            await Task.WhenAll(Enumerable.Range(0, 200)
+                .Select(i => Task.Run(() => reporter.addResult(new TestResult { Id = i.ToString() }))));
+
+            stored.Select(r => r.Id).Should().OnlyHaveUniqueItems().And.HaveCount(200);
         }
 
         [Fact]

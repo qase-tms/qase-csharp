@@ -65,6 +65,7 @@ namespace Qase.Csharp.Commons.Config
 
         public void SetMode(string? mode)
         {
+            mode = mode?.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(mode) || mode == "off")
             {
                 Mode = Mode.Off;
@@ -85,6 +86,7 @@ namespace Qase.Csharp.Commons.Config
 
         public void SetFallback(string? fallback)
         {
+            fallback = fallback?.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(fallback) || fallback == "off")
             {
                 Fallback = Mode.Off;

@@ -212,6 +212,39 @@ namespace Qase.XUnit.V3.Reporter.Tests
         }
 
         [Fact]
+        public async Task ConsumeAsync_WithTimeoutState_MapsToFailedStatus()
+        {
+            var extension = CreateExtensionWithConfig(Mode.TestOps);
+            var (mockReporter, getCaptured) = CreateCapturingReporter();
+            InjectReporter(extension, mockReporter.Object);
+
+            var message = CreateTestMessage("SlowTest", new TimeoutTestNodeStateProperty("timed out after 1s"));
+
+            await extension.ConsumeAsync(Mock.Of<IDataProducer>(), message, CancellationToken.None);
+
+            var result = getCaptured();
+            result.Should().NotBeNull();
+            result!.Execution!.Status.Should().Be(TestResultStatus.Failed);
+            result.Message.Should().Be("timed out after 1s");
+        }
+
+        [Fact]
+        public async Task ConsumeAsync_WithCancelledState_MapsToSkippedStatus()
+        {
+            var extension = CreateExtensionWithConfig(Mode.TestOps);
+            var (mockReporter, getCaptured) = CreateCapturingReporter();
+            InjectReporter(extension, mockReporter.Object);
+
+            var message = CreateTestMessage("CancelledTest", new CancelledTestNodeStateProperty());
+
+            await extension.ConsumeAsync(Mock.Of<IDataProducer>(), message, CancellationToken.None);
+
+            var result = getCaptured();
+            result.Should().NotBeNull();
+            result!.Execution!.Status.Should().Be(TestResultStatus.Skipped);
+        }
+
+        [Fact]
         public async Task ConsumeAsync_WithTimingProperty_ExtractsStartEndDuration()
         {
             // Arrange

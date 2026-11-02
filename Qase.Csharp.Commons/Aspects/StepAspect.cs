@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using System.Text.Json;
 using AspectInjector.Broker;
@@ -99,9 +100,11 @@ namespace Qase.Csharp.Commons.Aspects
             {
                 return wrappedSync.Invoke(this, new object[] { target, args, metadata });
             }
-            catch (TargetInvocationException ex)
+            catch (TargetInvocationException ex) when (ex.InnerException != null)
             {
-                throw ex.GetBaseException();
+                // Rethrow the step's own exception with its original stack trace.
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+                throw;
             }
         }
 

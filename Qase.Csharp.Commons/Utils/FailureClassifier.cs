@@ -20,28 +20,58 @@ namespace Qase.Csharp.Commons.Utils
             string[]? exceptionTypes,
             string? stackTrace)
         {
-            // Priority 1: explicit "Error" label → Invalid (NUnit)
+            // Third-party assertion libraries throw their own exceptions, which NUnit labels "Error"
+            // and counts as zero asserts; the assertion evidence has to win over both.
+            if (ContainsAssertionException(exceptionTypes) ||
+                (!string.IsNullOrEmpty(stackTrace) && ContainsAssertionPattern(stackTrace!)))
+                return TestResultStatus.Failed;
+
+            // Explicit "Error" label → Invalid (NUnit)
             if (!string.IsNullOrEmpty(failureLabel) && failureLabel == "Error")
                 return TestResultStatus.Invalid;
 
-            // Priority 2: assertsCount == 0 → Invalid (NUnit)
+            // assertsCount == 0 → Invalid (NUnit)
             if (assertsCount.HasValue && assertsCount.Value == 0)
                 return TestResultStatus.Invalid;
-
-            // Priority 3: assertsCount > 0 → Failed (NUnit)
-            if (assertsCount.HasValue && assertsCount.Value > 0)
-                return TestResultStatus.Failed;
-
-            // Priority 4: check stack trace for assertion framework patterns
-            if (!string.IsNullOrEmpty(stackTrace) && ContainsAssertionPattern(stackTrace))
-                return TestResultStatus.Failed;
 
             // Default: Failed (safer than Invalid — assume assertion failure)
             return TestResultStatus.Failed;
         }
 
+        private static readonly string[] AssertionNamespaces =
+        {
+            "NUnit.Framework.",
+            "Xunit.Sdk.",
+            "Microsoft.VisualStudio.TestTools.UnitTesting.",
+            "FluentAssertions.",
+            "AwesomeAssertions.",
+            "Shouldly."
+        };
+
+        private static bool ContainsAssertionException(string[]? exceptionTypes)
+        {
+            if (exceptionTypes == null || exceptionTypes.Length == 0)
+                return false;
+
+            // xUnit reports the whole chain; the outermost exception decides.
+            var type = exceptionTypes[0];
+            foreach (var ns in AssertionNamespaces)
+            {
+                if (type.StartsWith(ns, System.StringComparison.Ordinal))
+                    return true;
+            }
+
+            return false;
+        }
+
         private static bool ContainsAssertionPattern(string stackTrace)
         {
+            foreach (var ns in AssertionNamespaces)
+            {
+                if (stackTrace.Contains("at " + ns))
+                    return true;
+            }
+
             // NUnit assertion patterns
             if (stackTrace.Contains("at NUnit.Framework.Assert") ||
                 stackTrace.Contains("at NUnit.Framework.Constraints"))

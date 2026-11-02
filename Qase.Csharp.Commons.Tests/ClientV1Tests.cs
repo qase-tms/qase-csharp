@@ -785,5 +785,32 @@ namespace Qase.Csharp.Commons.Tests
                 new Mock<IConfigurationsApi>().Object);
         }
 
-    }
+    
+        [Fact]
+        public async Task CreateTestRunAsync_ShouldRetryWithoutEnvironment_WhenItDoesNotExist()
+        {
+            var mockRunApi = new Mock<IRunsApi>();
+            var config = new QaseConfig { Environment = "no-such-env" };
+            config.TestOps.Project = "TEST";
+
+            var rejected = new Mock<ICreateRunApiResponse>();
+            rejected.Setup(x => x.IsSuccessStatusCode).Returns(false);
+            rejected.Setup(x => x.RawContent).Returns(
+                "{\"status\":false,\"errorFields\":[{\"field\":\"environment_slug\",\"error\":\"The selected environment doesn't exist.\"}]}");
+            var accepted = new Mock<ICreateRunApiResponse>();
+            accepted.Setup(x => x.IsSuccessStatusCode).Returns(true);
+            accepted.Setup(x => x.Ok()).Returns(new IdResponse { Result = new IdResponseAllOfResult { Id = 7 } });
+
+            mockRunApi.Setup(x => x.CreateRunAsync("TEST", It.Is<RunCreate>(r => r.EnvironmentSlug != null), It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(rejected.Object);
+            mockRunApi.Setup(x => x.CreateRunAsync("TEST", It.Is<RunCreate>(r => r.EnvironmentSlug == null), It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(accepted.Object);
+
+            var client = new ClientV1(Mock.Of<ILogger<ClientV1>>(), config, mockRunApi.Object, Mock.Of<IAttachmentsApi>(), Mock.Of<IConfigurationsApi>());
+
+            var runId = await client.CreateTestRunAsync();
+
+            runId.Should().Be(7);
+        }
+}
 } 

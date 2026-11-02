@@ -70,11 +70,12 @@ namespace Qase.Reqnroll.Reporter
                     return;
                 }
 
-                // Build RawTestData
+                // Scenario titles repeat across features, so the context key carries the feature too.
+                var contextBase = $"{_featureContext.FeatureInfo.Title}.{scenarioInfo.Title}";
                 var raw = new RawTestData
                 {
                     DisplayName = scenarioInfo.Title,
-                    ContextDisplayNameBase = scenarioInfo.Title,
+                    ContextDisplayNameBase = contextBase,
                     Status = TestResultStatus.Skipped,
                     StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                     Thread = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString()
@@ -96,8 +97,8 @@ namespace Qase.Reqnroll.Reporter
                 }
 
                 // Set display name for ContextManager (using DisplayNameGenerator)
-                var displayName = DisplayNameGenerator.Generate(scenarioInfo.Title, raw.PreParsedParams);
-                ContextManager.SetTestCaseName(displayName);
+                var displayName = DisplayNameGenerator.Generate(contextBase, raw.PreParsedParams);
+                ContextManager.BeginTestCase(displayName);
 
                 _scenarioContext[RawTestDataKey] = raw;
                 _scenarioContext[StepsKey] = new List<StepResult>();
@@ -258,6 +259,7 @@ namespace Qase.Reqnroll.Reporter
                 result.Signature = Signature.Generate(
                     result.TestopsIds,
                     result.Relations?.Suite?.Data?.Select(s => s.Title),
+                    _scenarioContext.ScenarioInfo.Title,
                     result.Params);
 
                 if (string.IsNullOrEmpty(result.Signature))

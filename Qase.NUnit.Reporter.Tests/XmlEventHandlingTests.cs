@@ -229,6 +229,40 @@ namespace Qase.NUnit.Reporter.Tests
         }
 
         [Fact]
+        public void OnTestEvent_WithParameterizedFixture_ShouldResolveAttributesFromClassAndMethodNames()
+        {
+            _listenerType.GetField("_builder", BindingFlags.NonPublic | BindingFlags.Static)!
+                .SetValue(null, new TestResultBuilder());
+            TestResult? captured = null;
+            _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>()))
+                .Callback<TestResult>(r => captured = r)
+                .Returns(System.Threading.Tasks.Task.CompletedTask);
+
+            const string attrs = @"id=""0-2001"" name=""TestMethodWithAttributes"" fullname=""Qase.NUnit.Reporter.Tests.TestClassWithAttributes(1).TestMethodWithAttributes"" classname=""Qase.NUnit.Reporter.Tests.TestClassWithAttributes"" methodname=""TestMethodWithAttributes""";
+            _listener.OnTestEvent($"<start-test {attrs} />");
+            _listener.OnTestEvent($@"<test-case {attrs} result=""Passed"" duration=""0.001"" />");
+
+            captured.Should().NotBeNull();
+            captured!.TestopsIds.Should().BeEquivalentTo(new[] { 300L, 400L });
+            captured.Title.Should().Be("Test Method Title");
+        }
+
+        [Fact]
+        public void OnTestEvent_WithWarningResult_ShouldReportPassed()
+        {
+            _listenerType.GetField("_builder", BindingFlags.NonPublic | BindingFlags.Static)!
+                .SetValue(null, new TestResultBuilder());
+            TestResult? captured = null;
+            _mockReporter.Setup(x => x.addResult(It.IsAny<TestResult>()))
+                .Callback<TestResult>(r => captured = r)
+                .Returns(System.Threading.Tasks.Task.CompletedTask);
+
+            _listener.OnTestEvent(@"<test-case id=""0-2002"" name=""TestMethod"" fullname=""Qase.NUnit.Reporter.Tests.TestClassWithoutAttributes.TestMethod"" classname=""Qase.NUnit.Reporter.Tests.TestClassWithoutAttributes"" methodname=""TestMethod"" result=""Warning"" duration=""0.001"" />");
+
+            captured!.Execution!.Status.Should().Be(TestResultStatus.Passed);
+        }
+
+        [Fact]
         public void OnTestEvent_WithInvalidXml_ShouldNotThrow()
         {
             // Arrange

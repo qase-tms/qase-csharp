@@ -64,6 +64,10 @@ namespace Qase.NUnit.Reporter
 
         private static void WriteToFile(string message)
         {
+            // Raw NUnit event dumps are a troubleshooting aid, not something every run should pay for.
+            if (!CoreReporterFactory.GetConfig().Debug)
+                return;
+
             try
             {
                 lock (_lockObject)
@@ -208,24 +212,36 @@ namespace Qase.NUnit.Reporter
 
             WriteToFile($"[Qase] Test started - ID: {id}, Name: {name}, FullName: {fullName}");
 
-            // Create RawTestData from fullName; builder will resolve type/method/attrs/params
+            _rawTestData[id] = CreateRawTestData(element);
+        }
+
+        /// <summary>
+        /// Identifies the test by NUnit's own classname/methodname attributes. Splitting the
+        /// fullname breaks on parameterized fixtures ("Ns.Class(1).Method(2)") and on TestName overrides.
+        /// </summary>
+        private static RawTestData CreateRawTestData(XmlElement element)
+        {
             var raw = new RawTestData
             {
-                FullTestName = fullName,
-                DisplayName = name,
+                DisplayName = element.GetAttribute("name"),
                 Status = TestResultStatus.Skipped,
                 Thread = System.Threading.Thread.CurrentThread.Name ??
                     System.Threading.Thread.CurrentThread.ManagedThreadId.ToString()
             };
 
-            _rawTestData[id] = raw;
+            var className = element.GetAttribute("classname");
+            var methodName = element.GetAttribute("methodname");
+            if (!string.IsNullOrEmpty(className) && !string.IsNullOrEmpty(methodName))
+            {
+                raw.FullTypeName = className;
+                raw.MethodName = methodName;
+            }
+            else
+            {
+                raw.FullTestName = element.GetAttribute("fullname");
+            }
 
-            // Generate display name for ContextManager WITHOUT calling builder.Build()
-            // (Build() consumes ContextManager data, which would lose steps)
-            var methodBaseName = ExtractMethodBaseFromFullName(fullName);
-            var parameters = ResolveParametersForDisplayName(fullName, name);
-            var displayName = DisplayNameGenerator.Generate(methodBaseName, parameters);
-            ContextManager.SetTestCaseName(displayName);
+            return raw;
         }
 
         private void HandleTestCase(XmlElement element)
@@ -241,17 +257,9 @@ namespace Qase.NUnit.Reporter
             WriteToFile($"[Qase] Test case finished - ID: {id}, Name: {name}, FullName: {fullName}");
             WriteToFile($"[Qase]   Result: {result}, Duration: {duration}s, Start: {startTime}, End: {endTime}");
 
-            // Get or create raw test data
             if (!_rawTestData.TryGetValue(id, out var raw))
             {
-                raw = new RawTestData
-                {
-                    FullTestName = fullName,
-                    DisplayName = name,
-                    Status = TestResultStatus.Skipped,
-                    Thread = System.Threading.Thread.CurrentThread.Name ??
-                        System.Threading.Thread.CurrentThread.ManagedThreadId.ToString()
-                };
+                raw = CreateRawTestData(element);
             }
 
             // Map result status
@@ -359,70 +367,10 @@ namespace Qase.NUnit.Reporter
                 "Failed" => TestResultStatus.Failed,
                 "Skipped" => TestResultStatus.Skipped,
                 "Inconclusive" => TestResultStatus.Skipped,
+                // Assert.Warn: the test ran to completion and its assertions held.
+                "Warning" => TestResultStatus.Passed,
                 _ => TestResultStatus.Skipped
             };
-        }
-
-        /// <summary>
-        /// Resolves parameter names and values from a NUnit full test name for ContextManager display name.
-        /// Uses TypeMethodResolver to get method parameter names and ParameterParser to extract values.
-        /// Does NOT call TestResultBuilder.Build() to avoid consuming ContextManager data.
-        /// </summary>
-        private static Dictionary<string, string>? ResolveParametersForDisplayName(string fullName, string testName)
-        {
-            // Extract values from fullName
-            var values = ParameterParser.ParseValues(fullName);
-            if (values.Count == 0)
-                return null;
-
-            // Resolve type and method to get parameter names
-            var openParen = fullName.IndexOf('(');
-            var nameWithoutParams = openParen > 0 ? fullName.Substring(0, openParen) : fullName;
-            var parts = nameWithoutParams.Split('.');
-            if (parts.Length < 2)
-                return null;
-
-            var methodName = parts[parts.Length - 1];
-            var className = parts[parts.Length - 2];
-            var namespaceName = string.Join(".", parts.Take(parts.Length - 2));
-            var fullClassName = string.IsNullOrEmpty(namespaceName) ? className : $"{namespaceName}.{className}";
-
-            var type = TypeMethodResolver.ResolveType(fullClassName);
-            if (type == null)
-                return null;
-
-            var method = TypeMethodResolver.ResolveMethod(type, methodName);
-            if (method == null)
-                return null;
-
-            var methodParams = method.GetParameters();
-            var result = new Dictionary<string, string>();
-            for (int i = 0; i < Math.Min(values.Count, methodParams.Length); i++)
-            {
-                var paramName = methodParams[i].Name ?? $"param{i}";
-                var paramValue = values[i];
-                if (paramValue == "null")
-                    result[paramName] = "null";
-                else if (string.IsNullOrEmpty(paramValue))
-                    result[paramName] = "empty";
-                else
-                    result[paramName] = paramValue;
-            }
-
-            return result.Count > 0 ? result : null;
-        }
-
-        /// <summary>
-        /// Extracts the "Namespace.ClassName.MethodName" portion from a NUnit full test name,
-        /// stripping any parameter parentheses. Used as the base for ContextManager display name.
-        /// </summary>
-        private static string ExtractMethodBaseFromFullName(string fullName)
-        {
-            if (string.IsNullOrEmpty(fullName))
-                return fullName;
-
-            var openParenIndex = fullName.IndexOf('(');
-            return openParenIndex > 0 ? fullName.Substring(0, openParenIndex) : fullName;
         }
     }
 }
