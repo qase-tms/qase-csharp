@@ -1,0 +1,48 @@
+.github/workflows/build.yaml
+  s_c0c37cdcdc9469::t_5f28ae2f72339d 84-86
+Qase.MSTest.Reporter/Qase.MSTest.Reporter.csproj
+  s_c0c37cdcdc9469::t_73806c4de76653 24-25
+Qase.MSTest.Reporter.Tests/LifecycleTests.cs
+  s_c0c37cdcdc9469::t_ac385bd67aa50f 11
+  s_c0c37cdcdc9469::t_73806c4de76653 103,121,135,161
+Qase.MSTest.Reporter.Tests/ConsumeAsyncTests.cs
+  s_c0c37cdcdc9469::t_ac385bd67aa50f 456-462,473-479
+changelog.md
+  s_c0c37cdcdc9469::t_5f28ae2f72339d 3-9
+Directory.Build.props
+  s_c0c37cdcdc9469::t_5f28ae2f72339d 4
+examples/MSTestExamples/MSTestExamples.csproj
+  s_c0c37cdcdc9469::t_5f03c5b5bd4f80 17-18
+examples/MSTestExamples/README.md
+  s_c0c37cdcdc9469::t_5f28ae2f72339d 3,34,39-40
+Qase.MSTest.Reporter/docs/usage.md
+  s_c0c37cdcdc9469::t_5f28ae2f72339d 31
+README.md
+  s_c0c37cdcdc9469::t_5f28ae2f72339d 12
+Qase.MSTest.Reporter.Tests/Qase.MSTest.Reporter.Tests.csproj
+  s_c0c37cdcdc9469::t_b43dcc9ca9118b 33-38
+  s_c0c37cdcdc9469::t_5f0c1d224cae92 39
+Qase.MSTest.Reporter/QaseMSTestExtension.cs
+  s_c0c37cdcdc9469::t_fd5b6734bf8f5e 9
+  s_c0c37cdcdc9469::t_73806c4de76653 318,333
+Qase.MSTest.Reporter/README.md
+  s_c0c37cdcdc9469::t_5f28ae2f72339d 16,32,47-49,69-82,155
+examples/MSTestExamples/global.json
+  s_c0c37cdcdc9469::t_5f03c5b5bd4f80 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bd63a4d8ff6296f0f3ffc52823bcb47f28509016",
+  "prompts": {},
+  "sessions": {
+    "s_c0c37cdcdc9469": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5158c493-8759-4049-8268-dde409c378d0",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
