@@ -8,7 +8,7 @@ using Moq;
 using Qase.Csharp.Commons.Config;
 using Qase.Csharp.Commons.Reporters;
 using Qase.MSTest.Reporter;
-using Microsoft.Testing.Platform.TestHost;
+using Microsoft.Testing.Platform.Services;
 using Xunit;
 
 namespace Qase.MSTest.Reporter.Tests
@@ -100,7 +100,7 @@ namespace Qase.MSTest.Reporter.Tests
             mockReporter.Setup(r => r.uploadResults()).Returns(Task.CompletedTask);
             mockReporter.Setup(r => r.completeTestRun()).Returns(Task.CompletedTask);
 
-            await extension.OnTestSessionFinishingAsync(new SessionUid("test-session"), CancellationToken.None);
+            await extension.OnTestSessionFinishingAsync(Mock.Of<ITestSessionContext>());
 
             // Assert — verify the reporter's lifecycle methods were called
             mockReporter.Verify(r => r.uploadResults(), Times.Once);
@@ -118,7 +118,7 @@ namespace Qase.MSTest.Reporter.Tests
             InjectReporter(extension, mockReporter.Object);
 
             // Act
-            await extension.OnTestSessionFinishingAsync(new SessionUid("test-session"), CancellationToken.None);
+            await extension.OnTestSessionFinishingAsync(Mock.Of<ITestSessionContext>());
 
             // Assert
             mockReporter.Verify(r => r.uploadResults(), Times.Once);
@@ -132,8 +132,7 @@ namespace Qase.MSTest.Reporter.Tests
             var extension = CreateExtensionWithConfig(Mode.TestOps);
 
             // Act & Assert — should not throw NullReferenceException
-            var act = () => extension.OnTestSessionFinishingAsync(
-                new SessionUid("test-session"), CancellationToken.None);
+            var act = () => extension.OnTestSessionFinishingAsync(Mock.Of<ITestSessionContext>());
 
             await act.Should().NotThrowAsync();
         }
@@ -159,7 +158,7 @@ namespace Qase.MSTest.Reporter.Tests
             InjectReporter(extension, mockReporter.Object);
 
             // Act
-            await extension.OnTestSessionFinishingAsync(new SessionUid("test-session"), CancellationToken.None);
+            await extension.OnTestSessionFinishingAsync(Mock.Of<ITestSessionContext>());
 
             // Assert — uploadResults must be called before completeTestRun
             callOrder.Should().ContainInOrder("upload", "complete");

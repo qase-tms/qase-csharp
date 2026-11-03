@@ -453,12 +453,13 @@ namespace Qase.MSTest.Reporter.Tests
             string namespaceName, string typeName, string methodName)
         {
             return new TestMethodIdentifierProperty(
-                AssemblyFullName: "Qase.MSTest.Reporter.Tests, Version=1.0.0.0",
-                Namespace: namespaceName,
-                TypeName: typeName,
-                MethodName: methodName,
-                ParameterTypeFullNames: Array.Empty<string>(),
-                ReturnTypeFullName: "System.Void"
+                assemblyFullName: "Qase.MSTest.Reporter.Tests, Version=1.0.0.0",
+                @namespace: namespaceName,
+                typeName: typeName,
+                methodName: methodName,
+                methodArity: 0,
+                parameterTypeFullNames: Array.Empty<string>(),
+                returnTypeFullName: "System.Void"
             );
         }
 
@@ -469,12 +470,13 @@ namespace Qase.MSTest.Reporter.Tests
             string namespaceName, string typeName, string methodName, string[] parameterTypeFullNames)
         {
             return new TestMethodIdentifierProperty(
-                AssemblyFullName: "Qase.MSTest.Reporter.Tests, Version=1.0.0.0",
-                Namespace: namespaceName,
-                TypeName: typeName,
-                MethodName: methodName,
-                ParameterTypeFullNames: parameterTypeFullNames,
-                ReturnTypeFullName: "System.Void"
+                assemblyFullName: "Qase.MSTest.Reporter.Tests, Version=1.0.0.0",
+                @namespace: namespaceName,
+                typeName: typeName,
+                methodName: methodName,
+                methodArity: 0,
+                parameterTypeFullNames: parameterTypeFullNames,
+                returnTypeFullName: "System.Void"
             );
         }
 
