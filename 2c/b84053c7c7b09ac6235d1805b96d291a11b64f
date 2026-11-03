@@ -1,0 +1,19 @@
+.github/workflows/build.yaml
+  s_c0c37cdcdc9469::t_7283ef02a7b266 138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2cb84053c7c7b09ac6235d1805b96d291a11b64f",
+  "prompts": {},
+  "sessions": {
+    "s_c0c37cdcdc9469": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5158c493-8759-4049-8268-dde409c378d0",
+        "model": "unknown"
+      },
+      "human_author": "Dmitrii Gridnev <dgridnev@qase.io>"
+    }
+  }
+}
