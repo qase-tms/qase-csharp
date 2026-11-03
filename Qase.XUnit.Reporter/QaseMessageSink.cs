@@ -78,7 +78,7 @@ namespace Qase.Xunit.Reporter
 
             var raw = new RawTestData
             {
-                DisplayName = testCase.TestMethod.Method.Name,
+                DisplayName = ResolveDisplayName(testCase),
                 Status = TestResultStatus.Skipped,
                 Thread = System.Threading.Thread.CurrentThread.Name ??
                     System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(),
@@ -89,6 +89,27 @@ namespace Qase.Xunit.Reporter
             };
 
             qaseTestData[message.Test] = raw;
+        }
+
+        // xUnit's default name is "Ns.Class.Method(args)"; anything else came from [Fact(DisplayName = ...)].
+        internal static string ResolveDisplayName(ITestCase testCase)
+        {
+            var methodName = testCase.TestMethod.Method.Name;
+            var displayName = testCase.DisplayName;
+            var className = testCase.TestMethod.TestClass.Class.Name;
+
+            if (string.IsNullOrEmpty(displayName) ||
+                displayName.StartsWith(className + "." + methodName, StringComparison.Ordinal) ||
+                displayName.StartsWith(methodName, StringComparison.Ordinal))
+            {
+                return methodName;
+            }
+
+            var arguments = testCase.TestMethodArguments;
+            var openParen = displayName.LastIndexOf('(');
+            return arguments != null && arguments.Length > 0 && openParen > 0
+                ? displayName.Substring(0, openParen).TrimEnd()
+                : displayName;
         }
 
         private void OnTestPassed(MessageHandlerArgs<ITestPassed> args)

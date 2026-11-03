@@ -90,8 +90,7 @@ View your results at: `https://app.qase.io/run/PROJECT_CODE`
 | xUnit Status | Qase Status | Description |
 |--------------|-------------|-------------|
 | Passed | Passed | Test assertions succeeded |
-| Failed (assertion) | Failed | Test assertion failed (Assert.Equal, Assert.True, etc.) |
-| Failed (other) | Invalid | Test failed due to exception or error (not assertion) |
+| Failed | Failed | Test failed, whether by an assertion or by an unexpected exception |
 | Skipped | Skipped | Test was skipped via [Skip] or conditional skip |
 
 ## Requirements

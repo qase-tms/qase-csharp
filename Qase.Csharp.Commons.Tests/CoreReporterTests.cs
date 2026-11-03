@@ -168,7 +168,6 @@ namespace Qase.Csharp.Commons.Tests
 
             // Assert
             _primaryReporterMock.Verify(r => r.completeTestRun(), Times.Once);
-            _primaryReporterMock.Verify(r => r.getResults(), Times.Once);
             _fallbackReporterMock.Verify(r => r.startTestRun(), Times.Once);
             _fallbackReporterMock.Verify(r => r.setResults(testResults), Times.Once);
         }
@@ -350,6 +349,8 @@ namespace Qase.Csharp.Commons.Tests
         {
             _primaryReporterMock.Setup(r => r.completeTestRun())
                 .ThrowsAsync(new System.Net.Http.HttpRequestException("connection refused"));
+            _primaryReporterMock.Setup(r => r.getResults())
+                .ReturnsAsync(new List<TestResult> { new TestResult { Id = "pending" } });
 
             await _coreReporter.Invoking(x => x.completeTestRun()).Should().NotThrowAsync();
 
@@ -531,5 +532,45 @@ namespace Qase.Csharp.Commons.Tests
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
         }
-    }
+    
+        [Fact]
+        public async Task AddResult_ShouldPrependRootSuite_WithoutChangingTheSignature()
+        {
+            var config = new QaseConfig { RootSuite = "Nightly" };
+            var reporter = new CoreReporter(_loggerMock.Object, config, _primaryReporterMock.Object);
+            var result = new TestResult { Signature = "1::ns::class::method" };
+            result.Relations = new Relations();
+            result.Relations.Suite.Data.Add(new SuiteData { Title = "Ns" });
+
+            await reporter.addResult(result);
+
+            result.Relations.Suite.Data.Select(s => s.Title).Should().Equal("Nightly", "Ns");
+            result.Signature.Should().Be("1::ns::class::method");
+        }
+
+        [Fact]
+        public async Task AddResult_ShouldCreateSuiteRelation_WhenResultHasNone()
+        {
+            var config = new QaseConfig { RootSuite = "Nightly" };
+            var reporter = new CoreReporter(_loggerMock.Object, config, _primaryReporterMock.Object);
+            var result = new TestResult();
+
+            await reporter.addResult(result);
+
+            result.Relations!.Suite.Data.Should().ContainSingle().Which.Title.Should().Be("Nightly");
+        }
+
+        [Fact]
+        public async Task CompleteTestRun_ShouldNotWriteEmptyFallbackReport_WhenNothingIsPending()
+        {
+            _primaryReporterMock.Setup(r => r.completeTestRun())
+                .ThrowsAsync(new QaseException("complete failed"));
+            _primaryReporterMock.Setup(r => r.getResults()).ReturnsAsync(new List<TestResult>());
+
+            await _coreReporter.completeTestRun();
+
+            _fallbackReporterMock.Verify(r => r.startTestRun(), Times.Never);
+            _fallbackReporterMock.Verify(r => r.completeTestRun(), Times.Never);
+        }
+}
 } 

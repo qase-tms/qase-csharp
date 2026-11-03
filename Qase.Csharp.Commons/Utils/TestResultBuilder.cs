@@ -110,7 +110,7 @@ namespace Qase.Csharp.Commons.Utils
                     }
                 }
             }
-            else if (method != null)
+            else if (method != null && IsDefaultDisplayName(raw))
             {
                 var parsedParams = ParameterParser.ParseAndMap(raw.DisplayName, method);
                 foreach (var kvp in parsedParams)
@@ -126,7 +126,8 @@ namespace Qase.Csharp.Commons.Utils
                 // xUnit v3 names a plain test by its fully qualified method; the others use the method name.
                 result.Title = raw.MethodName;
             }
-            else if (result.Title == raw.DisplayName && result.Params.Count > 0 && raw.MethodName != null)
+            else if (result.Title == raw.DisplayName && result.Params.Count > 0 && raw.MethodName != null &&
+                     raw.DisplayName.IndexOf('(') >= 0)
             {
                 result.Title = raw.MethodName;
             }
@@ -197,6 +198,21 @@ namespace Qase.Csharp.Commons.Utils
             }
 
             return result;
+        }
+
+        // Only a framework-generated name ("Method (1,2)", "Ns.Class.Method(a: 1)") renders the
+        // arguments; a custom DisplayName such as "Login (admin)" holds no parameter values.
+        private static bool IsDefaultDisplayName(RawTestData raw)
+        {
+            if (raw.MethodName == null)
+                return true;
+
+            var name = raw.DisplayName;
+            if (raw.FullTypeName != null && name.StartsWith(raw.FullTypeName + ".", StringComparison.Ordinal))
+                name = name.Substring(raw.FullTypeName.Length + 1);
+
+            return name.StartsWith(raw.MethodName, StringComparison.Ordinal) &&
+                   (name.Length == raw.MethodName.Length || name[raw.MethodName.Length] == '(' || name[raw.MethodName.Length] == ' ');
         }
 
         private static (Type? type, MethodInfo? method) ResolveFromFullTestName(string fullTestName)

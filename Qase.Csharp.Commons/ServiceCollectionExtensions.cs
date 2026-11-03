@@ -126,8 +126,9 @@ namespace Qase.Csharp.Commons
                 var runApi = apiServiceProvider.GetRequiredService<IRunsApi>();
                 var attachmentsApi = apiServiceProvider.GetRequiredService<IAttachmentsApi>();
                 var configurationsApi = apiServiceProvider.GetRequiredService<IConfigurationsApi>();
-                
-                return new ClientV1(logger, config, runApi, attachmentsApi, configurationsApi);
+                var plansApi = apiServiceProvider.GetRequiredService<IPlansApi>();
+
+                return new ClientV1(logger, config, runApi, attachmentsApi, configurationsApi, plansApi);
             });
 
             services.AddSingleton<ClientV2>(sp =>

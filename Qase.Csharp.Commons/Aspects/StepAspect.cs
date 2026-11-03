@@ -83,6 +83,11 @@ namespace Qase.Csharp.Commons.Aspects
 
         private object GetStepExecutionResult(Type returnType, Func<object[], object> target, object[] args, MethodBase metadata)
         {
+            if (IsValueTask(returnType))
+            {
+                return WrapValueTask(returnType, target, args, metadata);
+            }
+
             if (typeof(Task).IsAssignableFrom(returnType))
             {
                 var wrappedAsync = returnType.IsConstructedGenericType
@@ -106,6 +111,32 @@ namespace Qase.Csharp.Commons.Aspects
                 ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
                 throw;
             }
+        }
+
+        // netstandard2.0 has no ValueTask, so it is recognised by name; without this a
+        // ValueTask step would be marked passed before it ran to completion.
+        private static bool IsValueTask(Type returnType)
+        {
+            var name = returnType.IsConstructedGenericType
+                ? returnType.GetGenericTypeDefinition().FullName
+                : returnType.FullName;
+            return name == "System.Threading.Tasks.ValueTask" || name == "System.Threading.Tasks.ValueTask`1";
+        }
+
+        private object WrapValueTask(Type returnType, Func<object[], object> target, object[] args, MethodBase metadata)
+        {
+            object AsTask(object[] a)
+            {
+                var valueTask = target(a);
+                return returnType.GetMethod("AsTask")!.Invoke(valueTask, null)!;
+            }
+
+            var handler = returnType.IsConstructedGenericType
+                ? AsyncGenericHandler.MakeGenericMethod(returnType.GenericTypeArguments[0])
+                : AsyncHandler;
+            var task = handler.Invoke(this, new object[] { (Func<object[], object>)AsTask, args, metadata });
+
+            return Activator.CreateInstance(returnType, task)!;
         }
 
         private static void WrapSync(Func<object[], object> target, object[] args, MethodBase metadata)

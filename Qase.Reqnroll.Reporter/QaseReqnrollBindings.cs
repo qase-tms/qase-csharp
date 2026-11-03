@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Reqnroll;
+using Reqnroll.Events;
 using Qase.Csharp.Commons;
 using Qase.Csharp.Commons.Models.Domain;
 using Qase.Csharp.Commons.Reporters;
@@ -21,21 +23,25 @@ namespace Qase.Reqnroll.Reporter
         private readonly ScenarioContext _scenarioContext;
         private readonly FeatureContext _featureContext;
         private readonly ICoreReporter _reporter;
+        private readonly ITestThreadExecutionEventPublisher _eventPublisher;
         private readonly ITestResultBuilder _builder = new TestResultBuilder();
 
         private const string RawTestDataKey = "QaseRawTestData";
         private const string StepStartTimeKey = "QaseStepStartTime";
         private const string StepsKey = "QaseSteps";
-        private const string StepFailedKey = "QaseStepFailed";
+
+        private static readonly ConditionalWeakTable<ITestThreadExecutionEventPublisher, object> SubscribedPublishers = new();
 
         public QaseReqnrollBindings(
             ScenarioContext scenarioContext,
             FeatureContext featureContext,
-            ICoreReporter reporter)
+            ICoreReporter reporter,
+            ITestThreadExecutionEventPublisher eventPublisher)
         {
             _scenarioContext = scenarioContext;
             _featureContext = featureContext;
             _reporter = reporter;
+            _eventPublisher = eventPublisher;
         }
 
         [BeforeTestRun(Order = 0)]
@@ -102,7 +108,7 @@ namespace Qase.Reqnroll.Reporter
 
                 _scenarioContext[RawTestDataKey] = raw;
                 _scenarioContext[StepsKey] = new List<StepResult>();
-                _scenarioContext[StepFailedKey] = false;
+                SubscribeToStepEvents(_eventPublisher);
             }
             catch (Exception ex)
             {
@@ -110,88 +116,80 @@ namespace Qase.Reqnroll.Reporter
             }
         }
 
-        [BeforeStep(Order = 0)]
-        public void BeforeStep()
+        // Reqnroll runs no step hooks for the steps it skips after a failure, but it does
+        // publish step events for them, so steps are recorded from the events.
+        private static void SubscribeToStepEvents(ITestThreadExecutionEventPublisher publisher)
+        {
+            lock (SubscribedPublishers)
+            {
+                if (SubscribedPublishers.TryGetValue(publisher, out _))
+                    return;
+
+                SubscribedPublishers.Add(publisher, new object());
+            }
+
+            publisher.AddHandler<StepStartedEvent>(OnStepStarted);
+            publisher.AddHandler<StepFinishedEvent>(OnStepFinished);
+        }
+
+        internal static void OnStepStarted(StepStartedEvent e)
         {
             try
             {
-                if (!_scenarioContext.ContainsKey(RawTestDataKey))
+                if (!(e.ScenarioContext is ScenarioContext scenarioContext) || !scenarioContext.ContainsKey(StepsKey))
                     return;
 
-                // If StepsKey isn't present, the scenario was ignored — skip step tracking
-                if (!_scenarioContext.ContainsKey(StepsKey))
-                    return;
-
-                _scenarioContext[StepStartTimeKey] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                scenarioContext[StepStartTimeKey] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"[Qase] Failed in BeforeStep: {ex.Message}");
+                Console.Error.WriteLine($"[Qase] Failed to handle step start: {ex.Message}");
             }
         }
 
-        [AfterStep(Order = int.MaxValue)]
-        public void AfterStep()
+        internal static void OnStepFinished(StepFinishedEvent e)
         {
             try
             {
-                if (!_scenarioContext.ContainsKey(RawTestDataKey))
+                var stepInfo = e.StepContext?.StepInfo;
+                if (!(e.ScenarioContext is ScenarioContext scenarioContext) || stepInfo == null ||
+                    !scenarioContext.ContainsKey(StepsKey))
                     return;
-
-                // If StepsKey isn't present, the scenario was ignored — skip step tracking
-                if (!_scenarioContext.ContainsKey(StepsKey))
-                    return;
-
-                var stepContext = _scenarioContext.StepContext;
-                var stepInfo = stepContext.StepInfo;
-
-                var stepTitle = $"{stepInfo.StepDefinitionType} {stepInfo.Text}";
-
-                var startTime = _scenarioContext.ContainsKey(StepStartTimeKey)
-                    ? (long)_scenarioContext[StepStartTimeKey]
-                    : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
                 var endTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                var previousStepFailed = (bool)_scenarioContext[StepFailedKey];
+                var startTime = scenarioContext.TryGetValue(StepStartTimeKey, out var started) && started is long value
+                    ? value
+                    : endTime;
 
-                StepResultStatus stepStatus;
-                if (previousStepFailed)
+                var steps = (List<StepResult>)scenarioContext[StepsKey];
+                steps.Add(new StepResult
                 {
-                    stepStatus = StepResultStatus.Skipped;
-                }
-                else if (stepContext.Status == ScenarioExecutionStatus.TestError)
-                {
-                    stepStatus = StepResultStatus.Failed;
-                    _scenarioContext[StepFailedKey] = true;
-                }
-                else if (stepContext.Status == ScenarioExecutionStatus.OK)
-                {
-                    stepStatus = StepResultStatus.Passed;
-                }
-                else
-                {
-                    stepStatus = StepResultStatus.Skipped;
-                    _scenarioContext[StepFailedKey] = true;
-                }
-
-                var stepResult = new StepResult
-                {
-                    Data = new Data { Action = stepTitle },
+                    Data = new Data { Action = $"{stepInfo.StepDefinitionType} {stepInfo.Text}" },
                     Execution = new StepExecution
                     {
-                        Status = stepStatus,
+                        Status = MapStepStatus(e.StepContext!.Status),
                         StartTime = startTime,
                         EndTime = endTime,
                         Duration = endTime - startTime
                     }
-                };
-
-                var steps = (List<StepResult>)_scenarioContext[StepsKey];
-                steps.Add(stepResult);
+                });
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"[Qase] Failed in AfterStep: {ex.Message}");
+                Console.Error.WriteLine($"[Qase] Failed to record step: {ex.Message}");
+            }
+        }
+
+        internal static StepResultStatus MapStepStatus(ScenarioExecutionStatus status)
+        {
+            switch (status)
+            {
+                case ScenarioExecutionStatus.OK:
+                    return StepResultStatus.Passed;
+                case ScenarioExecutionStatus.TestError:
+                    return StepResultStatus.Failed;
+                default:
+                    return StepResultStatus.Skipped;
             }
         }
 

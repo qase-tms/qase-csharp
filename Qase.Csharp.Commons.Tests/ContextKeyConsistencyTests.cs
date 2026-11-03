@@ -170,5 +170,39 @@ namespace Qase.Csharp.Commons.Tests
             var steps = ContextManager.GetCompletedSteps(key);
             steps.Should().ContainSingle().Which.Data!.Action.Should().Be("attempt 2");
         }
-    }
+    
+        [Fact]
+        public void Build_ShouldNotParseParameters_FromACustomDisplayName()
+        {
+            var raw = new RawTestData
+            {
+                DisplayName = "Login (admin) works",
+                FullTypeName = typeof(Fixture).FullName!,
+                MethodName = nameof(Fixture.Search),
+                Status = TestResultStatus.Passed
+            };
+
+            var result = new TestResultBuilder().Build(raw);
+
+            result.Params.Should().BeEmpty();
+            result.Title.Should().Be("Login (admin) works");
+        }
+
+        [Fact]
+        public void Build_ShouldParseParameters_FromTheMSTestDefaultDisplayName()
+        {
+            var raw = new RawTestData
+            {
+                DisplayName = "Search (usb hub,8)",
+                FullTypeName = typeof(Fixture).FullName!,
+                MethodName = nameof(Fixture.Search),
+                Status = TestResultStatus.Passed
+            };
+
+            var result = new TestResultBuilder().Build(raw);
+
+            result.Params["query"].Should().Be("usb hub");
+            result.Title.Should().Be(nameof(Fixture.Search));
+        }
+}
 }

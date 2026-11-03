@@ -812,5 +812,38 @@ namespace Qase.Csharp.Commons.Tests
 
             runId.Should().Be(7);
         }
+
+        [Fact]
+        public async Task GetTestCaseIdsForExecutionAsync_ShouldReadCasesFromThePlan()
+        {
+            var config = new QaseConfig();
+            config.TestOps.Project = "TEST";
+            config.TestOps.Plan.Id = 5;
+
+            var planResponse = new Mock<IGetPlanApiResponse>();
+            planResponse.Setup(x => x.IsSuccessStatusCode).Returns(true);
+            planResponse.Setup(x => x.Ok()).Returns(new PlanResponse
+            {
+                Result = new PlanDetailed
+                {
+                    Cases = new List<PlanDetailedAllOfCases>
+                    {
+                        new PlanDetailedAllOfCases(caseId: 11),
+                        new PlanDetailedAllOfCases(caseId: 12)
+                    }
+                }
+            });
+            var plansApi = new Mock<IPlansApi>();
+            plansApi.Setup(x => x.GetPlanAsync("TEST", 5, It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync(planResponse.Object);
+            var runApi = new Mock<IRunsApi>(MockBehavior.Strict);
+
+            var client = new ClientV1(Mock.Of<ILogger<ClientV1>>(), config, runApi.Object,
+                Mock.Of<IAttachmentsApi>(), Mock.Of<IConfigurationsApi>(), plansApi.Object);
+
+            var ids = await client.GetTestCaseIdsForExecutionAsync();
+
+            ids.Should().Equal(11, 12);
+        }
 }
 } 

@@ -8,8 +8,11 @@
     <IsPackable>true</IsPackable>
     <Description>MSTest Integration with Qase TMS</Description>
     <Nullable>enable</Nullable>
-    <InternalsVisibleTo>Qase.MSTest.Reporter.Tests</InternalsVisibleTo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Qase.MSTest.Reporter.Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
