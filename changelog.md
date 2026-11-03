@@ -2,9 +2,10 @@
 
 ## qase-csharp 2.0.0
 
-**Breaking:** `Qase.MSTest.Reporter` targets MSTest 4 and Microsoft Testing Platform 2. Version 1.2.1 crashed the test host of an MSTest 4 project (`TypeLoadException` for `IDataConsumer`), so no tests ran. MSTest 3 projects should stay on 1.2.x: restoring 2.0.0 there fails with `NU1605`.
+**Breaking:** `Qase.MSTest.Reporter` targets MSTest 4 and Microsoft Testing Platform 2. Version 1.2.1 crashed the test host of an MSTest 4 project (`TypeLoadException` for `IDataConsumer`), so no tests ran. MSTest 3 projects should stay on 1.2.x: restoring 2.0.0 there fails with `NU1605`. See the [upgrade guide](Qase.MSTest.Reporter/docs/UPGRADE.md).
 
 - With the .NET 10 SDK, `dotnet test` needs `"test": { "runner": "Microsoft.Testing.Platform" }` in `global.json`; see the MSTest reporter README
+- Attributes, configuration, result signatures and the report format are unchanged: results keep linking to the same test cases
 - The other reporters have no changes; their version follows the shared release version
 
 ## qase-csharp 1.2.1

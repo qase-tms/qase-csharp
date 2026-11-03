@@ -29,7 +29,7 @@ Or add directly to your `.csproj` file:
 
 ## Project Setup
 
-The Qase MSTest reporter is a Microsoft Testing Platform (MTP) v2 extension and requires MSTest 4. MSTest 3 projects should stay on `Qase.MSTest.Reporter` 1.2.x. Your test project requires specific settings in the `.csproj` file for the reporter to work.
+The Qase MSTest reporter is a Microsoft Testing Platform (MTP) v2 extension and requires MSTest 4. MSTest 3 projects should stay on `Qase.MSTest.Reporter` 1.2.x; see [Upgrading to 2.0](docs/UPGRADE.md). Your test project requires specific settings in the `.csproj` file for the reporter to work.
 
 ### Required `.csproj` Settings
 
@@ -139,6 +139,7 @@ View your results at: `https://app.qase.io/run/PROJECT_CODE`
 | Usage Guide | Comprehensive guide to using all reporter features | [docs/usage.md](docs/usage.md) |
 | Attachments | How to attach files and screenshots to test results | [docs/ATTACHMENTS.md](docs/ATTACHMENTS.md) |
 | Test Steps | How to add structured steps to your tests | [docs/STEPS.md](docs/STEPS.md) |
+| Upgrading to 2.0 | Moving from MSTest 3 / reporter 1.x to MSTest 4 / reporter 2.0 | [docs/UPGRADE.md](docs/UPGRADE.md) |
 | Configuration Reference | Complete configuration options for Qase reporters | [Qase.Csharp.Commons](../Qase.Csharp.Commons/README.md#configuration) |
 
 ## Test Result Statuses
