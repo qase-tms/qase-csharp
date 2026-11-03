@@ -28,7 +28,7 @@ dotnet add package Qase.MSTest.Reporter
 Add the following to your `.csproj` file:
 
 ```xml
-<PackageReference Include="Qase.MSTest.Reporter" Version="1.0.0" />
+<PackageReference Include="Qase.MSTest.Reporter" Version="2.0.0" />
 ```
 
 The `Qase.Csharp.Commons` package is included as a transitive dependency and provides the attributes and metadata APIs used throughout this guide.

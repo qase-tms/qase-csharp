@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Testing.Platform.Extensions;
 using Microsoft.Testing.Platform.Extensions.Messages;
 using Microsoft.Testing.Platform.Extensions.TestHost;
+using Microsoft.Testing.Platform.Services;
 using Microsoft.Testing.Platform.TestHost;
 using Qase.Csharp.Commons;
 using Qase.Csharp.Commons.Config;
@@ -314,7 +315,7 @@ namespace Qase.MSTest.Reporter
         }
 
         /// <inheritdoc />
-        public async Task OnTestSessionStartingAsync(SessionUid sessionUid, CancellationToken cancellationToken)
+        public async Task OnTestSessionStartingAsync(ITestSessionContext testSessionContext)
         {
             // Qase failures must not fail the user's test session.
             try
@@ -329,7 +330,7 @@ namespace Qase.MSTest.Reporter
         }
 
         /// <inheritdoc />
-        public async Task OnTestSessionFinishingAsync(SessionUid sessionUid, CancellationToken cancellationToken)
+        public async Task OnTestSessionFinishingAsync(ITestSessionContext testSessionContext)
         {
             if (_reporter == null)
                 return;

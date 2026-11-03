@@ -81,7 +81,9 @@ jobs:
 
       - name: Validate MSTest
         run: |
-          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/mstest-report dotnet test examples/MSTestExamples/MSTestExamples.csproj || true
+          cd examples/MSTestExamples
+          QASE_MODE=report QASE_REPORT_CONNECTION_PATH=${{ github.workspace }}/build/mstest-report dotnet test --project MSTestExamples.csproj || true
+          cd ../..
           reporters-validator validate \
             --report-dir ${{ github.workspace }}/build/mstest-report \
             --expected expected/mstest-examples.yaml \

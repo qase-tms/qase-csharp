@@ -1,6 +1,6 @@
 # MSTest Examples
 
-Demonstrates all Qase TestOps reporter features with the MSTest v3 testing framework.
+Demonstrates all Qase TestOps reporter features with the MSTest v4 testing framework.
 
 ## Test Files
 
@@ -31,13 +31,13 @@ The `testdata/` directory contains real files used by attachment examples:
 
 3. Run the tests:
    ```bash
-   dotnet test
+   dotnet test --project MSTestExamples.csproj
    ```
 
 ## Notes
 
-- This example project uses standard VSTest mode (`dotnet test`).
-- MSTest v3 supports `[DataRow]` directly on `[TestMethod]` — `[DataTestMethod]` is not needed.
+- This example project runs on Microsoft Testing Platform; `global.json` enables it for `dotnet test`.
+- MSTest supports `[DataRow]` directly on `[TestMethod]` — `[DataTestMethod]` is not needed.
 - The `[Ignore]` attribute used here is from `Qase.Csharp.Commons.Attributes`, not MSTest's built-in `[Ignore]`.
 
 ## Resources

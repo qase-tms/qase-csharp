@@ -13,7 +13,7 @@ dotnet add package Qase.MSTest.Reporter
 Or add directly to your `.csproj` file:
 
 ```xml
-<PackageReference Include="Qase.MSTest.Reporter" Version="1.1.8" />
+<PackageReference Include="Qase.MSTest.Reporter" Version="2.0.0" />
 ```
 
 ## Features
@@ -29,7 +29,7 @@ Or add directly to your `.csproj` file:
 
 ## Project Setup
 
-The Qase MSTest reporter uses Microsoft Testing Platform (MTP) v2. Your test project requires specific settings in the `.csproj` file for the reporter to work.
+The Qase MSTest reporter is a Microsoft Testing Platform (MTP) v2 extension and requires MSTest 4. MSTest 3 projects should stay on `Qase.MSTest.Reporter` 1.2.x; see [Upgrading to 2.0](docs/UPGRADE.md). Your test project requires specific settings in the `.csproj` file for the reporter to work.
 
 ### Required `.csproj` Settings
 
@@ -44,9 +44,9 @@ The Qase MSTest reporter uses Microsoft Testing Platform (MTP) v2. Your test pro
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" Version="3.7.3" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.7.3" />
-    <PackageReference Include="Qase.MSTest.Reporter" Version="1.1.8" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.5.2" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.5.2" />
+    <PackageReference Include="Qase.MSTest.Reporter" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +65,20 @@ The Qase MSTest reporter uses Microsoft Testing Platform (MTP) v2. Your test pro
 | `TestingPlatformDotnetTestSupport` | Yes | Enables `dotnet test` integration with the MTP v2 runner |
 
 > **Important:** Without these three properties, the Qase reporter extension will not be registered and test results will not be reported.
+
+### `global.json`
+
+On the .NET 10 SDK, `dotnet test` runs MTP projects only when the new test experience is enabled. Add a `global.json` next to the solution (or the test project):
+
+```json
+{
+  "test": {
+    "runner": "Microsoft.Testing.Platform"
+  }
+}
+```
+
+and run `dotnet test --project <TestProject>.csproj`. Without it, the build fails with "Testing with VSTest target is no longer supported by Microsoft.Testing.Platform on .NET 10 SDK and later".
 
 ## Quick Start
 
@@ -125,6 +139,7 @@ View your results at: `https://app.qase.io/run/PROJECT_CODE`
 | Usage Guide | Comprehensive guide to using all reporter features | [docs/usage.md](docs/usage.md) |
 | Attachments | How to attach files and screenshots to test results | [docs/ATTACHMENTS.md](docs/ATTACHMENTS.md) |
 | Test Steps | How to add structured steps to your tests | [docs/STEPS.md](docs/STEPS.md) |
+| Upgrading to 2.0 | Moving from MSTest 3 / reporter 1.x to MSTest 4 / reporter 2.0 | [docs/UPGRADE.md](docs/UPGRADE.md) |
 | Configuration Reference | Complete configuration options for Qase reporters | [Qase.Csharp.Commons](../Qase.Csharp.Commons/README.md#configuration) |
 
 ## Test Result Statuses
@@ -138,7 +153,7 @@ View your results at: `https://app.qase.io/run/PROJECT_CODE`
 
 ## Requirements
 
-- **MSTest**: Version 3.0 or higher is required.
+- **MSTest**: Version 4.0 or higher is required. For MSTest 3, use `Qase.MSTest.Reporter` 1.2.x.
 - **.NET**: Version 6.0 or higher is required.
 
 For further assistance, please refer to the [Qase Authentication Documentation](https://developers.qase.io/#authentication).
